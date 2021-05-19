@@ -1,30 +1,31 @@
 import { HookContext } from "@feathersjs/feathers";
 
-const addVotingsArray = (context: HookContext) => {
-  context.data.votings = [];
-  context.data.votingsAdmin = [];
-  return context;
-}
+const purgeUser = (context: HookContext) => {
+    if(context.result.user && context.result.user.secretInUse) {
+        delete context.result.user.secretInUse
+    }
+    return context;
+};
 
 export default {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [addVotingsArray],
+    create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   after: {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [purgeUser],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -34,6 +35,6 @@ export default {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

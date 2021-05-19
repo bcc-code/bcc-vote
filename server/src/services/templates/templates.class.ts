@@ -4,7 +4,7 @@ import { Application } from '../../declarations';
 
 interface Data {}
 
-export class Person extends DbService<Data> {
+export class Templates extends DbService<Data> {
   app: Application;
 
   constructor (options: IOptions, app: Application) {
@@ -14,11 +14,7 @@ export class Person extends DbService<Data> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-  //   console.log('finding');
-  //   let newParams = {};
-  //   if(params)
-  //     newParams = params;
-  //   return super.find(newParams);
+  //   return [];
   // }
 
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,11 +26,11 @@ export class Person extends DbService<Data> {
 
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // async create (data: Data, params?: Params): Promise<Data> {
-  //   console.log(data);
   //   if (Array.isArray(data)) {
   //     return Promise.all(data.map(current => this.create(current, params)));
   //   }
-  //   return super.create(data, {});
+
+  //   return data;
   // }
 
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars

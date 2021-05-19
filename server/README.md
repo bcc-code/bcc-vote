@@ -1,6 +1,6 @@
 # server
 
-> voting application
+> learning
 
 ## About
 

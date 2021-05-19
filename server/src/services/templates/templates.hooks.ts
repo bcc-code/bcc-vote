@@ -1,17 +1,10 @@
-import { HookContext } from "@feathersjs/feathers";
-
-const addVotingsArray = (context: HookContext) => {
-  context.data.votings = [];
-  context.data.votingsAdmin = [];
-  return context;
-}
 
 export default {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [addVotingsArray],
+    create: [],
     update: [],
     patch: [],
     remove: []
