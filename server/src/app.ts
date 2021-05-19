@@ -17,7 +17,6 @@ import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
-import authentication from "./services/authentication/authentication";
 
 import clientConfig from "./config/client";
 // Don't remove this comment. It's needed to format import lines nicely.
@@ -46,7 +45,6 @@ app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware);
-app.configure(authentication);
 // Set up our services (see `services/index.ts`)
 app.configure(services);
 // Set up event channels (see channels.ts)
