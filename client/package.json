@@ -1,23 +1,21 @@
 {
-  "name": "client",
+  "name": "app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 25135",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
-    "@popperjs/core": "^2.9.2",
     "core-js": "^3.6.5",
     "socket.io-client": "^2.4.0",
-    "v-calendar": "^3.0.0-alpha.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vue3-datepicker": "^0.2.4",
-    "vue3-timepicker": "^1.0.0-beta.2"
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -41,9 +39,7 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {
-      "no-unused-vars": "warn"
-    }
+    "rules": {}
   },
   "browserslist": [
     "> 1%",

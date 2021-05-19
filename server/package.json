@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "description": "learning",
+  "description": "learning about authorization",
   "version": "0.0.0",
   "homepage": "",
   "private": true,
@@ -24,7 +24,7 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run compile && npm run mocha",
+    "test": "npm run lint && npm run compile && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
     "start": "npm run compile && node lib/",
@@ -39,7 +39,6 @@
   },
   "types": "lib/",
   "dependencies": {
-    "@bcc-its/feathers-arangodb": "^3.0.0",
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
     "@feathersjs/authentication-oauth": "^4.5.11",
@@ -49,7 +48,6 @@
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio": "^4.5.11",
     "@feathersjs/transport-commons": "^4.5.11",
-    "arangojs": "^7.5.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
@@ -57,12 +55,12 @@
     "helmet": "^4.6.0",
     "nedb": "^1.8.0",
     "serve-favicon": "^2.5.0",
-    "speakeasy": "^2.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.10",
+    "@types/jsonwebtoken": "^8.5.1",
     "@types/mocha": "^8.2.2",
     "@types/nedb": "^1.8.11",
     "@types/serve-favicon": "^2.5.2",

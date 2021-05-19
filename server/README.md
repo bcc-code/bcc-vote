@@ -1,6 +1,6 @@
 # server
 
-> learning
+> learning about authorization
 
 ## About
 

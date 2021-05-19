@@ -1,70 +1,44 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
-import Messages from '../views/Messages.vue'
-import CreateVoting from '../views/CreateVoting.vue'
-import MyVotings from '../views/Votings.vue'
-import VotingTemplates from '../views/VotingTemplates.vue'
-import EditTemplate from '../views/EditTemplate.vue'
-import InitializeVoting from '../views/InitializeVoting.vue'
-import AdministerVoting from '../views/AdministerVoting.vue'
-import Vote from '../views/Vote.vue'
-
-const routes = [{
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/messages',
-    name: 'Messages',
-    component: Messages
-  },
-  {
-    path: '/templates',
-    name: 'Voting Templates',
-    component: VotingTemplates
-  },
-  {
-    path: '/templates/create',
-    name: 'Create Voting',
-    component: CreateVoting
-  },
-  {
-    path: '/templates/edit-:id',
-    name: 'Edit Template',
-    component: EditTemplate
-  },
-  {
-    path: '/votings',
-    name: 'Votings',
-    component: MyVotings
-  },
-  {
-    path: '/votings/initialize-:id',
-    name: 'Initialize Voting',
-    component: InitializeVoting
-  },
-  {
-    path: '/votings/administer-:id',
-    name: 'Administer Voting',
-    component: AdministerVoting,
-  },
-  {
-    path: '/votings/vote-:id',
-    name: 'Vote',
-    component: Vote,
-  }
-]
+import { routes } from "./routes"
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+async function authentication() {
+  console.log(router.app);
+  // console.log(app);
+  // const client = app.appContext.config.globalProperties.$client;
+  // console.log(client);
+  // const authenticationResult = await app.$client
+  //   .reAuthenticate()
+  //   .catch((err) => {
+  //     //Send unauthenticated/expired users to login endpoint
+  //     location.href = "localhost:3030/oauth/auth0";
+  //     console.log(err);
+  //   })
+  // if (!authenticationResult) {
+  //   return { authenticated: false }
+  // }
+
+  // const user = authenticationResult.user;
+  // // app.$d.user = user;
+
+  // console.log(user);
+
+  // return { user, authenticated: true };
+}
+
+router.beforeEach(async(to, from, next) => {
+  const { authenticated } = await authentication(to, from, next);
+  if (authenticated)
+    next();
+})
+
+router.afterEach(() => {
+  let hash = window.location.hash
+  if (hash.includes("access_token")) window.location.hash = ""
 })
 
 export default router
