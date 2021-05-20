@@ -1,7 +1,10 @@
 <template>
-  <div class="home">
+  <div id="container" class="container vertical">
+    <router-link class="width-80" to="/create">
+    <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
+    </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <div>{{$user.name}}</div>
+    <div>{{$user}}</div>
   </div>
 </template>
 
@@ -14,5 +17,10 @@ export default {
   // components: {
   //   HelloWorld
   // }
+  methods: {
+    log () {
+      console.log(this.$user);
+    }
+  }
 }
 </script>

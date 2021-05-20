@@ -10,9 +10,9 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 import { NotAuthenticated } from '@feathersjs/errors';
 
 import { Application } from './declarations';
-import services from './services';
+// import services from './services';
 
-import jsonwebtoken, { SignOptions, Secret, VerifyOptions } from 'jsonwebtoken';
+// import jsonwebtoken, { SignOptions, Secret, VerifyOptions } from 'jsonwebtoken';
 
 declare module './declarations' {
   interface ServiceTypes {
@@ -20,24 +20,14 @@ declare module './declarations' {
   }
 }
 class Auth0Strategy extends OAuthStrategy {
-  // async getEntityData(profile: OAuthProfile, existing: any, params: Params) {
-  //   const baseData = await super.getEntityData(profile, existing, params)
-  //   console.log(profile);
-  //   // console.log(existing);
-  //   // console.log(params);
-  //   return {
-  //     ...baseData,
-  //     name: profile.name,
-  //     email: profile.email,
-  //     birthdate: profile.birthdate,
-  //     churchName: profile['https://login.bcc.no/claims/churchName']
-  //   };
-  // }
   async authenticate(authentication: AuthenticationRequest, originalParams: Params) {
     const entity: string = this.configuration.entity;
     const { provider, ...params } = originalParams;
     const profile = await this.getProfile(authentication,params)
     const personID = profile["https://login.bcc.no/claims/personId"];
+    
+    // const myPerson = await MembersApi.getPerson(personID);
+    // console.log(myPerson);
     // console.log(profile);
     const personSvc = this.app?.services.users;
     let person;
@@ -50,35 +40,19 @@ class Auth0Strategy extends OAuthStrategy {
     if(tryFind.total == 0){
       person = await personSvc.create({
         personID: personID,
-        email: profile.email,
-        name: profile.name,
-        churchName: profile["https://login.bcc.no/claims/churchName"]
       })
     }else{
       person = tryFind.data[0];
     }
-    // const person = await personSvc.create({
-    //   auth0Id: profile.sub,
-    //   email: profile.email,
-    //   myId: personID
-    // })
-    console.log(person);
+    const memberSvc = this.app?.services.members;
+    const allInfo = await memberSvc.get(person.personID);
+    allInfo._id = person._id;
     return {
       authentication: { strategy: this.name ? this.name : 'unknown' },
-      [entity]: person
+      [entity]: allInfo
     }
   }
 }
-
-// function verifyAuth0AccessToken(accessToken:string):{[key:string]:any}{
-//   console.log('verifying');
-//   var fs = require('fs');
-//   const publicKey = fs.readFileSync(`../config/development-public.key`)
-//   console.log('publicKey');
-//   accessToken = accessToken.replace("Bearer ","");
-//   const payload = <object>jsonwebtoken.verify(accessToken, publicKey);
-//   return payload
-// }
 
 class CustomJWtStrategy extends JWTStrategy {
   async getEntity(id: any, params: any) {
@@ -96,34 +70,35 @@ class CustomJWtStrategy extends JWTStrategy {
 
   
 
-  // async authenticate(authentication: AuthenticationRequest, params: Params) {
-  //   let { accessToken } = authentication;
-  //   console.log('authenticating JWT token');
+  async authenticate(authentication: AuthenticationRequest, params: Params) {
+    let { accessToken } = authentication;
 
-  //   if (!accessToken) {
-  //     throw new NotAuthenticated('No access token');
-  //   }
 
-  //   try {
-  //     console.log('trying to verify');
-  //     let payload = verifyAuth0AccessToken(accessToken)
-  //     const personID = payload["https://login.bcc.no/claims/personId"]
-  //     console.log(personID);
-  //     const user =  await this.app?.services.users.find({query:{personID:personID}}).data[0]
-  //     console.log(user);
-  //     return {
-  //       user,
-  //       accessToken,
-  //       authentication: {
-  //           strategy: 'jwt',
-  //           accessToken,
-  //           payload
-  //         }
-  //       }
-  //   } catch (error) {
-  //     return await super.authenticate(authentication,params)
-  //   }
-  // }
+    if (!accessToken) {
+      throw new NotAuthenticated('No access token');
+    }
+
+    try {
+      const payload = await this.authentication?.verifyAccessToken(accessToken, params.jwt);
+      const localID = payload.sub.split('/')[1];
+      const user = await this.app?.service('users').get(localID);
+      const personID = user.personID; 
+      const person = await this.app?.services.members.get(personID);
+      person._id = localID;
+      return {
+        user: person,
+        accessToken,
+        authentication: {
+            strategy: 'jwt',
+            accessToken,
+            payload
+          }
+        }
+    } catch (error) {
+      console.log(error);
+      return await super.authenticate(authentication,params)
+    }
+  }
 }
 
 export default function(app: Application) {

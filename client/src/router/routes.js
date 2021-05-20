@@ -1,4 +1,6 @@
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+import Create from '../views/Create.vue'
 
 export const routes = [{
     path: '/',
@@ -11,8 +13,7 @@ export const routes = [{
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import ( /* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     name: 'logout',
@@ -21,4 +22,12 @@ export const routes = [{
       logout: true
     }
   },
+  {
+    name: 'create',
+    path: '/create',
+    component: Create,
+    meta: {
+      needAdmin: true
+    }
+  }
 ]

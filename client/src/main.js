@@ -16,15 +16,14 @@ client.configure(socketio(socket))
 
 client.configure(auth())
 
-const user = createApp({
-  data() {
-    return {
-      name: '',
-      churchName: '',
-      personID: 0,
-    }
-  }
-});
+const user = {
+  name: null,
+  church: null,
+  age: null,
+  personID: null,
+  administrator: null,
+  roles: null,
+}
 
 const app = createApp(App)
 app.use(router);

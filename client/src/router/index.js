@@ -7,24 +7,30 @@ const router = createRouter({
 })
 
 async function authentication() {
-  console.log(router.app);
   const authenticationResult = await router.$client
     .reAuthenticate()
     .catch((err) => {
-      //Send unauthenticated/expired users to login endpoint
-      location.href = "http://localhost:3030/oauth/auth0";
-      console.log(err);
+      if (err.message == "No accessToken found in storage" || err.message.includes('jwt')) {
+        //Send unauthenticated/expired users to login endpoint
+        location.href = "http://localhost:3030/oauth/auth0";
+      } else {
+        console.log(err);
+      }
     })
   if (!authenticationResult) {
     return { authenticated: false }
   }
-  console.log(authenticationResult);
+  // console.log(authenticationResult);
   const user = authenticationResult.user;
 
   // update the $user global variable
   router.$user.name = user.name;
-  router.$user.churchName = user.churchName;
+  router.$user.age = user.age;
+  router.$user.church = user.church;
+  router.$user.churchID = user.churchID;
   router.$user.personID = user.personID;
+  router.$user.roles = user.roles;
+  router.$user.administrator = user.administrator;
 
   return { user, authenticated: true };
 }
@@ -49,12 +55,23 @@ function logout() {
   location.href = url
 }
 
+async function authorization(user, to) {
+  if (to.meta.needAdmin && !user.administrator) {
+    location.href = '/';
+    throw Error('You are unauthorized to get there');
+  }
+  return true;
+}
+
 router.beforeEach(async(to, from, next) => {
   if (to.meta.logout)
     logout();
-  const { authenticated } = await authentication();
-  if (authenticated)
-    next();
+  const { user, authenticated } = await authentication();
+  if (authenticated) {
+    const authorized = await authorization(user, to)
+    if (authorized)
+      next();
+  }
 })
 
 router.afterEach(() => {
