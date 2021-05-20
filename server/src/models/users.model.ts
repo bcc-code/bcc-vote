@@ -1,15 +1,22 @@
-import NeDB from 'nedb';
-import path from 'path';
-import { Application } from '../declarations';
+import { IOptions, AUTH_TYPES } from "@bcc-its/feathers-arangodb";
+import { Application } from "../declarations";
 
-export default function (app: Application): NeDB<any> {
-  const dbPath = app.get('nedb');
-  const Model = new NeDB({
-    filename: path.join(dbPath, 'users.db'),
-    autoload: true
-  });
-
-  Model.ensureIndex({ fieldName: 'email', unique: true });
-
-  return Model;
+export default function (app: Application) {
+  const arangoDBConfig = app.get("arangodDB");
+  const personDatabase: IOptions = {
+    collection: "user",
+    view: "user_view",
+    dbConfig: {
+      url: arangoDBConfig.url,
+    },
+    database: arangoDBConfig.database,
+    authType: AUTH_TYPES.BASIC_AUTH,
+    username: arangoDBConfig.username,
+    password: arangoDBConfig.password,
+    paginate: {
+      default: 100,
+      max: 50000
+    }
+  };
+  return personDatabase;
 }

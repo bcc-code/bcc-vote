@@ -1,9 +1,13 @@
-import { Service, NedbServiceOptions } from 'feathers-nedb';
+import { DbService, IOptions, } from "@bcc-its/feathers-arangodb";
 import { Application } from '../../declarations';
 
-export class Users extends Service {
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  constructor(options: Partial<NedbServiceOptions>, app: Application) {
-    super(options);
+interface Data {}
+
+export class Users extends DbService<Data> {
+  app: Application;
+
+  constructor (options: IOptions, app: Application) {
+    super(options)
+    this.app = app;
   }
 }

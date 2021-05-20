@@ -7,33 +7,22 @@
       <!-- <router-link to="/messages">
         <div class="button topEl">Messages</div>
       </router-link> -->
-      <router-link v-if="me._id" to="/templates">
+      <!-- <router-link v-if="me._id" to="/templates">
         <div class="button topEl">Voting templates</div>
       </router-link>
       <router-link v-if="me._id" to="/votings">
         <div class="button topEl">My votings</div>
-      </router-link>
+      </router-link> -->
       
     </div>
     <div id="logging" class="horizontal">
-      <template v-if="me.name">
-        <div class="topEl name">{{me.name}}</div>
-        <router-link to="/">
-          <div @click="$emit('logout')" class="button topEl">Log out</div>
-        </router-link>
-      </template>
-      <router-link v-else to="/login">
-        <div class="button topEl">Log in</div>
-      </router-link>
+        <router-link to="/logout" class="button topEl">Log out</router-link>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: 'Topbar',
-  props: {
-    me: Object
-  },
 }
 </script>
 

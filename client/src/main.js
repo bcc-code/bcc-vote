@@ -16,9 +16,21 @@ client.configure(socketio(socket))
 
 client.configure(auth())
 
+const user = createApp({
+  data() {
+    return {
+      name: '',
+      churchName: '',
+      personID: 0,
+    }
+  }
+});
+
 const app = createApp(App)
 app.use(router);
-router.app = app;
-app.config.globalProperties.$client = "abcd";
+router.$client = client;
+router.$user = user;
+app.config.globalProperties.$client = client;
+app.config.globalProperties.$user = user;
 
 app.mount("#app");
