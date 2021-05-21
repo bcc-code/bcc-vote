@@ -4,8 +4,10 @@
     <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <div>{{$user}}</div>
-    <div @click="makeRequest">Make request</div>
+    <div v-for="(voting, ind) in votings" :key="ind">
+      {{voting.title}} {{voting.description}} 
+      <div> {{voting.startTime}}</div>
+    </div>
   </div>
 </template>
 
@@ -15,9 +17,33 @@
 
 export default {
   name: 'Home',
-  // components: {
-  //   HelloWorld
-  // }
+  data () {
+    return {
+      votings: [],
+      administer: [],
+    }
+  },
+  mounted () {
+    console.log(this.$user);
+    this.$client.service('meetings').find({
+      query: {
+        $or: [
+          {churchID: this.$user.churchID},
+          {role: {$in: this.$user.roles}}
+        ],
+        minAge: {
+          $lt: this.$user.age
+        },
+        maxAge: {
+          $gt: this.$user.age
+        },
+        $select: ['title', 'description', 'startTime']
+      }
+    }).then(res => {
+      console.log(res);
+      this.votings = res.data;
+    })
+  },
   methods: {
     log () {
       console.log(this.$user);

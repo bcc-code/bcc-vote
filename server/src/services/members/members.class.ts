@@ -44,46 +44,33 @@ export class Members implements ServiceMethods<Data> {
     const minAge = params?.query?.minAge;
     const maxAge = params?.query?.maxAge;
 
-    const isAge: boolean = minAge || maxAge;
-
     if(!role && !churchID){
       throw Error("You must specify role or scope meeting to local");
     }
 
-    let limit = 0;
-    if(isAge) limit = 1000;
-
-    let url = affiliationUrl+'?%24limit='+limit+'&_to='+encodeURIComponent(churchID);
-    if(!churchID){
-      url = personroleUrl+'?%24limit='+limit+'&_to='+encodeURIComponent(role);
-    }
-
-    const res = await axios.get(url);
-
-    if(!isAge){
+    if(role){
+      let url = personroleUrl+'?%24limit=0&_to='+encodeURIComponent(role);
+      const res = await axios.get(url);
       return res.data;
     }
 
-    let amt = 0;
-    let people: any[] = [];
-    
-    res.data.data.forEach(async (roleData: any) => {
-      const fromId = roleData._from.split('/')[1];
-      people.push(axios.get(personUrl+'/'+fromId))
-    })
+    let url = personUrl+'?%24limit=0'
 
-    const values = await Promise.all(people)
-    values.forEach((person: any) => {
-      if(!(person.data.age < minAge) && !(person.data.age > maxAge))
-        amt ++;
-    })
+    url += "&churchID="+churchID;
 
-    return {
-      total: amt,
-      limit: 0,
-      skip: 0,
-      data: []
-    };
+    if(minAge)
+      url += "&age[$gt]="+minAge;
+
+    if(maxAge)
+      url += "&age[$lt]="+maxAge;
+
+    console.log(url);
+
+    const res = await axios.get(url);
+
+    console.log(res.data);
+
+    return res.data;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -100,7 +87,7 @@ export class Members implements ServiceMethods<Data> {
       _id: '',
       name: data.displayName,
       church: data.church.org.name,
-      churchID: data.church.org._id,
+      churchID: data.churchID,
       age: data.age,
       personID: data.personID,
       administrator: data.administrator,

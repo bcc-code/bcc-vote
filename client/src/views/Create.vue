@@ -30,17 +30,18 @@
         </template>
       </date-picker>
     </div>
-    <div class="horizontal padding-vertical-20">
-      <input type="checkbox" class="margin-horizontal-10" v-model="publicVoting"/>
-      <label class="medium-text">Public Results</label>
-    </div>
     <div class="horizontal width-100 space-out">
     <h2>Invited Voters</h2>
-    <h2 v-if="numOfVoters">Found {{numOfVoters}} Voters</h2>
+    <h2>Found {{numOfVoters}} People</h2>
     </div>
     <div class="horizontal padding-vertical-20">
       <input type="radio" class="margin-horizontal-10" v-model="local" :value="true" @change="getNumOfPeople"/>
-      <h3>Scoped down to local church</h3>
+      <h3>Select by church</h3>
+    </div>
+    <div v-if="local" class="vertical width-80">
+      <select v-model="selectedChurch">
+        <option v-for="(church, ind) in churches" :key="ind" :value="church.churchID">{{church.name}}</option>
+      </select>
     </div>
     <div class="horizontal padding-vertical-20">
       <input type="radio" class="margin-horizontal-10" v-model="local" :value="false" @change="getNumOfPeople"/>
@@ -53,7 +54,7 @@
       </div>
     </div>
     <div class="horizontal padding-vertical-20">
-      <input type="checkbox" class="margin-horizontal-10" v-model="isMinAge"/>
+      <input type="checkbox" class="margin-horizontal-10" v-model="isMinAge" @change="getNumOfPeople"/>
       <h3>Minimal age</h3>
       <numeric-input :min="0" :max="maxAge" v-if="isMinAge" v-model="minAge" class="margin-horizontal-10" @change="getNumOfPeople"></numeric-input>
     </div>
@@ -70,7 +71,8 @@
 </template>
 <script>
   import { DatePicker } from 'v-calendar';
-import NumericInput from '../components/NumericInput.vue';
+  import NumericInput from '../components/NumericInput.vue';
+  import ChurchesList from '../util/churches.js'
 
   export default {
     name: "Create",
@@ -87,15 +89,16 @@ import NumericInput from '../components/NumericInput.vue';
         ready: false,
         scheduledStart: false,
         scheduledEnd: false,
-        publicVoting: false,
         local: true,
+        selectedChurch: this.$user.churchID,
         roleSelect: false,
         isMinAge: false,
         minAge: 0,
         isMaxAge: false,
         maxAge: 100,
         selectedRole: this.$user.roles[0].id,
-        numOfVoters: 0
+        numOfVoters: 0,
+        churches: ChurchesList
       }
     },
     created() {
@@ -112,29 +115,31 @@ import NumericInput from '../components/NumericInput.vue';
       this.ready = true;
     },
     methods: {
-      async getNumOfPeople(){
+      getNumOfPeople(){
         const query = {
           $limit: 0,
         }
         if(this.local)
-          query.churchID = this.$user.churchID
+          query.churchID = this.selectedChurch;
         if(!this.local)
           query.role = this.selectedRole;
         if(this.isMinAge)
           query.minAge = this.minAge;
         if(this.isMaxAge)
           query.maxAge = this.maxAge;
-        const res = await this.$client.service('members').find({
-          query
+        console.log(query);
+        this.$client.service('members').find({query})
+        .then(res => {
+          this.numOfVoters = res.total;
         })
-        console.log(res);
-        this.numOfVoters = res.total;
+        .catch(err => {
+          console.log(err);
+        })
       },
       startMeeting(){
         const data = {
           title: this.title,
           description: this.description,
-          public: this.public
         }
         if(this.scheduledStart)
           data.startTime = this.startTime.getTime();
@@ -148,7 +153,10 @@ import NumericInput from '../components/NumericInput.vue';
           data.churchID = this.$user.churchID;
         else
           data.role = this.selectedRole;
-        this.$client.service('meetings').create(data);
+        this.$client.service('meetings').create(data)
+        .then(res => {
+          this.$router.push('/administer-'+res._key)
+        });
       }
     }
   }
