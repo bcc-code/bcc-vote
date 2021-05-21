@@ -4,23 +4,27 @@
     <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <div v-for="(voting, ind) in votings" :key="ind">
+    <!-- <div v-for="(voting, ind) in votings" :key="ind">
       {{voting.title}} {{voting.description}} 
       <div> {{voting.startTime}}</div>
-    </div>
+    </div> -->
+    <meeting-tile v-for="(voting, ind) in votings" :key="ind" :title="voting.title" :description="voting.description" :timeLeft="voting.timeLeft" :votersNum="numberOfInvited"/>
   </div>
 </template>
 
 <script>
+import MeetingTile from '../components/MeetingTile.vue';
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
+  components: { MeetingTile },
   name: 'Home',
   data () {
     return {
       votings: [],
       administer: [],
+      time: 10000,
     }
   },
   mounted () {
@@ -37,12 +41,22 @@ export default {
         maxAge: {
           $gt: this.$user.age
         },
-        $select: ['title', 'description', 'startTime']
+        $select: ['title', 'description', 'startTime', 'numberOfInvited']
       }
     }).then(res => {
       console.log(res);
       this.votings = res.data;
+      const now = new Date().getTime();
+      this.votings.forEach(v => {
+        v.timeLeft = Math.floor((v.startTime - now) / 1000)
+      });
+      console.log(this.votings)
     })
+    setInterval(() => {
+      this.votings.forEach(v => {
+        v.timeLeft --;
+      })
+    }, 1000);
   },
   methods: {
     log () {

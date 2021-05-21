@@ -116,9 +116,7 @@
     },
     methods: {
       getNumOfPeople(){
-        const query = {
-          $limit: 0,
-        }
+        const query = {}
         if(this.local)
           query.churchID = this.selectedChurch;
         if(!this.local)
@@ -145,18 +143,28 @@
           data.startTime = this.startTime.getTime();
         if(this.scheduledEnd)
           data.endTime = this.endTime.getTime();
+        
+        data.minAge = 0
+        data.maxAge = 1000;
+        
         if(this.isMinAge)
           data.minAge = this.minAge;
         if(this.isMaxAge)
           data.maxAge = this.maxAge;
+        
         if(this.local)
           data.churchID = this.$user.churchID;
         else
           data.role = this.selectedRole;
+
+
+        console.log(data);
         this.$client.service('meetings').create(data)
         .then(res => {
           this.$router.push('/administer-'+res._key)
-        });
+        }).catch(err => {
+          console.log(err);
+        })
       }
     }
   }
