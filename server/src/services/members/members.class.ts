@@ -38,29 +38,31 @@ export class Members implements ServiceMethods<Data> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-    // const churchId = 55;
-    console.log(params?.query);
 
     const role = params?.query?.role;
     const churchID = params?.query?.churchID;
+    const minAge = params?.query?.minAge;
+    const maxAge = params?.query?.maxAge;
+
+    const isAge: boolean = minAge || maxAge;
 
     if(!role && !churchID){
       throw Error("You must specify role or scope meeting to local");
     }
 
-    if(!role){
-      const url = affiliationUrl+'?%24limit=0&_to='+encodeURIComponent(churchID);
-      const res = await axios.get(url);
-      return res.data;
-    }
+    let limit = 0;
+    if(isAge) limit = 1000;
+
+    let url = affiliationUrl+'?%24limit='+limit+'&_to='+encodeURIComponent(churchID);
     if(!churchID){
-      const url = personroleUrl+'?%24limit=0&_to='+encodeURIComponent(role);
-      const res = await axios.get(url);
-      return res.data;
+      url = personroleUrl+'?%24limit='+limit+'&_to='+encodeURIComponent(role);
     }
 
-    const url = personroleUrl+'?%24limit=1000&_to='+encodeURIComponent(role);
     const res = await axios.get(url);
+
+    if(!isAge){
+      return res.data;
+    }
 
     let amt = 0;
     let people: any[] = [];
@@ -71,18 +73,10 @@ export class Members implements ServiceMethods<Data> {
     })
 
     const values = await Promise.all(people)
-
     values.forEach((person: any) => {
-      if(person.data.church.org._id === churchID)
+      if(!(person.data.age < minAge) && !(person.data.age > maxAge))
         amt ++;
     })
-    // console.log(role);
-    // if(role){
-    //   url += '%24limit=2&_to='+encodeURIComponent(role);
-    // }
-
-    // const res = await axios.get(url);
-    // console.log(res.data);
 
     return {
       total: amt,
