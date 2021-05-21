@@ -1,6 +1,6 @@
 # server
 
-> voting application
+> learning about authorization
 
 ## About
 

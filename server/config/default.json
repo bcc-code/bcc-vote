@@ -7,18 +7,28 @@
     "max": 50
   },
   "authentication": {
-    "entity": "person",
-    "service": "person",
-    "secret": "6yYb+pllL4pyKqGQgBETMfQf4IY=",
+    "oauth": {
+      "redirect": "BCC_VOTE_AUTH_SUCCESS_CLIENT_REDIRECT",
+      "auth0": {
+        "scope": ["openid", "profile", "email", "church", "country"],
+        "key": "BCC_VOTE_AUTH0_CLIENT_KEY",
+        "secret": "BCC_VOTE_AUTH0_CLIENT_SECRET",
+        "subdomain": "BCC_VOTE_AUTH0_SUBDOMAIN"
+      }
+    },
+    "entity": "user",
+    "service": "users",
+    "secret": "FEATHERS_JWT_HS256_SECRET",
     "authStrategies": [
       "jwt",
-      "local"
+      "local",
+      "auth0"
     ],
     "jwtOptions": {
       "header": {
         "typ": "access"
       },
-      "audience": "https://yourdomain.com",
+      "audience": "https://login.bcc.no",
       "issuer": "feathers",
       "algorithm": "HS256",
       "expiresIn": "1d"
@@ -27,5 +37,12 @@
       "usernameField": "email",
       "passwordField": "password"
     }
+  },
+  "nedb": "../data",
+  "arangodDB": {
+    "username": "BCC_VOTE_ARANGODB_USERNAME",
+    "password": "BCC_VOTE_ARANGODB_PASSWORD",
+    "url": "BCC_VOTE_ARANGODB_URL",
+    "database": "BCC_VOTE_ARANGODB_DATABASE"
   }
 }
