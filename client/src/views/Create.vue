@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="vertical">
     <h1>This is the creating page</h1>
-    <form v-if="ready" @submit.prevent="$emit('submit')" class="color-grey rounded width-90 padding-10 padding-vertical-20 vertical">
+    <form v-if="ready" @submit.prevent="getNumOfPeople" class="color-grey rounded width-90 padding-10 padding-vertical-20 vertical">
     <label class="big-text top-space-10">Title:</label>
     <input name="title" type="text" placeholder="title" v-model="title"/>
     <label class="big-text top-space-10">Description:</label>
@@ -36,7 +36,7 @@
     </div>
     <div class="horizontal width-100 space-out">
     <h2>Invited Voters</h2>
-    <h2>Found {{numOfUsers}} Users</h2>
+    <h2 v-if="numOfVoters">Found {{numOfVoters}} Voters</h2>
     </div>
     <div class="horizontal padding-vertical-20">
       <input type="checkbox" class="margin-horizontal-10" v-model="local"/>
@@ -48,11 +48,10 @@
     </div>
     <div v-if="roleSelect" class="vertical width-80">
       <div v-for="(role, ind) in $user.roles" :key="ind" class="go-start">
-        <input type="checkbox" :value="role" :id="role" class="margin-horizontal-10" v-model="selectedRoles"/>
-        <label for="jack">{{role}}</label>
+        <input type="radio" :value="role.id" :id="role" class="margin-horizontal-10" v-model="selectedRole"/>
+        <label for="jack">{{role.name}}</label>
       </div>
     </div>
-    {{selectedRoles}}
     <input type="submit" value="Start"/>
     </form>
   </div>
@@ -77,21 +76,21 @@
         publicVoting: false,
         local: true,
         roleSelect: false,
-        selectedRoles: [],
-        numOfUsers: 10,
+        selectedRole: this.$user.roles[0].id,
+        numOfVoters: 0
       }
     },
     created() {
-      this.$client.service('members').find({
-        query: {
-          $limit: 0,
-          churchID: this.$user.churchID
-        }
-      })
-      // this.$client.services.members.get(54512)
-      .then(res => {
-        console.log(res);
-      })
+      // this.$client.service('members').find({
+      //   query: {
+      //     $limit: 0,
+      //     churchID: this.$user.churchID
+      //   }
+      // })
+      // // this.$client.services.members.get(54512)
+      // .then(res => {
+      //   console.log(res);
+      // })
     },
     mounted () {
       // set default time
@@ -103,5 +102,35 @@
       this.endTime.setTime(nearestHour + 2 * 3600000);
       this.ready = true;
     },
+    methods: {
+      async getNumOfPeople(){
+        const query = {
+          $limit: 0,
+        }
+        if(this.local)
+          query.churchID = this.$user.churchID
+        if(this.roleSelect)
+          query.role = this.selectedRole;
+        const res = await this.$client.service('members').find({
+          query
+        })
+        console.log(res);
+        this.numOfVoters = res.total;
+      },
+      startMeeting(){
+        this.$client.service('meetings').create({
+          title: this.title,
+          description: this.description,
+          startTime: this.startTime.getTime(),
+          endTime: this.endTime.getTime(),
+          scheduledStart: this.scheduledStart,
+          scheduledEnd: this.shceduledEnd,
+          publicVoting: this.publicVoting,
+          local: this.local,
+          roleSelect: this.roleSelect,
+          selectedRoles: this.selectedRoles,
+        })
+      }
+    }
   }
 </script>

@@ -4,8 +4,8 @@ import { Application } from "../declarations";
 export default function (app: Application) {
   const arangoDBConfig = app.get("arangodDB");
   const personDatabase: IOptions = {
-    collection: "templates",
-    view: "templates_view",
+    collection: "meeting",
+    view: "meeting_view",
     dbConfig: {
       url: arangoDBConfig.url,
     },

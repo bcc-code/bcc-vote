@@ -4,7 +4,6 @@ import {
   JWTStrategy,
   AuthenticationRequest,
 } from "@feathersjs/authentication";
-import { LocalStrategy } from '@feathersjs/authentication-local';
 import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentication-oauth';
 
 import { NotAuthenticated } from '@feathersjs/errors';
@@ -47,6 +46,7 @@ class Auth0Strategy extends OAuthStrategy {
     const memberSvc = this.app?.services.members;
     const allInfo = await memberSvc.get(person.personID);
     allInfo._id = person._id;
+    console.log(allInfo);
     return {
       authentication: { strategy: this.name ? this.name : 'unknown' },
       [entity]: allInfo
@@ -105,7 +105,6 @@ export default function(app: Application) {
   const authentication = new AuthenticationService(app);
 
   authentication.register('jwt', new CustomJWtStrategy());
-  authentication.register('local', new LocalStrategy());
   console.log('using auth0 strategy');
   authentication.register('auth0', new Auth0Strategy());
 

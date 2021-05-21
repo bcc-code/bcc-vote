@@ -1,25 +1,23 @@
 import * as authentication from '@feathersjs/authentication';
+import { HookContext } from "@feathersjs/feathers";
 // Don't remove this comment. It's needed to format import lines nicely.
-import { Hook, HookContext } from '@feathersjs/feathers';
 
 const { authenticate } = authentication.hooks;
 
-const addUser = async (context: HookContext) => {
-  const { data } = context;
-
-  const user = context.params.user;
-
-  // console.log(user);
-
-  const text = data.text;
-
-  context.data = {
-    text,
-    name: user!.email,
-    createdAt: new Date().getTime()
+const setUserInformation = async (context: HookContext) => {
+  // console.log(context);
+  const query = {
+    churchID: ''
+  };
+  // set up all the queries
+  if(context.data.local){
+    query.churchID = context.params.user?.churchID;
   }
+  console.log(query);
 
-  return context;
+  const res = await context.app.services.users.find({query})
+  const invited = res.data;
+  console.log(invited);
 }
 
 export default {
@@ -27,7 +25,7 @@ export default {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [addUser],
+    create: [],
     update: [],
     patch: [],
     remove: []
@@ -37,7 +35,7 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [ setUserInformation ],
     update: [],
     patch: [],
     remove: []
