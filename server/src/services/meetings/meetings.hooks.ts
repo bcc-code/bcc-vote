@@ -1,12 +1,14 @@
 import * as authentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
+import { RealTimeConnection } from '@feathersjs/transport-commons/lib/channels/channel/base';
+import { Hook } from 'mocha';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 
 const addNumberOfInvited = async (context: HookContext) => {
 
-  
+  console.log('adding number of invited');
   const memberSvc = context.app.services.members;
 
   const data = context.data;
@@ -24,24 +26,16 @@ const addNumberOfInvited = async (context: HookContext) => {
   return context;
 }
 
-const addAdministrator = async (context: HookContext) => {
-  const userSvc = context.app.services.users;
-  const meetingId = context.result._key;
-
-  userSvc.get(context.params.user?._id)
-  .then((res: any) => {
-    res.administerMeetings.push(meetingId);
-    userSvc.patch(res._key, {
-      administerMeetings: res.administerMeetings
-    })
-  })
+const addChannel = async (context: HookContext) => {
+  if(context.id && context.params.connection)
+    context.app.channel(context.id.toString()).join(context.params.connection);
 }
 
 export default {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
-    get: [],
+    get: [ addChannel ],
     create: [ addNumberOfInvited ],
     update: [],
     patch: [],
@@ -52,7 +46,7 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [ addAdministrator ],
+    create: [],
     update: [],
     patch: [],
     remove: []

@@ -7,20 +7,26 @@ export default function(app: Application): void {
     return;
   }
 
-  app.on('connection', (connection: any): void => {
-    app.channel('anonymous').join(connection);
-  });
+  app.services.meetings.publish('patched', data => {
 
-  app.on('login', (authResult: any, { connection }: any): void => {
-    if(connection) {
-      app.channel('anonymous').leave(connection);
-      app.channel('authenticated').join(connection);
-    }
-  });
+    return app.channel(data._key);
+  })
+  app.services.answers.publish('created', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
+  app.services.answers.publish('patched', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.publish((data: any, hook: HookContext) => {
-    return app.channel('authenticated');
-  });
+  app.services.questions.publish('created', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
 
+  app.services.questions.publish('patched', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
 }

@@ -1,36 +1,83 @@
 <template>
-  <div class="width-80 color-grey rounded padding-vertical-10 horizontal center-line space-out">
+  <router-link :to="(data.admin ? '/admin-':'/meeting-')+data._key" class="width-80 color-grey rounded padding-vertical-10 horizontal center-line space-out clickable" :class="{ 'color-green': timeLeftStart < 0 && !data.admin, 'color-yellow': data.admin, 'color-red': ended }">
     <div>
-      <h2>{{title}}</h2>
-      <h3>{{votersNum ? votersNum : 0}} voters are invited</h3>
+      <h2>{{data.title}}</h2>
+      <h3>{{data.votersNum ? data.votersNum : 0}} voters are invited</h3>
     </div>
-    <h4 style="width: 20vw">{{description}}</h4>
+    <h4 style="width: 20vw">{{data.description}}</h4>
     <h3> 
-      {{timeLeft > 0 ? formattedTime: "OPEN"}}
+      <template v-if="!ended">
+        <timer :time="timeLeftStart" ready="OPEN"/>
+      </template>
+      <template v-if="isEnd">
+        <timer :time="timeLeftEnd" ready="CLOSED"/>
+      </template>
     </h3>
-  </div>
+  </router-link>
 </template>
 
 <script>
+import Timer from './Timer.vue';
 export default {
-  props: {
-    title: String,
-    description: String,
-    timeLeft: Number,
-    votersNum: Number
+  components: {
+    Timer,
   },
-  computed: {
-    formattedTime () {
-      let hours   = Math.floor(this.timeLeft / 3600);
-      let minutes = Math.floor((this.timeLeft - (hours * 3600)) / 60);
-      let seconds = this.timeLeft - (hours * 3600) - (minutes * 60);
-
-      if (hours   < 10) {hours   = "0"+hours}
-      if (minutes < 10) {minutes = "0"+minutes;}
-      if (seconds < 10) {seconds = "0"+seconds;}
-
-      return hours+":"+minutes+":"+seconds;
+  props: {
+    data: Object,
+  },
+  data () {
+    return {
+      timeLeftStart: 100,
+      timeLeftEnd: 100,
+      isStart: false,
+      isEnd: false,
+      ended: false,
     }
+  },
+  created (){
+    console.log(this.data);
+    const now = new Date().getTime();
+    if(this.data.startTime){
+      this.isStart = true;
+      this.timeLeftStart = this.data.startTime - now;
+      this.timeLeftStart = Math.floor(this.timeLeftStart/1000);
+    }
+    if(this.data.endTime){
+      this.isEnd = true;
+      this.timeLeftEnd = this.data.endTime - now;
+      this.timeLeftEnd = Math.floor(this.timeLeftEnd/1000);
+      if(this.timeLeftEnd < 0)
+        this.ended = true;
+    }
+    const interval = setInterval(() => {
+      if(this.isEnd){
+        this.timeLeftEnd--;
+        if(this.timeLeftEnd < 0){
+          this.ended = true;
+        }
+      }
+      if(this.isStart){
+        this.timeLeftStart--;
+        if(this.timeLeftStart < 0){
+          this.isStart = false;
+        }
+      }
+      if(!this.isStart && !this.isEnd)
+        clearInterval(interval);
+    }, 1000);
   }
 }
 </script>
+
+<style scoped>
+  a {
+    color: #2c3e50;
+    text-decoration: none;
+  }
+  .open{
+    background-color: green;
+  }
+  .admin{
+    background-color: rgb(255, 187, 0);
+  }
+</style>
