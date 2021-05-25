@@ -8,7 +8,8 @@
       {{voting.title}} {{voting.description}} 
       <div> {{voting.startTime}}</div>
     </div> -->
-    <meeting-tile v-for="(voting, ind) in votings" :key="ind" :title="voting.title" :description="voting.description" :timeLeft="voting.timeLeft" :votersNum="numberOfInvited"/>
+    <meeting-tile v-for="(voting, ind) in votings" :key="ind" :data="voting" class="top-space-10"/>
+    <meeting-tile v-for="(admin, ind) in administered" :key="ind" :data="admin" class="top-space-10"/>
   </div>
 </template>
 
@@ -23,17 +24,19 @@ export default {
   data () {
     return {
       votings: [],
-      administer: [],
+      votingKeys: [],
+      administered: [],
       time: 10000,
     }
   },
-  mounted () {
+  created () {
     console.log(this.$user);
+    const roleIds = this.$user.roles.map(r => r.id);
     this.$client.service('meetings').find({
       query: {
         $or: [
           {churchID: this.$user.churchID},
-          {role: {$in: this.$user.roles}}
+          {role: {$in: roleIds}}
         ],
         minAge: {
           $lt: this.$user.age
@@ -49,14 +52,36 @@ export default {
       const now = new Date().getTime();
       this.votings.forEach(v => {
         v.timeLeft = Math.floor((v.startTime - now) / 1000)
+        v.admin = false;
+        this.votingKeys.push(v._key);
       });
-      console.log(this.votings)
+    })
+
+    this.$client.service('meetings').find({
+      query: {
+        admin: this.$user.personID,
+        $select: ['title', 'description', 'startTime', 'numberOfInvited']
+      }
+    }).then(res => {
+      console.log(res);
+      this.administered = res.data;
+      console.log(this.administered);
+      const now = new Date().getTime();
+      this.administered.forEach(v => {
+        v.timeLeft = Math.floor((v.startTime - now) / 1000)
+        v.admin = true;
+      });
+      
     })
     setInterval(() => {
       this.votings.forEach(v => {
         v.timeLeft --;
       })
+      this.administered.forEach(v => {
+        v.timeLeft --;
+      })
     }, 1000);
+    this.$client.service('meetings').on('patched', this.updateMeeting);
   },
   methods: {
     log () {
@@ -73,6 +98,13 @@ export default {
         }
       });
       console.log(res);
+    },
+    updateMeeting(data) {
+      const ind = this.votingKeys.indexOf(data._key);
+      this.votings[ind].startTime = data.startTime;
+      this.votings[ind].title = data.title;
+      this.votings[ind].description = data.description;
+      this.votings[ind].timeLeft = Math.floor((this.votings[ind].startTime - new Date().getTime()) / 1000)
     }
   }
 }

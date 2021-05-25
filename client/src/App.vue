@@ -73,9 +73,6 @@
     max-width: 1024px;
   }
 
-  router-link {
-    text-decoration: none;
-  }
 
   body {
     margin: 0;
@@ -204,14 +201,14 @@
   .color-dark-grey{
     background-color: #777;
   }
+  .color-green {
+    background-color: #77dd77;
+  }
   .color-yellow{
     background-color: #f9d71c;
   }
   .color-red {
     background-color: #ec3f36;
-  }
-  .color-green {
-    background-color: #77dd77;
   }
   
   .color-yellow:hover{

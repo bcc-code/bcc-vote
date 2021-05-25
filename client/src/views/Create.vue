@@ -39,21 +39,10 @@
       <h3>Select by church</h3>
     </div>
     <div v-if="local" class="vertical width-80">
-      <select v-model="selectedChurch">
+      <select v-model="selectedChurch" @change="getNumOfPeople">
         <option v-for="(church, ind) in churches" :key="ind" :value="church.churchID">{{church.name}}</option>
       </select>
-    </div>
-    <div class="horizontal padding-vertical-20">
-      <input type="radio" class="margin-horizontal-10" v-model="local" :value="false" @change="getNumOfPeople"/>
-      <h3>Select by role</h3>
-    </div>
-    <div v-if="!local" class="vertical width-80">
-      <div v-for="(role, ind) in $user.roles" :key="ind" class="go-start">
-        <input type="radio" :value="role.id" :id="role" class="margin-horizontal-10" v-model="selectedRole" @change="getNumOfPeople"/>
-        <label for="jack">{{role.name}}</label>
-      </div>
-    </div>
-    <div class="horizontal padding-vertical-20">
+      <div class="horizontal padding-vertical-20">
       <input type="checkbox" class="margin-horizontal-10" v-model="isMinAge" @change="getNumOfPeople"/>
       <h3>Minimal age</h3>
       <numeric-input :min="0" :max="maxAge" v-if="isMinAge" v-model="minAge" class="margin-horizontal-10" @change="getNumOfPeople"></numeric-input>
@@ -63,6 +52,17 @@
       <h3>Maximal age</h3>
       <numeric-input :min="minAge" v-if="isMaxAge" v-model="maxAge" class="margin-horizontal-10" @change="getNumOfPeople"></numeric-input>
     </div>
+    </div>
+    <div class="horizontal padding-vertical-20">
+      <input type="radio" class="margin-horizontal-10" v-model="local" :value="false" @change="getNumOfPeople"/>
+      <h3>Select by role</h3>
+    </div>
+    <div v-if="!local" class="vertical width-80">
+      <select v-model="selectedRole" @change="getNumOfPeople">
+        <option v-for="(role, ind) in roles" :key="ind" :value="role.roleID">{{role.name}}</option>
+      </select>
+    </div>
+    
     <input type="submit" value="Start"/>
     
 
@@ -72,7 +72,7 @@
 <script>
   import { DatePicker } from 'v-calendar';
   import NumericInput from '../components/NumericInput.vue';
-  import ChurchesList from '../util/churches.js'
+  import { churches, roles } from '../util/dataLists.js'
 
   export default {
     name: "Create",
@@ -98,7 +98,8 @@
         maxAge: 100,
         selectedRole: this.$user.roles[0].id,
         numOfVoters: 0,
-        churches: ChurchesList
+        churches,
+        roles
       }
     },
     created() {
@@ -108,8 +109,6 @@
       // set default time
       const now = new Date().getTime()
       const nearestHour = Math.ceil(now/3600000) * 3600000
-      console.log(now);
-      console.log(nearestHour);
       this.startTime.setTime(nearestHour);
       this.endTime.setTime(nearestHour + 2 * 3600000);
       this.ready = true;
@@ -138,7 +137,9 @@
         const data = {
           title: this.title,
           description: this.description,
+          admin: this.$user.personID,
         }
+        data.startTime = new Date().getTime();
         if(this.scheduledStart)
           data.startTime = this.startTime.getTime();
         if(this.scheduledEnd)
@@ -153,7 +154,7 @@
           data.maxAge = this.maxAge;
         
         if(this.local)
-          data.churchID = this.$user.churchID;
+          data.churchID = this.selectedChurch;
         else
           data.role = this.selectedRole;
 
@@ -161,7 +162,7 @@
         console.log(data);
         this.$client.service('meetings').create(data)
         .then(res => {
-          this.$router.push('/administer-'+res._key)
+          this.$router.push('/admin-'+res._key)
         }).catch(err => {
           console.log(err);
         })

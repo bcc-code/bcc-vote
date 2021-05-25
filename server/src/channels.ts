@@ -8,49 +8,28 @@ export default function(app: Application): void {
     return;
   }
 
-  app.on('connection', (connection: any): void => {
-    // On a new real-time connection, add it to the anonymous channel
-    app.channel('anonymous').join(connection);
-  });
+  app.services.meetings.publish('patched', data => {
 
-  app.on('login', (authResult: any, { connection }: any): void => {
-    // connection can be undefined if there is no
-    // real-time connection, e.g. when logging in via REST
-    if(connection) {
-      // Obtain the logged in user from the connection
-      // const user = connection.user;
-      
-      // The connection is no longer anonymous, remove it
-      app.channel('anonymous').leave(connection);
+    return app.channel(data._key);
+  })
+  app.services.answers.publish('created', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
+  app.services.answers.publish('patched', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
 
-      // Add it to the authenticated user channel
-      app.channel('authenticated').join(connection);
+  app.services.questions.publish('created', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
 
-      // Channels can be named anything and joined on any condition 
-      
-      // E.g. to send real-time events only to admins use
-      // if(user.isAdmin) { app.channel('admins').join(connection); }
-
-      // If the user has joined e.g. chat rooms
-      // if(Array.isArray(user.rooms)) user.rooms.forEach(room => app.channel(`rooms/${room.id}`).join(connection));
-      
-      // Easily organize users by email and userid for things like messaging
-      // app.channel(`emails/${user.email}`).join(connection);
-      // app.channel(`userIds/${user.id}`).join(connection);
-    }
-  });
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.publish((data: any, hook: HookContext) => {
-    // Here you can add event publishers to channels set up in `channels.ts`
-    // To publish only for a specific event use `app.publish(eventname, () => {})`
-
-    // console.log('Publishing all events to all authenticated users. See `channels.ts` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
-
-    // e.g. to publish all service events to all authenticated users use
-    return app.channel('authenticated');
-  });
-
+  app.services.questions.publish('patched', data => {
+    console.log(data.meetingID);
+    return app.channel(data.meetingID);
+  })
   // Here you can also add service specific event publishers
   // e.g. the publish the `users` service `created` event to the `admins` channel
   // app.service('users').publish('created', () => app.channel('admins'));

@@ -24,13 +24,13 @@ export const routes = [{
     }
   },
   {
-    name: 'vote',
-    path: '/vote-:id',
+    name: 'meeting',
+    path: '/meeting-:id',
     component: Vote
   },
   {
-    name: 'administer',
-    path: '/administer-:id',
+    name: 'admin',
+    path: '/admin-:id',
     component: Administer,
     meta: {
       needAdmin: true

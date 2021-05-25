@@ -46,7 +46,6 @@ class Auth0Strategy extends OAuthStrategy {
     const memberSvc = this.app?.services.members;
     const allInfo = await memberSvc.get(person.personID);
     allInfo._id = person._id;
-    console.log(allInfo);
     return {
       authentication: { strategy: this.name ? this.name : 'unknown' },
       [entity]: allInfo

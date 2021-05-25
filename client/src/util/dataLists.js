@@ -1,4 +1,21 @@
-export default [
+export const roles = [
+  { roleID: "role/176132938", name: "Forstander" },
+  { roleID: "role/20039824", name: "Central Administrator" },
+  { roleID: "role/20039837", name: "Arrangementsansvarlige" },
+  { roleID: "role/176132937", name: "Developer" },
+  { roleID: "role/176132942", name: "Sentral Informasjonsmedarbeider" },
+  { roleID: "role/176132935", name: "BCC Ansatt" },
+  { roleID: "role/176132941", name: "PMO Manager" },
+  { roleID: "role/176132940", name: "Innmelder" },
+  { roleID: "role/176132939", name: "Informasjonsmedarbeider" },
+  { roleID: "role/176132936", name: "Brunstad Kontaktperson" },
+  { roleID: "role/176132943", name: "Head of Communications" },
+  { roleID: "role/176132944", name: "Chairman of the Board" },
+  { roleID: "role/176132945", name: "Finance Manager" },
+  { roleID: "role/176132946", name: "Sunday School Leader" }
+]
+
+export const churches = [
   { name: "Harstad", churchID: 36 },
   { name: "Lilongwe", churchID: 508 },
   { name: "Missouri", churchID: 60 },
@@ -167,11 +184,6 @@ export default [
   { name: "Nairobi", churchID: 476 },
   { name: "Uganda", churchID: 478 },
   { name: "A-team Vanderbijlpark", churchID: 479 },
-  { name: "New Church", churchID: 422 },
-  { name: "New Church", churchID: 423 },
-  { name: "New Church", churchID: 434 },
-  { name: "New Church", churchID: 436 },
-  { name: "UTGÅR", churchID: 437 },
   { name: "Abu Dhabi", churchID: 1 },
   { name: "Berlin", churchID: 8 },
   { name: "Curupaity", churchID: 13 },
