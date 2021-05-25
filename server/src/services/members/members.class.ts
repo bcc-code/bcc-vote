@@ -13,8 +13,8 @@ interface Data {}
 interface ServiceOptions {}
 
 interface Role {
-  id: String,
-  name: String,
+  id: string,
+  name: string,
 }
 
 export class Members implements ServiceMethods<Data> {
@@ -30,9 +30,9 @@ export class Members implements ServiceMethods<Data> {
     const roles: Role[] = [];
     if(person.roles)
       person.related.roles.forEach((role: any) => {
-        if(role.name != "Member")
+        if(role.name != 'Member')
           roles.push({id: role._id, name: role.enumName});
-      })
+      });
     return roles;
   }
 
@@ -45,18 +45,18 @@ export class Members implements ServiceMethods<Data> {
     const maxAge = params?.query?.maxAge;
 
     if(!role && !churchID){
-      throw Error("You must specify role or scope meeting to local");
+      throw Error('You must specify role or scope meeting to local');
     }
 
     if(role){
-      let url = personroleUrl+'?%24limit=0&_to='+encodeURIComponent(role);
+      const url = personroleUrl+'?%24limit=0&_to='+encodeURIComponent(role);
       const res = await axios.get(url);
       return res.data;
     }
 
-    let url = personUrl+'?%24limit=0'
+    let url = personUrl+'?%24limit=0';
 
-    url += "&churchID="+churchID;
+    url += '&churchID='+churchID;
 
     // if(minAge)
     //   url += "&age[$gt]="+minAge;
@@ -92,7 +92,7 @@ export class Members implements ServiceMethods<Data> {
       personID: data.personID,
       administrator: data.administrator,
       roles: this.getRoles(data),
-    }
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

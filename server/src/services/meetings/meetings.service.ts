@@ -1,4 +1,3 @@
-// Initializes the `meetings` service on path `/meetings`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { Meetings } from './meetings.class';
