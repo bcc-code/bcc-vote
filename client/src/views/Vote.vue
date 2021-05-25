@@ -65,13 +65,13 @@ export default {
     processQuestion(data){
       data.result = this.fillWithEmptyArrays(data.answers.length)
       if(!data.active){
-        this.addClosed(data);
+        this.addToClosed(data);
         return;
       }
       if(data.isTime){
         const timeLeft = data.timeLimit - new Date().getTime();
         if(timeLeft < 0){
-          this.addClosed(data);
+          this.addToClosed(data);
           return
         }
       }

@@ -1,7 +1,8 @@
 <template>
   <div class = "vertical width-90 go-center color-grey rounded top-space-10 padding-vertical-10">
-    <question-data :data="data" @timeOut="$emit('timeOut')"/>
     <icon-base v-if="active" class="box-30 clickable margin-horizontal-10" @click="$emit('close')"><icon-cross /></icon-base>
+    <question-data :data="data" @timeOut="$emit('timeOut')"/>
+    
     <h3>{{data.result}}</h3>
     <div v-for="ind in data.answers.length" :key="ind" class="width-100 horizontal center-line">
       <div class="horizontal space-out width-100">
