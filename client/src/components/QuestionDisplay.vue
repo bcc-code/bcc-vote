@@ -1,11 +1,7 @@
 <template>
   <div class = "vertical width-90 go-center color-grey rounded top-space-10 padding-vertical-10">
-    <div class="horizontal center-line space-out">
-      <h3>{{data.text}}</h3>
-      <h3><timer :time="data.timeLeft" /></h3>
-      <icon-base v-if="active" class="box-30 clickable margin-horizontal-10" @click="$emit('close')"><icon-cross /></icon-base>
-    </div>
-    <h3>Answers {{data.public ? 'are': 'aren\'t'}} publicly available</h3>
+    <question-data :data="data" @timeOut="$emit('timeOut')"/>
+    <icon-base v-if="active" class="box-30 clickable margin-horizontal-10" @click="$emit('close')"><icon-cross /></icon-base>
     <h3>{{data.result}}</h3>
     <div v-for="ind in data.answers.length" :key="ind" class="width-100 horizontal center-line">
       <div class="horizontal space-out width-100">
@@ -20,21 +16,20 @@
 <script>
 
 
-import IconBase from '../components/IconBase'
-import IconCross from '../components/icons/IconCross'
-
-import Timer from "./Timer.vue"
+import IconBase from './IconBase'
+import IconCross from './icons/IconCross'
+import QuestionData from './QuestionData'
 
 export default {
   components: { 
-    Timer,
     IconBase,
     IconCross,
+    QuestionData,
   },
   props: {
     data: Object,
     active: Boolean,
   },
-  emits: ['close'],
+  emits: ['close', 'timeOut'],
 }
 </script>

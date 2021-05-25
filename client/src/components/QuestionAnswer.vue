@@ -1,10 +1,6 @@
 <template>
   <div class = "vertical width-90 go-center color-grey rounded top-space-10 padding-vertical-10">
-    <div class="horizontal center-line space-out">
-      <h3><timer :time="data.timeLeft" /></h3>
-    </div>
-    
-    <h3>{{data.text}}</h3>
+    <question-data :data="data" @timeOut="$emit('timeOut')"/>
     <h3 v-if="data.savedAnswer">Saved answer: {{data.answers[data.savedAnswer - 1]}}</h3>
     <h3>Your answer {{data.public ? 'will': 'won\'t'}} be publicly available</h3>
     <div v-for="ind in data.answers.length" :key="ind" class="width-100 horizontal center-line">
@@ -16,11 +12,12 @@
 </template>
 
 <script>
-import Timer from "./Timer.vue"
+
+import QuestionData from './QuestionData'
 
 export default {
   components: { 
-    Timer 
+    QuestionData,
   },
   props: {
     data: Object,
@@ -30,6 +27,6 @@ export default {
       selected: ''
     }
   },
-  emits: ['answer']
+  emits: ['answer', 'timeOut']
 }
 </script>

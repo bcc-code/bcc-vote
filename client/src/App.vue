@@ -204,24 +204,26 @@
   .color-green {
     background-color: #77dd77;
   }
+  .color-green:hover{
+    background-color: #68be68;
+  }
   .color-yellow{
     background-color: #f9d71c;
+  }
+  .color-yellow:hover{
+    background-color: #f9be1c;
   }
   .color-red {
     background-color: #ec3f36;
   }
-  
-  .color-yellow:hover{
-    background-color: #f9be1c;
-  }
-  
   .color-red:hover{
     background-color: #cf352e;
   }
   
-  .color-green:hover{
-    background-color: #68be68;
-  }
+  
+  
+  
+  
   .big-text{
     font-size: 25px;
     font-weight: 600;

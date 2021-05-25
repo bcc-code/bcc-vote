@@ -1,34 +1,32 @@
 <template>
   <div id="container" class="vertical">
-  <h2>Administering {{$route.params.id}} meeting</h2>
-  <h2>{{info.title}}</h2>
-  <h3>{{info.description}}</h3>
-  <div class="horizontal center-line">
-    <h3 v-if="this.info.timeLeft > 0">Starts in &nbsp;</h3>
-    <h3><timer :time="this.info.timeLeft" ready="OPEN"/></h3>
-    <input v-if="this.info.timeLeft > 0" @click="startNow" type="submit" value="Start now"/>
-  </div>
+  <meeting-info v-if="infoReady" :info="info"/>
+  <input v-if="this.info.timeLeft > 0" @click="startNow" type="submit" value="Start now"/>
+  <input v-if="this.info.timeLeftEnd > 0" @click="endNow" type="submit" value="End now"/>
   <h2>Active Questions</h2>
-  <question-display v-for="(question, ind) in activeQuestions" :key="ind" :active="true" :data="question" @close="closeQuestion(ind)"/>
+  <question-display v-for="(question, ind) in activeQuestions" :key="ind" :active="true" :data="question" @close="closeQuestion(ind)" @timeOut="closeQuestion(ind)"/>
   <h2>Post a new question</h2>
-  <question-form :sentQuestion="newQuestion" @postQuestion="postQuestion"/>
+  <question-form :sentQuestion="newQuestion" @postQuestion="postQuestion" />
   <h2>Closed questions</h2>
   <question-display v-for="(question, ind) in closedQuestions" :key="ind" :data="question" />
   </div>
 </template>
 <script>
+
+import MeetingInfo from '../components/MeetingInfo.vue'
 import QuestionDisplay from '../components/QuestionDisplay.vue'
 import QuestionForm from '../components/QuestionForm.vue'
-import Timer from '../components/Timer'
+
 export default {
   components: {
-    Timer,
     QuestionForm,
     QuestionDisplay,
+    MeetingInfo
   },
   data () {
     return {
       info: {},
+      infoReady: false,
       newQuestion: {
         text: '',
         answers: ['Yes', 'No'],
@@ -43,92 +41,94 @@ export default {
     }
   },
   created(){
-    const now = new Date().getTime();
-    this.$client.service('meetings').get(this.$route.params.id)
-    .then(res => {
-      this.info = res;
-      this.info.timeLeft = this.info.startTime - now; 
-      this.info.timeLeft = Math.floor(this.info.timeLeft / 1000);
-      if(this.info.endTime){
-        this.info.timeLeftEnd = this.info.endTime - new Date().getTime();
-        this.info.timeLeftEnd = Math.floor(this.info.timeLeftEnd / 1000);
-      }
-    }).catch(() => {
-      this.$router.replace('/');
-    })
-
-    // get all questions
-    this.$client.service('questions').find({
-      query: {
-        meetingID: this.$route.params.id,
-      }
-    })
-    .then(res => {
-      res.data.forEach(r => {
-        this.processQuestion(r);
-      })
-      this.activeQuestionIDs.forEach(id => {
-        this.loadResultActive(id);
-      })
-      this.closedQuestionIDs.forEach(id => {
-        this.loadResultClosed(id);
-      })
-    })
+    this.loadMeeting();
+    this.loadQuestions();
+    
     this.$client.service('answers').on('created', this.newAnswer)
     this.$client.service('answers').on('patched', this.updateAnswer)
   },
   methods: {
+    loadMeeting(){
+      this.$client.service('meetings').get(this.$route.params.id)
+      .then(res => {
+        this.info = res;
+        this.info.timeLeft = this.info.startTime - new Date().getTime(); 
+        this.info.timeLeft = Math.floor(this.info.timeLeft / 1000);
+        if(this.info.endTime){
+          this.info.timeLeftEnd = this.info.endTime - new Date().getTime();
+          this.info.timeLeftEnd = Math.floor(this.info.timeLeftEnd / 1000);
+        }
+        this.infoReady = true;
+      }).catch(() => {
+        this.$router.replace('/');
+      })
+    },
+    loadQuestions(){
+      this.$client.service('questions').find({
+        query: {
+          meetingID: this.$route.params.id,
+        }
+      })
+      .then(res => {
+        res.data.forEach(r => {
+          this.processQuestion(r);
+        })
+        this.activeQuestionIDs.forEach(id => {
+          this.loadResultActive(id);
+        })
+        this.closedQuestionIDs.forEach(id => {
+          this.loadResultClosed(id);
+        })
+      })
+    },
     processQuestion(data){
       data.result = this.fillWithEmptyArrays(data.answers.length)
+      if(!data.active){
+        this.addClosed(data);
+        return;
+      }
       if(data.isTime){
-        this.processTimed(data);
-        return;
+        const timeLeft = data.timeLimit - new Date().getTime();
+        if(timeLeft < 0){
+          this.addClosed(data);
+          return
+        }
       }
-      this.processUntimed(data);
+      this.addActive(data);
+      
     },
-    processTimed(data){
-      const timeLeft = data.timeLimit - new Date().getTime();
-      if(timeLeft < 0){
-        this.closedQuestions.push(data);
-        this.closedQuestionIDs.push(data._key);
-        return;
-      }
-      data.timeLeft = Math.floor(timeLeft / 1000);
-      this.startTimer(data);
+    addActive(data){
       this.activeQuestions.push(data);
       this.activeQuestionIDs.push(data._key);
     },
-    startTimer(data){
-      data.timer = setInterval(() => {
-        const ind = this.activeQuestionIDs.indexOf(data._key);
-        this.activeQuestions[ind].timeLeft --;
-        if(data.timeLeft < 0){
-          this.closeQuestion(ind);
-          clearInterval(data.timer);
-        }
-      }, 1000)
-    },
-    processUntimed(data) {
-      if(data.active){
-        this.activeQuestions.push(data);
-        this.activeQuestionIDs.push(data._key);
-        return;
-      }
+    addClosed(data){
       this.closedQuestions.push(data);
       this.closedQuestionIDs.push(data._key);
     },
+    removeActive(ind){
+      this.activeQuestions.splice(ind, 1)
+      this.activeQuestionIDs.splice(ind, 1);
+    },
+    removeClosed(ind){
+      this.closedQuestions.splice(ind, 1)
+      this.closedQuestionIDs.splice(ind, 1);
+    },
     startNow () {
+      this.infoReady = false;
       this.$client.service('meetings').patch(this.$route.params.id, {
         startTime: new Date().getTime()
       }).then(() => {
-        this.info.timeLeft = 0;
+        this.info.startTime = new Date().getTime();
+        this.infoReady = true;
       })    
     },
     endNow () {
+      this.infoReady = false;
       this.$client.service('meetings').patch(this.$route.params.id, {
         endTime: new Date().getTime()
       }).then(() => {
-        this.info.timeLeftEnd = 0;
+        this.info.endTime = new Date().getTime();
+        this.infoReady = true;
       })  
     },
     postQuestion () {
@@ -142,18 +142,20 @@ export default {
       })
     },
     closeQuestion (ind) {
+      console.log('closing question');
       if(!this.activeQuestions[ind].isTime)
         this.$client.service('questions').patch(this.activeQuestions[ind]._key, {
           active: false,
         })
-      this.closedQuestions.push(this.activeQuestions[ind]);
-      this.activeQuestions.splice(ind, 1)
-      this.activeQuestionIDs.splice(ind, 1);
-    },
-    closeQuestionById (id) {
-      const ind = this.activeQuestionIDs.indexOf(id);
-      if(ind > -1)
-        this.closeQuestion(ind)
+      else {
+        const now = new Date().getTime();
+        this.activeQuestions[ind].timeLimit = now;
+        this.$client.service('questions').patch(this.activeQuestions[ind]._key, {
+          timeLimit: now,
+        })
+      }
+      this.addClosed(this.activeQuestions[ind]);
+      this.removeActive(ind);
     },
     newAnswer (data) {
       const ind = this.activeQuestionIDs.indexOf(data.questionID);
