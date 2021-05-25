@@ -10,7 +10,6 @@ export default {
       el.form.elements.item(currentIndex - 1).focus();
   },
   repeat: (num, func) => {
-    console.log(func);
     for (let i = 0; i < num; i++) {
       func();
     }

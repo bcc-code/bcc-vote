@@ -40,7 +40,6 @@ export default {
   },
   watch: {
     showedValue (newVal){
-      // bound the value
       newVal = this.boundValue(newVal);
       this.actualValue = parseInt(newVal);
       this.$emit('update:modelValue', this.actualValue);

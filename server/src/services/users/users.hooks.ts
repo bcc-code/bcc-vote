@@ -1,10 +1,8 @@
 import * as feathersAuthentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
-// import * as local from '@feathersjs/authentication-local';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = feathersAuthentication.hooks;
-// const { hashPassword, protect } = local.hooks;
 
 const addMeetingsArrays = async (context: HookContext) => {
   context.data.activeMeetings = [];
@@ -25,10 +23,7 @@ export default {
   },
 
   after: {
-    all: [ 
-      // Make sure the password field is never sent to the client
-      // Always must be the last hook
-    ],
+    all: [],
     find: [],
     get: [],
     create: [],

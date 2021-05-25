@@ -4,20 +4,37 @@ import { HookContext } from "@feathersjs/feathers";
 
 const { authenticate } = authentication.hooks;
 
-const setUserInformation = async (context: HookContext) => {
-  // console.log(context);
-  const query = {
-    churchID: ''
-  };
-  // set up all the queries
-  if(context.data.local){
-    query.churchID = context.params.user?.churchID;
-  }
-  console.log(query);
+const addNumberOfInvited = async (context: HookContext) => {
 
-  const res = await context.app.services.users.find({query})
-  const invited = res.data;
-  console.log(invited);
+  
+  const memberSvc = context.app.services.members;
+
+  const data = context.data;
+  const query: any = {
+    $limit: 0,
+  };
+  query.churchID = data.churchID;
+  query.role = data.role;
+  query.minAge = data.minAge;
+  query.maxAge= data.maxAge;
+
+  const res = await memberSvc.find({query});
+  context.data.numberOfInvited = res.total;
+
+  return context;
+}
+
+const addAdministrator = async (context: HookContext) => {
+  const userSvc = context.app.services.users;
+  const meetingId = context.result._key;
+
+  userSvc.get(context.params.user?._id)
+  .then((res: any) => {
+    res.administerMeetings.push(meetingId);
+    userSvc.patch(res._key, {
+      administerMeetings: res.administerMeetings
+    })
+  })
 }
 
 export default {
@@ -25,7 +42,7 @@ export default {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [],
+    create: [ addNumberOfInvited ],
     update: [],
     patch: [],
     remove: []
@@ -35,7 +52,7 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [ setUserInformation ],
+    create: [ addAdministrator ],
     update: [],
     patch: [],
     remove: []

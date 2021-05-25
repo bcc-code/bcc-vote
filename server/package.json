@@ -39,6 +39,7 @@
   },
   "types": "lib/",
   "dependencies": {
+    "@bcc-its/feathers-arangodb": "3.0.0",
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
     "@feathersjs/authentication-oauth": "^4.5.11",

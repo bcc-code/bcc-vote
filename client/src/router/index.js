@@ -11,19 +11,14 @@ async function authentication() {
     .reAuthenticate()
     .catch((err) => {
       if (err.message == "No accessToken found in storage" || err.message.includes('jwt')) {
-        //Send unauthenticated/expired users to login endpoint
         location.href = "http://localhost:3030/oauth/auth0";
-      } else {
-        console.log(err);
       }
     })
   if (!authenticationResult) {
     return { authenticated: false }
   }
-  // console.log(authenticationResult);
   const user = authenticationResult.user;
 
-  // update the $user global variable
   router.$user.name = user.name;
   router.$user.age = user.age;
   router.$user.church = user.church;

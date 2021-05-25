@@ -38,7 +38,6 @@
         this.showInfo(msg, 'success')
       },
       login (me) {
-        console.log(me);
         this.me = me;
         this.$router.push('/')
       },
