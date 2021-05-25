@@ -39,7 +39,6 @@ export default {
     }
   },
   created () {
-    console.log(this.sentTemplate);
     if(this.sentTemplate)
       this.template = this.sentTemplate;
   },

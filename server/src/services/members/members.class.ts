@@ -64,11 +64,7 @@ export class Members implements ServiceMethods<Data> {
     // if(maxAge)
     //   url += "&age[$lt]="+maxAge;
 
-    console.log(url);
-
     const res = await axios.get(url);
-
-    console.log(res.data);
 
     return res.data;
   }
@@ -78,11 +74,9 @@ export class Members implements ServiceMethods<Data> {
     if(!id)
       throw Error('You must specify the ID');
     const res = await axios.get(personUrl+'?personID='+id);
-    // console.log(res.data);
     if(res.data.total !== 1)
       throw Error('Person not found');
     const data = res.data.data[0];
-    // console.log(data);
     return {
       _id: '',
       name: data.displayName,
@@ -93,5 +87,28 @@ export class Members implements ServiceMethods<Data> {
       administrator: data.administrator,
       roles: this.getRoles(data),
     }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async create (data: Data, params?: Params): Promise<Data> {
+    if (Array.isArray(data)) {
+      return Promise.all(data.map(current => this.create(current, params)));
+    }
+
+    return data;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+    return data;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+    return data;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async remove (id: NullableId, params?: Params): Promise<Data> {
+    return { id };
   }
 }

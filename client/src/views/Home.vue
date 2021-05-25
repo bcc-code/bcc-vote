@@ -14,9 +14,6 @@
 
 <script>
 import MeetingTile from '../components/MeetingTile.vue';
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
   components: { MeetingTile },
   name: 'Home',
@@ -28,7 +25,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$user);
     this.$client.service('meetings').find({
       query: {
         $or: [
@@ -44,36 +40,17 @@ export default {
         $select: ['title', 'description', 'startTime', 'numberOfInvited']
       }
     }).then(res => {
-      console.log(res);
       this.votings = res.data;
       const now = new Date().getTime();
       this.votings.forEach(v => {
         v.timeLeft = Math.floor((v.startTime - now) / 1000)
       });
-      console.log(this.votings)
     })
     setInterval(() => {
       this.votings.forEach(v => {
         v.timeLeft --;
       })
     }, 1000);
-  },
-  methods: {
-    log () {
-      console.log(this.$user);
-    },
-    async makeRequest(){
-      console.log('making request');
-      // const res = await this.$client.service('members').find()
-      // console.log(res);
-      // this.$client.service('users').create(res);
-      const res = await this.$client.service('users').find({
-        query: {
-          Developer: true,
-        }
-      });
-      console.log(res);
-    }
   }
 }
 </script>
