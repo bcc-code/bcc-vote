@@ -11,9 +11,6 @@
 
 <script>
 import MeetingTile from '../components/MeetingTile.vue';
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
   components: { MeetingTile },
   name: 'Home',

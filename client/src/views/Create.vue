@@ -106,7 +106,6 @@
       this.getNumOfPeople();
     },
     mounted () {
-      // set default time
       const now = new Date().getTime()
       const nearestHour = Math.ceil(now/3600000) * 3600000
       this.startTime.setTime(nearestHour);
@@ -124,13 +123,9 @@
           query.minAge = this.minAge;
         if(this.isMaxAge)
           query.maxAge = this.maxAge;
-        console.log(query);
         this.$client.service('members').find({query})
         .then(res => {
           this.numOfVoters = res.total;
-        })
-        .catch(err => {
-          console.log(err);
         })
       },
       startMeeting(){
@@ -159,7 +154,6 @@
           data.role = this.selectedRole;
 
 
-        console.log(data);
         this.$client.service('meetings').create(data)
         .then(res => {
           this.$router.push('/admin-'+res._key)

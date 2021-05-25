@@ -9,10 +9,6 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 import { NotAuthenticated } from '@feathersjs/errors';
 
 import { Application } from './declarations';
-// import services from './services';
-
-// import jsonwebtoken, { SignOptions, Secret, VerifyOptions } from 'jsonwebtoken';
-
 declare module './declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -25,9 +21,6 @@ class Auth0Strategy extends OAuthStrategy {
     const profile = await this.getProfile(authentication,params)
     const personID = profile["https://login.bcc.no/claims/personId"];
     
-    // const myPerson = await MembersApi.getPerson(personID);
-    // console.log(myPerson);
-    // console.log(profile);
     const personSvc = this.app?.services.users;
     let person;
     let tryFind = await personSvc.find({
@@ -56,13 +49,11 @@ class Auth0Strategy extends OAuthStrategy {
 class CustomJWtStrategy extends JWTStrategy {
   async getEntity(id: any, params: any) {
     const personService = this.app?.services.users
-    console.log(id);
     try {
       id = id.split('/')[1];
       const user = await personService.get(id, {});
       return user;
     } catch (err){
-      console.log(err);
       throw new NotAuthenticated(`Could not find the User entity, try re-logging in.`);
     }
   }
@@ -94,7 +85,6 @@ class CustomJWtStrategy extends JWTStrategy {
           }
         }
     } catch (error) {
-      console.log(error);
       return await super.authenticate(authentication,params)
     }
   }
@@ -104,7 +94,6 @@ export default function(app: Application) {
   const authentication = new AuthenticationService(app);
 
   authentication.register('jwt', new CustomJWtStrategy());
-  console.log('using auth0 strategy');
   authentication.register('auth0', new Auth0Strategy());
 
   app.use('/authentication', authentication);
