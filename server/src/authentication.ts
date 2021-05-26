@@ -23,16 +23,16 @@ class Auth0Strategy extends OAuthStrategy {
     
     const personSvc = this.app?.services.users;
     let person;
-    let tryFind = await personSvc.find({
+    const tryFind = await personSvc.find({
       query: {
         $limit: 1,
         personID: personID
       }
-    })
+    });
     if(tryFind.total == 0){
       person = await personSvc.create({
         personID: personID,
-      })
+      });
     }else{
       person = tryFind.data[0];
     }
@@ -42,7 +42,7 @@ class Auth0Strategy extends OAuthStrategy {
     return {
       authentication: { strategy: this.name ? this.name : 'unknown' },
       [entity]: allInfo
-    }
+    };
   }
 }
 
@@ -61,7 +61,7 @@ class CustomJWtStrategy extends JWTStrategy {
   
 
   async authenticate(authentication: AuthenticationRequest, params: Params) {
-    let { accessToken } = authentication;
+    const { accessToken } = authentication;
 
 
     if (!accessToken) {
@@ -79,18 +79,18 @@ class CustomJWtStrategy extends JWTStrategy {
         user: person,
         accessToken,
         authentication: {
-            strategy: 'jwt',
-            accessToken,
-            payload
-          }
+          strategy: 'jwt',
+          accessToken,
+          payload
         }
+      };
     } catch (error) {
-      return await super.authenticate(authentication,params)
+      return await super.authenticate(authentication,params);
     }
   }
 }
 
-export default function(app: Application) {
+export default function(app: Application): void {
   const authentication = new AuthenticationService(app);
 
   authentication.register('jwt', new CustomJWtStrategy());

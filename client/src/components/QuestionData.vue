@@ -38,7 +38,6 @@ export default {
       const interval = setInterval(() => {
         this.timeLeft --;
         if(this.timeLeft < 0){
-          console.log('emit timeout')
           clearInterval(interval);
           this.$emit('timeOut')
         }

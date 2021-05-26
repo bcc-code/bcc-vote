@@ -35,7 +35,6 @@ export default {
     }
   },
   created (){
-    console.log(this.data);
     const now = new Date().getTime();
     if(this.data.startTime){
       this.isStart = true;

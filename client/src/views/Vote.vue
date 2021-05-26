@@ -123,7 +123,6 @@ export default {
     },
     sendAns(ind, val) {
       if(!val){
-        console.log('no value');
         return;
       }
       if(this.activeQuestions[ind].answerID){
@@ -161,7 +160,6 @@ export default {
       })
     },
     updateMeeting (data){
-      console.log('updating meeting', data)
       if(data._key != this.$route.params.id)
         return;
       this.info = data;
@@ -175,9 +173,14 @@ export default {
       if(data.meetingID != this.$route.params.id)
         return;
       const ind = this.activeQuestionIDs.indexOf(data._key);
-      this.activeQuestions[ind] = data;
       if(data.active == false){
         this.closeQuestion(ind);
+        return;
+      }
+      if(data.isTime){
+        const timeLeft = data.timeLimit - new Date().getTime();
+        if(timeLeft <= 0)
+          this.closeQuestion(ind);
       }
     },
     closeQuestion(ind) {
