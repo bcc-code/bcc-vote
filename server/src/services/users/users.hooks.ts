@@ -4,19 +4,12 @@ import { HookContext } from "@feathersjs/feathers";
 
 const { authenticate } = feathersAuthentication.hooks;
 
-const addMeetingsArrays = async (context: HookContext) => {
-  context.data.activeMeetings = [];
-  context.data.administerMeetings = [];
-
-  return context;
-}
-
 export default {
   before: {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
-    create: [ addMeetingsArrays ],
+    create: [ ],
     update: [ authenticate('jwt') ],
     patch: [ authenticate('jwt') ],
     remove: [ authenticate('jwt') ]

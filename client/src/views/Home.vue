@@ -4,7 +4,7 @@
     <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <meeting-tile v-for="(voting, ind) in votings" :key="ind" :data="voting" class="top-space-10"/>
+    <meeting-tile v-for="(voting, ind) in meetings" :key="ind" :data="voting" class="top-space-10"/>
     <meeting-tile v-for="(admin, ind) in administered" :key="ind" :data="admin" class="top-space-10"/>
   </div>
 </template>
