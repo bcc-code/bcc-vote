@@ -4,7 +4,7 @@
     <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <meeting-tile v-for="(voting, ind) in votings" :key="ind" :data="voting" class="top-space-10"/>
+    <meeting-tile v-for="(voting, ind) in meetings" :key="ind" :data="voting" class="top-space-10"/>
     <meeting-tile v-for="(admin, ind) in administered" :key="ind" :data="admin" class="top-space-10"/>
   </div>
 </template>
@@ -16,8 +16,8 @@ export default {
   name: 'Home',
   data () {
     return {
-      votings: [],
-      votingKeys: [],
+      meetings: [],
+      meetingIDs: [],
       administered: [],
       time: 10000,
     }
@@ -28,31 +28,27 @@ export default {
     this.loadMeetingsAdmin();
   },
   methods: {
-    log () {
-      console.log(this.$user);
-    },
     loadMeetingsMember(){
       const roleIds = this.$user.roles.map(r => r.id);
-    this.$client.service('meetings').find({
-      query: {
-        $or: [
-          {churchID: this.$user.churchID},
-          {role: {$in: roleIds}}
-        ],
-        minAge: {
-          $lt: this.$user.age
-        },
-        maxAge: {
-          $gt: this.$user.age
-        },
-        $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
-      }
-    }).then(res => {
-      this.votings = res.data;
-      this.votings.forEach(v => {
-        v.admin = false;
-      });
-    })
+      this.$client.service('meetings').find({
+        query: {
+          $or: [
+            {role: {$in: roleIds}},
+            {churchID: this.$user.churchID},
+          ],
+          minAge: {
+            $lt: this.$user.age
+          },
+          maxAge: {
+            $gte: this.$user.age
+          },
+          $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited'],
+        }}).then(res => {
+        this.meetings = res.data;
+        this.meetings.forEach(v => {
+          v.admin = false;
+        });
+      })
     },
     loadMeetingsAdmin(){
       this.$client.service('meetings').find({

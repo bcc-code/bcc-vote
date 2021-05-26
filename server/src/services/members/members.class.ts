@@ -58,11 +58,11 @@ export class Members implements ServiceMethods<Data> {
 
     url += '&churchID='+churchID;
 
-    // if(minAge)
-    //   url += "&age[$gt]="+minAge;
+    if(minAge)
+      url += "&age[$gt]="+minAge;
 
-    // if(maxAge)
-    //   url += "&age[$lt]="+maxAge;
+    if(maxAge)
+      url += "&age[$lt]="+maxAge;
 
     const res = await axios.get(url);
 

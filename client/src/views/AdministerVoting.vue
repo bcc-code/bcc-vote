@@ -142,7 +142,6 @@ export default {
       })
     },
     closeQuestion (ind) {
-      console.log('closing question');
       if(!this.activeQuestions[ind].isTime)
         this.$client.service('questions').patch(this.activeQuestions[ind]._key, {
           active: false,

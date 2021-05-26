@@ -2,7 +2,7 @@
   <router-link :to="(data.admin ? '/admin-':'/meeting-')+data._key" class="width-80 color-grey rounded padding-vertical-10 horizontal center-line space-out clickable" :class="{ 'color-green': timeLeftStart < 0 && !data.admin, 'color-yellow': data.admin, 'color-red': ended }">
     <div>
       <h2>{{data.title}}</h2>
-      <h3>{{data.votersNum ? data.votersNum : 0}} voters are invited</h3>
+      <h3>{{data.numberOfInvited ? data.numberOfInvited : 0}} voters are invited</h3>
     </div>
     <h4 style="width: 20vw">{{data.description}}</h4>
     <h3> 
@@ -35,7 +35,6 @@ export default {
     }
   },
   created (){
-    console.log(this.data);
     const now = new Date().getTime();
     if(this.data.startTime){
       this.isStart = true;
