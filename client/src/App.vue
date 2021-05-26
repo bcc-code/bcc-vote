@@ -1,57 +1,23 @@
 <template>
   <div id = "app">
-    <Topbar></Topbar>
+    Hello world From the App
+    <!-- <Topbar></Topbar>
     <router-view  @error="showError" @success="showSuccess" ></router-view>
-    <Infobox v-if="infoMessage" :content="infoMessage" :type="infoType"></Infobox>
+    <Infobox v-if="infoMessage" :content="infoMessage" :type="infoType"></Infobox> -->
+    <router-view />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
-  import Topbar from './components/Topbar'
-  import Infobox from './components/Infobox'
-
-  export default {
-    name: "app",
-    components: { Topbar, Infobox},
-
-    data () {
-      return {
-        infoMessage: '',
-        infoType: 'error',
-        infoTimer: undefined
-      }
-    },
+  import { defineComponent } from 'vue'
+  export default defineComponent({
     methods: {
-      showInfo (msg, type) {
-        this.infoMessage = msg
-        this.infoType = type
-        clearTimeout(this.infoTimer)
-        this.infoTimer = setTimeout(() => {
-          this.infoMessage = ''
-        }, 3000)
-      },
-      showError (msg) {
-        this.showInfo(msg, 'error')
-      },
-      showSuccess (msg) {
-        this.showInfo(msg, 'success')
-      },
-      login (me) {
-        this.me = me;
-        this.$router.push('/')
-      },
-      register (me) {
-        
-        this.login(me)
-        this.showInfo('successfully registered as ' + this.me.name, 'success')
-      },
-      logout () {
-        this.me = {}
+      showMessage (msg: string) {
+        console.log('Message', msg);
       }
     }
-    
-  }
+  })
 </script>
 
 <style>
