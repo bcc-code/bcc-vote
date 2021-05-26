@@ -29,56 +29,56 @@ import NumericInput from './NumericInput.vue'
 import focus from '../util/functions.js'
 
 export default {
-  components: {
-    NumericInput,
-    IconBase,
-    IconCross,
-  },
-  props: {
-    sentQuestion: Object
-  },
-  data () {
-    return {
-      question: Object,
-    }
-  },
-  created () {
-    if(this.sentQuestion)
-      this.question = this.sentQuestion;
-  },
-  computed: {
-    numberOfAnswers: {
-      get(){
-        return this.question.answers.length;
-      },
-      set(newVal){
-        const diff = newVal - this.question.answers.length;
-        if(diff > 0){
-          for(let i =0; i < diff; i++){
-            this.question.answers.push('');
-          }
-        } 
-        else{
-          this.question.answers.splice(newVal, -diff);
+    components: {
+        NumericInput,
+        IconBase,
+        IconCross,
+    },
+    props: {
+        sentQuestion: Object
+    },
+    data () {
+        return {
+            question: Object,
         }
-      }
-    }
-  },
-  methods: {
-    deleteMe(){
-      this.question.splice(this.index, 1);
     },
-    deleteAns(ind){
-      this.question.answers.splice(ind, 1);
+    created () {
+        if(this.sentQuestion)
+            this.question = this.sentQuestion
     },
-    focusNext(evt){
-      focus.focusOnNextFormInput(evt.target);
+    computed: {
+        numberOfAnswers: {
+            get(){
+                return this.question.answers.length
+            },
+            set(newVal){
+                const diff = newVal - this.question.answers.length
+                if(diff > 0){
+                    for(let i =0; i < diff; i++){
+                        this.question.answers.push('')
+                    }
+                } 
+                else{
+                    this.question.answers.splice(newVal, -diff)
+                }
+            }
+        }
     },
-    focusPrev(evt){
-      focus.focusOnPreviousFormInput(evt.target);
-    }
-  },
-  emits: ['postQuestion'],
+    methods: {
+        deleteMe(){
+            this.question.splice(this.index, 1)
+        },
+        deleteAns(ind){
+            this.question.answers.splice(ind, 1)
+        },
+        focusNext(evt){
+            focus.focusOnNextFormInput(evt.target)
+        },
+        focusPrev(evt){
+            focus.focusOnPreviousFormInput(evt.target)
+        }
+    },
+    emits: ['postQuestion'],
 
 }
 </script>

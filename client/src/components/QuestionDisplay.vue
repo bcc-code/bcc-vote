@@ -22,15 +22,15 @@ import IconCross from './icons/IconCross'
 import QuestionData from './QuestionData'
 
 export default {
-  components: { 
-    IconBase,
-    IconCross,
-    QuestionData,
-  },
-  props: {
-    data: Object,
-    active: Boolean,
-  },
-  emits: ['close', 'timeOut'],
+    components: { 
+        IconBase,
+        IconCross,
+        QuestionData,
+    },
+    props: {
+        data: Object,
+        active: Boolean,
+    },
+    emits: ['close', 'timeOut'],
 }
 </script>

@@ -70,97 +70,97 @@
   </div>
 </template>
 <script>
-  import { DatePicker } from 'v-calendar';
-  import NumericInput from '../components/NumericInput.vue';
-  import { churches, roles } from '../util/dataLists.js'
+import { DatePicker } from 'v-calendar'
+import NumericInput from '../components/NumericInput.vue'
+import { churches, roles } from '../util/dataLists.js'
 
-  export default {
+export default {
     name: "Create",
     components: {
-      DatePicker,
+        DatePicker,
         NumericInput
     },
     data () {
-      return {
-        title: '',
-        description: '',
-        startTime: new Date(),
-        endTime: new Date(),
-        ready: false,
-        scheduledStart: false,
-        scheduledEnd: false,
-        local: true,
-        selectedChurch: this.$user.churchID,
-        roleSelect: false,
-        isMinAge: false,
-        minAge: 0,
-        isMaxAge: false,
-        maxAge: 100,
-        selectedRole: this.$user.roles[0].id,
-        numOfVoters: 0,
-        churches,
-        roles
-      }
+        return {
+            title: '',
+            description: '',
+            startTime: new Date(),
+            endTime: new Date(),
+            ready: false,
+            scheduledStart: false,
+            scheduledEnd: false,
+            local: true,
+            selectedChurch: this.$user.churchID,
+            roleSelect: false,
+            isMinAge: false,
+            minAge: 0,
+            isMaxAge: false,
+            maxAge: 100,
+            selectedRole: this.$user.roles[0].id,
+            numOfVoters: 0,
+            churches,
+            roles
+        }
     },
     created() {
-      this.getNumOfPeople();
+        this.getNumOfPeople()
     },
     mounted () {
-      const now = new Date().getTime()
-      const nearestHour = Math.ceil(now/3600000) * 3600000
-      this.startTime.setTime(nearestHour);
-      this.endTime.setTime(nearestHour + 2 * 3600000);
-      this.ready = true;
+        const now = new Date().getTime()
+        const nearestHour = Math.ceil(now/3600000) * 3600000
+        this.startTime.setTime(nearestHour)
+        this.endTime.setTime(nearestHour + 2 * 3600000)
+        this.ready = true
     },
     methods: {
-      getNumOfPeople(){
-        const query = {}
-        if(this.local)
-          query.churchID = this.selectedChurch;
-        if(!this.local)
-          query.role = this.selectedRole;
-        if(this.isMinAge)
-          query.minAge = this.minAge;
-        if(this.isMaxAge)
-          query.maxAge = this.maxAge;
-        this.$client.service('members').find({query})
-        .then(res => {
-          this.numOfVoters = res.total;
-        })
-      },
-      startMeeting(){
-        const data = {
-          title: this.title,
-          description: this.description,
-          admin: this.$user.personID,
+        getNumOfPeople(){
+            const query = {}
+            if(this.local)
+                query.churchID = this.selectedChurch
+            if(!this.local)
+                query.role = this.selectedRole
+            if(this.isMinAge)
+                query.minAge = this.minAge
+            if(this.isMaxAge)
+                query.maxAge = this.maxAge
+            this.$client.service('members').find({query})
+                .then(res => {
+                    this.numOfVoters = res.total
+                })
+        },
+        startMeeting(){
+            const data = {
+                title: this.title,
+                description: this.description,
+                admin: this.$user.personID,
+            }
+            data.startTime = new Date().getTime()
+            if(this.scheduledStart)
+                data.startTime = this.startTime.getTime()
+            if(this.scheduledEnd)
+                data.endTime = this.endTime.getTime()
+        
+            data.minAge = 0
+            data.maxAge = 1000
+        
+            if(this.isMinAge)
+                data.minAge = this.minAge
+            if(this.isMaxAge)
+                data.maxAge = this.maxAge
+        
+            if(this.local)
+                data.churchID = this.selectedChurch
+            else
+                data.role = this.selectedRole
+
+
+            this.$client.service('meetings').create(data)
+                .then(res => {
+                    this.$router.push('/admin-'+res._key)
+                }).catch(err => {
+                    console.log(err)
+                })
         }
-        data.startTime = new Date().getTime();
-        if(this.scheduledStart)
-          data.startTime = this.startTime.getTime();
-        if(this.scheduledEnd)
-          data.endTime = this.endTime.getTime();
-        
-        data.minAge = 0
-        data.maxAge = 1000;
-        
-        if(this.isMinAge)
-          data.minAge = this.minAge;
-        if(this.isMaxAge)
-          data.maxAge = this.maxAge;
-        
-        if(this.local)
-          data.churchID = this.selectedChurch;
-        else
-          data.role = this.selectedRole;
-
-
-        this.$client.service('meetings').create(data)
-        .then(res => {
-          this.$router.push('/admin-'+res._key)
-        }).catch(err => {
-          console.log(err);
-        })
-      }
     }
-  }
+}
 </script>

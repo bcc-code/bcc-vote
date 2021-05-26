@@ -5,16 +5,16 @@ export interface State {
 }
 
 export default createStore<State>({
-  state:{
-    count: 0,
-  },
-  mutations: {
-    increment(state){
-      state.count++;
+    state:{
+        count: 0,
+    },
+    mutations: {
+        increment(state){
+            state.count++
+        }
+    },
+    actions: {
+    },
+    modules: {
     }
-  },
-  actions: {
-  },
-  modules: {
-  }
 })

@@ -15,17 +15,17 @@
 import QuestionData from './QuestionData'
 
 export default {
-  components: { 
-    QuestionData,
-  },
-  props: {
-    data: Object,
-  },
-  data () {
-    return {
-      selected: ''
-    }
-  },
-  emits: ['answer', 'timeOut']
+    components: { 
+        QuestionData,
+    },
+    props: {
+        data: Object,
+    },
+    data () {
+        return {
+            selected: ''
+        }
+    },
+    emits: ['answer', 'timeOut']
 }
 </script>

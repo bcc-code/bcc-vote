@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-  name: 'Topbar',
+    name: 'Topbar',
 }
 </script>
 

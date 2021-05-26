@@ -10,63 +10,63 @@
 </template>
 
 <script>
-import MeetingTile from '../components/MeetingTile.vue';
+import MeetingTile from '../components/MeetingTile.vue'
 export default {
-  components: { MeetingTile },
-  name: 'Home',
-  data () {
-    return {
-      votings: [],
-      votingKeys: [],
-      administered: [],
-      time: 10000,
-    }
-  },
-  created () {
-
-    this.loadMeetingsMember();
-    this.loadMeetingsAdmin();
-  },
-  methods: {
-    log () {
-      console.log(this.$user);
-    },
-    loadMeetingsMember(){
-      const roleIds = this.$user.roles.map(r => r.id);
-    this.$client.service('meetings').find({
-      query: {
-        $or: [
-          {churchID: this.$user.churchID},
-          {role: {$in: roleIds}}
-        ],
-        minAge: {
-          $lt: this.$user.age
-        },
-        maxAge: {
-          $gt: this.$user.age
-        },
-        $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
-      }
-    }).then(res => {
-      this.votings = res.data;
-      this.votings.forEach(v => {
-        v.admin = false;
-      });
-    })
-    },
-    loadMeetingsAdmin(){
-      this.$client.service('meetings').find({
-        query: {
-          admin: this.$user.personID,
-          $select: ['title', 'description', 'startTime',  'endTime', 'numberOfInvited']
+    components: { MeetingTile },
+    name: 'Home',
+    data () {
+        return {
+            votings: [],
+            votingKeys: [],
+            administered: [],
+            time: 10000,
         }
-      }).then(res => {
-        this.administered = res.data;
-        this.administered.forEach(v => {
-          v.admin = true;
-        });
-      })
+    },
+    created () {
+
+        this.loadMeetingsMember()
+        this.loadMeetingsAdmin()
+    },
+    methods: {
+        log () {
+            console.log(this.$user)
+        },
+        loadMeetingsMember(){
+            const roleIds = this.$user.roles.map(r => r.id)
+            this.$client.service('meetings').find({
+                query: {
+                    $or: [
+                        {churchID: this.$user.churchID},
+                        {role: {$in: roleIds}}
+                    ],
+                    minAge: {
+                        $lt: this.$user.age
+                    },
+                    maxAge: {
+                        $gt: this.$user.age
+                    },
+                    $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
+                }
+            }).then(res => {
+                this.votings = res.data
+                this.votings.forEach(v => {
+                    v.admin = false
+                })
+            })
+        },
+        loadMeetingsAdmin(){
+            this.$client.service('meetings').find({
+                query: {
+                    admin: this.$user.personID,
+                    $select: ['title', 'description', 'startTime',  'endTime', 'numberOfInvited']
+                }
+            }).then(res => {
+                this.administered = res.data
+                this.administered.forEach(v => {
+                    v.admin = true
+                })
+            })
+        }
     }
-  }
 }
 </script>

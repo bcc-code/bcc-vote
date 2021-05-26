@@ -17,38 +17,38 @@
 import Timer from "./Timer"
 
 export default {
-  components: {
-    Timer,
-  },
-  props: {
-    info: Object,
-  },
-  data () {
-    return {
-      timeLeftStart: 100,
-      timeLeftEnd: 100,
-      isEnd: false,
+    components: {
+        Timer,
+    },
+    props: {
+        info: Object,
+    },
+    data () {
+        return {
+            timeLeftStart: 100,
+            timeLeftEnd: 100,
+            isEnd: false,
+        }
+    },
+    created(){
+        this.startTimer()
+    },
+    methods: {
+        startTimer() {
+            const now = new Date().getTime()
+            this.timeLeftStart = this.info.startTime - now
+            this.timeLeftStart = Math.floor(this.timeLeftStart / 1000)
+            if(this.info.timeLeftEnd){
+                this.isEnd = true
+                this.timeLeftEnd = this.info.endTime - now
+                this.timeLeftEnd = Math.floor(this.timeLeftEnd / 1000)
+            }
+            setInterval(() => {
+                this.timeLeftStart --
+                if(this.timeLeftEnd)
+                    this.timeLeftEnd --
+            }, 1000)
+        }
     }
-  },
-  created(){
-    this.startTimer();
-  },
-  methods: {
-    startTimer() {
-      const now = new Date().getTime();
-      this.timeLeftStart = this.info.startTime - now;
-      this.timeLeftStart = Math.floor(this.timeLeftStart / 1000);
-      if(this.info.timeLeftEnd){
-        this.isEnd = true;
-        this.timeLeftEnd = this.info.endTime - now;
-        this.timeLeftEnd = Math.floor(this.timeLeftEnd / 1000);
-      }
-      setInterval(() => {
-        this.timeLeftStart --;
-        if(this.timeLeftEnd)
-          this.timeLeftEnd --;
-      }, 1000);
-    }
-  }
 }
 </script>

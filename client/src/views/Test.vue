@@ -7,12 +7,12 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  export default defineComponent({
+import { defineComponent } from 'vue'
+export default defineComponent({
     methods: {
-      testMethod(){
-        this.$store.commit('increment');
-      }
+        testMethod(){
+            this.$store.commit('increment')
+        }
     }
-  });
+})
 </script>

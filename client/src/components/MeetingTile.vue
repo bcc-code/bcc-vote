@@ -17,55 +17,55 @@
 </template>
 
 <script>
-import Timer from './Timer.vue';
+import Timer from './Timer.vue'
 export default {
-  components: {
-    Timer,
-  },
-  props: {
-    data: Object,
-  },
-  data () {
-    return {
-      timeLeftStart: 100,
-      timeLeftEnd: 100,
-      isStart: false,
-      isEnd: false,
-      ended: false,
-    }
-  },
-  created (){
-    console.log(this.data);
-    const now = new Date().getTime();
-    if(this.data.startTime){
-      this.isStart = true;
-      this.timeLeftStart = this.data.startTime - now;
-      this.timeLeftStart = Math.floor(this.timeLeftStart/1000);
-    }
-    if(this.data.endTime){
-      this.isEnd = true;
-      this.timeLeftEnd = this.data.endTime - now;
-      this.timeLeftEnd = Math.floor(this.timeLeftEnd/1000);
-      if(this.timeLeftEnd < 0)
-        this.ended = true;
-    }
-    const interval = setInterval(() => {
-      if(this.isEnd){
-        this.timeLeftEnd--;
-        if(this.timeLeftEnd < 0){
-          this.ended = true;
+    components: {
+        Timer,
+    },
+    props: {
+        data: Object,
+    },
+    data () {
+        return {
+            timeLeftStart: 100,
+            timeLeftEnd: 100,
+            isStart: false,
+            isEnd: false,
+            ended: false,
         }
-      }
-      if(this.isStart){
-        this.timeLeftStart--;
-        if(this.timeLeftStart < 0){
-          this.isStart = false;
+    },
+    created (){
+        console.log(this.data)
+        const now = new Date().getTime()
+        if(this.data.startTime){
+            this.isStart = true
+            this.timeLeftStart = this.data.startTime - now
+            this.timeLeftStart = Math.floor(this.timeLeftStart/1000)
         }
-      }
-      if(!this.isStart && !this.isEnd)
-        clearInterval(interval);
-    }, 1000);
-  }
+        if(this.data.endTime){
+            this.isEnd = true
+            this.timeLeftEnd = this.data.endTime - now
+            this.timeLeftEnd = Math.floor(this.timeLeftEnd/1000)
+            if(this.timeLeftEnd < 0)
+                this.ended = true
+        }
+        const interval = setInterval(() => {
+            if(this.isEnd){
+                this.timeLeftEnd--
+                if(this.timeLeftEnd < 0){
+                    this.ended = true
+                }
+            }
+            if(this.isStart){
+                this.timeLeftStart--
+                if(this.timeLeftStart < 0){
+                    this.isStart = false
+                }
+            }
+            if(!this.isStart && !this.isEnd)
+                clearInterval(interval)
+        }, 1000)
+    }
 }
 </script>
 
