@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 
+import { store } from './store'
+
 
 import App from './App.vue'
 
@@ -27,6 +29,7 @@ const user = {
 
 const app = createApp(App)
 app.use(router);
+app.use(store);
 router.$client = client;
 router.$user = user;
 app.config.globalProperties.$client = client;
