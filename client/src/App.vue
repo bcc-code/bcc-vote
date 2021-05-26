@@ -1,9 +1,6 @@
 <template>
   <div id = "app">
     Hello world From the App
-    <!-- <Topbar></Topbar>
-    <router-view  @error="showError" @success="showSuccess" ></router-view>
-    <Infobox v-if="infoMessage" :content="infoMessage" :type="infoType"></Infobox> -->
     <router-view />
   </div>
 </template>
@@ -12,11 +9,6 @@
 
   import { defineComponent } from 'vue'
   export default defineComponent({
-    methods: {
-      showMessage (msg: string) {
-        console.log('Message', msg);
-      }
-    }
   })
 </script>
 
