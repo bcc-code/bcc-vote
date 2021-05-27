@@ -22,9 +22,8 @@ export default {
         }
     },
     created () {
-
         this.loadMeetingsMember()
-        this.loadMeetingsAdmin()
+        this.loadMeetingsAdmin()        
     },
     methods: {
         log () {
@@ -66,7 +65,7 @@ export default {
                     v.admin = true
                 })
             })
-        }
+        }       
     }
 }
 </script>
