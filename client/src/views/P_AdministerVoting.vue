@@ -13,9 +13,9 @@
 </template>
 <script>
 
-import MeetingInfo from '../components/MeetingInfo.vue'
-import QuestionDisplay from '../components/QuestionDisplay.vue'
-import QuestionForm from '../components/QuestionForm.vue'
+import MeetingInfo from '../components/P_MeetingInfo.vue'
+import QuestionDisplay from '../components/P_QuestionDisplay.vue'
+import QuestionForm from '../components/P_QuestionForm.vue'
 
 export default {
     components: {

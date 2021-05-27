@@ -71,7 +71,7 @@
 </template>
 <script>
 import { DatePicker } from 'v-calendar'
-import NumericInput from '../components/NumericInput.vue'
+import NumericInput from '../components/P_NumericInput.vue'
 import { churches, roles } from '../util/dataLists.js'
 
 export default {

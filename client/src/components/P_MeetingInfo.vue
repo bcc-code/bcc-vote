@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Timer from "./Timer"
+import Timer from "./P_Timer"
 
 export default {
     components: {
