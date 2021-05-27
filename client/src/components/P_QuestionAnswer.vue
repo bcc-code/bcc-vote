@@ -12,7 +12,7 @@
 
 <script>
 
-import QuestionData from './QuestionData'
+import QuestionData from './P_QuestionData'
 
 export default {
     components: { 

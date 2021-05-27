@@ -1,6 +1,6 @@
 <template>
   <div id="top-bar" class="horizontal space-out">
-    <router-link to="/">
+    <router-link to="/prototype">
       <div class="clickable topEl">Home</div>
     </router-link>
       

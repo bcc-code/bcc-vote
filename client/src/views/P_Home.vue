@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MeetingTile from '../components/MeetingTile.vue'
+import MeetingTile from '../components/P_MeetingTile.vue'
 export default {
     components: { MeetingTile },
     name: 'Home',
