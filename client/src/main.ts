@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 
-import Toasted from 'vue-toasted';
-import vSelect from 'vue-select'
+import DKToast from 'vue-dk-toast'
 import Spinner from "@/components/spinner.vue"
 
 import './assets/style.css'
@@ -13,6 +12,13 @@ import socketio from '@feathersjs/socketio-client'
 import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
 import router from './router'
+
+const app = createApp(App)
+
+app.component('Spinner', Spinner)
+app.use(DKToast,{duration:5000, positionX: 'right',positionY:'bottom'})
+app.use(router)
+app.use(store)
 
 const socket = io('http://localhost:3030')
 const client = feathers()
@@ -30,14 +36,6 @@ const user = {
     roles: null,
 }
 
-const app = createApp(App)
-
-app.use(Toasted, { position: 'bottom-right', keepOnHover: 'true', duration: 5000 })
-
-app.component('v-select', vSelect)
-app.component('Spinner', Spinner)
-app.use(router)
-app.use(store)
 router.$client = client
 router.$user = user
 app.config.globalProperties.$client = client

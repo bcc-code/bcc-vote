@@ -8,7 +8,7 @@
 <script>
 export default {
     props: {
-        color: { type: String, default: '#2c7a7b' },
+        color: { type: String, default: '#6297FF' },
         inline: { type: Boolean, default: false },
     }
 }
