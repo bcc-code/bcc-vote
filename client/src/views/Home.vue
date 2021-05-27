@@ -4,7 +4,7 @@
     <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
-    <meeting-tile v-for="(voting, ind) in meetings" :key="ind" :data="voting" class="top-space-10"/>
+    <meeting-tile v-for="(meeting, ind) in meetings" :key="ind" :data="meeting" class="top-space-10"/>
     <meeting-tile v-for="(admin, ind) in administered" :key="ind" :data="admin" class="top-space-10"/>
   </div>
 </template>
@@ -16,8 +16,7 @@ export default {
     name: 'Home',
     data () {
         return {
-            votings: [],
-            votingKeys: [],
+            meetings: [],
             administered: [],
             time: 10000,
         }
@@ -33,11 +32,12 @@ export default {
         },
         loadMeetingsMember(){
             const roleIds = this.$user.roles.map(r => r.id)
+            console.log(roleIds)
             this.$client.service('meetings').find({
                 query: {
                     $or: [
+                        {role: {$in: roleIds}},
                         {churchID: this.$user.churchID},
-                        {role: {$in: roleIds}}
                     ],
                     minAge: {
                         $lt: this.$user.age
@@ -48,8 +48,8 @@ export default {
                     $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
                 }
             }).then(res => {
-                this.votings = res.data
-                this.votings.forEach(v => {
+                this.meetings = res.data
+                this.meetings.forEach(v => {
                     v.admin = false
                 })
             })

@@ -1,15 +1,16 @@
 <template>
   <div id = "app">
-    Hello world From the App
+    <topbar />
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
+import Topbar from './components/Topbar.vue'
 
-import { defineComponent } from 'vue'
-export default defineComponent({
-})
+export default {
+    components: { Topbar },
+}
 </script>
 
 <style>
