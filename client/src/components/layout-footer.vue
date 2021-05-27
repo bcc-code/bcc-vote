@@ -1,19 +1,18 @@
 <template>
-    <footer class="flex w-full rounded-t-xl bg-green-900 p-5">
-        Some text
-        <div style="height: 300px"></div>
-
-        <!-- <hr class="mb-4 border-b-1 border-gray-200" />
-        <div class="flex flex-wrap items-center md:justify-between justify-center">
-            <div class="w-full px-4">
-                <p class="text-tint-300 font-thin py-1">
-                    Copyright © {{ date }}
-                    <a href="https://bcc.no" class="hover:text-tint-400">
-                        Brunstad Christian Church
-                    </a>
-                </p>
-            </div>
-        </div> -->
+    <footer class="w-full rounded-t-xl bg-gradient-to-tr from-blue-900 to-blue-600 p-6 text-white text-xl">
+        <div class="py-3">
+          <label class="block font-bold">OM BCC</label>
+          <a href="https://bcc.no" class="block text-xl">BCC nettside</a>
+          <a href="https://bcc.no" class="block text-xl">Årsrapporter</a>
+        </div>
+        <div class="py-3">
+          <label class="block font-bold">Kontakt</label>
+          <a href="https://bcc.no" class="block text-xl">Customer support</a>
+        </div>
+        <div class="py-5 text-center">
+          Copyright © {{ date }}
+          <a href="https://bcc.no" class="font-bold text-xl">Brunstad Christian Church</a>
+        </div>
     </footer>
 </template>
 <script>

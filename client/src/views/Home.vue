@@ -1,18 +1,10 @@
 <template>
-  <div>
-    <!-- <router-link class="w-full" to="/create">
-        <input type="submit" class="font-bold" v-if="$user.administrator" value="create a meeting"/>
-    </router-link>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <meeting-tile v-for="(meeting, ind) in meetings" :key="ind" :data="meeting" class="top-space-10"/>
-    <meeting-tile v-for="(admin, ind) in administered" :key="ind" :data="admin" class="top-space-10"/> -->
+  <div style="height: 500px">
   </div>
 </template>
 
 <script>
-// import MeetingTile from '../components/MeetingTile.vue'
 export default {
-    // components: { MeetingTile },
     name: 'Home',
     data () {
         return {
@@ -22,7 +14,6 @@ export default {
         }
     },
     created () {
-
         this.loadMeetingsMember()
         this.loadMeetingsAdmin()
     },
