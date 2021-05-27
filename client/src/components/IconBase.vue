@@ -17,21 +17,21 @@
 </template>
 
 <script>
-  export default {
+export default {
     props: {
-      iconName: {
-        type: String,
-        default: 'box'
-      },
-      size: {
-        type: [Number, String],
-        default: 20
-      },
+        iconName: {
+            type: String,
+            default: 'box'
+        },
+        size: {
+            type: [Number, String],
+            default: 20
+        },
       
-      iconColor: {
-        type: String,
-        default: 'currentColor'
-      }
+        iconColor: {
+            type: String,
+            default: 'currentColor'
+        }
     }
-  }
+}
 </script>

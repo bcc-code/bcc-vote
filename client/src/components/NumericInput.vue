@@ -19,59 +19,59 @@ import IconMinus from './icons/IconMinus'
 import focus from '../util/functions.js'
 
 export default {
-  components: {
-    IconBase,
-    IconPlus,
-    IconMinus,
-  },
-  props: {
-    modelValue: Number,
-    min: Number,
-    max: Number,
-  },
-  data (){
-    return{
-      showedValue: this.min,
-      actualValue: this.min
-    }
-  },
-  mounted() {
-    this.showedValue = this.modelValue;
-  },
-  watch: {
-    showedValue (newVal){
-      newVal = this.boundValue(newVal);
-      this.actualValue = parseInt(newVal);
-      this.$emit('update:modelValue', this.actualValue);
+    components: {
+        IconBase,
+        IconPlus,
+        IconMinus,
     },
-    modelValue (newVal){
-        this.showedValue = newVal;
-    }
-  },
-  methods: {
-    changeValue(diff) {
-      this.showedValue = this.boundValue(this.showedValue + diff);
+    props: {
+        modelValue: Number,
+        min: Number,
+        max: Number,
     },
-    updateVisible () {
-      this.showedValue = this.actualValue;
+    data (){
+        return{
+            showedValue: this.min,
+            actualValue: this.min
+        }
     },
-    boundValue (val) {
-      if(val > this.max){
-        return this.max;
-      }
-      if(val < this.min){
-        return this.min;
-      }
-      return val;
+    mounted() {
+        this.showedValue = this.modelValue
     },
-    focusNext(evt){
-      focus.focusOnNextFormInput(evt.target);
+    watch: {
+        showedValue (newVal){
+            newVal = this.boundValue(newVal)
+            this.actualValue = parseInt(newVal)
+            this.$emit('update:modelValue', this.actualValue)
+        },
+        modelValue (newVal){
+            this.showedValue = newVal
+        }
     },
-    focusPrev(evt){
-      focus.focusOnPreviousFormInput(evt.target);
-    }
-  },
-  emits: ['update:modelValue']
+    methods: {
+        changeValue(diff) {
+            this.showedValue = this.boundValue(this.showedValue + diff)
+        },
+        updateVisible () {
+            this.showedValue = this.actualValue
+        },
+        boundValue (val) {
+            if(val > this.max){
+                return this.max
+            }
+            if(val < this.min){
+                return this.min
+            }
+            return val
+        },
+        focusNext(evt){
+            focus.focusOnNextFormInput(evt.target)
+        },
+        focusPrev(evt){
+            focus.focusOnPreviousFormInput(evt.target)
+        }
+    },
+    emits: ['update:modelValue']
 }
 </script>
 

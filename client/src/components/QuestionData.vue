@@ -13,37 +13,38 @@
 import Timer from "./Timer.vue"
 
 export default {
-  components: { 
-    Timer
-  },
-  props: {
-    data: Object,
-  },
-  data () {
-    return {
-      timeLeft: 100,
-    }
-  },
-  created(){
-    if(this.data.isTime){
-      const now = new Date().getTime();
-      this.timeLeft = this.data.timeLimit - now;
-      this.timeLeft = Math.floor(this.timeLeft / 1000);
-      if(this.timeLeft >= 0)
-        this.startTimer();
-    }
-  },
-  methods: {
-    startTimer() {
-      const interval = setInterval(() => {
-        this.timeLeft --;
-        if(this.timeLeft < 0){
-          clearInterval(interval);
-          this.$emit('timeOut')
+    components: { 
+        Timer
+    },
+    props: {
+        data: Object,
+    },
+    data () {
+        return {
+            timeLeft: 100,
         }
-      }, 1000);
-    }
-  },
-  emits: ['timeOut'],
+    },
+    created(){
+        if(this.data.isTime){
+            const now = new Date().getTime()
+            this.timeLeft = this.data.timeLimit - now
+            this.timeLeft = Math.floor(this.timeLeft / 1000)
+            if(this.timeLeft >= 0)
+                this.startTimer()
+        }
+    },
+    methods: {
+        startTimer() {
+            const interval = setInterval(() => {
+                this.timeLeft --
+                if(this.timeLeft < 0){
+                    console.log('emit timeout')
+                    clearInterval(interval)
+                    this.$emit('timeOut')
+                }
+            }, 1000)
+        }
+    },
+    emits: ['timeOut'],
 }
 </script>

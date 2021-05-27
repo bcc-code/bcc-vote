@@ -3,10 +3,10 @@
 </template>
 <script>
 export default {
-  props: {
-    content: String,
-    type: String
-  }
+    props: {
+        content: String,
+        type: String
+    }
 }
 </script>
 

@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-
+import store from './store'
 import App from './App.vue'
 
 import feathers from '@feathersjs/feathers'
@@ -17,19 +17,20 @@ client.configure(socketio(socket))
 client.configure(auth())
 
 const user = {
-  name: null,
-  church: null,
-  age: null,
-  personID: null,
-  administrator: null,
-  roles: null,
+    name: null,
+    church: null,
+    age: null,
+    personID: null,
+    administrator: null,
+    roles: null,
 }
 
 const app = createApp(App)
-app.use(router);
-router.$client = client;
-router.$user = user;
-app.config.globalProperties.$client = client;
-app.config.globalProperties.$user = user;
+app.use(router)
+app.use(store)
+router.$client = client
+router.$user = user
+app.config.globalProperties.$client = client
+app.config.globalProperties.$user = user
 
-app.mount("#app");
+app.mount("#app")
