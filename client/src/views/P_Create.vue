@@ -123,9 +123,12 @@ export default {
                 query.minAge = this.minAge
             if(this.isMaxAge)
                 query.maxAge = this.maxAge
-            this.$client.service('members').find({query})
-                .then(res => {
+            this.$client.service('person').find({query})
+                .then(res => {                    
                     this.numOfVoters = res.total
+                })
+                .catch(err =>{
+                  console.error(err)
                 })
         },
         startMeeting(){

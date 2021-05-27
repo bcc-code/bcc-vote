@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import DKToast from 'vue-dk-toast'
+//import DKToast from 'vue-dk-toast'
 import Spinner from "@/components/spinner.vue"
 
 import './assets/style.css'
@@ -13,14 +13,14 @@ import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
 import router from './router'
 
+const socket = io('http://localhost:4040')
 const app = createApp(App)
 
 app.component('Spinner', Spinner)
-app.use(DKToast,{duration:5000, positionX: 'right',positionY:'bottom'})
+//app.use(DKToast,{duration:5000, positionX: 'right',positionY:'bottom'})
 app.use(router)
 app.use(store)
 
-const socket = io('http://localhost:3030')
 const client = feathers()
 
 client.configure(socketio(socket))
