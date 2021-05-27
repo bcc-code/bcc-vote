@@ -7,8 +7,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import { SparklesIcon  } from '@heroicons/vue/solid'
+<script>
+import { SparklesIcon } from '@heroicons/vue/solid'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: { SparklesIcon },
@@ -18,7 +18,7 @@ export default defineComponent({
         }
     },
     methods: {
-        toastMethod(text:string) {
+        toastMethod(text) {
             this.$toast(text)
         }
     }
