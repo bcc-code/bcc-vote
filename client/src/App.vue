@@ -1,7 +1,7 @@
 <template>
     <div id = "app">
-        <Header />
-        <router-view :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
+        <Header :isNav="!mobile"/>
+        <router-view :style="`min-height: calc(100vh - ${layoutHeight}px);`" :mobile="mobile"/>
         <Footer />
     </div>
 </template>
@@ -18,7 +18,8 @@ export default {
     },
     data (){
       return {
-        layoutHeight: '328'
+        layoutHeight: '328',
+        mobile: true,
       }
     }
 }

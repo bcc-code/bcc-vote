@@ -1,5 +1,5 @@
 <template>
-    <nav class="flex justify-between items-center fixed left-0 top12 w-full h-12 z-10 shadow-md">
+    <nav  v-if="isNav" class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
         <div class="pl-8 w-40">
             <i class="cursor-pointer fas fa-long-arrow-alt-left" style="color:#838ca8;" @click="navigateBack">aabb</i>
         </div>
@@ -15,6 +15,9 @@
 
 import loadjs from "loadjs"
 export default {
+    props: {
+        isNav: Boolean,
+    },
     methods: {
         initTopbar() {
             var scriptId = "script-bcc-topbar"

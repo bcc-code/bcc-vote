@@ -2,28 +2,69 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
-    html {
-        font-family: Ubuntu, sans-serif;
+  html {
+    font-family: Ubuntu, sans-serif;
+  }
+  h1 {
+    @apply text-5xl;
+  }
+  h2 {
+    @apply text-4xl;
+  }
+  h3 {
+    @apply text-3xl;
+  }
+  h4 {
+    @apply text-2xl;
+  }
+  h5 {
+    @apply text-lg;
+  }
+  h6 {
+    @apply text-sm;
+  }
+  p {
+    @apply text-base;
+    letter-spacing: -0.2px;
+  }
+  label {
+    @apply text-xl;
+  }
+  button {
+    @apply text-lg;
+  }
+  a {
+    @apply text-base;
+  }
+  .v-select {
+    @apply text-base;
+  }
+  a {
+    @apply cursor-pointer;
+  }
+  button:focus {
+    @apply outline-none;
+  }
+  .background-home {
+    background: url('./home-mobile.svg');
+    @apply bg-no-repeat;
+    @apply bg-auto;
+    @apply bg-center;
+  }
+  .arrow-left {
+    background: url('./arrow-down.svg');
+    @apply bg-no-repeat;
+    @apply bg-contain;
+    @apply bg-center;
+    transform: rotate(90deg);
+  }
+  @media (min-width: 640px) {
+    .background-home {
+      background: url('./home-desktop.svg');
+      @apply bg-no-repeat;
+      @apply bg-auto;
+      @apply bg-center;
     }
-    
-    h1 { @apply text-5xl;}
-    h2 { @apply text-4xl;}
-    h3 { @apply text-3xl;}
-    h4 { @apply text-2xl;}
-    h5 { @apply text-lg;}
-    h6 { @apply text-sm;}
-    p { @apply text-base; letter-spacing: -0.2px;}
-    label { @apply text-xl;}
-    button { @apply text-lg;}
-    a { @apply text-base;}
-    .v-select { @apply text-base;}
-    
-    a {
-        @apply cursor-pointer;
-    }
-    button:focus {
-        @apply outline-none;
-    }
+  }
 }

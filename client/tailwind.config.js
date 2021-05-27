@@ -21,7 +21,15 @@ module.exports = {
         '5xl': ['32px', '44px'], //h1
       },
       borderRadius: {
-        'xl': '24px'
+        'xl': '1.5rem'
+      },
+      height: {
+        '128': '32rem',
+        '60': '15rem',
+      },
+      top: {
+        '56': '14rem',
+        '28': '7rem'
       },
       colors: {
         gray: {
@@ -47,7 +55,9 @@ module.exports = {
           900: '#70A76F',
         },
         blue: {
+          300: '#EBF4FF',
           600: '#6297FF',
+          800: '#23687D',
           900: '#2A4E96',
         }
       }
