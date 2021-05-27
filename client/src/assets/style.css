@@ -18,7 +18,7 @@
     label { @apply text-xl;}
     button { @apply text-lg;}
     a { @apply text-base;}
-    .v-select { @apply text-base;}
+    .select { @apply text-base;}
     
     a {
         @apply cursor-pointer;
@@ -26,4 +26,12 @@
     button:focus {
         @apply outline-none;
     }
+}
+
+.dk__toast {
+    background-color: #43B02A !important;
+    border-radius: none !important;
+    box-shadow: none !important;
+    max-width: 400px;
+    @apply text-white;
 }
