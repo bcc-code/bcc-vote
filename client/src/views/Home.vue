@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="container vertical">
-    <router-link class="width-80" to="/create">
-    <input type="submit" class="width-80" v-if="$user.administrator" value="create a meeting"/>
+    <router-link class="w-full" to="/create">
+        <input type="submit" class="font-bold" v-if="$user.administrator" value="create a meeting"/>
     </router-link>
     <img alt="Vue logo" src="../assets/logo.png">
     <meeting-tile v-for="(meeting, ind) in meetings" :key="ind" :data="meeting" class="top-space-10"/>
