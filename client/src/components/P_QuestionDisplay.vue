@@ -19,7 +19,7 @@
 
 import IconBase from './IconBase'
 import IconCross from './icons/IconCross'
-import QuestionData from './QuestionData'
+import QuestionData from './P_QuestionData'
 
 export default {
     components: { 
