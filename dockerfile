@@ -6,6 +6,7 @@ LABEL MAINTAINER "Philip Dalen <philip.dalen@bcc.no>"
 
 # copy server files and install dependencies
 WORKDIR /opt/vote/server
+ARG GITHUB_PACKAGES_ACCESS_KEY
 COPY ./server/package.json ./server/package-lock.json ./server/.npmrc /opt/vote/server/
 RUN npm ci
 COPY ./server/ /opt/vote/server

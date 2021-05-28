@@ -12,6 +12,8 @@ steps:
         "dockerfile",
         "-t",
         "$_IMAGE_NAME",
+        "--build-arg",
+        "$_GITHUB_PACKAGES_ACCESS_KEY",
         "."
       ] 
   #push image
