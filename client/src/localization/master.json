@@ -1,5 +1,19 @@
 {
-    "pages": {
-        "home": "Home"
-    }
+  "titles": {
+    "home": "Voting App"
+  },
+  "pages": {
+    "home": "Home"
+  },
+  "actions": {
+    "create-meeting": "Create a voting event",
+    "show-events": "Voting events",
+    "show-history": "History"
+  },
+  "info": {
+    "no-meetings": "There are no meetings currently available"
+  },
+  "descriptions": {
+    "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }
 }
