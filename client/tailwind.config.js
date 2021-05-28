@@ -10,15 +10,26 @@ module.exports = {
         sans: ['Ubuntu', 'sans-serif'],
       },
       fontSize: {
-          xs: ['12px','16px'],    //
-          sm: ['11px','20px'],    //h6
-          base: ['16px','28px'],  //p
-          lg: ['14px','20px'],    //h5
-          xl: ['14px','24px'],    //label
-          '2xl': ['17px','24px'],   //h4
-          '3xl': ['20px','28px'],   //h3
-          '4xl': ['28px','36px'],   //h2
-          '5xl': ['32px','44px'],   //h1
+        xs: ['12px', '16px'], //
+        sm: ['11px', '20px'], //h6
+        base: ['16px', '28px'], //p
+        lg: ['14px', '20px'], //h5
+        xl: ['14px', '24px'], //label
+        '2xl': ['17px', '24px'], //h4
+        '3xl': ['20px', '28px'], //h3
+        '4xl': ['28px', '36px'], //h2
+        '5xl': ['32px', '44px'], //h1
+      },
+      borderRadius: {
+        'xl': '1.5rem'
+      },
+      height: {
+        '128': '32rem',
+        '60': '15rem',
+      },
+      top: {
+        '56': '14rem',
+        '28': '7rem'
       },
       colors: {
         gray: {
@@ -31,6 +42,12 @@ module.exports = {
           700: '#838CA8',
           800: '#5A617D',
           900: '#16171A',
+        },
+        blue: {
+          300: '#EBF4FF',
+          600: '#6297FF',
+          800: '#23687D',
+          900: '#2A4E96',
         }
       }
     },
