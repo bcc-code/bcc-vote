@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "VOTE_HOSTNAME",
   "port": 4040,
   "public": "../public/",
   "paginate": {
