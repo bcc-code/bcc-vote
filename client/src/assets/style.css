@@ -1,37 +1,80 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700");
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
+  @import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700");
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  @layer base {
     html {
-        font-family: Ubuntu, sans-serif;
+      font-family: Ubuntu, sans-serif;
     }
-    
-    h1 { @apply text-5xl;}
-    h2 { @apply text-4xl;}
-    h3 { @apply text-3xl;}
-    h4 { @apply text-2xl;}
-    h5 { @apply text-lg;}
-    h6 { @apply text-sm;}
-    p { @apply text-base; letter-spacing: -0.2px;}
-    label { @apply text-xl;}
-    button { @apply text-lg;}
-    a { @apply text-base;}
-    .select { @apply text-base;}
-    
+    .background-home {
+      background: url('./home-mobile.svg');
+      @apply bg-no-repeat;
+      @apply bg-auto;
+      @apply bg-center;
+    }
+    .info-icon {
+      background: url('./info-icon.svg');
+      @apply bg-no-repeat;
+      @apply bg-contain;
+      @apply bg-center;
+    }
+    .gradient-blue {
+      background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
+    }
+    @media (min-width: 640px) {
+      .background-home {
+        background: url('./home-desktop.svg');
+        @apply bg-no-repeat;
+        @apply bg-auto;
+        @apply bg-center;
+      }
+    }
+    h1 {
+      @apply text-5xl;
+    }
+    h2 {
+      @apply text-4xl;
+    }
+    h3 {
+      @apply text-3xl;
+    }
+    h4 {
+      @apply text-2xl;
+    }
+    h5 {
+      @apply text-lg;
+    }
+    h6 {
+      @apply text-sm;
+    }
+    p {
+      @apply text-base;
+      letter-spacing: -0.2px;
+    }
+    label {
+      @apply text-xl;
+    }
+    button {
+      @apply text-lg;
+    }
     a {
-        @apply cursor-pointer;
+      @apply text-base;
+    }
+    .select {
+      @apply text-base;
+    }
+    a {
+      @apply cursor-pointer;
     }
     button:focus {
-        @apply outline-none;
+      @apply outline-none;
     }
-}
-
-.dk__toast {
+  }
+  
+  .dk__toast {
     background-color: #43B02A !important;
     border-radius: none !important;
     box-shadow: none !important;
     max-width: 400px;
     @apply text-white;
-}
+  }
