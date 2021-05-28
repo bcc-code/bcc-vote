@@ -1,6 +1,7 @@
 <template>
   <div id="container">
-        <div class="flex justify-center items-center mt-4 w-full background-home h-60 sm:h-128">
+        <div class="h-4"></div>
+        <div class="flex justify-center items-center w-full background-home h-60 sm:h-128">
             <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
                 <h1 class="font-bold pb-5">BCC Voting</h1>
                 <p class="hidden sm:block">
@@ -17,9 +18,9 @@
             <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">Voting events</h3>
             <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">History</h3>
         </div>
-        <info>
-            Hello
-            </info>
+        <info v-if="meetings.length == 0">
+            There are no meetings currently available
+        </info>
   </div>
 </template>
 

@@ -59,6 +59,18 @@
     @apply bg-center;
     transform: rotate(90deg);
   }
+  .info-icon {
+    background: url('./info-icon.svg');
+    @apply bg-no-repeat;
+    @apply bg-contain;
+    @apply bg-center;
+  }
+  .cross-icon {
+    background: url('./cross-icon.svg');
+    @apply bg-no-repeat;
+    @apply bg-contain;
+    @apply bg-center;
+  }
   @media (min-width: 640px) {
     .background-home {
       background: url('./home-desktop.svg');
