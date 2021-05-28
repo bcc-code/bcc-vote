@@ -1,6 +1,6 @@
 <template>
     <div id="container" class="container vertical">
-        <h1 class="font-bold">Homepage</h1>
+        <h1 class="font-bold">{{$t('pages.home')}}</h1>
         <button @click="toastMethod('Test text')">Toast</button>
         <SparklesIcon class="h-20 w-20 text-blue-500"/>
         <Spinner />
