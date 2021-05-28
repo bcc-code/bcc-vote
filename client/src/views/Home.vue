@@ -8,9 +8,9 @@
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
                 <router-link to="/create">
-                    <grad-button class="text-2xl sm:text-base sm:mt-4">
+                    <GradButton class="text-2xl sm:text-base sm:mt-4">
                         Create a voting event
-                    </grad-button>
+                    </GradButton>
                 </router-link>
             </div>
         </div>
@@ -18,14 +18,13 @@
             <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">Voting events</h3>
             <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">History</h3>
         </div>
-        <info v-if="meetings.length == 0">
+        <Info>
             There are no meetings currently available
-        </info>
+        </Info>
   </div>
 </template>
 
 <script>
-
 import GradButton from '../components/GradButton'
 import Info from '../components/Info'
 
@@ -43,6 +42,35 @@ export default {
             meetings: [],
         }
     },
+    mounted(){
+        this.loadMeetings();
+    },
+    methods: {
+        loadMeetings(){
+            const roleIds = this.$user.roles.map(r => r.id)
+            this.$client.service('meetings').find({
+                query: {
+                    $or: [
+                        {role: {$in: roleIds}},
+                        {churchID: this.$user.churchID},
+                    ],
+                    minAge: {
+                        $lt: this.$user.age
+                    },
+                    maxAge: {
+                        $gt: this.$user.age
+                    },
+                    $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
+                }
+            }).then(res => {
+                this.meetings = res.data
+                this.meetings.forEach(v => {
+                    v.admin = false
+                })
+                console.log(this.meetings);
+            })
+        }
+    }
 }
 </script>
 

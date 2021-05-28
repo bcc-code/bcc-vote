@@ -1,8 +1,11 @@
 <template>
-    <div id = "app">
+  <div id="app">
+      <router-view v-if="$route.path.includes('/prototype')"></router-view>
+      <template v-else>
         <Header :isNav="!mobile"/>
         <router-view :style="`min-height: calc(100vh - ${layoutHeight}px);`" :mobile="mobile"/>
         <Footer />
+      </template>
     </div>
 </template>
 

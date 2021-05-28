@@ -1,5 +1,5 @@
 <template>
-    <footer class="w-full rounded-t-xl bg-gradient-to-tr from-blue-900 to-blue-600 p-6 text-white text-xl">
+    <footer class="w-full rounded-t-xl gradient-blue p-6 text-white text-xl">
         <div class="py-3">
           <label class="block font-bold">OM BCC</label>
           <a href="https://bcc.no" class="block text-xl">BCC nettside</a>
