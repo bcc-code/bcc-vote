@@ -13,7 +13,7 @@ import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
 import router from './router'
 
-const socket = io('http://localhost:4040')
+const socket = io(window.location.hostname == 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
 const app = createApp(App)
 
 app.component('Spinner', Spinner)
