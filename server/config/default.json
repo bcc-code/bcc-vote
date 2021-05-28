@@ -8,12 +8,12 @@
   },
   "authentication": {
     "oauth": {
-      "redirect": "BCC_VOTE_AUTH_SUCCESS_CLIENT_REDIRECT",
+      "redirect": "VOTE_AUTH_SUCCESS_CLIENT_REDIRECT",
       "auth0": {
         "scope": ["openid", "profile", "email", "church", "country"],
-        "key": "BCC_VOTE_AUTH0_CLIENT_KEY",
-        "secret": "BCC_VOTE_AUTH0_CLIENT_SECRET",
-        "subdomain": "BCC_VOTE_AUTH0_SUBDOMAIN"
+        "key": "VOTE_AUTH0_CLIENT_KEY",
+        "secret": "VOTE_AUTH0_CLIENT_SECRET",
+        "subdomain": "VOTE_AUTH0_SUBDOMAIN"
       }
     },
     "entity": "user",
@@ -40,10 +40,10 @@
   },
   "nedb": "../data",
   "arangodDB": {
-    "username": "BCC_VOTE_ARANGODB_USERNAME",
-    "password": "BCC_VOTE_ARANGODB_PASSWORD",
-    "url": "BCC_VOTE_ARANGODB_URL",
-    "database": "BCC_VOTE_ARANGODB_DATABASE"
+    "username": "VOTE_ARANGODB_USERNAME",
+    "password": "VOTE_ARANGODB_PASSWORD",
+    "url": "VOTE_ARANGODB_URL",
+    "database": "VOTE_ARANGODB_DATABASE"
   },
   "members":{
     "url":"MEMBERS_URL",
