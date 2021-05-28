@@ -13,7 +13,7 @@ steps:
         "-t",
         "$_IMAGE_NAME",
         "--build-arg",
-        "$_GITHUB_PACKAGES_ACCESS_KEY",
+        "GITHUB_PACKAGES_ACCESS_KEY=$_GITHUB_PACKAGES_ACCESS_KEY",
         "."
       ] 
   #push image
