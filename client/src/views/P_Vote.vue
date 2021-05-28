@@ -12,9 +12,9 @@
   </div>
 </template>
 <script>
-import MeetingInfo from '../components/MeetingInfo.vue'
-import QuestionAnswer from '../components/QuestionAnswer.vue'
-import QuestionDisplay from '../components/QuestionDisplay.vue'
+import MeetingInfo from '../components/P_MeetingInfo.vue'
+import QuestionAnswer from '../components/P_QuestionAnswer.vue'
+import QuestionDisplay from '../components/P_QuestionDisplay.vue'
 export default {
     components: {
         QuestionAnswer,

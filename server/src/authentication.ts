@@ -20,7 +20,7 @@ class Auth0Strategy extends OAuthStrategy {
     const { provider, ...params } = originalParams;
     const profile = await this.getProfile(authentication,params)
     const personID = profile["https://login.bcc.no/claims/personId"];
-    
+
     const personSvc = this.app?.services.users;
     let person;
     const tryFind = await personSvc.find({
@@ -35,13 +35,16 @@ class Auth0Strategy extends OAuthStrategy {
       });
     }else{
       person = tryFind.data[0];
-    }
-    const memberSvc = this.app?.services.members;
-    const allInfo = await memberSvc.get(person.personID);
-    allInfo._id = person._id;
+    } 
+    const memberSvc = this.app?.services.person;
+    const member = (await memberSvc.find({query:{
+      personID: personID
+    }})).data[0];
+
+    member._id = person._id;
     return {
       authentication: { strategy: this.name ? this.name : 'unknown' },
-      [entity]: allInfo
+      [entity]: member
     };
   }
 }
@@ -58,7 +61,7 @@ class CustomJWtStrategy extends JWTStrategy {
     }
   }
 
-  
+
 
   async authenticate(authentication: AuthenticationRequest, params: Params) {
     const { accessToken } = authentication;
@@ -72,8 +75,11 @@ class CustomJWtStrategy extends JWTStrategy {
       const payload = await this.authentication?.verifyAccessToken(accessToken, params.jwt);
       const localID = payload.sub.split('/')[1];
       const user = await this.app?.service('users').get(localID);
-      const personID = user.personID; 
-      const person = await this.app?.services.members.get(personID);
+      const personID = user.personID;
+      const memberSvc = this.app?.services.person;
+      const person = (await memberSvc.find({query:{
+        personID: personID
+      }})).data[0];
       person._id = localID;
       return {
         user: person,

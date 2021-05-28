@@ -25,7 +25,7 @@
 
 import IconBase from '../components/IconBase'
 import IconCross from '../components/icons/IconCross'
-import NumericInput from './NumericInput.vue'
+import NumericInput from './P_NumericInput.vue'
 import focus from '../util/functions.js'
 
 export default {

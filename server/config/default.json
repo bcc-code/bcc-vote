@@ -1,6 +1,6 @@
 {
   "host": "localhost",
-  "port": 3030,
+  "port": 4040,
   "public": "../public/",
   "paginate": {
     "default": 10,
@@ -44,5 +44,9 @@
     "password": "BCC_VOTE_ARANGODB_PASSWORD",
     "url": "BCC_VOTE_ARANGODB_URL",
     "database": "BCC_VOTE_ARANGODB_DATABASE"
+  },
+  "members":{
+    "url":"MEMBERS_URL",
+    "apiKey":"MEMBERS_API_KEY"
   }
 }

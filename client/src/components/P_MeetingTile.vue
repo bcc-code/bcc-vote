@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Timer from './Timer.vue'
+import Timer from './P_Timer.vue'
 export default {
     components: {
         Timer,

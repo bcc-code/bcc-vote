@@ -71,7 +71,7 @@
 </template>
 <script>
 import { DatePicker } from 'v-calendar'
-import NumericInput from '../components/NumericInput.vue'
+import NumericInput from '../components/P_NumericInput.vue'
 import { churches, roles } from '../util/dataLists.js'
 
 export default {
@@ -123,9 +123,12 @@ export default {
                 query.minAge = this.minAge
             if(this.isMaxAge)
                 query.maxAge = this.maxAge
-            this.$client.service('members').find({query})
-                .then(res => {
+            this.$client.service('person').find({query})
+                .then(res => {                    
                     this.numOfVoters = res.total
+                })
+                .catch(err =>{
+                  console.error(err)
                 })
         },
         startMeeting(){

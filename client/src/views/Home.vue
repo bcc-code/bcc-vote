@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div>
         <div class="h-4"></div>
         <div class="flex justify-center items-center w-full background-home h-60 sm:h-128">
             <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
