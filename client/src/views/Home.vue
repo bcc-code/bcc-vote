@@ -1,7 +1,6 @@
 <template>
   <div>
-        <div class="h-4"></div>
-        <div class="flex justify-center items-center w-full background-home h-60 sm:h-128">
+        <div class="flex justify-center items-center w-full mt-4 background-home h-60 sm:h-128">
             <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
                 <h1 class="font-bold pb-5">{{$t('titles.home')}}</h1>
                 <p class="hidden sm:block">
@@ -18,7 +17,7 @@
             <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('actions.show-events')}}</h3>
             <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('actions.show-history')}}</h3>
         </div>
-        <Info>
+        <Info class="m-4">
             {{$t('info.no-meetings')}}
         </Info>
   </div>

@@ -1,12 +1,9 @@
 <template>
     <nav  v-if="isNav" class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
         <div class="pl-8 w-40">
-            <i class="cursor-pointer fas fa-long-arrow-alt-left" style="color:#838ca8;" @click="navigateBack">aabb</i>
+            <ArrowLeft class="cursor-pointer h-8" style="color:#838ca8;" @click="navigateBack"/>
         </div>
-        <div class="pr-8 flex justify-end" style="width: 10rem">
-            <button type="button" id="logout" @click="logout" class="hidden sm:flex items-center justify-center btn-teal rounded-xl py-1 px-4">
-                <i class="cursor-pointer fas fa-sign-out-alt pr-3" style="color:#ffffff;" @click="navigateBack">abd</i>
-            </button>  
+        <div class="pr-8 flex justify-end" style="width: 10rem"> 
         </div>     
     </nav>
 </template>
@@ -14,7 +11,13 @@
 <script>
 
 import loadjs from "loadjs"
+
+import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon'
+
 export default {
+    components: {
+        ArrowLeft,
+    },
     props: {
         isNav: Boolean,
     },
