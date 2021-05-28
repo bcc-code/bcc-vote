@@ -24,6 +24,7 @@
   </div>
 </template>
 
+<<<<<<< HEAD
 <script>
 import GradButton from '../components/GradButton'
 import Info from '../components/Info'
@@ -36,6 +37,14 @@ export default {
     props: {
         mobile: Boolean,
     },
+=======
+<script lang="ts">
+import SparklesIcon from 'heroicons-vue3/outline/SparklesIcon'
+import { defineComponent } from 'vue'
+export default defineComponent({
+    components: { SparklesIcon },
+    name: 'Home',
+>>>>>>> bf12b810dedb34aab4ae061d48e002ea34dde850
     data () {
         return {
             currentTab: 'events',
@@ -46,6 +55,7 @@ export default {
         this.loadMeetings();
     },
     methods: {
+<<<<<<< HEAD
         loadMeetings(){
             const roleIds = this.$user.roles.map(r => r.id)
             this.$client.service('meetings').find({
@@ -69,6 +79,10 @@ export default {
                 })
                 console.log(this.meetings);
             })
+=======
+        toastMethod(text:string) {
+            this.$toast(text)
+>>>>>>> bf12b810dedb34aab4ae061d48e002ea34dde850
         }
     }
 }

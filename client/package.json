@@ -12,12 +12,14 @@
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
-    "@heroicons/vue": "^1.0.1",
     "@popperjs/core": "^2.9.2",
     "autoprefixer": "^9.0.0",
     "core-js": "^3.6.5",
     "heroicons-vue3": "^1.0.1",
+<<<<<<< HEAD
     "loadjs": "^4.2.0",
+=======
+>>>>>>> bf12b810dedb34aab4ae061d48e002ea34dde850
     "socket.io-client": "^2.4.0",
     "tailwindcss": "^1.9.6",
     "v-calendar": "^3.0.0-alpha.4",
