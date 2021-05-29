@@ -6,7 +6,7 @@
                 <p class="hidden sm:block">
                     {{$t('descriptions.home')}}
                 </p>
-                <router-link to="/create">
+                <router-link v-if="$user.administrator" to="/create">
                     <GradButton class="text-2xl sm:text-base sm:mt-4">
                         {{$t('actions.create-meeting')}}
                     </GradButton>

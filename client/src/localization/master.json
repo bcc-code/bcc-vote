@@ -21,8 +21,13 @@
   "fields": {
     "poll-title": "Poll title",
     "poll-description": "Description",
-    "poll-date": "Date",
-    "optional": "Optional"
+    "poll-date": "Scheduled date",
+    "poll-church": "Church",
+    "poll-min-age": "Min. Age",
+    "poll-max-age": "Max. Age",
+    "poll-roles": "Roles",
+    "optional": "Optional",
+    "group": "Voting group"
   },
   "descriptions": {
     "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."

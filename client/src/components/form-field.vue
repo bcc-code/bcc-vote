@@ -8,8 +8,10 @@
 
         <input v-if="type == 'number'" type="number" class="box-field" v-model="model">
 
+        <SelectField v-if="type == 'select'" v-model="model" :options="options"/>
+
         <!-- You should give it the unix timestamp -->
-        <DateField v-else-if="type == 'date'" v-model="model"/>
+        <DateField class="box-field" v-else-if="type == 'date'" v-model="model"/>
 
         <textarea v-else-if="type == 'textarea'" v-model="model"></textarea>
         
@@ -17,10 +19,12 @@
 </template>
 <script>
 import DateField from './input-date-field.vue'
+import SelectField from './input-select-field.vue'
 
 export default {
     components: {
         DateField,
+        SelectField,
     },
     props: {
         // General props 
@@ -54,29 +58,18 @@ export default {
 }
 </script>
 <style scoped>
-
-.box-colors {
-    @apply appearance-none;
-    @apply bg-white;
+.box-field {
     @apply border-2;
     @apply border-gray-200;
     @apply rounded;
-    @apply leading-tight;
-    @apply text-black;
-}
 
-.box-field {
-    @apply flex;
-    @apply items-center;
     @apply w-full;
     @apply px-4;
-    @apply h-10;
-    @apply box-colors;
+    @apply py-2;
 }
 
-input:not([type=checkbox]):focus, textarea:focus {
-    @apply outline-none;
-    @apply border-gray-500;
+.box-field:focus {
+    @apply outline-none
 }
 
 input::-webkit-outer-spin-button,

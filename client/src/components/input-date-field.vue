@@ -1,21 +1,23 @@
 <template>
     <div class="formdate"  @keyup.capture="updateValue">
-        <div class="date">
-            <input ref="day" v-model="day" type="string" placeholder="dd" style="width:22px;">
+        <form class="date">
+            <input v-model="day" placeholder="dd" @input="goNext">
             <span class="px-1">/</span>
-            <input ref="month" v-model="month" type="string" placeholder="mm" style="width:28px;">
+            <input v-model="month" placeholder="mm" @input="goNext">
             <span class="px-1">/</span>
-            <input ref="year" v-model="year" type="string" placeholder="yyyy"  style="width:40px;">
+            <input v-model="year" placeholder="yyyy"  style="width:40px;" @input="goNext">
             <span class="px-1"></span>
-            <input ref="hour" v-model="hour" type="string" placeholder="hh" style="width:40px;">
+            <input v-model="hour"  placeholder="hh" @input="goNext">
             <span>:</span>
-            <input ref="minute" v-model="minute" type="string" placeholder="mm" style="width:40px;">
-        </div>
-        <i class="cursor-pointer fa fa-times my-1 w-1/12" @click="resetValue"></i>
+            <input v-model="minute" placeholder="mm">
+        </form>
     </div>
 </template>
 
 <script>
+
+import functions from '../util/functions.js'
+
 export default {
     name: 'FormDate',
     props: {
@@ -39,20 +41,14 @@ export default {
         this.init()
     },
     methods: {
-        resetValue() {
-            this.day = '';
-            this.month = '';
-            this.year = '';
-            this.focusElement = 'day'
-            this.$emit('input','');
-        },
         init(){
             if(this.modelValue){
-                this.day = this.format(new Date(this.modelValue).getDay());
-                this.month = this.format(new Date(this.modelValue).getMonth());
-                this.year = this.format(new Date(this.modelValue).getFullYear());
-                this.hour = this.format(new Date(this.modelValue).getHours());
-                this.minute = this.format(new Date(this.modelValue).getMinutes());
+                const date = new Date(this.modelValue);
+                this.day = this.format(date.getDay());
+                this.month = this.format(date.getMonth());
+                this.year = this.format(date.getFullYear());
+                this.hour = this.format(date.getHours());
+                this.minute = this.format(date.getMinutes());
             }
         },
         format(val){
@@ -65,48 +61,39 @@ export default {
             if (Number.isNaN(time)) {
                 return;
             }
+            if(time < new Date().getTime())
+                return;
             this.$emit('update:modelValue', time)
+        },
+        resetValue() {
+            this.day = '';
+            this.month = '';
+            this.year = '';
+            this.focusElement = 'day'
+            this.$emit('update:modelValue', 0);
+        },
+        goNext(evt){
+            if(evt.target.value.length === evt.target.placeholder.length)
+                functions.focusOnNextFormInput(evt.target);
         }
     }
 }
 </script>
 <style scoped>
-.form-field .formdate {
-    @apply h-10;
-}
 
-.formdate {
-    @apply appearance-none;
-    @apply flex;
-    @apply items-center;
-    @apply justify-between;
-    @apply px-4;
-    @apply w-full;
-    @apply bg-white;
+.date {
     @apply text-gray-700;
-    @apply border-2;
-    @apply border-gray-200;
-    @apply rounded;
-    @apply leading-tight;
 }
 
-.formdate .date {
-    @apply flex;
-    @apply items-center;
-}
-
-.formdate .date input {
+.date input {
+    width: 30px;
+    @apply flex-grow-0;
     -moz-appearance: textfield;
-    @apply bg-transparent;
     @apply text-center;
 }
 
 .formdate .date input:focus {
     @apply outline-none;
-    @apply border-none;
 }
 
-.formdate .date input::-webkit-inner-spin-button {
-    display: none;
-}
 </style>
