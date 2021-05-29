@@ -12,7 +12,7 @@ async function authentication() {
         .reAuthenticate()
         .catch((err: any) => {
             if (err.message === "No accessToken found in storage" || err.message.includes('jwt')) {
-                location.href = "http://localhost:4040/oauth/auth0"
+                location.href = window.location.hostname == 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`                
             }
         })
     if (!authenticationResult) {

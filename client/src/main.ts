@@ -31,7 +31,7 @@ app.use(router)
 app.use(store)
 
 const client = feathers()
-const socket = io('http://localhost:4040')
+const socket = io(window.location.hostname == 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
 
 client.configure(socketio(socket))
 client.configure(auth())
