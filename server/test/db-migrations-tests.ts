@@ -1,15 +1,15 @@
 import 'mocha'
 import { assert } from 'chai';
-import { getAranoDBConfigFromFeathers }  from '../setup-tests/test-set'
+import { getAranoDBConfigFromFeathers }  from './setup-tests/test-set'
 import { Direction, MigrateWithConfig, deleteDatabase, pullDownTestDataLocally, ArangoDBConfig} from "@bcc-code/arango-migrate";
 
 
 describe('Add-hock tests - db migrations', async () => {
 
   it.skip('Apply migrations upwards', async () => {
-    // Act
+
     try {
-        //await deleteDatabase(getAranoDBConfigFromFeathers())
+        await deleteDatabase(getAranoDBConfigFromFeathers())
         await MigrateWithConfig(Direction.Up, getAranoDBConfigFromFeathers(), './src/db-migrations');
         assert.isOk('The migraiton works')
     } catch (error) {
@@ -18,7 +18,7 @@ describe('Add-hock tests - db migrations', async () => {
   });
 
   it.skip('Downgrade latest migration', async () => {
-    // Act
+
     try {
         await MigrateWithConfig(Direction.Down, getAranoDBConfigFromFeathers(), './src/db-migrations');
         assert.isOk('The migraiton works')
@@ -28,7 +28,7 @@ describe('Add-hock tests - db migrations', async () => {
   });
 
   it.only('Import test data', async () => {
-    // Act
+
     try {
         let config:ArangoDBConfig = {
             databaseName: "VOTE_TEST_TEMPLATE",

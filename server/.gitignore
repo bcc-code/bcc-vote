@@ -113,3 +113,4 @@ data/
 
 .env
 public/
+.nyc_output
