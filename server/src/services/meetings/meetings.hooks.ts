@@ -5,7 +5,7 @@ import { HookContext } from "@feathersjs/feathers";
 const { authenticate } = authentication.hooks;
 
 const addNumberOfInvited = async (context: HookContext) => {
-  const memberSvc = context.app.services.members;
+  const memberSvc = context.app.services.person;
 
   const data = context.data;
   const query: any = {

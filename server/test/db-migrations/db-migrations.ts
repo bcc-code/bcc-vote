@@ -6,7 +6,7 @@ import { Direction, MigrateWithConfig, deleteDatabase, pullDownTestDataLocally, 
 
 describe('Add-hock tests - db migrations', async () => {
 
-  it.only('Apply migrations upwards', async () => {
+  it.skip('Apply migrations upwards', async () => {
     // Act
     try {
         //await deleteDatabase(getAranoDBConfigFromFeathers())
@@ -27,7 +27,7 @@ describe('Add-hock tests - db migrations', async () => {
     }
   });
 
-  it.skip('Import test data', async () => {
+  it.only('Import test data', async () => {
     // Act
     try {
         let config:ArangoDBConfig = {
