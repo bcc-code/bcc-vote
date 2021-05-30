@@ -18,7 +18,7 @@ class Auth0Strategy extends OAuthStrategy {
   async authenticate(authentication: AuthenticationRequest, originalParams: Params) {
     const entity: string = this.configuration.entity;
     const { provider, ...params } = originalParams;
-    const profile = await this.getProfile(authentication,params)
+    const profile = await this.getProfile(authentication,params);
     const personID = profile["https://login.bcc.no/claims/personId"];
 
     const personSvc = this.app?.services.users;
@@ -51,7 +51,7 @@ class Auth0Strategy extends OAuthStrategy {
 
 class CustomJWtStrategy extends JWTStrategy {
   async getEntity(id: any, params: any) {
-    const personService = this.app?.services.users
+    const personService = this.app?.services.users;
     try {
       id = id.split('/')[1];
       const user = await personService.get(id, {});
