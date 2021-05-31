@@ -12,9 +12,9 @@
                     </div>
                 </router-link>
                 <router-link to="/polling-event:id/prepare">
-                    <GradButton class="text-2xl sm:text-base sm:mt-4 ml-4">
+                    <button class="gradient-button">
                         Administrate Meeting
-                    </GradButton>
+                    </button>
                 </router-link>
             </div>
         </div>

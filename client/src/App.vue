@@ -17,19 +17,23 @@
 
 import Footer from "./components/layout-footer.vue"
 import Header from "./components/layout-header.vue"
-
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
     components: {
         Footer,
         Header,
     },
-    data (){
-      return {
-        layoutHeight: '376',
-      }
-    },
-    
-}
+    computed: {
+        layoutHeight() {
+          let height = 376;
+          console.log(this.$route.path)
+          if(this.$route.path == "/") {
+            height = height - 48
+          }
+          return height
+        }
+    }  
+})
 </script>
 <style scoped>
 .app-container {
