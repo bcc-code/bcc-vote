@@ -48,19 +48,12 @@ export default {
         // If you specify the value the the checkbox will act as a radio button
         value: {type: String, required: false}
     },
-    data: function(){
-        return {
-            setValue: false,
-        }
-    },
     computed: {
         model: {
             get () {
-                this.setValue = false
                 return this.modelValue
             },
             set (val) {
-                this.setValue = true;
                 this.$emit('update:modelValue', val);
             }
         }
