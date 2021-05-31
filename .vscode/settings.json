@@ -1,0 +1,23 @@
+{
+    "mochaExplorer.files": [
+        "./server/test/*.ts",       
+    ],
+    "mochaExplorer.ignore": "./server/test/setup-tests/*",
+    "mochaExplorer.require": "ts-node/register",
+    "mochaExplorer.mochaPath": "./server/node_modules/mocha",
+    "mochaExplorer.cwd": "./server",
+    "mochaExplorer.debuggerConfig": "",
+    "mochaExplorer.debuggerPort": 9230,
+    "mochaExplorer.timeout":5000,
+    "mochaExplorer.env": {
+        "NODE_ENV": "test"
+    },  
+    "eslint.validate": [
+        "javascript",
+        "vue"
+        ],
+    "eslint.workingDirectories": [{"mode": "auto" }],
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,    
+}
