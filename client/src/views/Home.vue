@@ -11,11 +11,6 @@
                         {{$t('actions.create-meeting')}}
                     </button>
                 </router-link>
-                <router-link to="/polling-event:id/prepare">
-                    <button class="gradient-button md-button ml-3">
-                        Administrate Meeting
-                    </button>
-                </router-link>
             </div>
         </div>
         <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
