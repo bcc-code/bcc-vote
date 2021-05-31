@@ -16,8 +16,16 @@ async function authentication() {
         router.$user.church = user.church
         router.$user.churchID = user.churchID
         router.$user.personID = user.personID
-        router.$user.roles = user.roles
         router.$user.administrator = user.administrator
+        if(user.roles){
+            router.$user.authorityLevel = user.roles[0].securityLevel
+            router.$user.roles = user.roles
+        }
+        else{
+            router.$user.roles = user.role
+            router.$user.authorityLevel = 10;
+        }
+    
 
         return { user, authenticated: true }
 
