@@ -1,7 +1,10 @@
 <template>
-  <div class="w-full h-full bg-gray-100 px-4 py-8">
-    <FormSection>
-    </FormSection>
+  <div class="p-10">
+    <div class="w-full h-full px-4 py-8">
+      <FormSection>
+        awda
+      </FormSection>
+    </div>
   </div>
 </template>
 <script>
@@ -18,6 +21,18 @@ export default {
     },
     data() {
       return {
+        pollingEvent: {
+          title: "Yearly Meeting",
+          description: "Yearly Meeting in Oslo",
+          type: "poll",
+          creatorId: "person/122324242",
+          participantFilter: {
+            orgs: [],
+            roles: [],
+            minAge: 10,
+            maxAge: 100
+          }
+        }
       }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full bg-gray-100 px-4 py-8">
+  <div class="w-full h-full px-4 py-8">
     <FormSection>
       <h3 class="font-bold mb-6">{{$t(`forms.new-poll`)}}</h3>
       <Info class="mb-8">
