@@ -1,22 +1,33 @@
 <template>
-    <nav  v-if="isNav" class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
-        <div class="pl-8 w-40">
-            <i class="cursor-pointer fas fa-long-arrow-alt-left" style="color:#838ca8;" @click="navigateBack">aabb</i>
-        </div>
-        <div class="pr-8 flex justify-end" style="width: 10rem">
-            <button type="button" id="logout" @click="logout" class="hidden sm:flex items-center justify-center btn-teal rounded-xl py-1 px-4">
-                <i class="cursor-pointer fas fa-sign-out-alt pr-3" style="color:#ffffff;" @click="navigateBack">abd</i>
-            </button>  
-        </div>     
-    </nav>
+    <div v-if="showNavigationBar" >
+        <nav class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
+            <div class="pl-5">
+                <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
+            </div>
+            <div class="pr-8 flex justify-end" style="width: 10rem"> 
+            </div>     
+        </nav>
+        <div class="h-12"></div>
+    </div>
 </template>
 
 <script>
 
+import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon'
+
+import { defineComponent } from 'vue'
 import loadjs from "loadjs"
-export default {
-    props: {
-        isNav: Boolean,
+
+export default defineComponent({
+    components: {
+        ArrowLeft,
+    },
+    computed: {
+        showNavigationBar(){
+            if(this.$route.path == "/")
+                return false
+            return true
+        },
     },
     methods: {
         initTopbar() {
@@ -51,5 +62,5 @@ export default {
     mounted: function(){
         this.initTopbar()
     },
-}
+})
 </script>

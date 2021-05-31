@@ -1,10 +1,11 @@
 import { RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
+import Create from '../views/Create.vue'
 import Prototype from '../views/Prototype.vue'
 import PrototypeHome from '../views/P_Home.vue'
-import Create from '../views/P_Create.vue'
-import Vote from '../views/P_Vote.vue'
-import Administer from '../views/P_AdministerVoting.vue'
+import PrototypeCreate from '../views/P_Create.vue'
+import PrototypeVote from '../views/P_Vote.vue'
+import PrototypeAdminister from '../views/P_AdministerVoting.vue'
 import Test from '../views/Test.vue'
 
 export const routes: Array<RouteRecordRaw> = [
@@ -17,6 +18,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/test',
         name: 'Test',
         component: Test
+    },
+    {
+        path: '/create',
+        name: 'Create a meeting',
+        component: Create,
     },
     {
         path: '/prototype',
@@ -34,7 +40,7 @@ export const routes: Array<RouteRecordRaw> = [
             {
                 name: 'Prototype create',
                 path: '/create',
-                component: Create,
+                component: PrototypeCreate,
                 meta: {
                     needAdmin: true
                 }
@@ -42,12 +48,12 @@ export const routes: Array<RouteRecordRaw> = [
             {
                 name: 'Prototype meeting',
                 path: '/meeting-:id',
-                component: Vote
+                component: PrototypeVote
             },
             {
                 name: 'Prototype admin',
                 path: '/admin-:id',
-                component: Administer,
+                component: PrototypeAdminister,
                 meta: {
                     needAdmin: true
                 }

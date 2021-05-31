@@ -11,7 +11,23 @@
     "show-history": "History"
   },
   "info": {
-    "no-meetings": "There are no meetings currently available"
+    "no-meetings": "There are no meetings currently available",
+    "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it."
+  },
+  "forms": {
+    "new-poll": "Create a new poll"
+
+  },
+  "fields": {
+    "poll-title": "Poll title",
+    "poll-description": "Description",
+    "poll-date": "Scheduled date",
+    "poll-church": "Church",
+    "poll-min-age": "Min. Age",
+    "poll-max-age": "Max. Age",
+    "poll-roles": "Roles",
+    "optional": "Optional",
+    "group": "Voting group"
   },
   "descriptions": {
     "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
