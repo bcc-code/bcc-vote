@@ -32,7 +32,12 @@ module.exports = {
         '28': '7rem'
       },
       padding: {
-        '15': '60px'
+        '15': '3.75rem',
+        '0.5': '0.125rem'
+      },
+      margin: {
+        '7': '1.75rem',
+        '1.5': '0.375rem'
       },
       colors: {
         gray: {

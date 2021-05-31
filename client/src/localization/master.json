@@ -9,12 +9,16 @@
     "create-meeting": "Create a voting event",
     "show-events": "Voting events",
     "show-history": "History",
-    "show-all-participants": "Show all participants"
+    "show-all-participants": "Show all participants",
+    "add-option": "Add another option",
+    "add-question": "Add another question"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
-    "number-of-participants": "Number of participants"
+    "number-of-participants": "Number of participants",
+    "question-visibility": "The questions won't be visible until the poll is started",
+    "answer-explanations": "For each answer opotion you can add an explanation which explains what does it mean for the voter. That message will appear after sombody submits an answer."
   },
   "forms": {
     "new-poll": "Create a new poll"
@@ -28,13 +32,22 @@
     "poll-min-age": "Min. Age",
     "poll-max-age": "Max. Age",
     "poll-roles": "Roles",
+    "poll-public": "Public (Available for everybody)",
+    "poll-non-public": "Availible for the event creator (Hidden for members)",
+    "poll-anonymous": "Anonymous (Hidden for everybody)",
     "optional": "Optional",
-    "group": "Voting group"
+    "group": "Voting group",
+    "answer-option": "Option",
+    "answer-explanation": "Answer Explanation",
+    "if-chosen": "If choose"
   },
   "descriptions": {
     "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
   },
-  "misc": {
-    "voters": "Voters"
+  "labels": {
+    "voters": "Voters",
+    "poll": "Poll",
+    "answers": "Answers",
+    "option": "Option"
   }
 }

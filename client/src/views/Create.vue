@@ -5,9 +5,9 @@
       <InfoBox class="mb-8">
           {{$t('info.define-group')}}
       </InfoBox>
-      <FormField v-model="eventData.title" translation="poll-title" type="input"/>
+      <FormField v-model="eventData.title" translation="poll-title" type="string"/>
 
-      <FormField v-model="eventData.description" translation="poll-description" type="input" :optional="true"/>
+      <FormField v-model="eventData.description" translation="poll-description" type="string" :optional="true"/>
 
       <FormField v-model="eventData.startDateTime" translation="poll-date" type="date"/>
 
@@ -50,11 +50,13 @@
 
 import InfoBox from '../components/info-box'
 import FormField from '../components/form-field'
+import PollForm from '../components/PollForm'
 
 export default {
    components: {
         InfoBox,
         FormField,
+        PollForm,
     },
     data() {
       return {
