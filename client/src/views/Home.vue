@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="flex justify-center items-center w-full mt-4 background-home h-60 sm:h-128">
+        <div class="flex justify-center items-center w-full background-home h-64 sm:h-128">
             <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
                 <h1 class="font-bold pb-5">{{$t('titles.home')}}</h1>
                 <p class="hidden sm:block">
@@ -74,4 +74,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

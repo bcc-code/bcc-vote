@@ -1,14 +1,15 @@
 <template>
   <div class="w-full h-full bg-gray-100 px-4 py-8">
-    <FormSection name="new-poll">
+    <FormSection>
+      <h3 class="font-bold mb-6">{{$t(`forms.new-poll`)}}</h3>
       <Info class="mb-8">
           {{$t('info.define-group')}}
       </Info>
-      <FormField v-model="formData.title" name="poll-title" type="input"/>
+      <FormField v-model="formData.title" translation="poll-title" type="input"/>
 
-      <FormField v-model="formData.description" name="poll-description" type="input" :optional="true"/>
+      <FormField v-model="formData.description" translation="poll-description" type="input" :optional="true"/>
 
-      <FormField v-model="formData.date" name="poll-date" type="date"/>
+      <FormField v-model="formData.date" translation="poll-date" type="date"/>
 
       <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
@@ -16,14 +17,14 @@
           {{$t('info.define-group')}}
       </Info>
 
-      <FormField v-model="formData.church" name="poll-church" type="select" :options="churches"/>
+      <FormField v-model="formData.church" translation="poll-church" type="select" :options="churches"/>
 
       <div class="flex w-full gap-10">
-        <FormField class="flex-grow" v-model="formData.minAge" name="poll-min-age" type="number"/>
-        <FormField class="flex-grow" v-model="formData.maxAge" name="poll-max-age" type="number"/>
+        <FormField class="flex-grow" v-model="formData.minAge" translation="poll-min-age" type="number"/>
+        <FormField class="flex-grow" v-model="formData.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="formData.role" type='select' name="poll-roles" :options="roles"/>
+      <FormField v-model="formData.role" type='select' translation="poll-roles" :options="roles"/>
 
       <GradButton class="text-2xl sm:text-base sm:mt-4">
           {{$t('actions.create-meeting')}}
@@ -66,7 +67,8 @@ export default {
           maxAge: 0,
           role: -1,
           date: 0,
-          val: 'av',
+          isSet: false,
+          radioSelect: 'av',
         }
       }
     }

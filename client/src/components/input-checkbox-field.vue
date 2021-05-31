@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-5 h-5">
-    <div v-if="isSet" class="absolute top-0 gradient-blue w-5 h-5 rounded">
-      <CheckIcon v-if="isSet" class="w-5 h-5 text-white absolute top-0"/>
+    <div v-show="isSet" class="absolute top-0 gradient-blue w-5 h-5 rounded">
+      <CheckIcon class="w-5 h-5 text-white absolute top-0"/>
     </div>
     <div class="absolute the-border rounded w-5 h-5"></div>
     <input v-model="model" :value="value" type="checkbox" class="w-5 h-5 opacity-0 cursor-pointer"/>
@@ -25,7 +25,6 @@ export default {
         return this.modelValue;
       },
       set(val) {
-        console.log(this.value, this.modelValue);
         if(val)
           this.$emit('update:modelValue', this.value)
         else if(typeof this.value == "boolean")

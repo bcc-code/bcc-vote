@@ -1,11 +1,11 @@
 <template>
     <div v-if="type == 'checkbox' || type == 'radio'" class="flex items-center mb-5">
         <CheckboxField v-model="model" :value="value"/>
-        <h5 class="font-bold ml-3">{{$t(`fields.${name}`)}}</h5>
+        <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
     </div>
     <section v-else class="mb-5">
         <div class="flex justify-between">
-        <h5 class="mb-1 font-bold">{{$t(`fields.${name}`)}}</h5>
+        <h5 class="mb-1 font-bold">{{$t(`fields.${translation}`)}}</h5>
         <h5 v-if="optional" class="text-gray-600">{{$t('fields.optional')}}</h5>
         </div>
         <input v-if="type == 'input'" class="box-field" v-model="model">
@@ -37,7 +37,7 @@ export default {
         modelValue: String|Number|Boolean,
 
         // General props 
-        name: { type: String, required: true },
+        translation: { type: String, required: true },
         required: { type: Boolean, default: false },
         type: { type: String, required: false },
         optional: {type: Boolean, default: false},
