@@ -1,6 +1,10 @@
 <template>
     <div class="relative w-full">
-        <select class="box-field appearance-none" v-model="model">
+
+        <select v-if="isMultiple" class="box-field appearance-none" v-model="model" multiple>
+          <option v-for="(option, ind) in options" :key="ind" :value="option.val">{{option.name}}</option>
+        </select>
+        <select v-else class="box-field appearance-none" v-model="model">
           <option v-for="(option, ind) in options" :key="ind" :value="option.val">{{option.name}}</option>
         </select>
         <ChevronDownIcon class="w-14 h-10 py-2 px-4 absolute right-0 bottom-0 text-gray-900 pointer-events-none"/>
@@ -17,7 +21,7 @@ export default {
     },
     props: {
         options: Array,
-        modelValue: String,
+        modelValue: Number|Array,
     },
     computed: {
       model: {
@@ -27,6 +31,9 @@ export default {
         set(val){
           this.$emit('update:modelValue', val);
         }
+      },
+      isMultiple(){
+        return typeof this.modelValue == 'object'
       }
     },
     emits: ['update:modelValue']

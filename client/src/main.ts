@@ -37,11 +37,10 @@ client.configure(socketio(socket))
 client.configure(auth())
 
 const user = {
-    name: null,
-    church: null,
     age: null,
+    churchID: null,
     personID: null,
-    administrator: null,
+    authorityLevel: null,
     roles: null,
 }
 
