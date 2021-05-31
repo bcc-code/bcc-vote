@@ -1,6 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
-import Create from '../views/Create.vue'
+import PollingEventCreate from '../views/PollingEventCreate.vue'
+import PollingEventPrepare from '../views/AdminEventPrepare.vue'
+import PollingEventLive from '../views/AdminEventLive.vue'
 import Prototype from '../views/Prototype.vue'
 import PrototypeHome from '../views/P_Home.vue'
 import PrototypeCreate from '../views/P_Create.vue'
@@ -21,8 +23,18 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/create',
-        name: 'Create a meeting',
-        component: Create,
+        name: 'Create a Polling event',
+        component: PollingEventCreate,
+    },
+    {
+        name: 'Prepare the Polling event',
+        path: '/polling-event:id/prepare',
+        component: PollingEventPrepare
+    },
+    {
+        name: 'Administrate the Live polling event',
+        path: '/polling-event:id/live-polling',
+        component: PollingEventLive
     },
     {
         path: '/prototype',

@@ -11,6 +11,11 @@
                         {{$t('actions.create-meeting')}}
                     </GradButton>
                 </router-link>
+                <router-link to="/polling-event:id/prepare">
+                    <GradButton class="text-2xl sm:text-base sm:mt-4 ml-4">
+                        Administrate Meeting
+                    </GradButton>
+                </router-link>
             </div>
         </div>
         <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
