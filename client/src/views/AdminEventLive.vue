@@ -23,6 +23,7 @@
 <script lang="ts">
 import InfoBox from '../components/info-box.vue'
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
+import { PollingEvent } from '../domain'
 import { defineComponent } from 'vue'
 export default defineComponent({
    components: {
@@ -31,8 +32,10 @@ export default defineComponent({
     },
     data() {
       return {
-        currentTab: 'polls',
+        currentTab: 'polls' as string,
         pollingEvent: {
+          _id: '',
+          _key: '',
           title: "Yearly Meeting",
           description: "Yearly Meeting in Oslo",
           type: "poll",
@@ -43,7 +46,7 @@ export default defineComponent({
             minAge: 10,
             maxAge: 100
           }
-        }
+        } as PollingEvent
       }
     },
     methods: {

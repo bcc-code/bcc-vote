@@ -50,7 +50,6 @@
 
 import InfoBox from '../components/info-box'
 import FormField from '../components/form-field'
-
 export default {
    components: {
         InfoBox,
