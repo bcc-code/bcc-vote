@@ -51,10 +51,10 @@ export default defineComponent({
     },
     computed: {
         model: {
-            get () {
+            get():any {
                 return this.modelValue
             },
-            set (val) {
+            set (val:any) {
                 if(this.type == 'number')
                     val = parseInt(val);
                 this.$emit('update:modelValue', val);
