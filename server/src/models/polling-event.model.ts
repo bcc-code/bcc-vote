@@ -12,11 +12,7 @@ export default function (app: Application) {
     database: arangoDBConfig.database,
     authType: AUTH_TYPES.BASIC_AUTH,
     username: arangoDBConfig.username,
-    password: arangoDBConfig.password,
-    paginate: {
-      default: 100,
-      max: 50000
-    }
+    password: arangoDBConfig.password
   };
   return personDatabase;
 }

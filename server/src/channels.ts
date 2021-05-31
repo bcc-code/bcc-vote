@@ -6,23 +6,23 @@ export default function(app: Application): void {
     return;
   }
 
-  app.services.meetings.publish('patched', data => {
+  app.services['polling-event'].publish('patched', (data:any) => {
 
     return app.channel(data._key);
   });
-  app.services.answers.publish('created', data => {
+  app.services.answer.publish('created', (data:any) => {
     return app.channel(data.meetingID);
   });
 
-  app.services.answers.publish('patched', data => {
+  app.services.answer.publish('patched', (data:any) => {
     return app.channel(data.meetingID);
   });
 
-  app.services.questions.publish('created', data => {
+  app.services.poll.publish('created', (data:any) => {
     return app.channel(data.meetingID);
   });
 
-  app.services.questions.publish('patched', data => {
+  app.services.poll.publish('patched', (data:any) => {
     return app.channel(data.meetingID);
   });
 }

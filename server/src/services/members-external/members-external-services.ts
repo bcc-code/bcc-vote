@@ -1,6 +1,5 @@
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import createModel from '../../models/meetings.model';
 const rest = require('@feathersjs/rest-client');
 const fetch = require('node-fetch');
 

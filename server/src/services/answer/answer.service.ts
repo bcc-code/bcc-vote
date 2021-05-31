@@ -1,14 +1,14 @@
 // Initializes the `meetings` service on path `/meetings`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { Answers } from './answers.class';
-import createModel from '../../models/answers.model';
-import hooks from './answers.hooks';
+import { Answer } from './answer.class';
+import createModel from '../../models/answer.model';
+import hooks from './answer.hooks';
 
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
-    'answers': Answers & ServiceAddons<any>;
+    'answer': Answer & ServiceAddons<any>;
   }
 }
 
@@ -16,9 +16,9 @@ export default function (app: Application): void {
   const Model = createModel(app);
 
   // Initialize our service with any options it requires
-  app.use('/answers', new Answers(Model, app));
+  app.use('/answer', new Answer(Model, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('answers');
+  const service = app.service('answer');
   service.hooks(hooks);
 }
