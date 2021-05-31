@@ -3,7 +3,7 @@
         <CheckboxField v-model="model" :value="value"/>
         <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
     </div>
-    <section v-else class="mb-5">
+    <section v-else class="mb-5 max-w-sm">
         <div class="flex justify-between">
         <h5 class="mb-1 font-bold">{{$t(`fields.${translation}`)}}</h5>
         <h5 v-if="optional" class="text-gray-600">{{$t('fields.optional')}}</h5>
@@ -12,6 +12,7 @@
 
         <input v-if="type == 'number'" type="number" class="box-field" v-model="model">
 
+        <!-- if you pass an array it will be a multiple select -->
         <SelectField v-if="type == 'select'" v-model="model" :options="options"/>
 
         <!-- You should give it the unix timestamp -->
@@ -34,7 +35,7 @@ export default {
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: String|Number|Boolean,
+        modelValue: String|Number|Boolean|Array,
 
         // General props 
         translation: { type: String, required: true },

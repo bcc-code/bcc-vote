@@ -5,11 +5,11 @@
       <Info class="mb-8">
           {{$t('info.define-group')}}
       </Info>
-      <FormField v-model="formData.title" translation="poll-title" type="input"/>
+      <FormField v-model="eventData.title" translation="poll-title" type="input"/>
 
-      <FormField v-model="formData.description" translation="poll-description" type="input" :optional="true"/>
+      <FormField v-model="eventData.description" translation="poll-description" type="input" :optional="true"/>
 
-      <FormField v-model="formData.date" translation="poll-date" type="date"/>
+      <FormField v-model="eventData.date" translation="poll-date" type="date"/>
 
       <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
@@ -17,18 +17,31 @@
           {{$t('info.define-group')}}
       </Info>
 
-      <FormField v-model="formData.church" translation="poll-church" type="select" :options="churches"/>
+      <FormField v-model="filter.church" translation="poll-church" type="select" :options="churches"/>
 
-      <div class="flex w-full gap-10">
-        <FormField class="flex-grow" v-model="formData.minAge" translation="poll-min-age" type="number"/>
-        <FormField class="flex-grow" v-model="formData.maxAge" translation="poll-max-age" type="number"/>
+      <div class="flex w-full gap-10 max-w-sm">
+        <FormField class="flex-grow" v-model="filter.minAge" translation="poll-min-age" type="number"/>
+        <FormField class="flex-grow" v-model="filter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="formData.role" type='select' translation="poll-roles" :options="roles"/>
+      <FormField v-model="filter.role" type='select' translation="poll-roles" :options="roles"/>
 
-      <GradButton class="text-2xl sm:text-base sm:mt-4">
-          {{$t('actions.create-meeting')}}
-      </GradButton>
+      <div class="flex justify-between py-4 font-bold items-center">
+        <div>
+          <h6>{{$t('info.number-of-participants')}}</h6>
+          <h3>{{numberOfVoters}} {{$t('misc.voters')}}</h3>
+        </div>
+        <div>
+          <LightButton class="text-lg">{{$t('actions.show-all-participants')}}</LightButton>
+        </div>
+      </div>
+
+      <div class="flex justify-center items-center py-5 gap-5 sm:mt-4">
+        <h4 @click="goHome" class="text-gray-800 font-bold p-4 cursor-pointer">Discard</h4>
+        <GradButton class="text-lg" @click="createPollingEvent">
+            {{$t('actions.create-meeting')}}
+        </GradButton>
+      </div>
     </FormSection>
   </div>
 </template>
@@ -37,40 +50,94 @@
 
 import Info from '../components/Info'
 import GradButton from '../components/GradButton'
+import LightButton from '../components/LightButton'
 import FormField from '../components/form-field'
 import FormSection from '../components/FormSection'
 
 export default {
    components: {
         GradButton,
+        LightButton,
         Info,
         FormField,
         FormSection
     },
     data() {
       return {
-        churches: [
-          {name: 'All Churches', val: 0},
-          {name: 'BKM Svartskog', val: 505},
-          {name: 'BKM Malinka', val: 55},
-        ],
-        roles: [
-          {name: 'PMO Manager', val: 0},
-          {name: 'Developer', val: 505},
-          {name: 'Member', val: 55},
-        ],
-        formData: {
-          title: 'Hello',
-          minAge: "10",
-          church: -1,
-          minAge: 0,
-          maxAge: 0,
-          role: -1,
-          date: 0,
-          isSet: false,
-          radioSelect: 'av',
-        }
+        churches: [],
+        roles: [],
+        eventData: {
+          title: '',
+          description: '',
+          date: null,
+          status: 'inactive',
+        },
+        filter: {
+          church: 0,
+          role: 0,
+          minAge: null,
+          maxAge: null,
+        },
+        numberOfVoters: 10,
       }
+    },
+    async created(){
+      this.loadOrgs();
+      this.loadRoles();
+    },
+    methods: {
+      async loadOrgs(){
+          const res = await this.$client.service('org').find({
+            query: {
+              activeStatusCode: 0,
+              type: 'church',
+              $select: ['name', 'churchID'],
+              $sort: {
+                name: 1
+              }
+            }
+          })
+          this.churches = res.map(c => {
+            return {
+              name: c.name,
+              val: c.churchID,
+            }
+          });
+          this.churches.unshift({name: 'All churches', val: 0})
+      },
+      async loadRoles(){
+          const res = await this.$client.service('role').find({
+            query: {
+              $sort: {
+                name: 1
+              },
+              
+              $select: ['name', '_key'],
+            }
+          })
+          this.roles = res.map(c => {
+            return {
+              name: c.name,
+              val: c._key,
+            }
+          });
+          this.roles.unshift({name: 'All roles', val: 0})
+      },
+      createPollingEvent(){
+        const data = this.eventData;
+        data.participantFilter = {}
+        for(const key in this.filter)
+          if(this.filter[key])
+            data.participantFilter[key] = this.filter[key];
+          
+        this.$client.service('meetings').create(data)
+        .then((res) => {
+          this.$router.push('/create/'+res._key);
+        })
+      },
+      goHome(){
+        this.$router.push('/');
+      },
     }
 }
 </script>

@@ -55,7 +55,6 @@ export default {
             return val.toString().padStart(2, '0');
         },
         updateValue() {
-            console.log('update');
             const stringDate = `${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:00`
             const time = Date.parse(stringDate);
             if (Number.isNaN(time)) {
