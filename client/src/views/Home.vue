@@ -7,20 +7,20 @@
                     {{$t('descriptions.home')}}
                 </p>
                 <router-link v-if="$user.authorityLevel <= 5" to="/create">
-                    <div class="gradient-button text-2xl sm:text-base sm:mt-4">
+                    <button class="gradient-button lg-button text-2xl sm:text-base sm:mt-4">
                         {{$t('actions.create-meeting')}}
-                    </div>
+                    </button>
                 </router-link>
                 <router-link to="/polling-event:id/prepare">
-                    <button class="gradient-button">
+                    <button class="gradient-button md-button ml-3">
                         Administrate Meeting
                     </button>
                 </router-link>
             </div>
         </div>
         <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
-            <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('actions.show-events')}}</h3>
-            <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('actions.show-history')}}</h3>
+            <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('labels.voting-events')}}</h3>
+            <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('labels.history')}}</h3>
         </div>
         <InfoBox class="m-4">
             {{$t('info.no-meetings')}}

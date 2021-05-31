@@ -8,9 +8,15 @@
   },
   "actions": {
     "create-meeting": "Create a voting event",
-    "show-events": "Voting events",
-    "show-history": "History",
-    "show-all-participants": "Show all participants"
+    "show-all-participants": "Show all participants",
+    "start-live-poll": "Start this live poll",
+    "close-live-poll": "Close this live poll"
+  },
+  "labels": {
+    "voting-events": "Voting events",
+    "history": "History",
+    "polls": "Polls",
+    "results": "Results"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",

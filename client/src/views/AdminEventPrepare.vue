@@ -1,18 +1,37 @@
 <template>
-  <div class="p-10">
+  <div class="max-w-5xl mx-auto">
     <div class="w-full h-full px-4 py-8">
-      awda
+      <div class="form-section padding-md">
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="font-bold">{{pollingEvent.title}}</h2>
+          <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-5"/>
+        </div>
+        <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce pretium porta interdum. Ut felis diam, tristique in tellus et, maximus molestie eros.</p>
+        <div class="w-full flex justify-center mt-8">
+          <button class="gradient-button md-button text-lg" @click="activatePollingEvent">{{$t('actions.start-live-poll')}}</button>
+        </div>
+      </div>
+      <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
+          <h3 :class="currentTab == 'polls' ? 'text-blue-900': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+          <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
+      </div>
+      <div v-if="currentTab === 'polls'" class="form-section padding-md">Polls</div>
+      <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
   </div>
 </template>
-<script>
-import FormField from '../components/form-field'
-export default {
+<script lang="ts">
+import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
+import FormField from '../components/form-field.vue'
+import { defineComponent } from 'vue'
+export default defineComponent({
    components: {
-        FormField
+        FormField,
+        PencilIcon
     },
     data() {
       return {
+        currentTab: 'polls',
         pollingEvent: {
           title: "Yearly Meeting",
           description: "Yearly Meeting in Oslo",
@@ -26,6 +45,14 @@ export default {
           }
         }
       }
+    },
+    methods: {
+      editPollingEvent() {
+        this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
+      },
+      activatePollingEvent() {
+        this.$router.push({ path: '/polling-event:id/live-polling', params: { id: this.pollingEvent._id } })
+      }
     }
-}
+})
 </script>

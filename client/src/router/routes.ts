@@ -36,7 +36,10 @@ export const routes: Array<RouteRecordRaw> = [
     {
         name: 'Administrate the Live polling event',
         path: '/polling-event:id/live-polling',
-        component: PollingEventLive
+        component: PollingEventLive,
+        meta: {
+            bgColor: "bg-blue-900"
+        }
     },
     {
         path: '/create/:id',

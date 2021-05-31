@@ -2,7 +2,7 @@
   <div id="app">
     <router-view v-if="$route.path.includes('/prototype')"></router-view>
     <template v-else>
-      <div class="app-container">
+      <div :class="['app-container',backgroundClass]">
         <Header />
         <transition name="fade" mode="out-in">
             <router-view :key="$route.fullPath" :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
@@ -26,11 +26,17 @@ export default defineComponent({
     computed: {
         layoutHeight() {
           let height = 376;
-          console.log(this.$route.path)
           if(this.$route.path == "/") {
             height = height - 48
           }
           return height
+        },
+        backgroundClass() {
+          let bgClass = 'bg-gray-100'
+          if(this.$route.meta && this.$route.meta.bgColor) {
+            bgClass = this.$route.meta.bgColor as string
+          }
+          return bgClass
         }
     }  
 })
@@ -39,7 +45,6 @@ export default defineComponent({
 .app-container {
     min-height: calc(100vh - 96px);
     @apply relative;
-    @apply bg-gray-100;
 }
 </style>
 <style>

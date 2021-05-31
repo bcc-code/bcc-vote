@@ -5,7 +5,7 @@
       <slot>
       </slot>
     </label>
-    <XIcon class="text-blue-800 flex-shrink-0 h-6 w-6 p-1 ml-1" @click="show = false"/>
+    <XIcon class="text-blue-800 flex-shrink-0 h-6 w-6 p-1 ml-1 cursor-pointer" @click="show = false"/>
   </div>
 </template>
 
