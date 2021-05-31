@@ -23,7 +23,7 @@
         <FormField class="flex-grow" v-model="formData.maxAge" name="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="formData.role" name="poll-roles" type="select" :options="roles"/>
+      <FormField v-model="formData.role" type='select' name="poll-roles" :options="roles"/>
 
       <GradButton class="text-2xl sm:text-base sm:mt-4">
           {{$t('actions.create-meeting')}}
@@ -66,6 +66,7 @@ export default {
           maxAge: 0,
           role: -1,
           date: 0,
+          val: 'av',
         }
       }
     }

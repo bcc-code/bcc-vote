@@ -1,7 +1,7 @@
 <template>
     <nav  v-if="isNav" class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
-        <div class="pl-8 w-40">
-            <ArrowLeft class="cursor-pointer h-8" style="color:#838ca8;" @click="navigateBack"/>
+        <div class="pl-5">
+            <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
         </div>
         <div class="pr-8 flex justify-end" style="width: 10rem"> 
         </div>     

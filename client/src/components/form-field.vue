@@ -1,5 +1,9 @@
 <template>
-    <section class="mb-5 form-field" :name="name">
+    <div v-if="type == 'checkbox' || type == 'radio'" class="flex items-center mb-5">
+        <CheckboxField v-model="model" :value="value"/>
+        <h5 class="font-bold ml-3">{{$t(`fields.${name}`)}}</h5>
+    </div>
+    <section v-else class="mb-5">
         <div class="flex justify-between">
         <h5 class="mb-1 font-bold">{{$t(`fields.${name}`)}}</h5>
         <h5 v-if="optional" class="text-gray-600">{{$t('fields.optional')}}</h5>
@@ -20,23 +24,29 @@
 <script>
 import DateField from './input-date-field.vue'
 import SelectField from './input-select-field.vue'
+import CheckboxField from './input-checkbox-field.vue'
 
 export default {
     components: {
         DateField,
         SelectField,
+        CheckboxField,
     },
     props: {
+        // the v-model value (see vue 3 documentation)
+        modelValue: String|Number|Boolean,
+
         // General props 
         name: { type: String, required: true },
         required: { type: Boolean, default: false },
         type: { type: String, required: false },
         optional: {type: Boolean, default: false},
-        // Select/Lookup props
-        options: { type: Array, required: false },
-        label: { type: String, required: false },
 
-        modelValue: String|Number,
+        // For select
+        options: { type: Array, required: false },
+
+        // If you specify the value the the checkbox will act as a radio button
+        value: {type: String, required: false}
     },
     data: function(){
         return {
@@ -50,7 +60,7 @@ export default {
                 return this.modelValue
             },
             set (val) {
-                console.log(val);
+                this.setValue = true;
                 this.$emit('update:modelValue', val);
             }
         }
