@@ -2,7 +2,7 @@
   "arangodDB":{
     "username":"root",
     "password":"root",
-    "url":"tcp://arango:8529",
+    "url":"tcp://localhost:8529",
     "database":"VOTING_TEST"
   }
 }

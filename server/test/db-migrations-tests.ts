@@ -27,7 +27,7 @@ describe('Add-hock tests - db migrations', async () => {
     }
   });
 
-  it.only('Import test data', async () => {
+  it.skip('Import test data', async () => {
 
     try {
         let config:ArangoDBConfig = {
