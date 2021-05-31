@@ -55,6 +55,8 @@ export default {
                 return this.modelValue
             },
             set (val) {
+                if(this.type == 'number')
+                    val = parseInt(val);
                 this.$emit('update:modelValue', val);
             }
         }

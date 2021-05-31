@@ -1,10 +1,10 @@
 <template>
   <div class="w-full h-full bg-gray-100 px-4 py-8">
-    <FormSection>
+    <div class="form-section">
       <h3 class="font-bold mb-6">{{$t(`forms.new-poll`)}}</h3>
-      <Info class="mb-8">
+      <InfoBox class="mb-8">
           {{$t('info.define-group')}}
-      </Info>
+      </InfoBox>
       <FormField v-model="eventData.title" translation="poll-title" type="input"/>
 
       <FormField v-model="eventData.description" translation="poll-description" type="input" :optional="true"/>
@@ -13,18 +13,18 @@
 
       <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
-      <Info class="mb-8">
+      <InfoBox class="mb-8">
           {{$t('info.define-group')}}
-      </Info>
+      </InfoBox>
 
-      <FormField v-model="filter.church" translation="poll-church" type="select" :options="churches"/>
+      <FormField v-model="filter.church" translation="poll-church" type="select" :options="allChurches"/>
 
       <div class="flex w-full gap-10 max-w-sm">
         <FormField class="flex-grow" v-model="filter.minAge" translation="poll-min-age" type="number"/>
         <FormField class="flex-grow" v-model="filter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="filter.role" type='select' translation="poll-roles" :options="roles"/>
+      <FormField v-model="filter.role" type='select' translation="poll-roles" :options="allRoles"/>
 
       <div class="flex justify-between py-4 font-bold items-center">
         <div>
@@ -32,46 +32,40 @@
           <h3>{{numberOfVoters}} {{$t('misc.voters')}}</h3>
         </div>
         <div>
-          <LightButton class="text-lg">{{$t('actions.show-all-participants')}}</LightButton>
+          <div class="light-button text-lg">{{$t('actions.show-all-participants')}}</div>
         </div>
       </div>
 
       <div class="flex justify-center items-center py-5 gap-5 sm:mt-4">
         <h4 @click="goHome" class="text-gray-800 font-bold p-4 cursor-pointer">Discard</h4>
-        <GradButton class="text-lg" @click="createPollingEvent">
+        <div class="gradient-button text-lg" @click="createPollingEvent">
             {{$t('actions.create-meeting')}}
-        </GradButton>
+        </div >
       </div>
-    </FormSection>
+    </div>
   </div>
 </template>
 
 <script>
 
-import Info from '../components/Info'
-import GradButton from '../components/GradButton'
-import LightButton from '../components/LightButton'
+import InfoBox from '../components/info-box'
 import FormField from '../components/form-field'
-import FormSection from '../components/FormSection'
 
 export default {
    components: {
-        GradButton,
-        LightButton,
-        Info,
+        InfoBox,
         FormField,
-        FormSection
     },
     data() {
       return {
-        churches: [],
-        roles: [],
+        allChurches: [],
+        allRoles: [],
         eventData: {
           title: '',
           description: '',
           startDateTime: null,
           creatorId: this.$user.personID,
-          status: 'inactive',
+          status: 0,
         },
         filter: {
           church: 0,
@@ -98,13 +92,13 @@ export default {
               }
             }
           })
-          this.churches = res.map(c => {
+          this.allChurches = res.map(c => {
             return {
               name: c.name,
               val: c.churchID,
             }
           });
-          this.churches.unshift({name: 'All churches', val: 0})
+          this.allChurches.unshift({name: 'All churches', val: 0})
       },
       async loadRoles(){
           const res = await this.$client.service('role').find({
@@ -116,13 +110,13 @@ export default {
               $select: ['name', '_key'],
             }
           })
-          this.roles = res.map(c => {
+          this.allRoles = res.map(c => {
             return {
               name: c.name,
               val: c._key,
             }
           });
-          this.roles.unshift({name: 'All roles', val: 0})
+          this.allRoles.unshift({name: 'All roles', val: 0})
       },
       createPollingEvent(){
         const data = this.eventData;
