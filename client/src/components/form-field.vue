@@ -22,12 +22,12 @@
         
     </section>
 </template>
-<script>
+<script lang="ts">
 import DateField from './input-date-field.vue'
 import SelectField from './input-select-field.vue'
 import CheckboxField from './input-checkbox-field.vue'
-
-export default {
+import { defineComponent,PropType } from 'vue'
+export default defineComponent({
     components: {
         DateField,
         SelectField,
@@ -35,7 +35,7 @@ export default {
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: String|Number|Boolean|Array,
+        modelValue: Object as PropType<any>,
 
         // General props 
         translation: { type: String, required: true },
@@ -61,7 +61,7 @@ export default {
             }
         }
     }
-}
+})
 </script>
 <style scoped>
 .box-field {
