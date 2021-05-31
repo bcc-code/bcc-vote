@@ -31,6 +31,9 @@ module.exports = {
         '56': '14rem',
         '28': '7rem'
       },
+      padding: {
+        '15': '60px'
+      },
       colors: {
         gray: {
           100: '#F5F6FA',
