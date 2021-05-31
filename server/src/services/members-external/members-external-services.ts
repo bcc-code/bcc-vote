@@ -17,5 +17,6 @@ export default function (app: Application): void {
   });
   app.use('/person', membersClient.service('person'));
   app.use('/org', membersClient.service('org'));
+  app.use('/role', membersClient.service('role'));
 
 }

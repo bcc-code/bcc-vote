@@ -6,29 +6,6 @@
     html {
       font-family: Ubuntu, sans-serif;
     }
-    .background-home {
-      background: url('./home-mobile.svg');
-      @apply bg-no-repeat;
-      @apply bg-auto;
-      @apply bg-center;
-    }
-    .info-icon {
-      background: url('./info-icon.svg');
-      @apply bg-no-repeat;
-      @apply bg-contain;
-      @apply bg-center;
-    }
-    .gradient-blue {
-      background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
-    }
-    @media (min-width: 640px) {
-      .background-home {
-        background: url('./home-desktop.svg');
-        @apply bg-no-repeat;
-        @apply bg-auto;
-        @apply bg-center;
-      }
-    }
     h1 {
       @apply text-5xl;
     }
@@ -77,4 +54,77 @@
     box-shadow: none !important;
     max-width: 400px;
     @apply text-white;
+  }
+  
+  .background-home {
+    background: url('./home-mobile.svg');
+    @apply bg-no-repeat;
+    @apply bg-auto;
+    @apply bg-bottom;
+  }
+  
+  .shadow-base {
+    box-shadow: 0px 1px 0px rgba(0, 35, 140, 0.06), 0px 2px 6px -1px rgba(0, 7, 26, 0.1);
+  }
+  
+  .border-base {
+    border: 1px solid rgba(35, 104, 125, 0.1);
+  }
+  
+  .info-icon {
+    background: url('./info-icon.svg');
+    @apply bg-no-repeat;
+    @apply bg-contain;
+    @apply bg-center;
+  }
+  
+  .gradient-blue {
+    background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
+  }
+  
+  .gradient-button {
+    @apply font-bold;
+    @apply py-4;
+    @apply px-6;
+    @apply text-white;
+    @apply gradient-blue;
+    @apply rounded-full;
+  }
+  
+  .light-button {
+    @apply font-bold;
+    @apply py-2;
+    @apply px-4;
+    @apply text-blue-900;
+    @apply border-2;
+    @apply border-blue-900;
+    @apply rounded-full;
+  }
+  
+  .form-section {
+    @apply px-4;
+    @apply py-6;
+    @apply mb-8;
+    @apply bg-white;
+    @apply rounded-lg;
+    @apply border-base;
+    @apply shadow-base;
+    @apply max-w-screen-lg;
+    @apply mx-auto;
+  }
+  
+  @media (min-width: 1024px) {
+    .form-section {
+      @apply px-15;
+      @apply py-10;
+    }
+  }
+  
+  @media (min-width: 640px) {
+    .background-home {
+      background: url('./home-desktop.svg');
+      @apply bg-no-repeat;
+      @apply bg-auto;
+      @apply bg-bottom;
+    }
   }

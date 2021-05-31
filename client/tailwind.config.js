@@ -25,11 +25,14 @@ module.exports = {
       },
       height: {
         '128': '32rem',
-        '60': '15rem',
+        '64': '16rem',
       },
       top: {
         '56': '14rem',
         '28': '7rem'
+      },
+      padding: {
+        '15': '60px'
       },
       colors: {
         gray: {

@@ -1,16 +1,15 @@
 <template>
   <div>
-        <div class="h-4"></div>
-        <div class="flex justify-center items-center w-full background-home h-60 sm:h-128">
+        <div class="flex justify-center items-center w-full background-home h-64 sm:h-128">
             <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
                 <h1 class="font-bold pb-5">{{$t('titles.home')}}</h1>
                 <p class="hidden sm:block">
                     {{$t('descriptions.home')}}
                 </p>
-                <router-link to="/create">
-                    <GradButton class="text-2xl sm:text-base sm:mt-4">
+                <router-link v-if="$user.authorityLevel <= 5" to="/create">
+                    <div class="gradient-button text-2xl sm:text-base sm:mt-4">
                         {{$t('actions.create-meeting')}}
-                    </GradButton>
+                    </div>
                 </router-link>
             </div>
         </div>
@@ -18,20 +17,18 @@
             <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('actions.show-events')}}</h3>
             <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('actions.show-history')}}</h3>
         </div>
-        <Info>
+        <InfoBox class="m-4">
             {{$t('info.no-meetings')}}
-        </Info>
+        </InfoBox>
   </div>
 </template>
 
 <script>
-import GradButton from '../components/GradButton'
-import Info from '../components/Info'
+import InfoBox from '../components/info-box'
 
 export default {
     components: {
-        GradButton,
-        Info,
+        InfoBox,
     },
     props: {
         mobile: Boolean,
@@ -67,7 +64,6 @@ export default {
                 this.meetings.forEach(v => {
                     v.admin = false
                 })
-                console.log(this.meetings);
             })
         }
     }
@@ -75,4 +71,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

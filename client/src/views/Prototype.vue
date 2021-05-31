@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   #prototype {
     width: 100vw;
     text-align: center;
@@ -34,36 +34,6 @@ export default {
     overflow-x: hidden;
   }
 
-  input, textarea{
-    padding: 10px;
-    font-size: 20px;
-    margin: 5px 0;
-    border-radius: 20px;
-  }
-  input, textarea{
-    border: 2px solid black;
-  }
-  input:focus, textarea:focus{
-    border-color: blue;
-    background-color: rgb(225, 236, 255);
-  }
-  textarea{
-    font-family: inherit;
-    resize: vertical;
-  }
-  h2, h3{
-    margin: 0;
-    padding: 10px 0;
-    text-align: left;
-  }
-  h4{
-    margin: 0;
-    padding: 5px 0;
-    text-align: left;
-  }
-  .clickable:hover {
-    cursor: pointer;
-  }
   .horizontal{
       display: flex;
       flex-direction: row;
