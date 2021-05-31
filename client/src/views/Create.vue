@@ -9,7 +9,7 @@
 
       <FormField v-model="eventData.description" translation="poll-description" type="input" :optional="true"/>
 
-      <FormField v-model="eventData.date" translation="poll-date" type="date"/>
+      <FormField v-model="eventData.startDateTime" translation="poll-date" type="date"/>
 
       <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
@@ -69,7 +69,8 @@ export default {
         eventData: {
           title: '',
           description: '',
-          date: null,
+          startDateTime: null,
+          creatorId: this.$user.personID,
           status: 'inactive',
         },
         filter: {
