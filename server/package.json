@@ -30,7 +30,7 @@
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "nodemon ./src/index.ts",
     "build": "npm run compile",
-    "start": "node lib/",
+    "start": "node lib/migrate.js && node lib/",
     "compile": "shx rm -rf lib/ && tsc"
   },
   "standard": {
