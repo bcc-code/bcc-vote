@@ -21,7 +21,9 @@
   "info": {
     "no-meetings": "There are no meetings currently available",
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
-    "number-of-participants": "Number of participants"
+    "number-of-participants": "Number of participants",
+    "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
+    "polls-activation-explaination":"In the poll queue you can see the list of polls that have been added to the event. In order to activate the pollfor  users - press “Publish this poll. To deactivate this event session press “Close this poll” at the bottom of this section."
   },
   "forms": {
     "new-poll": "Create a new poll"

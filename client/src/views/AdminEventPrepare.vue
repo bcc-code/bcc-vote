@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-5xl mx-auto">
     <div class="w-full h-full px-4 py-8">
-      <div class="form-section padding-md">
+      <div class="form-section padding-md mb-2">
         <div class="flex justify-between items-center mb-5">
           <h2 class="font-bold">{{pollingEvent.title}}</h2>
           <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-5"/>
@@ -15,18 +15,20 @@
           <h3 :class="currentTab == 'polls' ? 'text-blue-900': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
           <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
       </div>
-      <div v-if="currentTab === 'polls'" class="form-section padding-md">Polls</div>
+      <div v-if="currentTab === 'polls'" class="form-section padding-md">
+        <InfoBox class="m-4">{{$t('info.polls-will-be-invisible')}}</InfoBox>
+      </div>
       <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
-import FormField from '../components/form-field.vue'
+import InfoBox from '../components/info-box.vue'
 import { defineComponent } from 'vue'
 export default defineComponent({
    components: {
-        FormField,
+        InfoBox,
         PencilIcon
     },
     data() {

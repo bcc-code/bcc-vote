@@ -15,9 +15,7 @@
                 <div class="flex justify-between">
                     <h3 class="font-bold">{{$t('question-queue')}}</h3>
                 </div>
-                <InfoBox class="m-4">
-                    {{$t('info.no-meetings')}}
-                </InfoBox>
+                <InfoBox class="m-4">{{$t('info.polls-activation-explaination')}}</InfoBox>
             </div>
         </div>
     </div>
