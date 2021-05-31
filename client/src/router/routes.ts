@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import PollingEventCreate from '../views/PollingEventCreate.vue'
 import PollingEventPrepare from '../views/AdminEventPrepare.vue'
 import PollingEventLive from '../views/AdminEventLive.vue'
+import QuestionCreate from '../views/QuestionCreate.vue'
 import Prototype from '../views/Prototype.vue'
 import PrototypeHome from '../views/P_Home.vue'
 import PrototypeCreate from '../views/P_Create.vue'
@@ -35,6 +36,11 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'Administrate the Live polling event',
         path: '/polling-event:id/live-polling',
         component: PollingEventLive
+    },
+    {
+        path: '/create/:id',
+        name: 'Add questions to a polling event',
+        component:  QuestionCreate,
     },
     {
         path: '/prototype',

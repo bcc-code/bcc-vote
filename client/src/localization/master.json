@@ -8,11 +8,13 @@
   "actions": {
     "create-meeting": "Create a voting event",
     "show-events": "Voting events",
-    "show-history": "History"
+    "show-history": "History",
+    "show-all-participants": "Show all participants"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
-    "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it."
+    "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
+    "number-of-participants": "Number of participants"
   },
   "forms": {
     "new-poll": "Create a new poll"
@@ -31,5 +33,8 @@
   },
   "descriptions": {
     "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  },
+  "misc": {
+    "voters": "Voters"
   }
 }

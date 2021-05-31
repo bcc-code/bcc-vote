@@ -6,10 +6,10 @@
                 <p class="hidden sm:block">
                     {{$t('descriptions.home')}}
                 </p>
-                <router-link v-if="$user.administrator" to="/create">
-                    <GradButton class="text-2xl sm:text-base sm:mt-4">
+                <router-link v-if="$user.authorityLevel <= 5" to="/create">
+                    <div class="gradient-button text-2xl sm:text-base sm:mt-4">
                         {{$t('actions.create-meeting')}}
-                    </GradButton>
+                    </div>
                 </router-link>
                 <router-link to="/polling-event:id/prepare">
                     <GradButton class="text-2xl sm:text-base sm:mt-4 ml-4">
@@ -22,20 +22,18 @@
             <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('actions.show-events')}}</h3>
             <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('actions.show-history')}}</h3>
         </div>
-        <Info class="m-4">
+        <InfoBox class="m-4">
             {{$t('info.no-meetings')}}
-        </Info>
+        </InfoBox>
   </div>
 </template>
 
 <script>
-import GradButton from '../components/GradButton'
-import Info from '../components/Info'
+import InfoBox from '../components/info-box'
 
 export default {
     components: {
-        GradButton,
-        Info,
+        InfoBox,
     },
     props: {
         mobile: Boolean,
@@ -71,7 +69,6 @@ export default {
                 this.meetings.forEach(v => {
                     v.admin = false
                 })
-                console.log(this.meetings);
             })
         }
     }
