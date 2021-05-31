@@ -7,7 +7,7 @@ export class Answers extends DbService<Data> {
   app: Application;
 
   constructor (options: IOptions, app: Application) {
-    super(options)
+    super(options);
     this.app = app;
   }
 }
