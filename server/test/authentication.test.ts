@@ -1,4 +1,5 @@
-import assert from 'assert';
+import 'mocha'
+import { assert } from 'chai';
 import app from '../src/app';
 
 describe.skip('authentication', () => {

@@ -124,7 +124,7 @@ export default {
           if(this.filter[key])
             data.participantFilter[key] = this.filter[key];
           
-        this.$client.service('meetings').create(data)
+        this.$client.service('polling-event').create(data)
         .then((res) => {
           this.$router.push('/create/'+res._key);
         })

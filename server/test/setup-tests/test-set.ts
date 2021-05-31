@@ -12,12 +12,7 @@ function getAranoDBConfigFromFeathers():ArangoDBConfig {
             username: arangoDBConfig.username
         },
         migrationsPath:'./src/db-migrations',
-        testDataPath:'.\\test\\setup-tests\\test_data',
-        foxx:{
-            mountPoint:"/calculate-fields",
-            pathToManifest:"../db/manifest.json",
-            pathZipWithBuild:'../db/dist.zip'
-        }
+        testDataPath:'.\\test\\setup-tests\\test_data'
     }
 
     return config
