@@ -8,6 +8,7 @@ import PrototypeCreate from '../views/P_Create.vue'
 import PrototypeVote from '../views/P_Vote.vue'
 import PrototypeAdminister from '../views/P_AdministerVoting.vue'
 import Test from '../views/Test.vue'
+import Error from '../views/Error.vue'
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -73,5 +74,10 @@ export const routes: Array<RouteRecordRaw> = [
         meta: {
             logout: true 
         }
-    }
+    },
+    {
+        path: '/error',
+        name: 'error',
+        component: Error
+    },
 ]

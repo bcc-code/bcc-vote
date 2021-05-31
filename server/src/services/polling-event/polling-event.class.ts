@@ -3,7 +3,7 @@ import { Application } from '../../declarations';
 
 interface Data {}
 
-export class Answers extends DbService<Data> {
+export class PollingEvent extends DbService<Data> {
   app: Application;
 
   constructor (options: IOptions, app: Application) {
