@@ -3,20 +3,15 @@ import { Application } from "../declarations";
 
 export default function (app: Application) {
   const arangoDBConfig = app.get("arangodDB");
-  const personDatabase: IOptions = {
-    collection: "meeting",
-    view: "meeting_view",
+  const answerDatabase: IOptions = {
+    collection: "answer",
     dbConfig: {
       url: arangoDBConfig.url,
     },
     database: arangoDBConfig.database,
     authType: AUTH_TYPES.BASIC_AUTH,
     username: arangoDBConfig.username,
-    password: arangoDBConfig.password,
-    paginate: {
-      default: 100,
-      max: 50000
-    }
+    password: arangoDBConfig.password
   };
-  return personDatabase;
+  return answerDatabase;
 }

@@ -3,11 +3,11 @@ import { Application } from '../../declarations';
 
 interface Data {}
 
-export class Answers extends DbService<Data> {
+export class Participant extends DbService<Data> {
   app: Application;
 
   constructor (options: IOptions, app: Application) {
-    super(options)
+    super(options);
     this.app = app;
   }
 }

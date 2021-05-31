@@ -3,7 +3,8 @@
     "home": "Voting App"
   },
   "pages": {
-    "home": "Home"
+    "home": "Home",
+    "error": "Error"
   },
   "actions": {
     "create-meeting": "Create a voting event",
