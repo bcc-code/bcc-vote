@@ -1,42 +1,30 @@
 import { RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
-import PollingEventCreate from '../views/PollingEventCreate.vue'
-import PollingEventPrepare from '../views/AdminEventPrepare.vue'
-import PollingEventLive from '../views/AdminEventLive.vue'
-import QuestionCreate from '../views/QuestionCreate.vue'
-import Prototype from '../views/Prototype.vue'
-import PrototypeHome from '../views/P_Home.vue'
-import PrototypeCreate from '../views/P_Create.vue'
-import PrototypeVote from '../views/P_Vote.vue'
-import PrototypeAdminister from '../views/P_AdministerVoting.vue'
-import Test from '../views/Test.vue'
-import Error from '../views/Error.vue'
 
 export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: () => require('../views/Home.vue')
     },
     {
         path: '/test',
         name: 'Test',
-        component: Test
+        component: () => require('../views/Test.vue')
     },
     {
         path: '/create',
         name: 'Create a Polling event',
-        component: PollingEventCreate,
+        component: () => require('../views/PollingEventCreate.vue'),
     },
     {
         name: 'Prepare the Polling event',
-        path: '/polling-event:id/prepare',
-        component: PollingEventPrepare
+        path: '/polling-event/prepare/:id',
+        component: () => require('../views/AdminEventPrepare.vue')
     },
     {
         name: 'Administrate the Live polling event',
-        path: '/polling-event:id/live-polling',
-        component: PollingEventLive,
+        path: '/polling-event/live/:id',
+        component: () => require('../views/AdminEventLive.vue'),
         meta: {
             bgColor: "bg-blue-900"
         }
@@ -44,17 +32,17 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/create/:id',
         name: 'Add questions to a polling event',
-        component:  QuestionCreate,
+        component:  () => require('../views/QuestionCreate.vue'),
     },
     {
         path: '/prototype',
         name: 'Prototype',
-        component: Prototype,
+        component: () => require('../views/Prototype.vue'),
         children: [
             {
                 name: 'Prototype Homepage',
                 path: '',
-                component: PrototypeHome,
+                component: () => require('../views/P_Home.vue'),
                 meta: {
                     needAdmin: true
                 }
@@ -62,7 +50,7 @@ export const routes: Array<RouteRecordRaw> = [
             {
                 name: 'Prototype create',
                 path: '/create',
-                component: PrototypeCreate,
+                component: () => require('../views/P_Create.vue'),
                 meta: {
                     needAdmin: true
                 }
@@ -70,12 +58,12 @@ export const routes: Array<RouteRecordRaw> = [
             {
                 name: 'Prototype meeting',
                 path: '/meeting-:id',
-                component: PrototypeVote
+                component: () => require('../views/P_Vote.vue')
             },
             {
                 name: 'Prototype admin',
                 path: '/admin-:id',
-                component: PrototypeAdminister,
+                component: () => require('../views/P_AdministerVoting.vue'),
                 meta: {
                     needAdmin: true
                 }
@@ -93,6 +81,6 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/error',
         name: 'error',
-        component: Error
+        component: () => require('../views/Error.vue')
     },
 ]

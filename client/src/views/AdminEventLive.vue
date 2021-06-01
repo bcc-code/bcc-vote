@@ -54,7 +54,7 @@ export default defineComponent({
         this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
       },
       closePollingEvent() {
-        this.$router.push({ path: '/polling-event:id/prepare', params: { id: this.pollingEvent._id } })
+        this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
       }
     }
 })

@@ -4,6 +4,7 @@ export interface PollingEvent {
     title: string;
     description: string;
     type: string;
+    startDateTime: Date;
     creatorId: string;
     participantFilter: ParticpantFilters;
 }
