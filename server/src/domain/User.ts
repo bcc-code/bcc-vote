@@ -7,6 +7,15 @@ export type UserDetails = {[key: string]: any} & {
     tempSecret?: any
 }
 
+export type Role = {
+    name: string;
+    enumName: string;
+    org: [];
+    scope: string;
+    active: boolean;
+    securityLevel: number;
+}
+
 export type RoleName = 'CentralAdministrator'
     | 'Arrangementsansvarlige'
     | 'SentralInformasjonsmedarbeider'

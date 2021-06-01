@@ -26,7 +26,7 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import { PollingEvent } from '../domain'
 import { defineComponent } from 'vue'
 export default defineComponent({
-   components: {
+    components: {
         InfoBox,
         PencilIcon
     },

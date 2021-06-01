@@ -1,5 +1,5 @@
 import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
-import { UserDetails, RoleName } from '../domain';
+import { UserDetails, Role } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
 export const subjects = ['answer','polling-event','poll','participant','person','org','all'] as const;
@@ -13,10 +13,20 @@ type DefinePermissions = (user: any, builder: AbilityBuilder<AppAbility>) => voi
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
 
-  can('find','polling-event', {'participantFilter.org': user.church.org.churchID.toString()})
-  can('find','polling-event', {'participantFilter.org': 'all'as any})
-  cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
-  cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
+    if(user.roles.filter((r:Role) => r.enumName === 'Developer').length) {
+        can('create','poll');
+    }
+
+    can('create','answer');
+    can('find','poll');
+    can('find','person');
+
+    can('create','polling-event');
+    can('get','polling-event');
+    can('find','polling-event', {'participantFilter.org': user.church.org.churchID.toString()})
+    can('find','polling-event', {'participantFilter.org': 'all'as any})
+    cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
+    cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
 }
 
 export function defineAbilityFor(user:UserDetails): AppAbility {

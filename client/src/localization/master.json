@@ -7,6 +7,7 @@
     "error": "Error"
   },
   "actions": {
+    "vote": "Vote",
     "create-meeting": "Create a voting event",
     "show-events": "Voting events",
     "show-history": "History",
@@ -35,6 +36,7 @@
     "number-of-participants": "Number of participants",
     "question-visibility": "The questions won't be visible until the poll is started",
     "answer-explanations": "For each answer opotion you can add an explanation which explains what does it mean for the voter. That message will appear after sombody submits an answer.",
+    "polls-will-appear": "The poll will appear on the screen when it's published.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
     "polls-activation-explaination": "In the poll queue you can see the list of polls that have been added to the event. In order to activate the pollfor  users - press “Publish this poll. To deactivate this event session press “Close this poll” at the bottom of this section."
   },

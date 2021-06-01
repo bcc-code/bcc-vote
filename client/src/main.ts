@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import Toast from 'vue-dk-toast'
 import Spinner from "@/components/spinner.vue"
+import InfoBox from '@/components/info-box.vue'
 import './assets/style.css'
 import store from './store'
 import App from './App.vue'
@@ -25,6 +26,7 @@ const i18n = createI18n({
 const app = createApp(App)
 
 app.component('Spinner', Spinner)
+app.component('InfoBox', InfoBox)
 app.use(Toast,{duration:5000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
