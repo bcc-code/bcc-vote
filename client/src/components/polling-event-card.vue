@@ -8,7 +8,7 @@
               {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}
             </p>
         </div>
-      <button class="w-32 h-5 font-bold text-blue-900 flex items-center justify-between" @click="goToPoll">
+      <button class="w-32 h-5 font-bold text-blue-900 flex items-center justify-between" @click="goToPoll(pollingEvent._key)">
           {{$t('actions.go-to-poll')}}
           <ArrowRight class="h-full"/>
         </button>
@@ -27,8 +27,8 @@ export default defineComponent({
         pollingEvent: Object as PropType<PollingEvent>,
     },
     methods: {
-        goToPoll() {
-            this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+        goToPoll(pollingEventKey:string) {
+            this.$router.push({ path: `/polling-event/live/${pollingEventKey}`, params: { id: pollingEventKey}})
         }
     }
 })

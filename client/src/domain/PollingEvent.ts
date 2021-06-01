@@ -5,13 +5,13 @@ export interface PollingEvent {
     description: string;
     type: string;
     startDateTime: Date;
-    creatorId: string;
-    participantFilter: ParticpantFilters;
+    creatorI?: string;
+    participantFilter?: ParticpantFilters;
 }
 
 export interface ParticpantFilters {
-    orgs: Array<string>;
-    roles: Array<string>;
-    minAge: number;
-    maxAge: number;
+    orgs?: Array<string>;
+    roles?: Array<string>;
+    minAge?: number;
+    maxAge?: number;
 }
