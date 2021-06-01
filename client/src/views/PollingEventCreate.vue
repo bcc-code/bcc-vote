@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full bg-gray-100 px-4 py-8">
-    <div class="form-section">
+  <div class="max-w-screen-lg mx-auto px-4 py-8">
+    <div class="form-section padding-lg">
       <h3 class="font-bold mb-6">{{$t(`forms.new-poll`)}}</h3>
       <InfoBox class="mb-8">
           {{$t('info.define-group')}}
@@ -38,7 +38,7 @@
 
       <div class="flex justify-center items-center py-5 gap-5 sm:mt-4">
         <h4 @click="goHome" class="text-gray-800 font-bold p-4 cursor-pointer">Discard</h4>
-        <div class="gradient-button text-lg" @click="createPollingEvent">
+        <div class="gradient-button md-button text-lg" @click="createPollingEvent">
             {{$t('actions.create-meeting')}}
         </div >
       </div>
@@ -50,7 +50,6 @@
 
 import InfoBox from '../components/info-box'
 import FormField from '../components/form-field'
-
 export default {
    components: {
         InfoBox,
