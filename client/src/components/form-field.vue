@@ -27,15 +27,15 @@
         <XIcon v-if="removable" class="absolute text-gray-800 w-10 h-10 p-3 bottom-0 right-0 cursor-pointer" @click="$emit('remove')"/>
     </section>
 </template>
-<script>
+<script lang="ts">
 import DateField from './input-date-field.vue'
 import SelectField from './input-select-field.vue'
 import CheckboxField from './input-checkbox-field.vue'
 import RadioField from './input-radio-field.vue'
 import XIcon from 'heroicons-vue3/solid/XIcon'
 
-
-export default {
+import { defineComponent,PropType } from 'vue'
+export default defineComponent({
     components: {
         DateField,
         SelectField,
@@ -45,7 +45,7 @@ export default {
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: String|Number|Boolean|Array,
+        modelValue: Object as PropType<any>,
 
         // General props 
         translation: { type: String, required: true },
@@ -65,17 +65,17 @@ export default {
     },
     computed: {
         model: {
-            get () {
+            get():any {
                 return this.modelValue
             },
-            set (val) {
+            set (val:any) {
                 if(this.type == 'number')
                     val = parseInt(val);
                 this.$emit('update:modelValue', val);
             }
         }
     }
-}
+})
 </script>
 <style scoped>
 .box-field {

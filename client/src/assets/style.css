@@ -84,13 +84,21 @@
   
   .gradient-button {
     @apply font-bold;
-    @apply py-4;
-    @apply px-6;
     @apply text-white;
     @apply gradient-blue;
     @apply rounded-full;
   }
   
+  .lg-button {
+    @apply py-4;
+    @apply px-6;
+  }
+
+  .md-button {
+    @apply py-3;
+    @apply px-5;
+  }
+
   .light-button {
     @apply font-bold;
     @apply py-2;
@@ -102,21 +110,28 @@
   }
   
   .form-section {
-    @apply px-4;
-    @apply py-6;
-    @apply mb-8;
     @apply bg-white;
     @apply rounded-lg;
     @apply border-base;
     @apply shadow-base;
-    @apply max-w-screen-lg;
-    @apply mx-auto;
+  }
+  .form-section.padding-lg {
+    @apply px-4;
+    @apply py-6;
+  }
+  .form-section.padding-md {
+    @apply px-3;
+    @apply py-5;
   }
   
   @media (min-width: 1024px) {
-    .form-section {
+    .form-section.padding-lg {
       @apply px-15;
       @apply py-10;
+    }
+    .form-section.padding-md {
+      @apply px-10;
+      @apply py-8;
     }
   }
   

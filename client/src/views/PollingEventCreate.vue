@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full bg-gray-100 px-4 py-8">
-    <div class="form-section">
+  <div class="max-w-screen-lg mx-auto px-4 py-8">
+    <div class="form-section padding-lg">
       <h3 class="font-bold mb-6">{{$t(`forms.new-poll`)}}</h3>
       <InfoBox class="mb-8">
           {{$t('info.define-group')}}
@@ -38,7 +38,7 @@
 
       <div class="flex justify-center items-center py-5 gap-5 sm:mt-4">
         <h4 @click="goHome" class="text-gray-800 font-bold p-4 cursor-pointer">Discard</h4>
-        <div class="gradient-button text-lg" @click="createPollingEvent">
+        <div class="gradient-button md-button text-lg" @click="createPollingEvent">
             {{$t('actions.create-meeting')}}
         </div >
       </div>
@@ -48,6 +48,11 @@
 </template>
 
 <script lang="ts">
+
+interface church {
+  name: String,
+  val: number
+}
 
 import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
@@ -62,8 +67,8 @@ export default defineComponent({
     },
     data() {
       return {
-        allChurches: Array,
-        allRoles: Array,
+        allChurches: [],
+        allRoles: [],
         eventData: {
           title: '',
           description: '',
@@ -76,7 +81,7 @@ export default defineComponent({
           role: 0,
           minAge: null,
           maxAge: null,
-        },
+        } as any,
         numberOfVoters: null,
       }
     },
@@ -88,6 +93,7 @@ export default defineComponent({
       async loadOrgs(){
           const res = await this.$client.service('org').find({
             query: {
+              // $limit: 100,
               activeStatusCode: 0,
               type: 'church',
               $select: ['name', 'churchID'],
@@ -96,13 +102,13 @@ export default defineComponent({
               }
             }
           })
+          res.unshift({name: "All churches", churchID: 0})
           this.allChurches = res.map((c: any) => {
             return {
               name: c.name,
               val: c.churchID,
             }
           });
-          this.allChurches.unshift({name: 'All churches', val: 0})
       },
       async loadRoles(){
           const res = await this.$client.service('role').find({
@@ -120,16 +126,22 @@ export default defineComponent({
               val: c._key,
             }
           });
-          this.allRoles.unshift({name: 'All roles', val: 0})
+          res.unshift({name: "All roles", _key: 0})
+          this.allRoles = res.map((c: any) => {
+            return {
+              name: c.name,
+              val: c._key,
+            }
+          });
       },
       createPollingEvent(){
-        const data = this.eventData;
+        const data:any = this.eventData;
         data.participantFilter = {}
         for(const key in this.filter)
           if(this.filter[key])
-            data.participantFilter[key] = this.filter[key];
+            data.participantFilter[key] = this.filter[key] as any;
           
-        this.$client.service('meetings').create(data)
+        this.$client.service('polling-event').create(data)
         .then((res: any) => {
           this.$router.push('/create/'+res._key);
         })

@@ -3,7 +3,8 @@
     "home": "Voting App"
   },
   "pages": {
-    "home": "Home"
+    "home": "Home",
+    "error": "Error"
   },
   "actions": {
     "create-meeting": "Create a voting event",
@@ -11,14 +12,28 @@
     "show-history": "History",
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
-    "add-question": "Add another question"
+    "add-question": "Add another question",
+    "start-live-poll": "Start this live poll",
+    "close-live-poll": "Close this live poll"
+  },
+  "labels": {
+    "voting-events": "Voting events",
+    "history": "History",
+    "polls": "Polls",
+    "results": "Results",
+    "voters": "Voters",
+    "poll": "Poll",
+    "answers": "Answers",
+    "option": "Option"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
     "number-of-participants": "Number of participants",
     "question-visibility": "The questions won't be visible until the poll is started",
-    "answer-explanations": "For each answer opotion you can add an explanation which explains what does it mean for the voter. That message will appear after sombody submits an answer."
+    "answer-explanations": "For each answer opotion you can add an explanation which explains what does it mean for the voter. That message will appear after sombody submits an answer.",
+    "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
+    "polls-activation-explaination": "In the poll queue you can see the list of polls that have been added to the event. In order to activate the pollfor  users - press “Publish this poll. To deactivate this event session press “Close this poll” at the bottom of this section."
   },
   "forms": {
     "new-poll": "Create a new poll"
@@ -43,11 +58,5 @@
   },
   "descriptions": {
     "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  },
-  "labels": {
-    "voters": "Voters",
-    "poll": "Poll",
-    "answers": "Answers",
-    "option": "Option"
   }
 }
