@@ -136,7 +136,7 @@ export default defineComponent({
           
         this.$client.service('polling-event').create(data)
         .then((res: PollingEvent) => {
-          this.$router.push(`/polling-event${res._key}/prepare`);
+          this.$router.push(`/polling-event/prepare/${res._key}`);
         })
       },
       goHome(){
