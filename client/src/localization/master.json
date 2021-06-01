@@ -13,6 +13,7 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-question": "Add another question",
+    "go-to-poll": "Go to the poll",
     "start-live-poll": "Start this live poll",
     "close-live-poll": "Close this live poll"
   },
@@ -24,7 +25,9 @@
     "voters": "Voters",
     "poll": "Poll",
     "answers": "Answers",
-    "option": "Option"
+    "option": "Option",
+    "live-voting-event": "Live voting event",
+    "survey-voting-event": "Survey voting event"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
