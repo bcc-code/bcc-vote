@@ -17,9 +17,6 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
   can('find','polling-event', {churchID: 'all'as any})
   cannot('find','polling-event',{minAge: {$gte:user.age}})
   cannot('find','polling-event',{maxAge: {$lte:user.age}})
-
-
-
 }
 
 export function defineAbilityFor(user:UserDetails): AppAbility {

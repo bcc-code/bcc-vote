@@ -74,7 +74,7 @@ class CustomJWtStrategy extends JWTStrategy {
     try {
       const payload = await this.authentication?.verifyAccessToken(accessToken, params.jwt);
       const localID = payload.sub.split('/')[1];
-      const user = await this.app?.service('users').get(localID);
+      const user = await this.app?.service('user').get(localID);
       const personID = user.personID;
       const memberSvc = this.app?.services.person;
       const person = (await memberSvc.find({query:{

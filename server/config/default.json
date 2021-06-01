@@ -17,7 +17,7 @@
       }
     },
     "entity": "user",
-    "service": "users",
+    "service": "user",
     "secret": "FEATHERS_JWT_HS256_SECRET",
     "authStrategies": [
       "jwt",
