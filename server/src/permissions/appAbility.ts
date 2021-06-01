@@ -13,10 +13,10 @@ type DefinePermissions = (user: any, builder: AbilityBuilder<AppAbility>) => voi
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
 
-  can('find','polling-event', {churchID: user.church.org.churchID})
-  can('find','polling-event', {churchID: 'all'as any})
-  cannot('find','polling-event',{minAge: {$gte:user.age}})
-  cannot('find','polling-event',{maxAge: {$lte:user.age}})
+  can('find','polling-event', {'participantFilter.org': user.church.org.churchID.toString()})
+  can('find','polling-event', {'participantFilter.org': 'all'as any})
+  cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
+  cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
 }
 
 export function defineAbilityFor(user:UserDetails): AppAbility {
