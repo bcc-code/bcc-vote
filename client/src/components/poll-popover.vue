@@ -38,7 +38,6 @@ export default defineComponent({
                     _to: this.$user._key,
                     answerId: option.answerId
                 }
-                console.log('Answer:',participantAnswer)
                 await this.$client.service('answer').create(participantAnswer)
                     .catch((err:any) => {
                         this.$toast(err)
