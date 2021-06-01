@@ -93,7 +93,6 @@ export default defineComponent({
       async loadOrgs(){
           const res = await this.$client.service('org').find({
             query: {
-              // $limit: 100,
               activeStatusCode: 0,
               type: 'church',
               $select: ['name', 'churchID'],

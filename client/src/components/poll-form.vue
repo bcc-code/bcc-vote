@@ -87,10 +87,10 @@ export default defineComponent({
       this.pollData.answers.splice(ind, 1);
     },
     createPoll(){
-      // this.$client.service('questions').create(this.pollData)
-      // .then(() => {
-      //   this.$emit('created');
-      // })
+      this.$client.service('poll').create(this.pollData)
+      .then(() => {
+        this.$emit('created');
+      })
     }
   },
   emits: ['created']
