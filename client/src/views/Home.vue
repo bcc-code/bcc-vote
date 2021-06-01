@@ -13,22 +13,29 @@
             </router-link>
         </div>
     </div>
-    <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
-        <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('labels.voting-events')}}</h3>
-        <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('labels.history')}}</h3>
+    <div class="max-w-5xl mx-auto">
+        <div class="flex py-8 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
+            <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('labels.voting-events')}}</h3>
+            <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('labels.history')}}</h3>
+        </div>
+        <div v-if="currentTab == 'events'">
+            <div v-if="pollingEvents.length">
+                <div v-for="pollingEvent in pollingEvents" :key="pollingEvent._id">
+                    <PollingEventCard class="mb-8" :pollingEvent="pollingEvent"/>
+                </div>
+            </div>
+            <InfoBox v-else class="mb-4">
+                {{$t('info.no-meetings')}}
+            </InfoBox>
+        </div>
     </div>
-    <InfoBox class="m-4">
-        {{$t('info.no-meetings')}}
-    </InfoBox>
-    <PollingEventCard />
   </div>
 </template>
-
-<script>
-import InfoBox from '../components/info-box'
-import PollingEventCard from '../components/polling-event-card'
-
-export default {
+<script lang="ts">
+import InfoBox from '../components/info-box.vue'
+import PollingEventCard from '../components/polling-event-card.vue'
+import { defineComponent } from 'vue'
+export default defineComponent({
     components: {
         InfoBox,
         PollingEventCard
@@ -38,17 +45,17 @@ export default {
     },
     data () {
         return {
-            currentTab: 'events',
-            meetings: [],
+            currentTab: 'events' as string,
+            pollingEvents: [],
         }
     },
-    mounted(){
-        this.loadMeetings();
+    async mounted(){
+        await this.loadMeetings();
     },
     methods: {
-        loadMeetings(){
+        async loadMeetings(){
             const roleIds = this.$user.roles.map(r => r.id)
-            this.$client.service('meetings').find({
+            this.pollingEvents = await this.$client.service('polling-event').find({
                 query: {
                     $or: [
                         {role: {$in: roleIds}},
@@ -59,20 +66,10 @@ export default {
                     },
                     maxAge: {
                         $gt: this.$user.age
-                    },
-                    $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
+                    }
                 }
-            }).then(res => {
-                this.meetings = res.data
-                this.meetings.forEach(v => {
-                    v.admin = false
-                })
             })
         }
     }
-}
+})
 </script>
-
-<style scoped>
-
-</style>
