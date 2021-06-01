@@ -15,10 +15,10 @@ describe('Anwswer', async () => {
     await importDB(getAranoDBConfigFromFeathers(),true,false);
   });
 
-  it.only('Get a user', async () => {
+  it('Get a user', async () => {
 
     try {
-      const userSvc = app.services.users;
+      const userSvc = app.services.user;
       var user = await userSvc.get("178509735",{}) as any
 
         assert.equal(user._key,"178509735")

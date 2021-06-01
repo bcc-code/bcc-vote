@@ -15,7 +15,7 @@ describe('polling-event', async () => {
     await importDB(getAranoDBConfigFromFeathers(),false,false);
   });
 
-  it.only('Get a list of all poling events', async () => {
+  it('Get a list of all poling events', async () => {
 
     try {
       let events = await  app.services['polling-event'].find({}) as any[];
@@ -23,7 +23,7 @@ describe('polling-event', async () => {
     } catch (error) {
         assert.fail('It was not possible to retrieve a list of all polling events')
     }
-    
+
   });
 
 
