@@ -17,14 +17,14 @@
           {{$t('info.define-group')}}
       </InfoBox>
 
-      <FormField v-model="filter.church" translation="poll-church" type="select" :options="allChurches"/>
+      <FormField v-model="eventData.participantFilter.church" translation="poll-church" type="select" :options="allChurches"/>
 
       <div class="flex w-full gap-10 max-w-sm">
-        <FormField class="flex-grow" v-model="filter.minAge" translation="poll-min-age" type="number"/>
-        <FormField class="flex-grow" v-model="filter.maxAge" translation="poll-max-age" type="number"/>
+        <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
+        <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="filter.role" type='select' translation="poll-roles" :options="allRoles"/>
+      <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
 
       <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
         <div>
@@ -49,14 +49,10 @@
 
 <script lang="ts">
 
-interface church {
-  name: String,
-  val: number
-}
-
 import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
 import PollForm from '../components/poll-form.vue'
+import { PollingEvent } from '../domain'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -73,15 +69,16 @@ export default defineComponent({
           title: '',
           description: '',
           startDateTime: null,
-          creatorId: '',
           status: 0,
+          creatorId: null,
+          participantFilter: {
+            church: 0,
+            role: 0,
+            minAge: null,
+            maxAge: null,
+          }
         },
-        filter: {
-          church: 0,
-          role: 0,
-          minAge: null,
-          maxAge: null,
-        } as any,
+        
         numberOfVoters: null,
       }
     },
@@ -135,14 +132,12 @@ export default defineComponent({
       },
       createPollingEvent(){
         const data:any = this.eventData;
-        data.participantFilter = {}
-        for(const key in this.filter)
-          if(this.filter[key])
-            data.participantFilter[key] = this.filter[key] as any;
+        data.creatorId = this.$user.personID;
+        
           
         this.$client.service('polling-event').create(data)
-        .then((res: any) => {
-          this.$router.push('/create/'+res._key);
+        .then((res: PollingEvent) => {
+          this.$router.push(`/polling-event${res._key}/prepare`);
         })
       },
       goHome(){
