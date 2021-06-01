@@ -28,7 +28,8 @@ export default defineComponent({
     },
     methods: {
         goToPoll() {
-            this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+            if(this.pollingEvent)
+                this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
         }
     }
 })
