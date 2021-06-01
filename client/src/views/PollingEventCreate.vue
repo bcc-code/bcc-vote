@@ -5,9 +5,9 @@
       <InfoBox class="mb-8">
           {{$t('info.define-group')}}
       </InfoBox>
-      <FormField v-model="eventData.title" translation="poll-title" type="input"/>
+      <FormField v-model="eventData.title" translation="poll-title" type="string"/>
 
-      <FormField v-model="eventData.description" translation="poll-description" type="input" :optional="true"/>
+      <FormField v-model="eventData.description" translation="poll-description" type="string" :optional="true"/>
 
       <FormField v-model="eventData.startDateTime" translation="poll-date" type="date"/>
 
@@ -17,19 +17,19 @@
           {{$t('info.define-group')}}
       </InfoBox>
 
-      <FormField v-model="filter.church" translation="poll-church" type="select" :options="allChurches"/>
+      <FormField v-model="eventData.participantFilter.church" translation="poll-church" type="select" :options="allChurches"/>
 
       <div class="flex w-full gap-10 max-w-sm">
-        <FormField class="flex-grow" v-model="filter.minAge" translation="poll-min-age" type="number"/>
-        <FormField class="flex-grow" v-model="filter.maxAge" translation="poll-max-age" type="number"/>
+        <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
+        <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="filter.role" type='select' translation="poll-roles" :options="allRoles"/>
+      <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
 
-      <div class="flex justify-between py-4 font-bold items-center">
+      <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
         <div>
           <h6>{{$t('info.number-of-participants')}}</h6>
-          <h3>{{numberOfVoters}} {{$t('misc.voters')}}</h3>
+          <h3>{{numberOfVoters}} {{$t('labels.voters')}}</h3>
         </div>
         <div>
           <div class="light-button text-lg">{{$t('actions.show-all-participants')}}</div>
@@ -46,14 +46,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
-import InfoBox from '../components/info-box'
-import FormField from '../components/form-field'
-export default {
+import InfoBox from '../components/info-box.vue'
+import FormField from '../components/form-field.vue'
+import PollForm from '../components/poll-form.vue'
+import { PollingEvent } from '../domain'
+
+import { defineComponent } from 'vue'
+export default defineComponent({
    components: {
         InfoBox,
         FormField,
+        PollForm,
     },
     data() {
       return {
@@ -63,16 +68,17 @@ export default {
           title: '',
           description: '',
           startDateTime: null,
-          creatorId: this.$user.personID,
           status: 0,
+          creatorId: null,
+          participantFilter: {
+            church: 0,
+            role: 0,
+            minAge: null,
+            maxAge: null,
+          }
         },
-        filter: {
-          church: 0,
-          role: 0,
-          minAge: null,
-          maxAge: null,
-        },
-        numberOfVoters: 10,
+        
+        numberOfVoters: null,
       }
     },
     async created(){
@@ -91,13 +97,13 @@ export default {
               }
             }
           })
-          this.allChurches = res.map(c => {
+          res.unshift({name: "All churches", churchID: 0})
+          this.allChurches = res.map((c: any) => {
             return {
               name: c.name,
               val: c.churchID,
             }
           });
-          this.allChurches.unshift({name: 'All churches', val: 0})
       },
       async loadRoles(){
           const res = await this.$client.service('role').find({
@@ -109,31 +115,35 @@ export default {
               $select: ['name', '_key'],
             }
           })
-          this.allRoles = res.map(c => {
+          this.allRoles = res.map((c:any) => {
             return {
               name: c.name,
               val: c._key,
             }
           });
-          this.allRoles.unshift({name: 'All roles', val: 0})
+          res.unshift({name: "All roles", _key: 0})
+          this.allRoles = res.map((c: any) => {
+            return {
+              name: c.name,
+              val: c._key,
+            }
+          });
       },
       createPollingEvent(){
-        const data = this.eventData;
-        data.participantFilter = {}
-        for(const key in this.filter)
-          if(this.filter[key])
-            data.participantFilter[key] = this.filter[key];
+        const data:any = this.eventData;
+        data.creatorId = this.$user.personID;
+        
           
         this.$client.service('polling-event').create(data)
-        .then((res) => {
-          this.$router.push('/create/'+res._key);
+        .then((res: PollingEvent) => {
+          this.$router.push(`/polling-event/prepare/${res._key}`);
         })
       },
       goHome(){
         this.$router.push('/');
       },
     }
-}
+})
 </script>
 
 <style>
