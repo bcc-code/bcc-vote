@@ -20,29 +20,30 @@ describe('permissions - app ability', async () => {
     testSet = pollingEventsTestSet()
   });
 
-  const runPermissionsTest = async function (action:actionsType, onEntity:any, expected: boolean, entity:any="", changedData:any="") {
-
-    const ability = defineAbilityFor(await testSet.user())
+  const runPermissionsTest = async function (action:actionsType, onEntity:any, expected: boolean, entityName:any="", changedData:any="") {
 
     try {
+      const user = await testSet.user()
+      const ability = defineAbilityFor(user)
+      const entity = await (testSet[entityName])() as any
+
       let result:boolean = false;
       switch (action) {
         case "create":
-          result = ability.can(action,onEntity)
+          result = ability.can(action,entity)
           break;
         case "get":
-          result = ability.can(action,subject(onEntity, testSet[entity]))
+          result = ability.can(action,subject(onEntity, entity))
           break;
         case "patch":
-          let entityWithChanges = testSet[entity]
-
-          result = ability.can(action,subject(onEntity,entityWithChanges))
+          result = ability.can(action,subject(onEntity,entity))
           break;
         case "find":
-          result = ability.can(action,subject(onEntity,testSet[entity]))
+          const rule = ability.relevantRuleFor(action,subject(onEntity,entity));
+          result = ability.can(action,subject(onEntity,entity))
           break;
         case "remove":
-          result = result = ability.can(action,onEntity)
+          result = result = ability.can(action,entity)
           break;
         default:
           throw Error("unknown action")
@@ -67,7 +68,9 @@ describe('permissions - app ability', async () => {
  }
 
   var useCases:Array<useCaseType> = [
-    { action:"find", subject:"polling-event", entity:'scopedToLocalChurch', expected: true }
+    { action:"find", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+    { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+    { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false }
  ]
 
  useCases.forEach((useCase) => {

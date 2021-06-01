@@ -50,11 +50,13 @@ async function generateFreshContext() {
 }
 
 function pollingEventsTestSet(){
-  const pollingEventSvc = app.service('polling_event') as any
+  const pollingEventSvc = app.service('polling-event') as any
   const userSvc = app.service('user') as any ;
 
   const testData = {
-    scopedToLocalChurch: async () => { return await  pollingEventSvc.get('504279890')},
+    scopedToLocalChurchSameAsLoggedInUser: async () => { return await  pollingEventSvc.get('504279890')},
+    scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892')},
+    scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978')},
     user: async () => { return await userSvc.get('178509735',{})}
   }
 
