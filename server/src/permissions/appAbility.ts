@@ -15,11 +15,15 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
 
     if(user.roles.filter((r:Role) => r.enumName === 'Developer').length) {
         can('create','poll');
+        can('update', 'poll');
+        can('remove', 'poll');
     }
 
     can('create','answer');
     can('find','poll');
     can('find','person');
+
+
 
     can('create','polling-event');
     can('get','polling-event');
