@@ -5,10 +5,9 @@ import {
   AuthenticationRequest,
 } from "@feathersjs/authentication";
 import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentication-oauth';
-
 import { NotAuthenticated } from '@feathersjs/errors';
-
 import { Application } from '../../declarations';
+import pick from 'lodash/pick';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -23,15 +22,15 @@ class Auth0Strategy extends OAuthStrategy {
     try {
       const userSvc = this.app?.services.user;
       const memberSvc = this.app?.services.person;
-      const member = (await memberSvc.find({ query:{ personID: personID}})).data[0];
+      let member = (await memberSvc.find({ query:{ personID: personID}})).data[0];
+      member = pick(member,['_id','_key','personID','churchID','displayName','age','activeRole','roles','church','administrator']);
 
-      const existingUser = await userSvc.find({ query: { _key: member._key }});
-      if(existingUser.data) {
-        if(existingUser.data.length == 0) {
-          await userSvc.create(member);
-        } else if(existingUser.data.length == 1) {
-          await userSvc.update(existingUser.data[0]._key,member,{});
-        }
+      const existingUsers = (await userSvc.find({ query: { _key: member._key }})).data;
+      
+      if(existingUsers.length == 0) {
+        await userSvc.create(member);
+      } else if(existingUsers.length == 1) {
+        await userSvc.update(member._key,member);
       }
       return {
         authentication: { strategy: this.name ? this.name : 'unknown' },
