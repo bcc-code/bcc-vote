@@ -17,35 +17,29 @@ declare module '../../declarations' {
 class Auth0Strategy extends OAuthStrategy {
   async authenticate(authentication: AuthenticationRequest, originalParams: Params) {
     const entity: string = this.configuration.entity;
-    const { provider, ...params } = originalParams;
+    const { ...params } = originalParams;
     const profile = await this.getProfile(authentication,params);
     const personID = profile["https://login.bcc.no/claims/personId"];
+    try {
+      const userSvc = this.app?.services.user;
+      const memberSvc = this.app?.services.person;
+      const member = (await memberSvc.find({ query:{ personID: personID}})).data[0];
 
-    const personSvc = this.app?.services.user;
-    let person;
-    const tryFind = await personSvc.find({
-      query: {
-        $limit: 1,
-        personID: personID
+      const existingUser = await userSvc.find({ query: { _key: member._key }});
+      if(existingUser.data) {
+        if(existingUser.data.length == 0) {
+          await userSvc.create(member);
+        } else if(existingUser.data.length == 1) {
+          await userSvc.update(existingUser.data[0]._key,member,{});
+        }
       }
-    });
-    if(tryFind.total == 0){
-      person = await personSvc.create({
-        personID: personID,
-      });
-    }else{
-      person = tryFind.data[0];
+      return {
+        authentication: { strategy: this.name ? this.name : 'unknown' },
+        [entity]: member
+      };
+    } catch(err) {
+      throw new Error('Login not possible');
     }
-    const memberSvc = this.app?.services.person;
-    const member = (await memberSvc.find({query:{
-      personID: personID
-    }})).data[0];
-
-    member._id = person._id;
-    return {
-      authentication: { strategy: this.name ? this.name : 'unknown' },
-      [entity]: member
-    };
   }
 }
 
