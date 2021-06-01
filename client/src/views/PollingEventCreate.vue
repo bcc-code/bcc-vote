@@ -42,7 +42,6 @@
             {{$t('actions.create-meeting')}}
         </div >
       </div>
-      <PollForm pollEventId="1223" pollIndex="123"/>
     </div>
   </div>
 </template>

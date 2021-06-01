@@ -22,7 +22,7 @@
     <FormField v-model="pollData.visibility" :value="1" translation="poll-non-public" type="radio"/>
     <FormField v-model="pollData.visibility" :value="2" translation="poll-anonymous" type="radio"/>
     <div class="flex justify-center pt-8 pb-4">
-      <div class="gradient-button text-lg flex items-center cursor-pointer"  @click="createPoll">
+      <div class="gradient-button md-button text-lg flex items-center cursor-pointer"  @click="createPoll">
           <PlusIcon class="w-6 h-6 p-0.5 mr-2"/>
           {{$t('actions.add-question')}}
       </div >
@@ -74,6 +74,27 @@ export default defineComponent({
     }
   },
   methods: {
+    clearForm(){
+      this.pollData = {
+        title: '',
+        description: '',
+        pollingEventId: this.pollingEventId,
+        status: 0,
+        visibility: 0,
+        answers: [
+          {
+            label: "Yes",
+            explanation: "",
+            answerId: 1,
+          },
+          {
+            label: "No",
+            explanation: "",
+            answerId: 2,
+          }
+        ]
+      }
+    },
     addOption(){
       this.pollData.answers.push({
         label: "",
@@ -87,6 +108,7 @@ export default defineComponent({
     createPoll(){
       this.$client.service('poll').create(this.pollData)
       .then(() => {
+        this.clearForm();
         this.$emit('created');
       })
     }

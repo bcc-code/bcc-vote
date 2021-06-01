@@ -11,18 +11,18 @@ export default function(app: Application): void {
     return app.channel(data._key);
   });
   app.services.answer.publish('created', (data:any) => {
-    return app.channel(data.meetingID);
+    return app.channel(data.pollingEventId);
   });
 
   app.services.answer.publish('patched', (data:any) => {
-    return app.channel(data.meetingID);
+    return app.channel(data.pollingEventId);
   });
 
   app.services.poll.publish('created', (data:any) => {
-    return app.channel(data.meetingID);
+    return app.channel(data.pollingEventId);
   });
 
   app.services.poll.publish('patched', (data:any) => {
-    return app.channel(data.meetingID);
+    return app.channel(data.pollingEventId);
   });
 }
