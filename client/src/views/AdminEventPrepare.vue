@@ -98,7 +98,6 @@ export default defineComponent({
           }
         }).then((res: Poll[]) => {
           this.savedPolls = res;
-          console.log(res);
         })
       },
       addPollFromSocket(data: Poll){
@@ -112,7 +111,6 @@ export default defineComponent({
         this.savedPolls.splice(ind, 1);
       },
       updatePollFromSocket(data: Poll){
-        console.log('update');
         const ind = this.findIndex(data);
         this.savedPolls[ind] = data;
       }
