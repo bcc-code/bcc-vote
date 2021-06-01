@@ -7,10 +7,10 @@ export interface PollingEvent {
     status:PollingEventStatus;
     startDateTime: Date;
     creatorId: string;
-    participantFilter: ParticpantFilters;
+    participantFilter: ParticipantFilters;
 }
 
-export interface ParticpantFilters {
+export interface ParticipantFilters {
     orgs: string
     roles: string;
     minAge: number;
