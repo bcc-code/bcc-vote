@@ -7,7 +7,7 @@
         <RadioField v-model="model" :value="value"/>
         <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
     </div>
-    <section v-else class="mb-5 max-w-sm relative">
+    <section v-else class="mb-5 w-full max-w-sm relative">
         <div class="flex justify-between">
         <h5 class="mb-1 font-bold">{{$t(`fields.${translation}`)}} {{additionalText}}</h5>
         <h5 v-if="optional" class="text-gray-600">{{$t('fields.optional')}}</h5>

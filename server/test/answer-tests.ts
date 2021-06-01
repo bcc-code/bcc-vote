@@ -15,7 +15,7 @@ describe('Anwswer', async () => {
     await importDB(getAranoDBConfigFromFeathers(),true,false);
   });
 
-  it.only('Get a user', async () => {
+  it('Get a user', async () => {
 
     try {
       const userSvc = app.services.users;

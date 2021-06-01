@@ -15,12 +15,17 @@
           <h3 :class="currentTab == 'polls' ? 'text-blue-900': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
           <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
       </div>
-      <div v-if="currentTab === 'polls'" class="form-section padding-lg">
+      <div v-if="currentTab === 'polls'" class="form-section padding-md">
+        <div class="flex justify-between">
+          <h3 class="font-bold">{{$t('labels.polls')}}</h3>
+          <AddButton translation="add-poll" @click="addingPoll = true"/>
+        </div>
         <div class="pt-4 pb-8">
         <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
         </div>
-        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @delete="deletePoll(ind)"/>
-        <PollForm :pollingEventId="$route.params.id" pollIndex="1"/>
+        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
+        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = true" @stopEdit="currentlyEdited = false" :active="!currentlyEdited"/>
+        
       </div>
       <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
@@ -28,10 +33,11 @@
 </template>
 <script lang="ts">
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
-import InfoBox from '../components/info-box.vue'
 
+import InfoBox from '../components/info-box.vue'
 import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
+import AddButton from '../components/add-button.vue'
 
 import { PollingEvent } from '../domain'
 import { Poll } from '../domain/Poll'
@@ -43,6 +49,7 @@ export default defineComponent({
         PencilIcon,
         PollForm,
         SavedPoll,
+        AddButton,
     },
     data() {
       return {
@@ -62,6 +69,8 @@ export default defineComponent({
           }
         } as PollingEvent,
         savedPolls: [] as Poll[],
+        addingPoll: false,
+        currentlyEdited: false,
       }
     },
     created () {
@@ -69,6 +78,8 @@ export default defineComponent({
       this.loadSavedPolls();
 
       this.$client.service('poll').on('created', this.addPollFromSocket)
+      this.$client.service('poll').on('updated', this.updatePollFromSocket)
+      this.$client.service('poll').on('removed', this.deletePollFromSocket)
     },
     methods: {
       editPollingEvent() {
@@ -87,17 +98,23 @@ export default defineComponent({
           }
         }).then((res: Poll[]) => {
           this.savedPolls = res;
+          console.log(res);
         })
       },
       addPollFromSocket(data: Poll){
         this.savedPolls.push(data);
       },
-      deletePoll(ind: number){
-        const poll:Poll = this.savedPolls[ind];
-        this.$client.service('poll').remove(poll._key)
-        .then(() => {
-          this.savedPolls.splice(ind, 1);
-        })
+      findIndex(data: Poll){
+        return this.savedPolls.map((e: Poll) => e._key).indexOf(data._key);
+      },
+      deletePollFromSocket(data: Poll){
+        const ind = this.findIndex(data);
+        this.savedPolls.splice(ind, 1);
+      },
+      updatePollFromSocket(data: Poll){
+        console.log('update');
+        const ind = this.findIndex(data);
+        this.savedPolls[ind] = data;
       }
     }
 })

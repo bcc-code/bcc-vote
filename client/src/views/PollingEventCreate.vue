@@ -36,11 +36,11 @@
         </div>
       </div>
 
-      <div class="flex justify-center items-center py-5 gap-5 sm:mt-4">
-        <h4 @click="goHome" class="text-gray-800 font-bold p-4 cursor-pointer">Discard</h4>
-        <div class="gradient-button md-button text-lg" @click="createPollingEvent">
+      <div class="flex justify-center py-5 gap-5 sm:mt-4">
+        <h5 @click="goHome" class="md-button text-gray-800 font-bold">{{$t('actions.discard')}}</h5>
+        <h5 class="gradient-button md-button" @click="createPollingEvent">
             {{$t('actions.create-meeting')}}
-        </div >
+        </h5>
       </div>
     </div>
   </div>
