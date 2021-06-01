@@ -43,7 +43,6 @@
   "dependencies": {
     "@bcc-code/arango-migrate": "^0.9.17",
     "@bcc-its/feathers-arangodb": "3.0.0",
-    "@casl/ability": "^5.3.1",
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
     "@feathersjs/authentication-oauth": "^4.5.11",
@@ -70,6 +69,7 @@
     "x3-linkedlist": "^1.2.0"
   },
   "devDependencies": {
+    "@casl/ability": "^5.3.1",
     "@types/chai": "^4.2.18",
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.10",

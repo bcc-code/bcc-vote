@@ -19,9 +19,9 @@ function getAranoDBConfigFromFeathers():ArangoDBConfig {
 }
 
 async function generateFreshContext() {
-  const userSvc = app.service('person') as any ;
+  const userSvc = app.service('user') as any ;
 
-  let loggedInUser = await userSvc.get('178509735',{})
+  let loggedInUser = await userSvc.get('178509735',{});
 
   let context = {
     app:app,
@@ -42,20 +42,31 @@ async function generateFreshContext() {
       authenticated: true,
       user: loggedInUser
     }
-  }
+  };
 
   let contextString:any = JSON.stringify(context);
-  let contextFresh = JSON.parse(contextString)
+  let contextFresh = JSON.parse(contextString);
   return context;
 }
 
-// Please look at test scenario TESTING_SCENARIOS/346023223 for more details
+function pollingEventsTestSet(){
+  const pollingEventSvc = app.service('polling_event') as any
+  const userSvc = app.service('user') as any ;
+
+  const testData = {
+    scopedToLocalChurch: async () => { return await  pollingEventSvc.get('504279890')},
+    user: async () => { return await userSvc.get('178509735',{})}
+  }
+
+  return testData
+}
 
 
 
 
 export {
     generateFreshContext,
-    getAranoDBConfigFromFeathers
+    getAranoDBConfigFromFeathers,
+    pollingEventsTestSet
 }
 

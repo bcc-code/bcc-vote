@@ -1,20 +1,20 @@
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { Users } from './users.class';
+import { User } from './user.class';
 import createModel from '../../models/users.model';
-import hooks from './users.hooks';
+import hooks from './user.hooks';
 
 declare module '../../declarations' {
   interface ServiceTypes {
-    'users': Users & ServiceAddons<any>;
+    'user': User & ServiceAddons<any>;
   }
 }
 
 export default function (app: Application): void {
   const Model = createModel(app);
 
-  app.use('/users', new Users(Model, app));
+  app.use('/user', new User(Model, app));
 
-  const service = app.service('users');
+  const service = app.service('user');
   service.hooks(hooks);
 }
