@@ -26,7 +26,7 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import { PollingEvent } from '../domain'
 import { defineComponent } from 'vue'
 export default defineComponent({
-   components: {
+    components: {
         InfoBox,
         PencilIcon
     },
@@ -38,11 +38,12 @@ export default defineComponent({
           _key: '',
           title: "Yearly Meeting",
           description: "Yearly Meeting in Oslo",
-          type: "poll",
+          type: "live_event",
+          status:"not_started",
           creatorId: "person/122324242",
           participantFilter: {
-            orgs: [],
-            roles: [],
+            orgs: '',
+            roles: '',
             minAge: 10,
             maxAge: 100
           }

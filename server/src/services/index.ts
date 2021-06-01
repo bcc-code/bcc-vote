@@ -1,5 +1,5 @@
 import { Application } from '../declarations';
-import user from './users/users.service';
+import user from './user/user.service';
 import pollEvent from './polling-event/polling-event.service';
 import poll from './poll/poll.service';
 import answer from './answer/answer.service';

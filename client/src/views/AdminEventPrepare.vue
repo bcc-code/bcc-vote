@@ -59,11 +59,12 @@ export default defineComponent({
           _key: '',
           title: "Yearly Meeting",
           description: "Yearly Meeting in Oslo",
-          type: "poll",
+          type: "live_event",
+          status:"not_started",
           creatorId: "person/122324242",
           participantFilter: {
-            orgs: [],
-            roles: [],
+            orgs: '',
+            roles: '',
             minAge: 10,
             maxAge: 100
           }

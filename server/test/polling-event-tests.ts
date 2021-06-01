@@ -23,7 +23,7 @@ describe('polling-event', async () => {
     } catch (error) {
         assert.fail('It was not possible to retrieve a list of all polling events')
     }
-    
+
   });
 
 

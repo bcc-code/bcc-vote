@@ -11,7 +11,7 @@ const addChannel = async (context: HookContext) => {
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ ],
     find: [],
     get: [ addChannel ],
     create: [ ],

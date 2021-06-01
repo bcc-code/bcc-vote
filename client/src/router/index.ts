@@ -11,6 +11,8 @@ async function authentication() {
     try {
         const { user } = await router.$client.reAuthenticate()
 
+        router.$user._id = user._id
+        router.$user._key = user._key
         router.$user.name = user.name
         router.$user.age = user.age
         router.$user.church = user.church
