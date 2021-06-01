@@ -25,9 +25,12 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        path: '/create/:id',
-        name: 'Add questions to a polling event',
-        component: () => require('../views/QuestionCreate.vue')
+        name: 'Polling event lobby',
+        path: '/polling-event/lobby/:id',
+        component: () => require('../views/ParticipantLobby.vue'),
+        meta: {
+            bgColor: "bg-blue-900"
+        }
     },
     {
         name: 'logout',
@@ -41,5 +44,5 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/error',
         name: 'error',
         component: () => require('../views/Error.vue')
-    },
+    }
 ]

@@ -7,11 +7,15 @@
               &nbsp -&nbsp
               {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}
             </p>
-        </div>
-      <button class="w-32 h-5 font-bold text-blue-900 flex items-center justify-between" @click="goToPoll">
-          {{$t('actions.go-to-poll')}}
-          <ArrowRight class="h-full"/>
-        </button>
+    </div>
+    <button class="w-32 h-5 font-bold text-blue-900 flex items-center justify-between" @click="goToPoll(pollingEvent._key)">
+        {{$t('actions.go-to-poll')}}
+        <ArrowRight class="h-full"/>
+    </button>
+    <button class="w-32 h-5 font-bold text-blue-900 flex items-center justify-between" @click="editPoll(pollingEvent._key)">
+        Edit poll
+        <ArrowRight class="h-full"/>
+    </button>
   </div>
 </template>
 
@@ -27,9 +31,11 @@ export default defineComponent({
         pollingEvent: Object as PropType<PollingEvent>,
     },
     methods: {
-        goToPoll() {
-            if(this.pollingEvent)
-                this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+        goToPoll(pollingEventKey:string) {
+            this.$router.push({ path: `/polling-event/lobby/${pollingEventKey}`, params: { id: pollingEventKey}})
+        },
+        editPoll(pollingEventKey:string) {
+            this.$router.push({ path: `/polling-event/prepare/${pollingEventKey}`, params: { id: pollingEventKey}})
         }
     }
 })
