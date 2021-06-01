@@ -4,11 +4,11 @@
             <div class="form-section padding-md mb-10">
                 <div class="flex justify-between items-center mb-5">
                 <h2 class="font-bold">{{pollingEvent.title}}</h2>
-                <PencilIcon @click="editPollingEvent(pollingEvent)" class="text-blue-900 cursor-pointer h-5"/>
+                <PencilIcon @click="editPollingEvent(pollingEvent._key)" class="text-blue-900 cursor-pointer h-5"/>
                 </div>
                 <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce pretium porta interdum. Ut felis diam, tristique in tellus et, maximus molestie eros.</p>
                 <div class="w-full flex justify-center mt-8">
-                <button class="gradient-button md-button text-lg" @click="closePollingEvent(pollingEvent)">{{$t('actions.close-live-poll')}}</button>
+                <button class="gradient-button md-button text-lg" @click="closePollingEvent(pollingEvent._key)">{{$t('actions.close-live-poll')}}</button>
                 </div>
             </div>
             <div class="form-section padding-md">
