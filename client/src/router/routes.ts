@@ -30,12 +30,12 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         name: 'Prepare the Polling event',
-        path: '/polling-event:id/prepare',
+        path: '/polling-event/prepare/:id',
         component: PollingEventPrepare
     },
     {
         name: 'Administrate the Live polling event',
-        path: '/polling-event:id/live-polling',
+        path: '/polling-event/live/:id',
         component: PollingEventLive,
         meta: {
             bgColor: "bg-blue-900"
