@@ -3,7 +3,7 @@
     <InfoBox class="mb-8">
       {{$t('info.question-visibility')}}
     </InfoBox>
-    <h3 class="font-bold mb-6">{{index}}. {{$t('labels.poll')}}</h3>
+    <h3 class="font-bold mb-6">{{pollIndex}}. {{$t('labels.poll')}}</h3>
     <FormField v-model="pollData.title" translation = "poll-title" type="string"/>
     <FormField v-model="pollData.description" translation = "poll-description" type="string"/>
     <h3 class="font-bold mb-7">{{$t('labels.answers')}}</h3>
@@ -33,14 +33,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
 
-import InfoBox from '../components/info-box'
-import FormField from '../components/form-field'
+import InfoBox from '../components/info-box.vue'
+import FormField from '../components/form-field.vue'
 import PlusIcon from 'heroicons-vue3/outline/PlusIcon'
 
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
   components: {
     InfoBox,
     FormField,
@@ -48,7 +49,7 @@ export default {
   },
   props: {
     pollingEventId: String,
-    index: Number,
+    pollIndex: Number,
   },
   data(){
     return {
@@ -82,7 +83,7 @@ export default {
         answerId: 2,
       })
     },
-    removeOption(ind){
+    removeOption(ind: Number){
       this.pollData.answers.splice(ind, 1);
     },
     createPoll(){
@@ -93,5 +94,5 @@ export default {
     }
   },
   emits: ['created']
-}
+})
 </script>

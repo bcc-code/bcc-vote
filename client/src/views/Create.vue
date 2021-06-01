@@ -26,10 +26,10 @@
 
       <FormField v-model="filter.role" type='select' translation="poll-roles" :options="allRoles"/>
 
-      <div class="flex justify-between py-4 font-bold items-center">
+      <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
         <div>
           <h6>{{$t('info.number-of-participants')}}</h6>
-          <h3>{{numberOfVoters}} {{$t('misc.voters')}}</h3>
+          <h3>{{numberOfVoters}} {{$t('labels.voters')}}</h3>
         </div>
         <div>
           <div class="light-button text-lg">{{$t('actions.show-all-participants')}}</div>
@@ -42,17 +42,19 @@
             {{$t('actions.create-meeting')}}
         </div >
       </div>
+      <PollForm pollEventId="1223" pollIndex="123"/>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
-import InfoBox from '../components/info-box'
-import FormField from '../components/form-field'
-import PollForm from '../components/PollForm'
+import InfoBox from '../components/info-box.vue'
+import FormField from '../components/form-field.vue'
+import PollForm from '../components/poll-form.vue'
 
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
    components: {
         InfoBox,
         FormField,
@@ -60,13 +62,13 @@ export default {
     },
     data() {
       return {
-        allChurches: [],
-        allRoles: [],
+        allChurches: Array,
+        allRoles: Array,
         eventData: {
           title: '',
           description: '',
           startDateTime: null,
-          creatorId: this.$user.personID,
+          creatorId: '',
           status: 0,
         },
         filter: {
@@ -75,7 +77,7 @@ export default {
           minAge: null,
           maxAge: null,
         },
-        numberOfVoters: 10,
+        numberOfVoters: null,
       }
     },
     async created(){
@@ -94,7 +96,7 @@ export default {
               }
             }
           })
-          this.allChurches = res.map(c => {
+          this.allChurches = res.map((c: any) => {
             return {
               name: c.name,
               val: c.churchID,
@@ -112,7 +114,7 @@ export default {
               $select: ['name', '_key'],
             }
           })
-          this.allRoles = res.map(c => {
+          this.allRoles = res.map((c:any) => {
             return {
               name: c.name,
               val: c._key,
@@ -128,7 +130,7 @@ export default {
             data.participantFilter[key] = this.filter[key];
           
         this.$client.service('meetings').create(data)
-        .then((res) => {
+        .then((res: any) => {
           this.$router.push('/create/'+res._key);
         })
       },
@@ -136,7 +138,7 @@ export default {
         this.$router.push('/');
       },
     }
-}
+})
 </script>
 
 <style>
