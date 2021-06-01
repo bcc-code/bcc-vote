@@ -14,7 +14,7 @@ const checkIfOnlyOne = async (context: HookContext) => {
   const r = await context.app.services.answers.find({query});
   if(r.total > 0)
     throw Error('You cannot vote 2 times');
-  
+
   return context;
 };
 
@@ -31,7 +31,7 @@ const checkTime = async (context:HookContext) => {
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ ],
     find: [],
     get: [],
     create: [ checkTime , checkIfOnlyOne],

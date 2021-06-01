@@ -8,8 +8,8 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 
 import { NotAuthenticated } from '@feathersjs/errors';
 
-import { Application } from './declarations';
-declare module './declarations' {
+import { Application } from '../../declarations';
+declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
   }
