@@ -4,9 +4,7 @@
     <template v-else>
       <div :class="['app-container',backgroundClass]">
         <Header />
-        <transition name="fade" mode="out-in">
-            <router-view :key="$route.fullPath" :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
-        </transition>
+        <router-view :key="$route.fullPath" :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
         <Footer />
       </div>
     </template>
