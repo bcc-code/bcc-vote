@@ -69,6 +69,7 @@
     "x3-linkedlist": "^1.2.0"
   },
   "devDependencies": {
+    "@casl/ability": "^5.3.1",
     "@types/chai": "^4.2.18",
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.10",

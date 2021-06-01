@@ -8,8 +8,8 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 
 import { NotAuthenticated } from '@feathersjs/errors';
 
-import { Application } from './declarations';
-declare module './declarations' {
+import { Application } from '../../declarations';
+declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
   }
@@ -21,7 +21,7 @@ class Auth0Strategy extends OAuthStrategy {
     const profile = await this.getProfile(authentication,params);
     const personID = profile["https://login.bcc.no/claims/personId"];
 
-    const personSvc = this.app?.services.users;
+    const personSvc = this.app?.services.user;
     let person;
     const tryFind = await personSvc.find({
       query: {
@@ -35,7 +35,7 @@ class Auth0Strategy extends OAuthStrategy {
       });
     }else{
       person = tryFind.data[0];
-    } 
+    }
     const memberSvc = this.app?.services.person;
     const member = (await memberSvc.find({query:{
       personID: personID
@@ -51,7 +51,7 @@ class Auth0Strategy extends OAuthStrategy {
 
 class CustomJWtStrategy extends JWTStrategy {
   async getEntity(id: any, params: any) {
-    const personService = this.app?.services.users;
+    const personService = this.app?.services.user;
     try {
       id = id.split('/')[1];
       const user = await personService.get(id, {});
@@ -74,7 +74,7 @@ class CustomJWtStrategy extends JWTStrategy {
     try {
       const payload = await this.authentication?.verifyAccessToken(accessToken, params.jwt);
       const localID = payload.sub.split('/')[1];
-      const user = await this.app?.service('users').get(localID);
+      const user = await this.app?.service('user').get(localID);
       const personID = user.personID;
       const memberSvc = this.app?.services.person;
       const person = (await memberSvc.find({query:{

@@ -12,7 +12,7 @@ const checkIfOnlyOne = async (context: HookContext) => {
   const r = await context.app.service('answer').find({query});
   if(r.total > 0)
     throw Error('You cannot vote 2 times');
-  
+
   return context;
 };
 
@@ -26,7 +26,7 @@ const checkPollActive = async (context:HookContext) => {
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ ],
     find: [],
     get: [],
     create: [checkPollActive, checkIfOnlyOne],
