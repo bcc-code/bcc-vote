@@ -36,7 +36,7 @@ export default defineComponent({
         this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id,{}) as PollingEvent
         setTimeout(async () => {
             this.polls = await this.$client.service('poll').find({})
-        },5000)
+        },2000)
     }
 })
 </script>
