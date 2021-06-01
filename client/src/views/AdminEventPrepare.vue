@@ -56,7 +56,7 @@ export default defineComponent({
         this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
       },
       activatePollingEvent() {
-        this.$router.push({ path: '/polling-event:id/live-polling', params: { id: this.pollingEvent._id } })
+        this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
       }
     }
 })
