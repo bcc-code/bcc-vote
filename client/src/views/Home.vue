@@ -36,16 +36,16 @@ export default {
     data () {
         return {
             currentTab: 'events',
-            meetings: [],
+            pollingEvents: [],
         }
     },
     mounted(){
-        this.loadMeetings();
+        this.loadPollingEvents();
     },
     methods: {
-        loadMeetings(){
+        loadPollingEvents(){
             const roleIds = this.$user.roles.map(r => r.id)
-            this.$client.service('meetings').find({
+            this.$client.service('polling-event').find({
                 query: {
                     $or: [
                         {role: {$in: roleIds}},
@@ -60,8 +60,8 @@ export default {
                     $select: ['title', 'description', 'startTime', 'endTime', 'numberOfInvited']
                 }
             }).then(res => {
-                this.meetings = res.data
-                this.meetings.forEach(v => {
+                this.pollingEvents = res;
+                this.pollingEvents.forEach(v => {
                     v.admin = false
                 })
             })

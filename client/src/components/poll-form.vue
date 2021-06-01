@@ -83,14 +83,14 @@ export default defineComponent({
         answerId: 2,
       })
     },
-    removeOption(ind: Number){
+    removeOption(ind: number){
       this.pollData.answers.splice(ind, 1);
     },
     createPoll(){
-      this.$client.service('questions').create(this.pollData)
-      .then(() => {
-        this.$emit('created');
-      })
+      // this.$client.service('questions').create(this.pollData)
+      // .then(() => {
+      //   this.$emit('created');
+      // })
     }
   },
   emits: ['created']
