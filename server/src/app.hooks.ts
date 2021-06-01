@@ -1,12 +1,10 @@
 import { HookContext } from "@feathersjs/feathers";
-import { NotAuthenticated } from '@feathersjs/errors';
 import { defineAbilityFor,  } from './permissions/appAbility'
 import {authenticateExternal } from './services/authentication/customAuthentication'
 import { ForbiddenError, subject } from '@casl/ability';
 const { BadRequest } = require('@feathersjs/errors');
 
-var _ = require('lodash');
-var flatten = require('flat')
+
 // Application hooks that run for every service
 
 const startAuthenticationAtTheStartOfRequest = async (context: HookContext) => {
