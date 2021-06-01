@@ -36,6 +36,7 @@ async function authentication() {
             location.href = window.location.hostname == 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
             return { authenticated: false }        
         } else {
+            console.log('Routing Error:',err)
             return { authenticated: false, error: err }
         }
     }
