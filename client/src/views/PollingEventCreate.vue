@@ -17,7 +17,7 @@
           {{$t('info.define-group')}}
       </InfoBox>
 
-      <FormField v-model="eventData.participantFilter.orgs" translation="poll-church" type="select" :options="allChurches"/>
+      <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allChurches"/>
 
       <div class="flex w-full gap-10 max-w-sm">
         <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
@@ -72,8 +72,8 @@ export default defineComponent({
           startDateTime: new Date(0),
           creatorId: 0,
           participantFilter: {
-            orgs: 'all',
-            roles: 'all',
+            org: 'all',
+            role: 'all',
             minAge: undefined,
             maxAge: undefined,
           }

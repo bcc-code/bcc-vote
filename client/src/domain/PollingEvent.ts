@@ -21,8 +21,8 @@ export interface PollingEventPrepare {
 }
 
 export interface ParticipantFilters {
-    orgs: string
-    roles: string;
+    org: string
+    role: string;
     minAge?: number;
     maxAge?: number;
 }
