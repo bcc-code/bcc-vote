@@ -62,7 +62,7 @@ export default defineComponent({
           description: '',
           type: PollingEventType['Live Event'],
           status: PollingEventStatus['Not Started'],
-          creatorId: '',
+          creatorId: 0,
           participantFilter: {
             orgs: 'all',
             roles: 'all',

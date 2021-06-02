@@ -14,14 +14,15 @@
             </InfoBox>
             <Spinner />
         </div>
-        <div v-if="polls.length" class="w-full md:max-w-screen-md md:mx-auto h-full">
-            <PollPopOver class="h-full w-full" :poll="polls[0]" :style="`height: 75vh`"/>
+        <div v-if="currentPoll" class="w-full h-full">
+            <PollPopOver class="h-full w-full" :poll="currentPoll" :style="`height: 75vh`"/>
         </div>
     </section>
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import { PollingEvent } from '../domain'
+import { Poll } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -30,14 +31,17 @@ export default defineComponent({
     data() {
         return {
             pollingEvent: {} as PollingEvent,
-            polls: []
+            currentPoll: undefined as (undefined | Poll),
         }
     },
     async created() {
         this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id,{}) as PollingEvent
-        setTimeout(async () => {
-            this.polls = await this.$client.service('poll').find({})
-        },2000)
+        this.$client.service('poll').on('patched', this.getPoll);
+    },
+    methods: {
+        getPoll(data: Poll){
+            this.currentPoll = data;
+        }
     }
 })
 </script>
