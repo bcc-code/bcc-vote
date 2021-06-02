@@ -40,7 +40,7 @@ export default defineComponent({
           description: "Yearly Meeting in Oslo",
           type: "live_event",
           status:"not_started",
-          creatorId: "person/122324242",
+          creatorId: 0,
           participantFilter: {
             orgs: '',
             roles: '',

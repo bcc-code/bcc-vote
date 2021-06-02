@@ -6,7 +6,7 @@ export interface PollingEvent {
     type: PollingEventType;
     status:PollingEventStatus;
     startDateTime: Date;
-    creatorId: string;
+    creatorId: number;
     participantFilter: ParticipantFilters;
 }
 
@@ -16,7 +16,7 @@ export interface PollingEventPrepare {
     type: PollingEventType;
     status:PollingEventStatus;
     startDateTime: Date;
-    creatorId: string;
+    creatorId: number;
     participantFilter: ParticipantFilters;
 }
 
