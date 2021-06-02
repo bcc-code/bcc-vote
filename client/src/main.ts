@@ -10,6 +10,7 @@ import feathers from '@feathersjs/feathers'
 import socketio from '@feathersjs/socketio-client'
 import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
+import { Role } from './domain/User'
 import router from './router'
 
 const messages = {
@@ -27,10 +28,32 @@ const app = createApp(App)
 
 app.component('Spinner', Spinner)
 app.component('InfoBox', InfoBox)
-app.use(Toast,{duration:5000, positionX: 'right',positionY:'bottom'})
+app.use(Toast,{duration:50000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
+
+app.mixin({
+    methods: {
+        $showError(error:any) {
+            this.$toast(error,{ class: 'error' })
+        }
+    },
+    computed: {
+        $canAdministratePollingEvents() {
+            if(this.$user.roles) {
+                const allowedRoles = ['Developer','SentralInformasjonsmedarbeider','CentralAdministrator']
+                const allowedUserRoles = this.$user.roles.filter((r:Role) => allowedRoles.includes(r.enumName))
+                if(allowedUserRoles.length) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
+    }
+})
+app.mount('#mixins-global')
 
 const client = feathers()
 const socket = io(window.location.hostname == 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
@@ -42,7 +65,6 @@ const user = {
     age: null,
     churchID: null,
     personID: null,
-    authorityLevel: null,
     roles: null,
 }
 

@@ -4,8 +4,8 @@
       <h3 class="font-bold">{{pollIndex}}. {{poll.title}}</h3>
       <PencilIcon class="w-10 h-10 p-2 text-blue-900" :class="{'cursor-pointer': active}" @click="startEditing"/>
     </div>
-    <div class="text-xl mb-8">{{poll.description}}</div>
-    <div class="flex items-center text-red-500" :class="{'cursor-pointer': active}" @click="deletePoll">
+    <div v-if="poll.description" class="text-xl mb-8">{{poll.description}}</div>
+    <div class="flex items-center text-red-500 mt-4" :class="{'cursor-pointer': active}" @click="deletePoll">
       <TrashIcon class="w-5 h-5 mr-2"/>
       <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
     </div>
@@ -42,8 +42,10 @@ export default defineComponent({
       this.$emit('stopEdit');
     },
     async deletePoll(){
-      if(this.active)
+      if(this.active){
         await this.$client.service('poll').remove(this.poll?._key)
+        this.$emit('stopEdit')
+      }
     }
   },
   emits: ['edit', 'stopEdit']

@@ -7,7 +7,7 @@ export async function authenticateExternal(context: HookContext) {
 
   try {
 
-    const result = await context.app.service('authentication').authenticate(params.authentication, {},params.authentication?.strategy)
+    const result = await context.app.service('authentication').authenticate(params.authentication, {},'jwt')
     context.params.user = result.user;
 
   } catch(err) {

@@ -16,16 +16,17 @@
           <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
       </div>
       <div v-if="currentTab === 'polls'" class="form-section padding-md">
-        <div class="flex justify-between">
-          <h3 class="font-bold">{{$t('labels.polls')}}</h3>
-          <AddButton translation="add-poll" @click="createNewPoll"/>
-        </div>
+        <h3 class="font-bold">{{$t('labels.polls')}}</h3>
         <div class="pt-4 pb-8">
         <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
         </div>
-        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
-        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = ind + 1" @stopEdit="currentlyEdited = 0" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
-        
+        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
+        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="reloadPolls"/>
+        <div class="flex justify-center pt-4">
+          <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || currentlyEdited)}" @click="createNewPoll">
+            {{$t('actions.add-poll')}}
+          </div>
+        </div>
       </div>
       <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
@@ -77,17 +78,13 @@ export default defineComponent({
     created () {
       this.loadPollingEvent();
       this.loadSavedPolls();
-
-      this.$client.service('poll').on('created', this.addPollFromSocket)
-      this.$client.service('poll').on('updated', this.updatePollFromSocket)
-      this.$client.service('poll').on('removed', this.deletePollFromSocket)
     },
     methods: {
       editPollingEvent() {
         this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
       },
       activatePollingEvent() {
-        this.$client.service('polling_event').patch(this.pollingEvent._key, {
+        this.$client.service('polling-event').patch(this.pollingEvent._key, {
           status: PollingEventStatus['Live']
         }).then(() => {
           this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
@@ -105,23 +102,19 @@ export default defineComponent({
           this.savedPolls = res;
         })
       },
-      addPollFromSocket(data: Poll){
-        this.savedPolls.push(data);
-      },
-      findIndex(data: Poll){
-        return this.savedPolls.map((e: Poll) => e._key).indexOf(data._key);
-      },
-      deletePollFromSocket(data: Poll){
-        const ind = this.findIndex(data);
-        this.savedPolls.splice(ind, 1);
-      },
-      updatePollFromSocket(data: Poll){
-        const ind = this.findIndex(data);
-        this.savedPolls[ind] = data;
-      },
       createNewPoll(){
-        this.addingPoll = true;
+        if(!this.currentlyEdited){
+          this.addingPoll = true;
+        }
+      },
+      reloadPolls(){
         this.currentlyEdited = 0;
+        this.addingPoll = false;
+        this.loadSavedPolls();
+      },
+      startEditing(ind: number){
+        this.currentlyEdited = ind + 1; 
+        this.addingPoll=false;
       }
     }
 })

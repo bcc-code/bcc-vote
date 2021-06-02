@@ -17,6 +17,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can('create','poll');
     can('update', 'poll');
     can('remove', 'poll');
+    can('patch', 'polling-event');
     can('find', 'org');
     can('find', 'role');
   }
@@ -25,11 +26,9 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
   can('find','poll');
   can('find','person');
 
-
-
   can('create','polling-event');
   can('get','polling-event');
-  can('find','polling-event', {'participantFilter.org': user.church.org.churchID.toString()});
+  can('find','polling-event', {'participantFilter.org': user.churchID.toString()});
   can('find','polling-event', {'participantFilter.org': 'all'as any});
   cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}});
   cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}});
