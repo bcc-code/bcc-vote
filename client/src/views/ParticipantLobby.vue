@@ -6,21 +6,22 @@
                 <h3 class="font-bold">{{pollingEvent.title}}</h3>
                 <label>{{'Live poll'}} - {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}</label>
             </div>
-            <div v-if="!polls.length" class="w-full">
+            <div v-if="!currentPoll" class="w-full">
                 <InfoBox>
                     {{$t('info.polls-will-appear')}}
                 </InfoBox>
                 <Spinner />
             </div>
         </div>
-        <div v-if="polls.length" class="w-full h-full">
-            <PollPopOver class="h-full w-full" :poll="polls[0]" :style="`min-height: calc(100vh - 350px);`"/>
+        <div v-if="currentPoll" class="w-full h-full">
+            <PollPopOver class="h-full w-full" :poll="currentPoll" :style="`min-height: calc(100vh - 350px);`"/>
         </div>
     </section>
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import { PollingEvent } from '../domain'
+import { Poll } from '../domain/poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -29,14 +30,22 @@ export default defineComponent({
     data() {
         return {
             pollingEvent: {} as PollingEvent,
-            polls: []
+            currentPoll: undefined as (undefined | Poll),
         }
     },
     async created() {
         this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id,{}) as PollingEvent
-        setTimeout(async () => {
-            this.polls = await this.$client.service('poll').find({})
-        },2000)
+        // setTimeout(async () => {
+        //     this.polls = await this.$client.service('poll').find({})
+        // },2000)
+
+        this.$client.service('poll').on('patched', this.getPoll);
+    },
+    methods: {
+        getPoll(data: Poll){
+            console.log(data);
+            this.currentPoll = data;
+        }
     }
 })
 </script>

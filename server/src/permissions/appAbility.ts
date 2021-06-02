@@ -18,6 +18,8 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can('update', 'poll');
     can('remove', 'poll');
     can('patch', 'polling-event');
+    can('patch', 'poll');
+    can('get', 'poll');
     can('find', 'org');
     can('find', 'role');
   }

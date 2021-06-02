@@ -21,7 +21,7 @@
               <label class='text-gray-700'>
                 {{$t('info.publish-poll')}}
               </label>
-              <h4 class="md-button font-bold gradient-blue text-white rounded-full flex-shrink-0">
+              <h4 class="md-button font-bold gradient-blue text-white rounded-full flex-shrink-0 cursor-pointer" @click="publishPoll(ind)">
                 {{$t('actions.publish-poll')}}
               </h4>
             </div>
@@ -38,7 +38,7 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import { defineComponent } from 'vue'
 
 import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
-import { Poll } from '../domain/Poll'
+import { Poll, PollActiveStatus } from '../domain/Poll'
 
 export default defineComponent({
     components: {
@@ -98,6 +98,14 @@ export default defineComponent({
       },
       startEditing(ind: number){
         this.currentlyEdited = ind + 1; 
+      },
+      publishPoll(ind: number){
+        console.log(ind);
+        this.$client.service('poll').patch(this.savedPolls[ind]._key, {
+          activeStatus: PollActiveStatus['Live']
+        }).then(() => {
+          console.log('done');
+        })
       }
     }
 })
