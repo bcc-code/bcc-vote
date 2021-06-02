@@ -15,5 +15,6 @@ declare module '@vue/runtime-core' {
     $router: Router,
     $user: any,
     $client: any,
+    $showError: Function
   }
 }

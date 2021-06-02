@@ -39,9 +39,7 @@ export default defineComponent({
                     answerId: option.answerId
                 }
                 await this.$client.service('answer').create(participantAnswer)
-                    .catch((err:any) => {
-                        this.$toast(err)
-                    })
+                    .catch((e:Error) => this.$showError(e))
             }
         }
     }

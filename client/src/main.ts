@@ -27,10 +27,23 @@ const app = createApp(App)
 
 app.component('Spinner', Spinner)
 app.component('InfoBox', InfoBox)
-app.use(Toast,{duration:5000, positionX: 'right',positionY:'bottom'})
+app.use(Toast,{duration:50000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
+
+app.mixin({
+    methods: {
+        $showError(error:Error) {
+            console.log(JSON.stringify(error.message))
+            console.log('Global Error:')
+            this.$toast(error.message,{ class: 'error' })
+        }
+    },
+    computed: {
+    }
+})
+app.mount('#mixins-global')
 
 const client = feathers()
 const socket = io(window.location.hostname == 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
@@ -42,7 +55,6 @@ const user = {
     age: null,
     churchID: null,
     personID: null,
-    authorityLevel: null,
     roles: null,
 }
 
