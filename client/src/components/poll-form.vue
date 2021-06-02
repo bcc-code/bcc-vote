@@ -75,12 +75,12 @@ export default defineComponent({
           {
             label: "Yes",
             explanation: "",
-            answerId: 1,
+            answerId: new Date().getTime(),
           },
           {
             label: "No",
             explanation: "",
-            answerId: 2,
+            answerId: new Date().getTime() + 1,
           }
         ]
       } as PollPrepare
@@ -95,7 +95,7 @@ export default defineComponent({
       this.pollData.answers.push({
         label: "",
         explanation: "",
-        answerId: 2,
+        answerId: new Date().getTime(),
       })
     },
     removeOption(ind: number){
