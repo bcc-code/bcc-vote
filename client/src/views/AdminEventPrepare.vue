@@ -16,16 +16,17 @@
           <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
       </div>
       <div v-if="currentTab === 'polls'" class="form-section padding-md">
-        <div class="flex justify-between">
-          <h3 class="font-bold">{{$t('labels.polls')}}</h3>
-          <AddButton translation="add-poll" @click="createNewPoll"/>
-        </div>
+        <h3 class="font-bold">{{$t('labels.polls')}}</h3>
         <div class="pt-4 pb-8">
         <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
         </div>
-        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
         <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = ind + 1" @stopEdit="currentlyEdited = 0" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
-        
+        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
+        <div class="flex justify-center pt-4">
+          <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || currentlyEdited)}" @click="createNewPoll">
+            {{$t('actions.add-poll')}}
+          </div>
+        </div>
       </div>
       <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
@@ -120,8 +121,9 @@ export default defineComponent({
         this.savedPolls[ind] = data;
       },
       createNewPoll(){
-        this.addingPoll = true;
-        this.currentlyEdited = 0;
+        if(!this.currentlyEdited){
+          this.addingPoll = true;
+        }
       }
     }
 })
