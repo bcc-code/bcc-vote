@@ -40,7 +40,7 @@
     "votes": "Votes",
     "answers": "Answers",
     "option": "Option",
-    "event-result": "Polling event results",
+    "event-results": "Polling event results",
     "polling-event-status": {
       "live": "Live",
       "not_started": "Not started",
