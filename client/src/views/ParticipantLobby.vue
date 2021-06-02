@@ -1,20 +1,19 @@
 <template>
     <section>
-        <div class="max-w-5xl mx-auto py-10 px-4">
-            
-            <div class="text-white mb-12 px-4">
-                <h3 class="font-bold">{{pollingEvent.title}}</h3>
-                <label>{{'Live poll'}} - {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}</label>
+        <div class="max-w-screen-md mx-auto px-4 md:px-6">
+            <div class="flex flex-col justify-center" :style="`height: 15vh`">
+                <div class="text-white">
+                    <h3 class="font-bold">{{pollingEvent.title}}</h3>
+                    <label>{{'Live poll'}} - {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}</label>
+                </div>
             </div>
             <div v-if="!currentPoll" class="w-full">
-                <InfoBox>
-                    {{$t('info.polls-will-appear')}}
-                </InfoBox>
+                <InfoBox>{{$t('info.polls-will-appear')}}</InfoBox>
                 <Spinner />
             </div>
         </div>
-        <div v-if="currentPoll" class="w-full h-full">
-            <PollPopOver class="h-full w-full" :poll="currentPoll" :style="`min-height: calc(100vh - 350px);`"/>
+        <div v-if="currentPoll" class="w-full md:max-w-screen-md md:mx-auto h-full">
+            <PollPopOver class="h-full w-full" :poll="currentPoll" :style="`height: 75vh`"/>
         </div>
     </section>
 </template>
@@ -45,7 +44,7 @@ export default defineComponent({
         if(res.length > 0)
             this.currentPoll = res[0];
 
-        this.$client.service('poll').on('patched', this.getPoll).catch(this.$showError);
+        this.$client.service('poll').on('patched', this.getPoll);
     },
     methods: {
         getPoll(data: Poll){
