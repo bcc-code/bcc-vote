@@ -35,15 +35,10 @@ export default defineComponent({
     },
     async created() {
         this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id,{}) as PollingEvent
-        // setTimeout(async () => {
-        //     this.polls = await this.$client.service('poll').find({})
-        // },2000)
-
         this.$client.service('poll').on('patched', this.getPoll);
     },
     methods: {
         getPoll(data: Poll){
-            console.log(data);
             this.currentPoll = data;
         }
     }
