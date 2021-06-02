@@ -10,5 +10,5 @@ export interface Role {
     _id: string;
     name: string;
     securityLevel: number;
-    personRole: any;
+    enumName: string;
 }
