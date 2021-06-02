@@ -86,11 +86,11 @@
     @apply bg-center;
   }
   
-  .text-green {
-    color: #43B02A;
+  .text-bland-green {
+    color: #779BA6;
   }
-  .border-green {
-    border-color: #43B02A;
+  .bg-bland-green  {
+    background-color: rgba(209, 232, 238, 0.6);
   }
 
   .gradient-blue {

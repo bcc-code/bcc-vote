@@ -12,12 +12,8 @@
         </div>
     </div>
     <div class="max-w-screen-lg mx-auto px-4 pt-8">
-        <div v-if="$canAdministratePollingEvents" class="flex pb-8 gap-6 text-gray-700 font-bold justify-center">
-            <h3 :class="{'text-blue-900': currentTab==='events'}" class="cursor-pointer" @click="currentTab='events'">{{$t('labels.polling-events')}}</h3>
-            <h3 :class="{'text-blue-900': currentTab==='history'}" class="cursor-pointer" @click="currentTab='history'">{{$t('labels.history')}}</h3>
-        </div>
         <h2 class="font-bold mb-8">{{$t('labels.polling-events')}}</h2>
-        <div v-if="currentTab == 'events'">
+        <div>
             <div v-if="pollingEvents.length">
                 <div v-for="pollingEvent in pollingEvents" :key="pollingEvent._id">
                     <PollingEventCard class="w-full md:w-1/2 mb-8" :pollingEvent="pollingEvent"/>
@@ -44,7 +40,6 @@ export default defineComponent({
     },
     data () {
         return {
-            currentTab: 'events' as string,
             pollingEvents: [],
         }
     },

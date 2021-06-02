@@ -14,6 +14,7 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-question": "Add another question",
+    "admin-this-event": "Administrate this voting event",
     "join-this-event": "Join this voting event",
     "start-live-poll": "Start this live poll",
     "close-live-poll": "Close this live poll"
@@ -28,9 +29,9 @@
     "answers": "Answers",
     "option": "Option",
     "polling-event-status": {
-        "live": "Open",
-        "not_started": "Scheduled",
-        "finished": "Closed"
+        "live": "Live",
+        "not_started": "Not started",
+        "finished": "Finished"
     }
   },
   "info": {
