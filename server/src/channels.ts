@@ -25,4 +25,13 @@ export default function(app: Application): void {
   app.services.poll.publish('patched', (data:any) => {
     return app.channel(data.pollingEventId);
   });
+
+
+  app.services.poll.publish('updated', (data:any) => {
+    return app.channel(data.pollingEventId);
+  });
+
+  app.services.poll.publish('removed', (data:any) => {
+    return app.channel(data.pollingEventId);
+  });
 }

@@ -2,24 +2,29 @@ import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
 import { UserDetails, Role } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
-export const subjects = ['answer','polling-event','poll','participant','person','org','all'] as const;
+export const subjects = ['answer','polling-event','poll','participant','person','org', 'role', 'all'] as const;
 export type AppAbilities = [
   typeof actions[number],
   typeof subjects[number] | ForcedSubject<Exclude<typeof subjects[number], 'all'>>
 ];
-export class AppAbility extends Ability<AppAbilities>{};
+export class AppAbility extends Ability<AppAbilities>{}
 
 type DefinePermissions = (user: any, builder: AbilityBuilder<AppAbility>) => void;
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
 
-    if(user.roles.filter((r:Role) => r.enumName === 'Developer').length) {
-        can('create','poll');
-    }
+  if(user.roles.filter((r:Role) => r.enumName === 'Developer').length) {
+    can('create','poll');
+    can('update', 'poll');
+    can('remove', 'poll');
+    can('patch', 'polling-event');
+    can('find', 'org');
+    can('find', 'role');
+  }
 
-    can('create','answer');
-    can('find','poll');
-    can('find','person');
+  can('create','answer');
+  can('find','poll');
+  can('find','person');
 
     can('create','polling-event');
     can('get','polling-event');
@@ -27,6 +32,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can('find','polling-event', {'participantFilter.org': 'all'as any})
     cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
     cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
+    can('find','polling-event', {'creatorId':user.personID as any})
 }
 
 export function defineAbilityFor(user:UserDetails): AppAbility {

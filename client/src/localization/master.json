@@ -13,19 +13,25 @@
     "show-history": "History",
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
-    "add-question": "Add another question",
+    "add-poll": "Add another poll",
     "admin-this-event": "Administrate this voting event",
     "join-this-event": "Join this voting event",
     "start-live-poll": "Start this live poll",
-    "close-live-poll": "Close this live poll"
+    "close-live-poll": "Close this live poll",
+    "save-poll": "Save this poll",
+    "change-poll": "Save changes",
+    "delete-poll": "Delete this poll",
+    "save-changes": "Save changes",
+    "discard": "Discard"
   },
   "labels": {
     "polling-events": "Polling events",
     "history": "History",
     "polls": "Polls",
+    "poll": "Poll",
+    "new-poll": "New poll",
     "results": "Results",
     "voters": "Voters",
-    "poll": "Poll",
     "answers": "Answers",
     "option": "Option",
     "polling-event-status": {

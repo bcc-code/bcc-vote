@@ -108,12 +108,12 @@
     @apply py-4;
     @apply px-6;
   }
-
+  
   .md-button {
     @apply py-3;
     @apply px-5;
   }
-
+  
   .light-button {
     @apply font-bold;
     @apply py-2;
@@ -124,16 +124,25 @@
     @apply rounded-full;
   }
   
+  .border-with-bar {
+    @apply border-2;
+    @apply border-gray-200;
+    @apply rounded-lg;
+    border-left-width: 17px;
+  }
+  
   .form-section {
     @apply bg-white;
     @apply rounded-lg;
     @apply border-base;
     @apply shadow-base;
   }
+  
   .form-section.padding-lg {
     @apply px-4;
     @apply py-6;
   }
+  
   .form-section.padding-md {
     @apply px-3;
     @apply py-5;
