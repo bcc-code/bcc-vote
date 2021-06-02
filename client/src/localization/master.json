@@ -14,7 +14,8 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-poll": "Add another poll",
-    "go-to-poll": "Go to the poll",
+    "admin-this-event": "Administrate this voting event",
+    "join-this-event": "Join this voting event",
     "start-live-poll": "Start this live poll",
     "close-live-poll": "Close this live poll",
     "save-poll": "Save this poll",
@@ -24,7 +25,7 @@
     "discard": "Discard"
   },
   "labels": {
-    "voting-events": "Voting events",
+    "polling-events": "Polling events",
     "history": "History",
     "polls": "Polls",
     "poll": "Poll",
@@ -33,8 +34,11 @@
     "voters": "Voters",
     "answers": "Answers",
     "option": "Option",
-    "live-voting-event": "Live voting event",
-    "survey-voting-event": "Survey voting event"
+    "polling-event-status": {
+        "live": "Live",
+        "not_started": "Not started",
+        "finished": "Finished"
+    }
   },
   "info": {
     "no-meetings": "There are no meetings currently available",

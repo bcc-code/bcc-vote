@@ -2,26 +2,21 @@
   <div>
     <div class="flex justify-center items-center w-full background-home h-64 sm:h-128">
         <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
-            <h1 class="font-bold pb-5">{{$t('titles.home')}}</h1>
-            <p class="hidden sm:block">
+            <h1 class="font-bold">{{$t('titles.home')}}</h1>
+            <p class="hidden sm:block mt-1">
                 {{$t('descriptions.home')}}
             </p>
-            <router-link v-if="$canAdministratePollingEvents" to="/create">
-                <button class="gradient-button lg-button text-2xl sm:text-base sm:mt-4">
-                    {{$t('actions.create-meeting')}}
-                </button>
-            </router-link>
+            <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-5">
+                <h4>{{$t('actions.create-meeting')}}</h4>
+            </button>
         </div>
     </div>
-    <div class="max-w-5xl mx-auto">
-        <div class="flex py-8 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
-            <h3 :class="{'text-blue-900': currentTab==='events'}" @click="currentTab='events'">{{$t('labels.voting-events')}}</h3>
-            <h3 :class="{'text-blue-900': currentTab==='history'}" @click="currentTab='history'">{{$t('labels.history')}}</h3>
-        </div>
-        <div v-if="currentTab == 'events'">
+    <div class="max-w-screen-lg mx-auto px-4 pt-8">
+        <h2 class="font-bold mb-8">{{$t('labels.polling-events')}}</h2>
+        <div>
             <div v-if="pollingEvents.length">
                 <div v-for="pollingEvent in pollingEvents" :key="pollingEvent._id">
-                    <PollingEventCard class="mb-8" :pollingEvent="pollingEvent"/>
+                    <PollingEventCard class="w-full md:w-1/2 mb-8" :pollingEvent="pollingEvent"/>
                 </div>
             </div>
             <InfoBox v-else class="mb-4">
@@ -45,7 +40,6 @@ export default defineComponent({
     },
     data () {
         return {
-            currentTab: 'events' as string,
             pollingEvents: [],
         }
     },
@@ -53,6 +47,9 @@ export default defineComponent({
         await this.loadMeetings();
     },
     methods: {
+        goToCreate() {
+            this.$router.push({ path: '/create' })
+        },
         async loadMeetings(){
             const roleIds = this.$user.roles.map((r:any) => r.id)
             this.pollingEvents = await this.$client.service('polling-event').find({})
