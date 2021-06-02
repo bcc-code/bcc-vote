@@ -1,29 +1,29 @@
 import app from '../../src/app';
-import { ArangoDBConfig } from '@bcc-code/arango-migrate'
+import { ArangoDBConfig } from '@bcc-code/arango-migrate';
 
 function getAranoDBConfigFromFeathers():ArangoDBConfig {
-    const arangoDBConfig = app.get("arangodDB")
+  const arangoDBConfig = app.get("arangodDB");
 
-    let config:ArangoDBConfig = {
-        databaseName: arangoDBConfig.database,
-        url: arangoDBConfig.url,
-        auth: {
-            password: arangoDBConfig.password,
-            username: arangoDBConfig.username
-        },
-        migrationsPath:'./src/db-migrations',
-        testDataPath:'.\\test\\setup-tests\\test_data'
-    }
+  const config:ArangoDBConfig = {
+    databaseName: arangoDBConfig.database,
+    url: arangoDBConfig.url,
+    auth: {
+      password: arangoDBConfig.password,
+      username: arangoDBConfig.username
+    },
+    migrationsPath:'./src/db-migrations',
+    testDataPath:'.\\test\\setup-tests\\test_data'
+  };
 
-    return config
+  return config;
 }
 
 async function generateFreshContext() {
   const userSvc = app.service('user') as any ;
 
-  let loggedInUser = await userSvc.get('178509735',{});
+  const loggedInUser = await userSvc.get('178509735',{});
 
-  let context = {
+  const context = {
     app:app,
     data:{},
     id:'',
@@ -44,32 +44,36 @@ async function generateFreshContext() {
     }
   };
 
-  let contextString:any = JSON.stringify(context);
-  let contextFresh = JSON.parse(contextString);
+  const contextString:any = JSON.stringify(context);
+  const contextFresh = JSON.parse(contextString);
   return context;
 }
 
 function pollingEventsTestSet(){
-  const pollingEventSvc = app.service('polling-event') as any
+  const pollingEventSvc = app.service('polling-event') as any;
   const userSvc = app.service('user') as any ;
+  const pollSvc = app.service('poll') as any ;
 
   const testData = {
     scopedToLocalChurchSameAsLoggedInUser: async () => { return await  pollingEventSvc.get('504279890')},
     scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892')},
     scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978')},
     scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598')},
-    user: async () => { return await userSvc.get('178509735',{})}
-  }
+    user: async () => { return await userSvc.get('178509735',{})},  
+    basePoll: async () => {
+      return await pollSvc.get('504310091');
+    },
+  };
 
-  return testData
+  return testData;
 }
 
 
 
 
 export {
-    generateFreshContext,
-    getAranoDBConfigFromFeathers,
-    pollingEventsTestSet
-}
+  generateFreshContext,
+  getAranoDBConfigFromFeathers,
+  pollingEventsTestSet
+};
 
