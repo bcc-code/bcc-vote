@@ -74,6 +74,7 @@ describe('permissions - app ability', async () => {
     { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
     { action:"find", subject:"role", entity:'user', expected: true },
     { action:"find", subject:"org", entity:'user', expected: true },
+    { action:"patch", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
     { action:"update", subject:"poll", entity:'basePoll', expected: true },
     { action:"remove", subject:"poll", entity:'basePoll', expected: true },
   ];
