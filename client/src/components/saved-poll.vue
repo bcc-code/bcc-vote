@@ -42,8 +42,10 @@ export default defineComponent({
       this.$emit('stopEdit');
     },
     async deletePoll(){
-      if(this.active)
+      if(this.active){
         await this.$client.service('poll').remove(this.poll?._key)
+        this.$emit('stopEdit')
+      }
     }
   },
   emits: ['edit', 'stopEdit']

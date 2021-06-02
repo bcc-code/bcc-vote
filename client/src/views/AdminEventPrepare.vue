@@ -20,8 +20,8 @@
         <div class="pt-4 pb-8">
         <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
         </div>
-        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = ind + 1" @stopEdit="currentlyEdited = 0" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
-        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
+        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
+        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="reloadPolls"/>
         <div class="flex justify-center pt-4">
           <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || currentlyEdited)}" @click="createNewPoll">
             {{$t('actions.add-poll')}}
@@ -78,10 +78,6 @@ export default defineComponent({
     created () {
       this.loadPollingEvent();
       this.loadSavedPolls();
-
-      this.$client.service('poll').on('created', this.addPollFromSocket)
-      this.$client.service('poll').on('updated', this.updatePollFromSocket)
-      this.$client.service('poll').on('removed', this.deletePollFromSocket)
     },
     methods: {
       editPollingEvent() {
@@ -106,24 +102,19 @@ export default defineComponent({
           this.savedPolls = res;
         })
       },
-      addPollFromSocket(data: Poll){
-        this.savedPolls.push(data);
-      },
-      findIndex(data: Poll){
-        return this.savedPolls.map((e: Poll) => e._key).indexOf(data._key);
-      },
-      deletePollFromSocket(data: Poll){
-        const ind = this.findIndex(data);
-        this.savedPolls.splice(ind, 1);
-      },
-      updatePollFromSocket(data: Poll){
-        const ind = this.findIndex(data);
-        this.savedPolls[ind] = data;
-      },
       createNewPoll(){
         if(!this.currentlyEdited){
           this.addingPoll = true;
         }
+      },
+      reloadPolls(){
+        this.currentlyEdited = 0;
+        this.addingPoll = false;
+        this.loadSavedPolls();
+      },
+      startEditing(ind: number){
+        this.currentlyEdited = ind + 1; 
+        this.addingPoll=false;
       }
     }
 })
