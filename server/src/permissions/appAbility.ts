@@ -29,13 +29,14 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
   
   can('get', 'poll');
 
-  can('create','polling-event');
-  can('get','polling-event');
-  can('find','polling-event', {'participantFilter.org': user.churchID.toString()});
-  can('find','polling-event', {'participantFilter.org': 'all'as any});
-  cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}});
-  cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}});
-};
+    can('create','polling-event');
+    can('get','polling-event');
+    can('find','polling-event', {'participantFilter.org': user.churchID.toString()})
+    can('find','polling-event', {'participantFilter.org': 'all'as any})
+    cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
+    cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
+    can('find','polling-event', {'creatorId':user.personID as any})
+}
 
 export function defineAbilityFor(user:UserDetails): AppAbility {
   const builder = new AbilityBuilder<AppAbility>(AppAbility);
