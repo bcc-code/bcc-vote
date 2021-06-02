@@ -34,18 +34,18 @@ export default defineComponent({
         }
     },
     async created() {
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id) as PollingEvent
+        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError) as PollingEvent;
 
         const res = await this.$client.service('poll').find({
             query: {
                 pollingEventId: this.$route.params.id,
                 activeStatus: PollActiveStatus['Live']
             }
-        })
+        }).catch(this.$showError);
         if(res.length > 0)
             this.currentPoll = res[0];
 
-        this.$client.service('poll').on('patched', this.getPoll);
+        this.$client.service('poll').on('patched', this.getPoll).catch(this.$showError);
     },
     methods: {
         getPoll(data: Poll){

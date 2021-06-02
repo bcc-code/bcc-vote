@@ -58,7 +58,7 @@ export default defineComponent({
     },
     async deletePoll(){
       if(this.active){
-        await this.$client.service('poll').remove(this.poll?._key)
+        await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError);
         this.$emit('stopEdit')
       }
     }

@@ -57,14 +57,8 @@
             </div>
           </div>
           <div class="grid grid-flow-row grid-cols-2 gap-6">
-            <PollResultTile :poll="savedPolls[0]"/>
-            <PollResultTile :poll="savedPolls[1]"/>
-            <PollResultTile :poll="savedPolls[2]"/>
-            <PollResultTile :poll="savedPolls[3]"/>
-            <PollResultTile :poll="savedPolls[4]"/>
-            <PollResultTile :poll="savedPolls[5]"/>
+            <PollResultTile v-for="poll in savedPolls" :key="poll._key" :poll="poll"/>
           </div>
-          <div style="height: 1000px"></div>
         </template>
       </div>
     </div>
@@ -119,7 +113,8 @@ export default defineComponent({
       this.reloadPolls()
     },
     async loadPollingEvent(){
-      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
+      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
+      .catch(this.$showError);
     },
     loadSavedPolls(){
       this.$client.service('poll').find({
@@ -131,7 +126,7 @@ export default defineComponent({
         }
       }).then((res: Poll[]) => {
         this.savedPolls = res;
-      })
+      }).catch(this.$showError);
     },
     reloadPolls(){
       this.currentlyEdited = 0;
@@ -159,11 +154,11 @@ export default defineComponent({
       if(ind > -1)
         await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
           activeStatus: PollActiveStatus['Finished']
-        })
+        }).catch(this.$showError);
       if(p)
         await this.$client.service('poll').patch(p._key, {
           activeStatus: PollActiveStatus['Live']
-        })
+        }).catch(this.$showError);
     }
   } 
 })

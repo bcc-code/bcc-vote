@@ -35,7 +35,7 @@ export default defineComponent({
             if(this.poll && this.$user) {
                 const participantAnswer = {
                     _from: this.poll._id,
-                    _to: 'user/'+this.$user._key,
+                    _to: this.$user._id,
                     answerId: option.answerId
                 }
                 await this.$client.service('answer').create(participantAnswer)
