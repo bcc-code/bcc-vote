@@ -12,13 +12,10 @@ async function authentication() {
         const { user } = await router.$client.reAuthenticate()
         
         router.$user._key = user._key
-        router.$user.name = user.name
-        router.$user.age = user.age        
+        router.$user.age = user.age
         router.$user.churchID = user.churchID
         router.$user.personID = user.personID
         router.$user.roles = user.roles
-       
-        console.log(router.$user)
 
         return { user, authenticated: true }
 
