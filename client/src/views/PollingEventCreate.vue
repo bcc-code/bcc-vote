@@ -70,7 +70,7 @@ export default defineComponent({
           type: PollingEventType['Live Event'],
           status: PollingEventStatus['Not Started'],
           startDateTime: new Date(0),
-          creatorId: '',
+          creatorId: 0,
           participantFilter: {
             orgs: 'all',
             roles: 'all',
@@ -132,7 +132,7 @@ export default defineComponent({
       },
       createPollingEvent(){
         const data:any = this.eventData;
-        data.creatorId = this.$user.personID.toString();
+        data.creatorId = this.$user.personID;
         
           
         this.$client.service('polling-event').create(data)
