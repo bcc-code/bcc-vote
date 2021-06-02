@@ -36,12 +36,18 @@
     "poll-queue": "Poll Queue",
     "results": "Results",
     "voters": "Voters",
+    "votes": "Votes",
     "answers": "Answers",
     "option": "Option",
     "polling-event-status": {
-        "live": "Live",
-        "not_started": "Not started",
-        "finished": "Finished"
+      "live": "Live",
+      "not_started": "Not started",
+      "finished": "Finished"
+    },
+    "poll-result-visibility": {
+      "public": "Public",
+      "non_public": "Not Public",
+      "anonymous": "Anonymous"
     }
   },
   "info": {

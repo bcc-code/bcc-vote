@@ -21,7 +21,7 @@
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import { PollingEvent } from '../domain'
-import { Poll } from '../domain/Poll'
+import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -34,12 +34,25 @@ export default defineComponent({
         }
     },
     async created() {
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id,{}) as PollingEvent
+        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id) as PollingEvent
+
+        const res = await this.$client.service('poll').find({
+            query: {
+                pollingEventId: this.$route.params.id,
+                activeStatus: PollActiveStatus['Live']
+            }
+        })
+        if(res.length > 0)
+            this.currentPoll = res[0];
+
         this.$client.service('poll').on('patched', this.getPoll);
     },
     methods: {
         getPoll(data: Poll){
-            this.currentPoll = data;
+            if(data.activeStatus === PollActiveStatus['Live'])
+                this.currentPoll = data;
+            else
+                this.currentPoll = undefined;
         }
     }
 })
