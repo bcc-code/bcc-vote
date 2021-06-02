@@ -55,20 +55,7 @@ export default defineComponent({
     methods: {
         async loadMeetings(){
             const roleIds = this.$user.roles.map((r:any) => r.id)
-            this.pollingEvents = await this.$client.service('polling-event').find({
-                query: {
-                    $or: [
-                        {role: {$in: roleIds}},
-                        {churchID: this.$user.churchID},
-                    ],
-                    minAge: {
-                        $lt: this.$user.age
-                    },
-                    maxAge: {
-                        $gt: this.$user.age
-                    }
-                }
-            })
+            this.pollingEvents = await this.$client.service('polling-event').find({})
         }
     }
 })
