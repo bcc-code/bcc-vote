@@ -14,12 +14,12 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-question": "Add another question",
-    "participate-in-voting": "Participate in this voting",
+    "join-this-event": "Join this voting event",
     "start-live-poll": "Start this live poll",
     "close-live-poll": "Close this live poll"
   },
   "labels": {
-    "voting-events": "Voting events",
+    "polling-events": "Polling events",
     "history": "History",
     "polls": "Polls",
     "results": "Results",
