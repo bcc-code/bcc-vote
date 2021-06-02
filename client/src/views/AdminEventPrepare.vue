@@ -88,10 +88,10 @@ export default defineComponent({
           status: PollingEventStatus['Live']
         }).then(() => {
           this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
-        })
+        }).catch(this.$showError);
       },
       async loadPollingEvent(){
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
+        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError);
       },
       loadSavedPolls(){
         this.$client.service('poll').find({
@@ -100,7 +100,7 @@ export default defineComponent({
           }
         }).then((res: Poll[]) => {
           this.savedPolls = res;
-        })
+        }).catch(this.$showError);
       },
       createNewPoll(){
         if(!this.currentlyEdited){

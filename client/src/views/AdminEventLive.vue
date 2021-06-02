@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-5xl mx-auto">
     <div class="w-full h-full px-4 py-8">
-      <div class="form-section padding-md mb-2">
+      <div class="form-section padding-md">
         <div class="flex justify-between items-center mb-5">
           <h2 class="font-bold">{{pollingEvent.title}}</h2>
           <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-5"/>
@@ -11,7 +11,12 @@
           <button class="gradient-button md-button text-lg" @click="closePollingEvent">{{$t('actions.close-live-poll')}}</button>
         </div>
       </div>
+      <div class="flex py-8 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
+          <h3 :class="currentTab == 'polls' ? 'text-white': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+          <h3 :class="currentTab == 'results' ? 'text-white': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
+      </div>
       <div class="form-section padding-md">
+        <template v-if="currentTab === 'polls'">
           <div class="flex justify-between mb-4">
               <h3 class="font-bold">{{$t('labels.poll-queue')}}</h3>
           </div>
@@ -42,6 +47,19 @@
               </h5>
             </div>
           </SavedPoll>
+        </template>
+        <template v-else>
+          <div class="flex justify-between font-bold mb-8">
+            <h3>{{$t('label.event-results')}}</h3>
+            <div class="flex text-blue-900 items-center"> 
+              <ClipboardListIcon class="h-6 w-6"/>
+              <h5 class="py-1">{{$t('actions.get-report')}}</h5>
+            </div>
+          </div>
+          <div class="grid grid-flow-row grid-cols-2 gap-6">
+            <PollResultTile v-for="poll in savedPolls" :key="poll._key" :poll="poll"/>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -50,18 +68,22 @@
 import InfoBox from '../components/info-box.vue'
 import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
+import PollResultTile from '../components/poll-result-tile.vue'
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
-import { defineComponent } from 'vue'
+import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon'
 
 import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 
+import { defineComponent } from 'vue'
 export default defineComponent({
   components: {
       InfoBox,
       PencilIcon,
       PollForm,
       SavedPoll,
+      PollResultTile,
+      ClipboardListIcon,
   },
   data() {
     return {
@@ -91,7 +113,8 @@ export default defineComponent({
       this.reloadPolls()
     },
     async loadPollingEvent(){
-      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
+      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
+      .catch(this.$showError);
     },
     loadSavedPolls(){
       this.$client.service('poll').find({
@@ -103,7 +126,7 @@ export default defineComponent({
         }
       }).then((res: Poll[]) => {
         this.savedPolls = res;
-      })
+      }).catch(this.$showError);
     },
     reloadPolls(){
       this.currentlyEdited = 0;
@@ -131,11 +154,11 @@ export default defineComponent({
       if(ind > -1)
         await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
           activeStatus: PollActiveStatus['Finished']
-        })
+        }).catch(this.$showError);
       if(p)
         await this.$client.service('poll').patch(p._key, {
           activeStatus: PollActiveStatus['Live']
-        })
+        }).catch(this.$showError);
     }
   } 
 })

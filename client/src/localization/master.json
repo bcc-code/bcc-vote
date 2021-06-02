@@ -25,7 +25,8 @@
     "discard": "Discard",
     "publish-poll": "Publish this poll",
     "republish-poll": "Republish this poll",
-    "close-poll": "Close this poll"
+    "close-poll": "Close this poll",
+    "get-report": "Get a report"
   },
   "labels": {
     "polling-events": "Polling events",
@@ -36,12 +37,19 @@
     "poll-queue": "Poll Queue",
     "results": "Results",
     "voters": "Voters",
+    "votes": "Votes",
     "answers": "Answers",
     "option": "Option",
+    "event-results": "Polling event results",
     "polling-event-status": {
-        "live": "Live",
-        "not_started": "Not started",
-        "finished": "Finished"
+      "live": "Live",
+      "not_started": "Not started",
+      "finished": "Finished"
+    },
+    "poll-result-visibility": {
+      "public": "Public",
+      "non_public": "Not Public",
+      "anonymous": "Anonymous"
     }
   },
   "info": {
