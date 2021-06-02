@@ -1,8 +1,8 @@
 <template>
-    <div class="px-4 py-6 border-2 border-gray-200 rounded-lg">
-        <div class="mb-3 flex justify-between">
+    <div class="px-4 pt-5 pb-8 border-2 border-gray-200 rounded-lg shadow-base">
+        <div class="flex items-start justify-between mb-8">
             <h3 class="font-bold">{{pollingEvent.title}}</h3>
-            <div class="px-2 border-2 rounded-lg">
+            <div :class="['px-2 border-2 rounded-lg',statusColors[pollingEvent.status]]">
                 <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
             </div>
         </div>
@@ -23,8 +23,10 @@ export default defineComponent({
     },
     data () {
         return {
-            pollingStatus: {
-                
+            statusColors: {
+                'live':'text-green border-green',
+                'not_started':'text-gray-700 border-gray-700',
+                'finished':'text-red-500 border-red-500'
             }
         }
     },

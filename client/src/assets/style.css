@@ -78,6 +78,13 @@
     @apply bg-center;
   }
   
+  .text-green {
+    color: #43B02A;
+  }
+  .border-green {
+    border-color: #43B02A;
+  }
+
   .gradient-blue {
     background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
   }
