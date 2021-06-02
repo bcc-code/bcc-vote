@@ -6,7 +6,7 @@
             <p class="hidden sm:block mt-1">
                 {{$t('descriptions.home')}}
             </p>
-            <button v-if="$user.authorityLevel <= 5" @click="goToCreate" class="gradient-button md-button mt-5">
+            <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-5">
                 <h4>{{$t('actions.create-meeting')}}</h4>
             </button>
         </div>
@@ -56,20 +56,7 @@ export default defineComponent({
         },
         async loadMeetings(){
             const roleIds = this.$user.roles.map((r:any) => r.id)
-            this.pollingEvents = await this.$client.service('polling-event').find({
-                query: {
-                    $or: [
-                        {role: {$in: roleIds}},
-                        {churchID: this.$user.churchID},
-                    ],
-                    minAge: {
-                        $lt: this.$user.age
-                    },
-                    maxAge: {
-                        $gt: this.$user.age
-                    }
-                }
-            })
+            this.pollingEvents = await this.$client.service('polling-event').find({})
         }
     }
 })
