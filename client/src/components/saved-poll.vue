@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEdit" class="py-8 px-5 border-2 border-with-bar" :class="{'opacity-50 cursor-default': !active}">
+  <div v-if="!editing" class="py-8 px-5 border-2 border-with-bar" :class="{'opacity-50 cursor-default': !active}">
     <div class="flex justify-between mb-1">
       <h3 class="font-bold">{{pollIndex}}. {{poll.title}}</h3>
       <PencilIcon class="w-10 h-10 p-2 text-blue-900" :class="{'cursor-pointer': active}" @click="startEditing"/>
@@ -10,7 +10,7 @@
       <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
     </div>
   </div>
-  <PollForm v-else :eventId="$route.params.id" :poll="poll" :pollIndex="pollIndex" isEdit @close="stopEditing" @delete="deletePoll"/>
+  <PollForm v-else :eventId="$route.params.id" :poll="poll" :pollIndex="pollIndex" @close="stopEditing" @delete="deletePoll"/>
 </template>
 <script lang="ts">
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
@@ -29,27 +29,21 @@ export default defineComponent({
     poll: {type: Object, required: true},
     pollIndex: Number,
     active: Boolean,
-  },
-  data(){
-    return {
-      isEdit: false,
-    }
+    editing: Boolean,
   },
   methods: {
     startEditing(){
       if(this.active){
         
         this.$emit('edit');
-        this.isEdit = true;
       }
     },
     stopEditing(){
       this.$emit('stopEdit');
-      this.isEdit = false;
     },
-    deletePoll(){
+    async deletePoll(){
       if(this.active)
-        this.$client.service('poll').remove(this.poll?._key)
+        await this.$client.service('poll').remove(this.poll?._key)
     }
   },
   emits: ['edit', 'stopEdit']

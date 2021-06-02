@@ -17,14 +17,14 @@
           {{$t('info.define-group')}}
       </InfoBox>
 
-      <FormField v-model="eventData.participantFilter.church" translation="poll-church" type="select" :options="allChurches"/>
+      <FormField v-model="eventData.participantFilter.orgs" translation="poll-church" type="select" :options="allChurches"/>
 
       <div class="flex w-full gap-10 max-w-sm">
         <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
         <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
+      <FormField v-model="eventData.participantFilter.roles" type='select' translation="poll-roles" :options="allRoles"/>
 
       <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
         <div>
@@ -51,7 +51,7 @@
 import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
 import PollForm from '../components/poll-form.vue'
-import { PollingEvent } from '../domain'
+import { PollingEventPrepare, PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -67,16 +67,17 @@ export default defineComponent({
         eventData: {
           title: '',
           description: '',
-          startDateTime: null,
-          status: 0,
-          creatorId: null,
+          type: PollingEventType['Live Event'],
+          status: PollingEventStatus['Not Started'],
+          startDateTime: new Date(0),
+          creatorId: '',
           participantFilter: {
-            church: 0,
-            role: 0,
-            minAge: null,
-            maxAge: null,
+            orgs: 'all',
+            roles: 'all',
+            minAge: undefined,
+            maxAge: undefined,
           }
-        },
+        } as PollingEventPrepare,
         
         numberOfVoters: null,
       }
@@ -97,11 +98,11 @@ export default defineComponent({
               }
             }
           })
-          res.unshift({name: "All churches", churchID: 0})
+          res.unshift({name: "All churches", churchID: 'all'})
           this.allChurches = res.map((c: any) => {
             return {
               name: c.name,
-              val: c.churchID,
+              val: c.churchID.toString(),
             }
           });
       },
@@ -118,20 +119,20 @@ export default defineComponent({
           this.allRoles = res.map((c:any) => {
             return {
               name: c.name,
-              val: c._key,
+              val: c._key.toString(),
             }
           });
-          res.unshift({name: "All roles", _key: 0})
+          res.unshift({name: "All roles", _key: 'all'})
           this.allRoles = res.map((c: any) => {
             return {
               name: c.name,
-              val: c._key,
+              val: c._key.toString(),
             }
           });
       },
       createPollingEvent(){
         const data:any = this.eventData;
-        data.creatorId = this.$user.personID;
+        data.creatorId = this.$user.personID.toString();
         
           
         this.$client.service('polling-event').create(data)

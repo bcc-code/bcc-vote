@@ -18,13 +18,13 @@
       <div v-if="currentTab === 'polls'" class="form-section padding-md">
         <div class="flex justify-between">
           <h3 class="font-bold">{{$t('labels.polls')}}</h3>
-          <AddButton translation="add-poll" @click="addingPoll = true"/>
+          <AddButton translation="add-poll" @click="createNewPoll"/>
         </div>
         <div class="pt-4 pb-8">
         <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
         </div>
         <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="addingPoll = false"/>
-        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = true" @stopEdit="currentlyEdited = false" :active="!currentlyEdited"/>
+        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="currentlyEdited = ind + 1" @stopEdit="currentlyEdited = 0" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
         
       </div>
       <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
@@ -39,7 +39,7 @@ import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
 import AddButton from '../components/add-button.vue'
 
-import { PollingEvent } from '../domain'
+import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
 import { Poll } from '../domain/Poll'
 
 import { defineComponent } from 'vue'
@@ -57,21 +57,21 @@ export default defineComponent({
         pollingEvent: {
           _id: '',
           _key: '',
-          title: "Yearly Meeting",
-          description: "Yearly Meeting in Oslo",
-          type: "live_event",
-          status:"not_started",
-          creatorId: "person/122324242",
+          title: '',
+          description: '',
+          type: PollingEventType['Live Event'],
+          status: PollingEventStatus['Not Started'],
+          creatorId: '',
           participantFilter: {
-            orgs: '',
-            roles: '',
-            minAge: 10,
-            maxAge: 100
+            orgs: 'all',
+            roles: 'all',
+            minAge: undefined,
+            maxAge: undefined
           }
         } as PollingEvent,
         savedPolls: [] as Poll[],
         addingPoll: false,
-        currentlyEdited: false,
+        currentlyEdited: 0,
       }
     },
     created () {
@@ -87,7 +87,11 @@ export default defineComponent({
         this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
       },
       activatePollingEvent() {
-        this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+        this.$client.service('polling_event').patch(this.pollingEvent._key, {
+          status: PollingEventStatus['Live']
+        }).then(() => {
+          this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+        })
       },
       async loadPollingEvent(){
         this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
@@ -114,6 +118,10 @@ export default defineComponent({
       updatePollFromSocket(data: Poll){
         const ind = this.findIndex(data);
         this.savedPolls[ind] = data;
+      },
+      createNewPoll(){
+        this.addingPoll = true;
+        this.currentlyEdited = 0;
       }
     }
 })

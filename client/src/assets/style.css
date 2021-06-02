@@ -92,13 +92,11 @@
   .lg-button {
     @apply py-4;
     @apply px-6;
-    @apply cursor-pointer;
   }
   
   .md-button {
     @apply py-3;
     @apply px-5;
-    @apply cursor-pointer;
   }
   
   .light-button {

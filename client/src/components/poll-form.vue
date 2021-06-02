@@ -2,7 +2,7 @@
   <div class="border-with-bar px-5 py-8">
     <div class="flex justify-between mb-6">
     <h3 class="font-bold">
-      {{this.poll ? this.pollIndex+'. '+this.poll.title:$t('labels.new-poll')}}
+      {{poll ? pollIndex+'. '+poll.title : $t('labels.new-poll')}}
     </h3>
     <XIcon class="w-8 h-8 p-2 cursor-pointer" @click="$emit('close')"/>
     </div>
@@ -18,18 +18,18 @@
     </div>
     <AddButton class="mb-5" translation="add-option" @click="addOption"/>
 
-    <FormField v-model="pollData.visibility" :value="0" translation="poll-public" type="radio"/>
-    <FormField v-model="pollData.visibility" :value="1" translation="poll-non-public" type="radio"/>
-    <FormField v-model="pollData.visibility" :value="2" translation="poll-anonymous" type="radio"/>
+    <FormField v-model="pollData.resultVisibility" :value="visibility['Public']" translation="poll-public" type="radio"/>
+    <FormField v-model="pollData.resultVisibility" :value="visibility['Non Public']" translation="poll-non-public" type="radio"/>
+    <FormField v-model="pollData.resultVisibility" :value="visibility['Anonymous']" translation="poll-anonymous" type="radio"/>
     <div v-if="poll" class="flex items-center text-red-500 cursor-pointer" @click="$emit('delete')">
       <TrashIcon class="w-5 h-5 mr-2"/>
       <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
     </div>
-    <div class="flex justify-center pt-8 pb-4">
-      <h5 class="md-button text-gray-800 font-bold flex" @click="$emit('close')">
+    <div class="flex justify-center pt-8 pb-4 gap-2">
+      <h5 class="md-button text-gray-800 font-bold cursor-pointer" @click="$emit('close')">
           {{$t('actions.discard')}}
       </h5>
-      <h5 class="gradient-button md-button flex" @click="sendPoll">
+      <h5 class="gradient-button md-button cursor-pointer" @click="sendPoll">
           {{poll ? $t('actions.change-poll'): $t('actions.save-poll')}}
       </h5>
     </div>
@@ -44,6 +44,8 @@ import FormField from '../components/form-field.vue'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 import AddButton from '../components/add-button.vue'
 import TrashIcon from 'heroicons-vue3/outline/TrashIcon'
+
+import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/Poll'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -61,12 +63,14 @@ export default defineComponent({
   },
   data(){
     return {
+      activeStatus: PollActiveStatus,
+      visibility: PollResultVisibility,
       pollData: {
         title: '',
         description: '',
         pollingEventId: this.eventId,
-        status: 0,
-        visibility: 0,
+        activeStatus: PollActiveStatus['Not Started'],
+        resultVisibility: PollResultVisibility['Public'],
         answers: [
           {
             label: "Yes",
@@ -79,7 +83,7 @@ export default defineComponent({
             answerId: 2,
           }
         ]
-      }
+      } as PollPrepare
     }
   },
   created(){
@@ -110,9 +114,6 @@ export default defineComponent({
           this.$emit('close');
         })
       } 
-    },
-    changePoll(){
-      
     }
   },
   emits: ['close']
