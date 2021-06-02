@@ -72,6 +72,7 @@ describe('permissions - app ability', async () => {
     { action:"find", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
     { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
     { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+    { action:"find", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
     { action:"find", subject:"role", entity:'user', expected: true },
     { action:"find", subject:"org", entity:'user', expected: true },
     { action:"patch", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
