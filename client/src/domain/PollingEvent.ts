@@ -7,14 +7,24 @@ export interface PollingEvent {
     status:PollingEventStatus;
     startDateTime: Date;
     creatorId: string;
-    participantFilter: ParticpantFilters;
+    participantFilter: ParticipantFilters;
 }
 
-export interface ParticpantFilters {
+export interface PollingEventPrepare {
+    title: string;
+    description: string;
+    type: PollingEventType;
+    status:PollingEventStatus;
+    startDateTime: Date;
+    creatorId: string;
+    participantFilter: ParticipantFilters;
+}
+
+export interface ParticipantFilters {
     orgs: string
     roles: string;
-    minAge: number;
-    maxAge: number;
+    minAge?: number;
+    maxAge?: number;
 }
 
 export enum PollingEventType {

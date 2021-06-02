@@ -25,7 +25,7 @@ export default {
             type: [Number, String, Date],
             required: false,
         },
-        modelValue: Number
+        modelValue: Date
     },
     data() {
         return {
@@ -42,8 +42,8 @@ export default {
     },
     methods: {
         init(){
-            if(this.modelValue){
-                const date = new Date(this.modelValue);
+            if(this.modelValue.getTime()){
+                const date = this.modelValue;
                 this.day = this.format(date.getDay());
                 this.month = this.format(date.getMonth());
                 this.year = this.format(date.getFullYear());
@@ -62,7 +62,7 @@ export default {
             }
             if(time < new Date().getTime())
                 return;
-            this.$emit('update:modelValue', time)
+            this.$emit('update:modelValue', new Date(time))
         },
         resetValue() {
             this.day = '';

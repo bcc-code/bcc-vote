@@ -4,12 +4,32 @@ export interface Poll {
   title: string;
   description: string;
   answers: Answer[],
-  activeStatus: number;
-  resultVisibility: number;
+  activeStatus: PollActiveStatus;
+  resultVisibility: PollResultVisibility;
+}
+
+export interface PollPrepare {
+  title: string;
+  description: string;
+  answers: Answer[],
+  activeStatus: PollActiveStatus;
+  resultVisibility: PollResultVisibility;
 }
 
 export interface Answer {
   label: string,
   explanation: string,
   answerId: number,
+}
+
+export enum PollActiveStatus {
+  'Not Started' = 'not_started',
+  'Live' = 'live',
+  'Finished' = 'finished'
+}
+
+export enum PollResultVisibility {
+  'Public' = 'public',
+  'Non Public' = 'non_public',
+  'Anonymous' = 'anonymous',
 }
