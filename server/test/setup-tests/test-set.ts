@@ -57,6 +57,7 @@ function pollingEventsTestSet(){
     scopedToLocalChurchSameAsLoggedInUser: async () => { return await  pollingEventSvc.get('504279890')},
     scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892')},
     scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978')},
+    scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598')},
     user: async () => { return await userSvc.get('178509735',{})}
   }
 
