@@ -10,6 +10,7 @@ import feathers from '@feathersjs/feathers'
 import socketio from '@feathersjs/socketio-client'
 import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
+import { Role } from './domain/User'
 import router from './router'
 
 const messages = {
@@ -34,13 +35,22 @@ app.use(store)
 
 app.mixin({
     methods: {
-        $showError(error:Error) {
-            console.log(JSON.stringify(error.message))
-            console.log('Global Error:')
-            this.$toast(error.message,{ class: 'error' })
+        $showError(error:any) {
+            this.$toast(error,{ class: 'error' })
         }
     },
     computed: {
+        $canAdministratePollingEvents() {
+            if(this.$user.roles) {
+                const allowedRoles = ['Developer','SentralInformasjonsmedarbeider','CentralAdministrator']
+                const allowedUserRoles = this.$user.roles.filter((r:Role) => allowedRoles.includes(r.enumName))
+                if(allowedUserRoles.length) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
     }
 })
 app.mount('#mixins-global')
