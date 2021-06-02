@@ -66,13 +66,12 @@
 </template>
 <script lang="ts">
 import InfoBox from '../components/info-box.vue'
-import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
 import PollResultTile from '../components/poll-result-tile.vue'
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon'
 
-import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
+import { PollingEvent } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 
 import { defineComponent } from 'vue'
@@ -80,7 +79,6 @@ export default defineComponent({
   components: {
       InfoBox,
       PencilIcon,
-      PollForm,
       SavedPoll,
       PollResultTile,
       ClipboardListIcon,
