@@ -12,18 +12,34 @@
         </div>
       </div>
       <div class="form-section padding-md">
-          <div class="flex justify-between">
-              <h3 class="font-bold">{{$t('labels.question-queue')}}</h3>
+          <div class="flex justify-between mb-4">
+              <h3 class="font-bold">{{$t('labels.poll-queue')}}</h3>
           </div>
-          <InfoBox class="my-4">{{$t('info.polls-activation-explaination')}}</InfoBox>
+          <InfoBox class="mb-5">{{$t('info.polls-activation-explaination')}}</InfoBox>
           <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1">
             <div class='flex justify-between items-center mt-10 gap-12'>
               <label class='text-gray-700'>
-                {{$t('info.publish-poll')}}
+                <template v-if="isNotStarted(poll)">
+                  {{$t('info.publish-poll')}}
+                </template>
+                <template v-if="isLive(poll)">
+                  {{$t('info.close-poll')}}
+                </template>
+                <template v-if="isFinished(poll)">
+                  {{$t('info.republish-poll')}}
+                </template>
               </label>
-              <h4 class="md-button font-bold gradient-blue text-white rounded-full flex-shrink-0 cursor-pointer" @click="publishPoll(ind)">
-                {{$t('actions.publish-poll')}}
-              </h4>
+              <h5 class="md-button rounded-full flex-shrink-0 cursor-pointer font-bold" :class="{'gradient-blue text-white': !isFinished(poll), 'text-red-500 border-2 border-red-500': isFinished(poll)}" @click="changePollStatus(poll)">
+                <template v-if="isNotStarted(poll)">
+                  {{$t('actions.publish-poll')}}
+                </template>
+                <template v-if="isLive(poll)">
+                  {{$t('actions.close-poll')}}
+                </template>
+                <template v-if="isFinished(poll)">
+                  {{$t('actions.republish-poll')}}
+                </template>
+              </h5>
             </div>
           </SavedPoll>
       </div>
@@ -41,72 +57,86 @@ import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 
 export default defineComponent({
-    components: {
-        InfoBox,
-        PencilIcon,
-        PollForm,
-        SavedPoll,
+  components: {
+      InfoBox,
+      PencilIcon,
+      PollForm,
+      SavedPoll,
+  },
+  data() {
+    return {
+      currentTab: 'polls' as string,
+      pollingEvent: {} as PollingEvent,
+      savedPolls: [] as Poll[],
+      currentlyEdited: 0,
+    }
+  },
+  created(){
+    this.loadPollingEvent();
+    this.loadSavedPolls();
+  },
+  methods: {
+    editPollingEvent() {
+      this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
     },
-    data() {
-      return {
-        currentTab: 'polls' as string,
-        pollingEvent: {
-          _id: '',
-          _key: '',
-          title: '',
-          description: '',
-          type: PollingEventType['Live Event'],
-          status: PollingEventStatus['Not Started'],
-          creatorId: '',
-          participantFilter: {
-            orgs: 'all',
-            roles: 'all',
-            minAge: undefined,
-            maxAge: undefined
-          }
-        } as PollingEvent,
-        savedPolls: [] as Poll[],
-        currentlyEdited: 0,
+    closePollingEvent() {
+      this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+    },
+    async changePollStatus(poll: Poll){
+      if(poll.activeStatus === PollActiveStatus["Live"])
+        await this.setActivePoll();
+      else{
+        await this.setActivePoll(poll);
       }
+      this.reloadPolls()
     },
-    created(){
-      this.loadPollingEvent();
+    async loadPollingEvent(){
+      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
+    },
+    loadSavedPolls(){
+      this.$client.service('poll').find({
+        query: {
+          pollingEventId: this.$route.params.id,
+          $sort: {
+            title: 1,
+          }
+        }
+      }).then((res: Poll[]) => {
+        this.savedPolls = res;
+      })
+    },
+    reloadPolls(){
+      this.currentlyEdited = 0;
       this.loadSavedPolls();
     },
-    methods: {
-      editPollingEvent() {
-        this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
-      },
-      closePollingEvent() {
-        this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
-      },
-      async loadPollingEvent(){
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id);
-      },
-      loadSavedPolls(){
-        this.$client.service('poll').find({
-          query: {
-            pollingEventId: this.$route.params.id
-          }
-        }).then((res: Poll[]) => {
-          this.savedPolls = res;
+    startEditing(ind: number){
+      this.currentlyEdited = ind + 1; 
+    },
+    findPollByKey(key: String): number{
+      return this.savedPolls.findIndex((a: Poll) => {
+        return a._key === key;
+      })
+    },
+    isNotStarted(p: Poll):Boolean{
+      return p.activeStatus === PollActiveStatus['Not Started'];
+    },
+    isLive(p: Poll):Boolean{
+      return p.activeStatus === PollActiveStatus['Live'];
+    },
+    isFinished(p: Poll):Boolean{
+      return p.activeStatus === PollActiveStatus['Finished'];
+    },
+    async setActivePoll(p?: Poll){
+      const ind =  this.savedPolls.findIndex(this.isLive);
+      if(ind > -1)
+        await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
+          activeStatus: PollActiveStatus['Finished']
         })
-      },
-      reloadPolls(){
-        this.currentlyEdited = 0;
-        this.loadSavedPolls();
-      },
-      startEditing(ind: number){
-        this.currentlyEdited = ind + 1; 
-      },
-      publishPoll(ind: number){
-        console.log(ind);
-        this.$client.service('poll').patch(this.savedPolls[ind]._key, {
+      if(p)
+        await this.$client.service('poll').patch(p._key, {
           activeStatus: PollActiveStatus['Live']
-        }).then(() => {
-          console.log('done');
         })
-      }
     }
+  } 
 })
 </script>

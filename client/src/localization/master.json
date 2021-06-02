@@ -22,7 +22,9 @@
     "delete-poll": "Delete this poll",
     "save-changes": "Save changes",
     "discard": "Discard",
-    "publish-poll": "Publish this poll"
+    "publish-poll": "Publish this poll",
+    "republish-poll": "Republish this poll",
+    "close-poll": "Close this poll"
   },
   "labels": {
     "voting-events": "Voting events",
@@ -30,6 +32,7 @@
     "polls": "Polls",
     "poll": "Poll",
     "new-poll": "New poll",
+    "poll-queue": "Poll Queue",
     "results": "Results",
     "voters": "Voters",
     "answers": "Answers",
@@ -46,7 +49,9 @@
     "polls-will-appear": "The poll will appear on the screen when it's published.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
     "polls-activation-explaination": "In the poll queue you can see the list of polls that have been added to the event. In order to activate the pollfor  users - press “Publish this poll. To deactivate this event session press “Close this poll” at the bottom of this section.",
-    "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this poll event and they can vote on it."
+    "publish-poll": "By pressing “Publish this poll” you’ll make it visible for all the users in this poll event and they can vote on it.",
+    "republish-poll": "By pressing “Republish this poll” the previous results of this poll will be deleted and this question will appear for the voters to vote again.",
+    "close-poll": "By pressing “Close this poll” you’ll close this poll for all voters, they won’t have possibility to vote any longer."
   },
   "forms": {
     "new-poll": "Create a new poll"

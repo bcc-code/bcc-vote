@@ -21,7 +21,7 @@
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import { PollingEvent } from '../domain'
-import { Poll } from '../domain/poll'
+import { Poll } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
