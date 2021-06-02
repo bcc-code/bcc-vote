@@ -13,9 +13,9 @@
             </div>
             <div class="form-section padding-md">
                 <div class="flex justify-between">
-                    <h3 class="font-bold">{{$t('question-queue')}}</h3>
+                    <h3 class="font-bold">{{$t('labels.question-queue')}}</h3>
                 </div>
-                <InfoBox class="m-4">{{$t('info.polls-activation-explaination')}}</InfoBox>
+                <InfoBox class="my-4">{{$t('info.polls-activation-explaination')}}</InfoBox>
             </div>
         </div>
     </div>
@@ -50,13 +50,23 @@ export default defineComponent({
         } as PollingEvent
       }
     },
+    created(){
+      this.loadPollingEvent();
+      this.loadSavedPolls();
+    },
     methods: {
       editPollingEvent() {
         this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
       },
       closePollingEvent() {
         this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
-      }
+      },
+      loadPollingEvent(){
+      },
+      loadSavedPolls(){
+
+      },
+
     }
 })
 </script>
