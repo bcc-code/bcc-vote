@@ -1,7 +1,7 @@
 <template>
     <div class="h-full">
         <div v-for="(option,index) in poll.answers" :key="option.answerId" class="mb-6">
-            <div class="w-full result-bar flex" :style="`background: linear-gradient(to right, ${answerColors[index]} ${answerPercent[index]}%, #FFF 0%) ;`">
+            <div class="w-full result-bar flex" :style="`background: linear-gradient(to right, ${answerColors[index]} ${sortedAnswers[option.answerId].count / totalCount *100}%, #FFF 0%) ;`">
                 <h5 class="font-bold text-white">{{option.label}}</h5>
             </div>
         </div>
@@ -13,7 +13,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Poll, PollResultVisibility } from '../domain/Poll'
+import { Poll, PollResultVisibility, Answer } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
@@ -22,8 +22,18 @@ export default defineComponent({
     data() {
         return {
             answerColors: ['#758CDF','#FFA462','#F57988'],
-            answerPercent: [60,30,10]
+            answerPercent: [60,30,10],
+            answers: [] as Array<Answer>,
+            totalCount: 0 as number,
+            sortedAnswers: {} as {[answerId: number]: { count:number}}
         }
+    },
+    async created(){
+        if(this.poll) {
+            this.createSortedAnswer(this.poll)
+            await this.loadAnswers(this.poll)
+        }
+        this.$client.service('answer').on('created', this.addAnswer)
     },
     computed: {
         pollResultsAreHidden() {
@@ -32,6 +42,29 @@ export default defineComponent({
             } else {
                 return false
             }
+        }
+    },
+    methods: {
+        createSortedAnswer(poll:Poll){
+            poll.answers.forEach((answer: Answer) => {
+                this.sortedAnswers[answer.answerId] = {
+                    count: 0,
+                    ...answer
+                }
+            })
+        },
+        async loadAnswers(poll:Poll){
+            const query = {
+                _from: poll._id,
+                $select: ['answerId']
+            }
+            const answers = await this.$client.service('answer').find(query).catch(this.$showError)
+            answers.forEach((a:Answer) => {this.addAnswer(a)})
+        },
+        addAnswer(answer: Answer){
+            this.answers.push(answer)
+            this.sortedAnswers[answer.answerId].count ++
+            this.totalCount ++
         }
     }
 

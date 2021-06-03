@@ -52,7 +52,6 @@ app.mixin({
         }
     }
 })
-app.mount('#mixins-global')
 
 const client = feathers()
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
