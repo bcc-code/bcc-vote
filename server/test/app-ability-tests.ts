@@ -70,7 +70,7 @@ describe('permissions - app ability', async () => {
 
   const useCases:Array<useCaseType> = [
     { action:"find", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-    { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+     { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
     { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
     { action:"find", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
     { action:"find", subject:"role", entity:'user', expected: true },

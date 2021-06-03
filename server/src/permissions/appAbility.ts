@@ -13,6 +13,7 @@ type DefinePermissions = (user: any, builder: AbilityBuilder<AppAbility>) => voi
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
 
+    const userRoleEnums = user.roles.map((r:Role) => r.enumName);
   if(user.roles.filter((r:Role) => r.enumName === 'Developer').length) {
     can('create','poll');
     can('update', 'poll');
@@ -27,16 +28,20 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
   can('find', 'answer');
   can('find','poll');
   can('find','person');
-  
+
   can('get', 'poll');
 
-    can('create','polling-event');
-    can('get','polling-event');
-    can('find','polling-event', {'participantFilter.org': user.churchID.toString()})
-    can('find','polling-event', {'participantFilter.org': 'all'as any})
-    cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
-    cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
-    can('find','polling-event', {'creatorId':user.personID as any})
+  can('create','polling-event');
+  can('get','polling-event');
+  can('find','polling-event', {'participantFilter.org': user.churchID.toString()})
+  can('find','polling-event',{
+     'participantFilter.org': 'all'as any,
+     'participantFilter.role': 'all'as any
+    })
+  can('find','polling-event', {'participantFilter.role': { $in: userRoleEnums } as any})
+  cannot('find','polling-event',{'participantFilter.minAge': {$gte:user.age}})
+  cannot('find','polling-event',{'participantFilter.maxAge': {$lte:user.age}})
+  can('find','polling-event', {'creatorId':user.personID as any})
 }
 
 export function defineAbilityFor(user:UserDetails): AppAbility {

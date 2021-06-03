@@ -11,7 +11,7 @@
         </div>
         <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
         <div class="flex justify-center mb-3">
-            <button v-if="$canAdministratePollingEvents" class="gradient-button md-button" @click="adminEvent(pollingEvent._key)">
+            <button v-if="$user.personID === pollingEvent.creatorId" class="gradient-button md-button" @click="adminEvent(pollingEvent._key)">
                 {{$t(`actions.admin-this-event`)}}
             </button>
             <button v-else-if="pollingEvent.status !== 'finished'" class="gradient-button md-button" @click="goToLobby(pollingEvent._key)">
