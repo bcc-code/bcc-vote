@@ -14,7 +14,8 @@
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
                 <div v-for="answer in answers" :key="answer._key">
-                    {{answer._to}}
+                    {{answer.displayName}}
+                    {{answer.churchName}}
                 </div>
             </div>
             <Spinner v-else />
@@ -22,7 +23,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Poll, PollResultVisibility, Answer } from '../domain'
+import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
@@ -56,17 +57,17 @@ export default defineComponent({
     },
     methods: {
         createSortedAnswer(poll:Poll){
-            poll.answers.forEach((answer: Answer) => {
-                this.sortedAnswers[answer.answerId] = {
+            poll.answers.forEach((option: Option) => {
+                this.sortedAnswers[option.answerId] = {
                     count: 0,
-                    ...answer
+                    ...option
                 }
             })
         },
         async loadAnswers(poll:Poll){
             const query = {
                 _from: poll._id,
-                $select: ['answerId']
+                $select: ['answerId','displayName','churchName']
             }
             const answers = await this.$client.service('answer').find({query}).catch(this.$showError)
             answers.forEach((a:Answer) => {this.addAnswer(a)})

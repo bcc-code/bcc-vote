@@ -20,14 +20,14 @@
 </template>
 <script lang="ts">
 import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
-import { Answer } from '../domain/Poll'
+import { Option } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
         CheckIcon
     },
     props: {
-        options: Array as PropType<Array<Answer>>
+        options: Array as PropType<Array<Option>>
     },
     data() {
         return {
@@ -35,7 +35,7 @@ export default defineComponent({
         }
     },
     methods: {
-        async submitAnswer(option:Answer) {
+        async submitAnswer(option:Option) {
             this.$emit('voteConfirmed', option)
         }
     },

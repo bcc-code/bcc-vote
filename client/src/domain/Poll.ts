@@ -3,7 +3,7 @@ export interface Poll {
   _key: string,
   title: string;
   description: string;
-  answers: Answer[],
+  answers: Option[],
   activeStatus: PollActiveStatus;
   resultVisibility: PollResultVisibility;
 }
@@ -11,16 +11,27 @@ export interface Poll {
 export interface PollPrepare {
   title: string;
   description: string;
-  answers: Answer[],
+  answers: Option[],
   activeStatus: PollActiveStatus;
   resultVisibility: PollResultVisibility;
 }
 
-export interface Answer {
+export interface Option {
   label: string,
   explanation: string,
   answerId: number,
 }
+
+export interface Answer {
+    _id: string;
+    _key: string;
+    _from: string;
+    _to: string;
+    answerId: number;
+    pollingEventId: number;
+    displayName: string;
+    churchName: string;
+  }
 
 export enum PollActiveStatus {
   'Not Started' = 'not_started',
