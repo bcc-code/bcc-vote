@@ -36,6 +36,9 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'Poll result',
         path: '/poll/result/:id',
         component: () => require('../views/AdminPollResult.vue'),
+        meta: {
+            bgColor: "bg-blue-900"
+        }
     },
     {
         name: 'logout',

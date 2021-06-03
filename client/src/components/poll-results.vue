@@ -12,6 +12,11 @@
         <div class="py-4">
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
+            <div v-else-if="answers.length">
+                <div v-for="answer in answers" :key="answer._key">
+                    {{answer._to}}
+                </div>
+            </div>
             <Spinner v-else />
         </div>
     </div>
