@@ -35,7 +35,8 @@ export default defineComponent({
                 const participantAnswer = {
                     _from: this.poll._id,
                     _to: this.$user._id,
-                    answerId: option.answerId
+                    answerId: option.answerId,
+                    pollingEventId: this.$route.params.id
                 }
                 this.$client.service('answer').create(participantAnswer)
                     .then(() => {

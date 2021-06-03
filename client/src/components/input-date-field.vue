@@ -14,18 +14,17 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 
-import functions from '../util/functions.js'
-
-export default {
+import { defineComponent } from 'vue'
+export default defineComponent({
     name: 'FormDate',
     props: {
         value: {
             type: [Number, String, Date],
             required: false,
         },
-        modelValue: Date
+        modelValue: {type: Date, required: true}
     },
     data() {
         return {
@@ -37,46 +36,51 @@ export default {
             focusElement: 'day',
         }
     },
-    created(){
+    created():void{
         this.init()
     },
     methods: {
-        init(){
+        init():void {
             if(this.modelValue.getTime()){
-                const date = this.modelValue;
-                this.day = this.format(date.getDay());
-                this.month = this.format(date.getMonth());
-                this.year = this.format(date.getFullYear());
-                this.hour = this.format(date.getHours());
-                this.minute = this.format(date.getMinutes());
+                const date = this.modelValue
+                this.day = this.format(date.getDay())
+                this.month = this.format(date.getMonth())
+                this.year = this.format(date.getFullYear())
+                this.hour = this.format(date.getHours())
+                this.minute = this.format(date.getMinutes())
             }
         },
-        format(val){
-            return val.toString().padStart(2, '0');
+        format(val:number):string{
+            return val.toString().padStart(2, '0')
         },
-        updateValue() {
+        updateValue():void {
             const stringDate = `${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:00`
-            const time = Date.parse(stringDate);
+            const time = Date.parse(stringDate)
             if (Number.isNaN(time)) {
-                return;
+                return
             }
             if(time < new Date().getTime())
-                return;
+                return
             this.$emit('update:modelValue', new Date(time))
         },
-        resetValue() {
-            this.day = '';
-            this.month = '';
-            this.year = '';
+        resetValue():void {
+            this.day = ''
+            this.month = ''
+            this.year = ''
             this.focusElement = 'day'
-            this.$emit('update:modelValue', 0);
+            this.$emit('update:modelValue', 0)
         },
-        goNext(evt){
+        goNext(evt: any):void{
             if(evt.target.value.length === evt.target.placeholder.length)
-                functions.focusOnNextFormInput(evt.target);
+                this.focusOnNextFormInput(evt.target)
+        },
+        focusOnNextFormInput: (el: any):void => {
+            const currentIndex = Array.from(el.form.elements).indexOf(el)
+            if (currentIndex < el.form.elements.length - 1)
+                el.form.elements.item(currentIndex + 1).focus()
         }
     }
-}
+})
 </script>
 <style scoped>
 

@@ -38,84 +38,82 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import InfoBox from '../components/info-box.vue'
 import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
-import AddButton from '../components/add-button.vue'
 
 import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
 import { Poll } from '../domain/Poll'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
-   components: {
+    components: {
         InfoBox,
         PencilIcon,
         PollForm,
         SavedPoll,
-        AddButton,
     },
     data() {
-      return {
-        currentTab: 'polls',
-        pollingEvent: {
-          _id: '',
-          _key: '',
-          title: '',
-          description: '',
-          type: PollingEventType['Live Event'],
-          status: PollingEventStatus['Not Started'],
-          creatorId: 0,
-          participantFilter: {
-            org: 'all',
-            role: 'all',
-            minAge: undefined,
-            maxAge: undefined
-          }
-        } as PollingEvent,
-        savedPolls: [] as Poll[],
-        addingPoll: false,
-        currentlyEdited: 0,
-      }
+        return {
+            currentTab: 'polls',
+            pollingEvent: {
+                _id: '',
+                _key: '',
+                title: '',
+                description: '',
+                type: PollingEventType['Live Event'],
+                status: PollingEventStatus['Not Started'],
+                creatorId: 0,
+                participantFilter: {
+                    org: 'all',
+                    role: 'all',
+                    minAge: NaN,
+                    maxAge: NaN
+                }
+            } as PollingEvent,
+            savedPolls: [] as Poll[],
+            addingPoll: false,
+            currentlyEdited: 0,
+        }
     },
     created () {
-      this.loadPollingEvent();
-      this.loadSavedPolls();
+        this.loadPollingEvent()
+        this.loadSavedPolls()
     },
     methods: {
-      editPollingEvent() {
-        this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
-      },
-      activatePollingEvent() {
-        this.$client.service('polling-event').patch(this.pollingEvent._key, {
-          status: PollingEventStatus['Live']
-        }).then(() => {
-          this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
-        }).catch(this.$showError);
-      },
-      async loadPollingEvent(){
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError);
-      },
-      loadSavedPolls(){
-        this.$client.service('poll').find({
-          query: {
-            pollingEventId: this.$route.params.id
-          }
-        }).then((res: Poll[]) => {
-          this.savedPolls = res;
-        }).catch(this.$showError);
-      },
-      createNewPoll(){
-        if(!this.currentlyEdited){
-          this.addingPoll = true;
+        editPollingEvent() {
+            this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
+        },
+        activatePollingEvent() {
+            this.$client.service('polling-event').patch(this.pollingEvent._key, {
+                status: PollingEventStatus['Live']
+            }).then(() => {
+                this.$router.push({ path: `/polling-event/live/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+            }).catch(this.$showError)
+        },
+        async loadPollingEvent(){
+            this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError)
+        },
+        loadSavedPolls(){
+            this.$client.service('poll').find({
+                query: {
+                    pollingEventId: this.$route.params.id
+                }
+            }).then((res: Poll[]) => {
+                this.savedPolls = res
+            }).catch(this.$showError)
+        },
+        createNewPoll(){
+            if(!this.currentlyEdited){
+                this.addingPoll = true
+            }
+        },
+        reloadPolls(){
+            this.currentlyEdited = 0
+            this.addingPoll = false
+            this.loadSavedPolls()
+        },
+        startEditing(ind: number){
+            this.currentlyEdited = ind + 1 
+            this.addingPoll=false
         }
-      },
-      reloadPolls(){
-        this.currentlyEdited = 0;
-        this.addingPoll = false;
-        this.loadSavedPolls();
-      },
-      startEditing(ind: number){
-        this.currentlyEdited = ind + 1; 
-        this.addingPoll=false;
-      }
     }
 })
 </script>

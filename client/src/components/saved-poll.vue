@@ -24,46 +24,46 @@ import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
-  components: {
-    PencilIcon,
-    TrashIcon,
-    PollForm,
-  },
-  props: {
-    poll: {type: Object as PropType<Poll>, required: true},
-    pollIndex: Number,
-    active: Boolean,
-    editing: Boolean,
-  },
-  computed: {
-    isNotStarted(): Boolean{
-      return PollActiveStatus["Not Started"] == this.poll.activeStatus;
+    components: {
+        PencilIcon,
+        TrashIcon,
+        PollForm,
     },
-    isLive(): Boolean{
-      return PollActiveStatus["Live"] == this.poll.activeStatus;
+    props: {
+        poll: {type: Object as PropType<Poll>, required: true},
+        pollIndex: Number,
+        active: Boolean,
+        editing: Boolean,
     },
-    isFinished(): Boolean{
-      return PollActiveStatus["Finished"] == this.poll.activeStatus;
-    }
-  },
-  methods: {
-    startEditing(){
-      if(this.active){
+    computed: {
+        isNotStarted(): boolean{
+            return PollActiveStatus["Not Started"] === this.poll.activeStatus
+        },
+        isLive(): boolean{
+            return PollActiveStatus["Live"] === this.poll.activeStatus
+        },
+        isFinished(): boolean{
+            return PollActiveStatus["Finished"] === this.poll.activeStatus
+        }
+    },
+    methods: {
+        startEditing(){
+            if(this.active){
         
-        this.$emit('edit');
-      }
+                this.$emit('edit')
+            }
+        },
+        stopEditing(){
+            this.$emit('stopEdit')
+        },
+        async deletePoll(){
+            if(this.active){
+                await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError)
+                this.$emit('stopEdit')
+            }
+        }
     },
-    stopEditing(){
-      this.$emit('stopEdit');
-    },
-    async deletePoll(){
-      if(this.active){
-        await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError);
-        this.$emit('stopEdit')
-      }
-    }
-  },
-  emits: ['edit', 'stopEdit']
+    emits: ['edit', 'stopEdit']
 })
 </script>
 

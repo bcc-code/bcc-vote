@@ -1,3 +1,4 @@
+import * as authentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -5,6 +6,11 @@ const validateAndFormat = (context: HookContext) => {
   const { data } = context;
   if (!data.title || data.title === '') throw Error('Validation Error: Please provide a title')
   return context;
+};
+
+const addChannel = async (context: HookContext) => {
+  if(context.result.pollingEventId && context.params.connection)
+    context.app.channel(context.result.pollingEventId.toString()).join(context.params.connection);
 };
 
 export default {
@@ -21,7 +27,7 @@ export default {
   after: {
     all: [],
     find: [],
-    get: [],
+    get: [ addChannel ],
     create: [],
     update: [],
     patch: [],

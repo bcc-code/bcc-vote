@@ -8,31 +8,31 @@
   </div>
 </template>
 
-<script>
-
-export default {
-  props: {
-    value: { default: true },
-    modelValue: String | Boolean,
-  },
-  computed: {
-    model: {
-      get() {
-        return this.modelValue;
-      },
-      set(val) {
-        if(val)
-          this.$emit('update:modelValue', this.value)
-        else if(typeof this.value == "boolean")
-          this.$emit('update:modelValue', !this.value)
-      }
+<script lang="ts">
+import { PropType, defineComponent } from 'vue'
+export default defineComponent({
+    props: {
+        value: { default: true },
+        modelValue: {type: [String, Boolean] as PropType<string | boolean>, required: true}
     },
-    isSet() {
-      return this.value === this.modelValue;
-    }
-  },
-  emits: ['update:modelValue']
-}
+    computed: {
+        model: {
+            get(): (string | boolean) {
+                return this.modelValue
+            },
+            set(val: (string | boolean)):void {
+                if(val)
+                    this.$emit('update:modelValue', this.value)
+                else if(typeof this.value == "boolean")
+                    this.$emit('update:modelValue', !this.value)
+            }
+        },
+        isSet():boolean {
+            return this.value === this.modelValue
+        }
+    },
+    emits: ['update:modelValue']
+})
 </script>
 
 <style scoped>

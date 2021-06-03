@@ -8,35 +8,36 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
 
-export default {
-  components: {
-    CheckIcon
-  },
-  props: {
-    value: { default: true },
-    modelValue: String | Boolean,
-  },
-  computed: {
-    model: {
-      get() {
-        return this.modelValue;
-      },
-      set(val) {
-        if(val)
-          this.$emit('update:modelValue', this.value)
-        else if(typeof this.value == "boolean")
-          this.$emit('update:modelValue', !this.value)
-      }
+import { defineComponent, PropType } from 'vue'
+export default defineComponent({
+    components: {
+        CheckIcon
     },
-    isSet() {
-      return this.value === this.modelValue;
-    }
-  },
-  emits: ['update:modelValue']
-}
+    props: {
+        value: { default: true },
+        modelValue: {type: Object as PropType<string | boolean>, required: true},
+    },
+    computed: {
+        model: {
+            get(): (string|boolean) {
+                return this.modelValue
+            },
+            set(val: (string|boolean)):void {
+                if(val)
+                    this.$emit('update:modelValue', this.value)
+                else if(typeof this.value == "boolean")
+                    this.$emit('update:modelValue', !this.value)
+            }
+        },
+        isSet(): boolean {
+            return this.value === this.modelValue
+        }
+    },
+    emits: ['update:modelValue']
+})
 </script>
 
 <style scoped>
