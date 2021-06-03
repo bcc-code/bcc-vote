@@ -37,7 +37,7 @@ async function authentication() {
 router.beforeEach(async(to: any, from: any, next: any) => {
     const { user, authenticated, error } = await authentication()
     if(authenticated) {        
-        next();
+        next()
     } else if(error) {
         next({ name: "error" })
     }

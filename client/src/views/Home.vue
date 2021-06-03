@@ -44,7 +44,7 @@ export default defineComponent({
         }
     },
     async mounted(){
-        await this.loadMeetings();
+        await this.loadMeetings()
     },
     methods: {
         goToCreate() {

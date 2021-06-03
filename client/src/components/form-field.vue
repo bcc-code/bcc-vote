@@ -70,8 +70,8 @@ export default defineComponent({
             },
             set (val:any) {
                 if(this.type == 'number')
-                    val = parseInt(val);
-                this.$emit('update:modelValue', val);
+                    val = parseInt(val)
+                this.$emit('update:modelValue', val)
             }
         }
     }

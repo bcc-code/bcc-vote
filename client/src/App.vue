@@ -23,18 +23,18 @@ export default defineComponent({
     },
     computed: {
         layoutHeight() {
-          let height = 376;
-          if(this.$route.path == "/") {
-            height = height - 48
-          }
-          return height
+            let height = 376
+            if(this.$route.path == "/") {
+                height = height - 48
+            }
+            return height
         },
         backgroundClass() {
-          let bgClass = 'bg-gray-100'
-          if(this.$route.meta && this.$route.meta.bgColor) {
-            bgClass = this.$route.meta.bgColor as string
-          }
-          return bgClass
+            let bgClass = 'bg-gray-100'
+            if(this.$route.meta && this.$route.meta.bgColor) {
+                bgClass = this.$route.meta.bgColor as string
+            }
+            return bgClass
         }
     }  
 })

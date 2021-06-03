@@ -12,30 +12,30 @@
 import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
 
 export default {
-  components: {
-    CheckIcon
-  },
-  props: {
-    value: { default: true },
-    modelValue: String | Boolean,
-  },
-  computed: {
-    model: {
-      get() {
-        return this.modelValue;
-      },
-      set(val) {
-        if(val)
-          this.$emit('update:modelValue', this.value)
-        else if(typeof this.value == "boolean")
-          this.$emit('update:modelValue', !this.value)
-      }
+    components: {
+        CheckIcon
     },
-    isSet() {
-      return this.value === this.modelValue;
-    }
-  },
-  emits: ['update:modelValue']
+    props: {
+        value: { default: true },
+        modelValue: String | Boolean,
+    },
+    computed: {
+        model: {
+            get() {
+                return this.modelValue
+            },
+            set(val) {
+                if(val)
+                    this.$emit('update:modelValue', this.value)
+                else if(typeof this.value == "boolean")
+                    this.$emit('update:modelValue', !this.value)
+            }
+        },
+        isSet() {
+            return this.value === this.modelValue
+        }
+    },
+    emits: ['update:modelValue']
 }
 </script>
 

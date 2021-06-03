@@ -11,27 +11,27 @@
 <script>
 
 export default {
-  props: {
-    value: { default: true },
-    modelValue: String | Boolean,
-  },
-  computed: {
-    model: {
-      get() {
-        return this.modelValue;
-      },
-      set(val) {
-        if(val)
-          this.$emit('update:modelValue', this.value)
-        else if(typeof this.value == "boolean")
-          this.$emit('update:modelValue', !this.value)
-      }
+    props: {
+        value: { default: true },
+        modelValue: String | Boolean,
     },
-    isSet() {
-      return this.value === this.modelValue;
-    }
-  },
-  emits: ['update:modelValue']
+    computed: {
+        model: {
+            get() {
+                return this.modelValue
+            },
+            set(val) {
+                if(val)
+                    this.$emit('update:modelValue', this.value)
+                else if(typeof this.value == "boolean")
+                    this.$emit('update:modelValue', !this.value)
+            }
+        },
+        isSet() {
+            return this.value === this.modelValue
+        }
+    },
+    emits: ['update:modelValue']
 }
 </script>
 

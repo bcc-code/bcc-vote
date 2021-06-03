@@ -10,17 +10,17 @@
 </template>
 
 <script>
-  import XIcon from 'heroicons-vue3/solid/XIcon'
-  export default {
+import XIcon from 'heroicons-vue3/solid/XIcon'
+export default {
     components: {
-      XIcon,
+        XIcon,
     },
     data() {
-      return {
-        show: true
-      }
+        return {
+            show: true
+        }
     }
-  }
+}
 </script>
 <style scoped>
 .border-blue {

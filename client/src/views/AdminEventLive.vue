@@ -76,88 +76,88 @@ import { Poll, PollActiveStatus } from '../domain/Poll'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
-  components: {
-      InfoBox,
-      PencilIcon,
-      SavedPoll,
-      PollResultTile,
-      ClipboardListIcon,
-  },
-  data() {
-    return {
-      currentTab: 'polls' as string,
-      pollingEvent: {} as PollingEvent,
-      savedPolls: [] as Poll[],
-      currentlyEdited: 0,
-    }
-  },
-  created(){
-    this.loadPollingEvent();
-    this.loadSavedPolls();
-  },
-  methods: {
-    editPollingEvent() {
-      this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
+    components: {
+        InfoBox,
+        PencilIcon,
+        SavedPoll,
+        PollResultTile,
+        ClipboardListIcon,
     },
-    closePollingEvent() {
-      this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
-    },
-    async changePollStatus(poll: Poll){
-      if(poll.activeStatus === PollActiveStatus["Live"])
-        await this.setActivePoll();
-      else{
-        await this.setActivePoll(poll);
-      }
-      this.reloadPolls()
-    },
-    async loadPollingEvent(){
-      this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
-      .catch(this.$showError);
-    },
-    loadSavedPolls(){
-      this.$client.service('poll').find({
-        query: {
-          pollingEventId: this.$route.params.id,
-          $sort: {
-            title: 1,
-          }
+    data() {
+        return {
+            currentTab: 'polls' as string,
+            pollingEvent: {} as PollingEvent,
+            savedPolls: [] as Poll[],
+            currentlyEdited: 0,
         }
-      }).then((res: Poll[]) => {
-        this.savedPolls = res;
-      }).catch(this.$showError);
     },
-    reloadPolls(){
-      this.currentlyEdited = 0;
-      this.loadSavedPolls();
+    created(){
+        this.loadPollingEvent()
+        this.loadSavedPolls()
     },
-    startEditing(ind: number){
-      this.currentlyEdited = ind + 1; 
-    },
-    findPollByKey(key: String): number{
-      return this.savedPolls.findIndex((a: Poll) => {
-        return a._key === key;
-      })
-    },
-    isNotStarted(p: Poll):Boolean{
-      return p.activeStatus === PollActiveStatus['Not Started'];
-    },
-    isLive(p: Poll):Boolean{
-      return p.activeStatus === PollActiveStatus['Live'];
-    },
-    isFinished(p: Poll):Boolean{
-      return p.activeStatus === PollActiveStatus['Finished'];
-    },
-    async setActivePoll(p?: Poll){
-      const ind =  this.savedPolls.findIndex(this.isLive);
-      if(ind > -1)
-        await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
-          activeStatus: PollActiveStatus['Finished']
-        }).catch(this.$showError);
-      if(p)
-        await this.$client.service('poll').patch(p._key, {
-          activeStatus: PollActiveStatus['Live']
-        }).catch(this.$showError);
-    }
-  } 
+    methods: {
+        editPollingEvent() {
+            this.$router.push({ path: 'edit-polling-event', params: { id: this.pollingEvent._id } })
+        },
+        closePollingEvent() {
+            this.$router.push({ path: `/polling-event/prepare/${this.pollingEvent._key}`, params: { id: this.pollingEvent._key}})
+        },
+        async changePollStatus(poll: Poll){
+            if(poll.activeStatus === PollActiveStatus["Live"])
+                await this.setActivePoll()
+            else{
+                await this.setActivePoll(poll)
+            }
+            this.reloadPolls()
+        },
+        async loadPollingEvent(){
+            this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
+                .catch(this.$showError)
+        },
+        loadSavedPolls(){
+            this.$client.service('poll').find({
+                query: {
+                    pollingEventId: this.$route.params.id,
+                    $sort: {
+                        title: 1,
+                    }
+                }
+            }).then((res: Poll[]) => {
+                this.savedPolls = res
+            }).catch(this.$showError)
+        },
+        reloadPolls(){
+            this.currentlyEdited = 0
+            this.loadSavedPolls()
+        },
+        startEditing(ind: number){
+            this.currentlyEdited = ind + 1 
+        },
+        findPollByKey(key: string): number{
+            return this.savedPolls.findIndex((a: Poll) => {
+                return a._key === key
+            })
+        },
+        isNotStarted(p: Poll):boolean{
+            return p.activeStatus === PollActiveStatus['Not Started']
+        },
+        isLive(p: Poll):boolean{
+            return p.activeStatus === PollActiveStatus['Live']
+        },
+        isFinished(p: Poll):boolean{
+            return p.activeStatus === PollActiveStatus['Finished']
+        },
+        async setActivePoll(p?: Poll){
+            const ind =  this.savedPolls.findIndex(this.isLive)
+            if(ind > -1)
+                await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
+                    activeStatus: PollActiveStatus['Finished']
+                }).catch(this.$showError)
+            if(p)
+                await this.$client.service('poll').patch(p._key, {
+                    activeStatus: PollActiveStatus['Live']
+                }).catch(this.$showError)
+        }
+    } 
 })
 </script>

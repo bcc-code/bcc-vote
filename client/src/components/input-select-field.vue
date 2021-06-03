@@ -17,24 +17,24 @@ import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon'
 
 export default {
     components: {
-      ChevronDownIcon,
+        ChevronDownIcon,
     },
     props: {
         options: Array,
         modelValue: Number|Array,
     },
     computed: {
-      model: {
-        get(){
-          return this.modelValue
+        model: {
+            get(){
+                return this.modelValue
+            },
+            set(val){
+                this.$emit('update:modelValue', val)
+            }
         },
-        set(val){
-          this.$emit('update:modelValue', val);
+        isMultiple(){
+            return typeof this.modelValue == 'object'
         }
-      },
-      isMultiple(){
-        return typeof this.modelValue == 'object'
-      }
     },
     emits: ['update:modelValue']
 }

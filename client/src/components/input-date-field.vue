@@ -43,37 +43,37 @@ export default {
     methods: {
         init(){
             if(this.modelValue.getTime()){
-                const date = this.modelValue;
-                this.day = this.format(date.getDay());
-                this.month = this.format(date.getMonth());
-                this.year = this.format(date.getFullYear());
-                this.hour = this.format(date.getHours());
-                this.minute = this.format(date.getMinutes());
+                const date = this.modelValue
+                this.day = this.format(date.getDay())
+                this.month = this.format(date.getMonth())
+                this.year = this.format(date.getFullYear())
+                this.hour = this.format(date.getHours())
+                this.minute = this.format(date.getMinutes())
             }
         },
         format(val){
-            return val.toString().padStart(2, '0');
+            return val.toString().padStart(2, '0')
         },
         updateValue() {
             const stringDate = `${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:00`
-            const time = Date.parse(stringDate);
+            const time = Date.parse(stringDate)
             if (Number.isNaN(time)) {
-                return;
+                return
             }
             if(time < new Date().getTime())
-                return;
+                return
             this.$emit('update:modelValue', new Date(time))
         },
         resetValue() {
-            this.day = '';
-            this.month = '';
-            this.year = '';
+            this.day = ''
+            this.month = ''
+            this.year = ''
             this.focusElement = 'day'
-            this.$emit('update:modelValue', 0);
+            this.$emit('update:modelValue', 0)
         },
         goNext(evt){
             if(evt.target.value.length === evt.target.placeholder.length)
-                functions.focusOnNextFormInput(evt.target);
+                functions.focusOnNextFormInput(evt.target)
         }
     }
 }

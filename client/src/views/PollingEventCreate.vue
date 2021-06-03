@@ -55,94 +55,94 @@ import { PollingEventPrepare, PollingEvent, PollingEventType, PollingEventStatus
 
 import { defineComponent } from 'vue'
 export default defineComponent({
-   components: {
+    components: {
         InfoBox,
         FormField,
         PollForm,
     },
     data() {
-      return {
-        allChurches: [],
-        allRoles: [],
-        eventData: {
-          title: '',
-          description: '',
-          type: PollingEventType['Live Event'],
-          status: PollingEventStatus['Not Started'],
-          startDateTime: new Date(0),
-          creatorId: 0,
-          participantFilter: {
-            org: 'all',
-            role: 'all',
-            minAge: undefined,
-            maxAge: undefined,
-          }
-        } as PollingEventPrepare,
+        return {
+            allChurches: [],
+            allRoles: [],
+            eventData: {
+                title: '',
+                description: '',
+                type: PollingEventType['Live Event'],
+                status: PollingEventStatus['Not Started'],
+                startDateTime: new Date(0),
+                creatorId: 0,
+                participantFilter: {
+                    org: 'all',
+                    role: 'all',
+                    minAge: undefined,
+                    maxAge: undefined,
+                }
+            } as PollingEventPrepare,
         
-        numberOfVoters: null,
-      }
+            numberOfVoters: null,
+        }
     },
     async created(){
-      this.loadOrgs();
-      this.loadRoles();
+        this.loadOrgs()
+        this.loadRoles()
     },
     methods: {
-      async loadOrgs(){
-          const res = await this.$client.service('org').find({
-            query: {
-              activeStatusCode: 0,
-              type: 'church',
-              $select: ['name', 'churchID'],
-              $sort: {
-                name: 1
-              }
-            }
-          })
-          res.unshift({name: "All churches", churchID: 'all'})
-          this.allChurches = res.map((c: any) => {
-            return {
-              name: c.name,
-              val: c.churchID.toString(),
-            }
-          });
-      },
-      async loadRoles(){
-          const res = await this.$client.service('role').find({
-            query: {
-              $sort: {
-                name: 1
-              },
+        async loadOrgs(){
+            const res = await this.$client.service('org').find({
+                query: {
+                    activeStatusCode: 0,
+                    type: 'church',
+                    $select: ['name', 'churchID'],
+                    $sort: {
+                        name: 1
+                    }
+                }
+            })
+            res.unshift({name: "All churches", churchID: 'all'})
+            this.allChurches = res.map((c: any) => {
+                return {
+                    name: c.name,
+                    val: c.churchID.toString(),
+                }
+            })
+        },
+        async loadRoles(){
+            const res = await this.$client.service('role').find({
+                query: {
+                    $sort: {
+                        name: 1
+                    },
               
-              $select: ['name', '_key'],
-            }
-          })
-          this.allRoles = res.map((c:any) => {
-            return {
-              name: c.name,
-              val: c._key.toString(),
-            }
-          });
-          res.unshift({name: "All roles", _key: 'all'})
-          this.allRoles = res.map((c: any) => {
-            return {
-              name: c.name,
-              val: c._key.toString(),
-            }
-          });
-      },
-      createPollingEvent(){
-        const data:any = this.eventData;
-        data.creatorId = this.$user.personID;
+                    $select: ['name', '_key'],
+                }
+            })
+            this.allRoles = res.map((c:any) => {
+                return {
+                    name: c.name,
+                    val: c._key.toString(),
+                }
+            })
+            res.unshift({name: "All roles", _key: 'all'})
+            this.allRoles = res.map((c: any) => {
+                return {
+                    name: c.name,
+                    val: c._key.toString(),
+                }
+            })
+        },
+        createPollingEvent(){
+            const data:any = this.eventData
+            data.creatorId = this.$user.personID
         
           
-        this.$client.service('polling-event').create(data)
-        .then((res: PollingEvent) => {
-          this.$router.push(`/polling-event/prepare/${res._key}`);
-        })
-      },
-      goHome(){
-        this.$router.push('/');
-      },
+            this.$client.service('polling-event').create(data)
+                .then((res: PollingEvent) => {
+                    this.$router.push(`/polling-event/prepare/${res._key}`)
+                })
+        },
+        goHome(){
+            this.$router.push('/')
+        },
     }
 })
 </script>

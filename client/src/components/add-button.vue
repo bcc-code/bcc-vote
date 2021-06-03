@@ -9,11 +9,11 @@
 
 import PlusIcon from 'heroicons-vue3/outline/PlusIcon'
 export default {
-  components: {
-    PlusIcon,
-  },
-  props: {
-    translation: String
-  },
+    components: {
+        PlusIcon,
+    },
+    props: {
+        translation: String
+    },
 }
 </script>
