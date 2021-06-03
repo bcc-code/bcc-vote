@@ -14,31 +14,49 @@ export default defineComponent({
     return{
       poll: {} as Poll,
       answers: [] as Array<number>,
+
+      // this is a map for mapping answerIds to indexes in the list of answers (in python it is called a dictionary and in cpp we call that an unordered_map) in javaScript Object as any can serve this purpose
       answerMap: {} as any
     }
   },
   async created(){
-    this.poll = await this.$client.service('poll').get(this.$route.params.id)
-    let ind = 0;
-    this.poll.answers.forEach((ans: Answer) => {
-      this.answerMap[ans.answerId.toString()] = ind;
-      ind++;
-    });
-    this.answers = new Array<number>(ind).fill(0);
-    const res = await this.$client.service('answer').find({
-      query:{
-        _from: 'poll/'+this.$route.params.id,
-        $select: ['answerId']
-      }
-    })
-    res.forEach((ans: Answer) => {
-      this.answers[this.answerMap[ans.answerId.toString()]] ++;
-    });
+    await this.loadPoll();
+    this.createAnswerMap();
+    await this.loadAnswers();
+
     this.$client.service('answer').on('created', this.updateAnswers);
   },
   methods: {
+    async loadPoll(){
+      this.$client.service('poll').get(this.$route.params.id)
+      .then((res: Poll) => {
+        this.poll = res;
+      }).catch(this.$showError)
+    },
+    createAnswerMap(){
+      // The way it works is that it maps answerIds to the actual index in the answers array so that later I know where to put the answers 
+
+      let answerIndex = 0;
+      this.poll.answers.forEach((ans: Answer) => {
+        this.answerMap[ans.answerId.toString()] = answerIndex;
+        answerIndex++;
+      });
+      
+      this.answers = new Array<number>(answerIndex).fill(0);
+    },
+    async loadAnswers(){
+      this.$client.service('answer').find({
+        query:{
+          _from: 'poll/'+this.$route.params.id,
+          $select: ['answerId']
+        }
+      }).then((allAnswers: Answer[])=>{
+        allAnswers.forEach((ans: Answer) => {
+          this.answers[this.answerMap[ans.answerId.toString()]] ++;
+        });
+      }).catch(this.$showError)
+    },
     updateAnswers(ans: Answer){
-      console.log('new ans');
       this.answers[this.answerMap[ans.answerId.toString()]] ++;
     }
   }
