@@ -49,73 +49,73 @@ import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/P
 
 import { defineComponent } from 'vue'
 export default defineComponent({
-  components: {
-    InfoBox,
-    FormField,
-    XIcon,
-    TrashIcon,
-    AddButton,
-  },
-  props: {
-    eventId: String,
-    pollIndex: Number,
-    poll: Object,
-  },
-  data(){
-    return {
-      activeStatus: PollActiveStatus,
-      visibility: PollResultVisibility,
-      pollData: {
-        title: '',
-        description: '',
-        pollingEventId: this.eventId,
-        activeStatus: PollActiveStatus['Not Started'],
-        resultVisibility: PollResultVisibility['Public'],
-        answers: [
-          {
-            label: "Yes",
-            explanation: "",
-            answerId: new Date().getTime(),
-          },
-          {
-            label: "No",
-            explanation: "",
-            answerId: new Date().getTime() + 1,
-          }
-        ]
-      } as PollPrepare
-    }
-  },
-  created(){
-    if(this.poll)
-      this.pollData = JSON.parse(JSON.stringify(this.poll));
-  },
-  methods: {
-    addOption(){
-      this.pollData.answers.push({
-        label: "",
-        explanation: "",
-        answerId: new Date().getTime(),
-      })
+    components: {
+        InfoBox,
+        FormField,
+        XIcon,
+        TrashIcon,
+        AddButton,
     },
-    removeOption(ind: number){
-      this.pollData.answers.splice(ind, 1);
+    props: {
+        eventId: String,
+        pollIndex: Number,
+        poll: Object,
     },
-    sendPoll(){
-      if(this.poll?._key){
-        this.$client.service('poll').update(this.poll._key, this.pollData)
-        .then(() => {
-          this.$emit('close');
-        }).catch(this.$showError);
-      }
-      else{
-        this.$client.service('poll').create(this.pollData)
-        .then(() => {
-          this.$emit('close');
-        }).catch(this.$showError);
-      } 
-    }
-  },
-  emits: ['close']
+    data(){
+        return {
+            activeStatus: PollActiveStatus,
+            visibility: PollResultVisibility,
+            pollData: {
+                title: '',
+                description: '',
+                pollingEventId: this.eventId,
+                activeStatus: PollActiveStatus['Not Started'],
+                resultVisibility: PollResultVisibility['Public'],
+                answers: [
+                    {
+                        label: "Yes",
+                        explanation: "",
+                        answerId: new Date().getTime(),
+                    },
+                    {
+                        label: "No",
+                        explanation: "",
+                        answerId: new Date().getTime() + 1,
+                    }
+                ]
+            } as PollPrepare
+        }
+    },
+    created(){
+        if(this.poll)
+            this.pollData = JSON.parse(JSON.stringify(this.poll))
+    },
+    methods: {
+        addOption(){
+            this.pollData.answers.push({
+                label: "",
+                explanation: "",
+                answerId: new Date().getTime(),
+            })
+        },
+        removeOption(ind: number){
+            this.pollData.answers.splice(ind, 1)
+        },
+        sendPoll(){
+            if(this.poll?._key){
+                this.$client.service('poll').update(this.poll._key, this.pollData)
+                    .then(() => {
+                        this.$emit('close')
+                    }).catch(this.$showError)
+            }
+            else{
+                this.$client.service('poll').create(this.pollData)
+                    .then(() => {
+                        this.$emit('close')
+                    }).catch(this.$showError)
+            } 
+        }
+    },
+    emits: ['close']
 })
 </script>

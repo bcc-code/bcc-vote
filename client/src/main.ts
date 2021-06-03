@@ -16,7 +16,7 @@ import router from './router'
 const messages = {
     master: Object.assign({}, require('./localization/master.json')),
     no: Object.assign({}, require('./localization/no_master.json'))
-}
+};
 
 const i18n = createI18n({
     locale: 'master',
@@ -35,28 +35,27 @@ app.use(store)
 
 app.mixin({
     methods: {
-        $showError(error:any) {
+        $showError(error: Error) {
             this.$toast(error,{ class: 'error' })
         }
     },
     computed: {
-        $canAdministratePollingEvents() {
+        $canAdministratePollingEvents():boolean {
             if(this.$user.roles) {
                 const allowedRoles = ['Developer','SentralInformasjonsmedarbeider','CentralAdministrator']
                 const allowedUserRoles = this.$user.roles.filter((r:Role) => allowedRoles.includes(r.enumName))
                 if(allowedUserRoles.length) {
                     return true
-                } else {
-                    return false
                 }
             }
+            return false
         }
     }
 })
 app.mount('#mixins-global')
 
 const client = feathers()
-const socket = io(window.location.hostname == 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
+const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`)
 
 client.configure(socketio(socket))
 client.configure(auth())

@@ -33,6 +33,11 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
+        name: 'Poll result',
+        path: '/poll/result/:id',
+        component: () => require('../views/AdminPollResult.vue'),
+    },
+    {
         name: 'logout',
         path: "/logout",
         component: {},

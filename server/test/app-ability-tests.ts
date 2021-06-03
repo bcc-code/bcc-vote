@@ -69,13 +69,21 @@ describe('permissions - app ability', async () => {
  }
 
   const useCases:Array<useCaseType> = [
+    // Permissions for get and find should be identical for polling events
     { action:"find", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
      { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
     { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
     { action:"find", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+
+    { action:"get", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+     { action:"get", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+    { action:"get", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+    { action:"get", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+
+    { action:"patch", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
     { action:"find", subject:"role", entity:'user', expected: true },
     { action:"find", subject:"org", entity:'user', expected: true },
-    { action:"patch", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+
     { action:"update", subject:"poll", entity:'basePoll', expected: true },
     { action:"patch", subject:"poll", entity:'basePoll', expected: true },
     { action:"remove", subject:"poll", entity:'basePoll', expected: true },

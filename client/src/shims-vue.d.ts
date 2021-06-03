@@ -1,4 +1,4 @@
-import { ComponentCustomProperties } from 'vue';
+import { ComponentCustomProperties } from 'vue'
 
 /* eslint-disable */
 declare module '*.vue' {

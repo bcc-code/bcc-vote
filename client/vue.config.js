@@ -13,7 +13,7 @@ module.exports = {
     lintOnSave: false,
     chainWebpack: config => {
         config.plugin("copy").tap(([options]) => {
-            options[0].ignore.push("**/config.json");
+            options[0].ignore.push("**/config.json")
             return [options]
         })
     },
