@@ -1,7 +1,7 @@
 <template>
     <div class="h-full w-full px-4 md:px-6 py-8 bg-white rounded-t-lg">
         <div v-for="(option,index) in options" :key="option.answerId" class="mb-6">
-            <div class="w-full result-bar flex" :style="`background: linear-gradient(to right, ${answerColors[index]} ${answerPercent[index]}%, #FFF ${100 - answerPercent[index]}%) ;`">
+            <div class="w-full result-bar flex" :style="`background: linear-gradient(to right, ${answerColors[index]} ${answerPercent[index]}%, #FFF 0%) ;`">
                 <h5 class="font-bold text-white">{{option.label}}</h5>
             </div>
         </div>
