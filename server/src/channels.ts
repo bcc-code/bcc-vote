@@ -11,7 +11,6 @@ export default function(app: Application): void {
     return app.channel(data._key);
   });
   app.services.answer.publish('created', (data:any) => {
-    console.log(data.pollingEventId);
     return app.channel(data.pollingEventId);
   });
 
