@@ -1,8 +1,12 @@
 <template>
     <div class="h-full">
-        <div v-for="(option,index) in poll.answers" :key="option.answerId" class="mb-6">
-            <div class="w-full result-bar flex" :style="`background: linear-gradient(to right, ${answerColors[index]} ${sortedAnswers[option.answerId].count / totalCount *100}%, #FFF 0%) ;`">
-                <h5 class="font-bold text-white">{{option.label}}</h5>
+        <div v-if="loaded">
+            <div v-for="(option,index) in poll.answers" :key="option.answerId" class="mb-6">
+                <div class="result-bar">
+                    <span :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%`">
+                        <h5 class="font-bold text-white">{{option.label}}</h5>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="py-4">
@@ -21,8 +25,8 @@ export default defineComponent({
     },
     data() {
         return {
+            loaded: false as boolean,
             answerColors: ['#758CDF','#FFA462','#F57988'],
-            answerPercent: [60,30,10],
             answers: [] as Array<Answer>,
             totalCount: 0 as number,
             sortedAnswers: {} as {[answerId: number]: { count:number}}
@@ -33,6 +37,7 @@ export default defineComponent({
             this.createSortedAnswer(this.poll)
             await this.loadAnswers(this.poll)
         }
+        this.loaded = true
         this.$client.service('answer').on('created', this.addAnswer)
     },
     computed: {
@@ -58,12 +63,15 @@ export default defineComponent({
                 _from: poll._id,
                 $select: ['answerId']
             }
-            const answers = await this.$client.service('answer').find(query).catch(this.$showError)
+            const answers = await this.$client.service('answer').find({query}).catch(this.$showError)
             answers.forEach((a:Answer) => {this.addAnswer(a)})
         },
         addAnswer(answer: Answer){
             this.answers.push(answer)
             this.sortedAnswers[answer.answerId].count ++
+            this.totalCount ++
+        },
+        addcount(){
             this.totalCount ++
         }
     }
@@ -72,9 +80,33 @@ export default defineComponent({
 </script>
 <style>
 .result-bar {
-    border-width: 1.5px;
-    @apply border-gray-200;
-    @apply rounded-lg;
-    @apply p-4;
+  box-sizing: content-box;
+  position: relative;
+  border-width: 1.5px;
+  @apply border-gray-200;
+  @apply rounded-lg;
+  @apply mb-4;
+}
+
+.result-bar > span {
+  @apply p-4;
+  @apply rounded-l-lg;
+  display: block;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: width 2s;
+}
+.result-bar > span:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  background-size: 50px 50px;
+  transition: width 0.3 ease-out;
+  overflow: hidden;
 }
 </style>
