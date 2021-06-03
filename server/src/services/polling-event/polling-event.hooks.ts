@@ -29,7 +29,7 @@ export default {
     get: [ addChannel ],
     create: [ validateAndFormat ],
     update: [validateAndFormat ],
-    patch: [validateAndFormat ],
+    patch: [ ],
     remove: []
   },
 
