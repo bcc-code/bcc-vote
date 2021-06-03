@@ -48,7 +48,8 @@ export default defineComponent({
                 const participantAnswer = {
                     _from: this.poll._id,
                     _to: this.$user._id,
-                    answerId: option.answerId
+                    answerId: option.answerId,
+                    pollingEventId: this.$route.params.id
                 }
                 await this.$client.service('answer').create(participantAnswer)
                     .catch((e:Error) => this.$showError(e))
