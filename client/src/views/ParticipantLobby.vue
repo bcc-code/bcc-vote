@@ -12,9 +12,7 @@
                 <Spinner />
             </div>
         </div>
-        <div v-if="currentPoll" class="w-full md:max-w-screen-md md:mx-auto h-full">
-            <PollPopOver class="h-full w-full" :poll="currentPoll" :style="`height: 75vh`"/>
-        </div>
+        <PollPopOver v-if="currentPoll" class="w-full h-full md:max-w-screen-md md:mx-auto" :poll="currentPoll" :style="`height: 75vh`"/>
     </section>
 </template>
 <script lang="ts">

@@ -64,8 +64,8 @@ export default defineComponent({
           status: PollingEventStatus['Not Started'],
           creatorId: 0,
           participantFilter: {
-            orgs: 'all',
-            roles: 'all',
+            org: 'all',
+            role: 'all',
             minAge: undefined,
             maxAge: undefined
           }

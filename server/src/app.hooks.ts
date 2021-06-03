@@ -127,6 +127,7 @@ const checkFindAbility = async (context: HookContext) => {
     }else{
       context.result.data = allowedItems
     }
+    
     return context;
   } else {
     throw Error('User has not been set in params.')

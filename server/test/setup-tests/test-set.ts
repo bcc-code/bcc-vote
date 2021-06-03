@@ -59,7 +59,7 @@ function pollingEventsTestSet(){
     scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892')},
     scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978')},
     scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598')},
-    user: async () => { return await userSvc.get('178509735',{})},  
+    user: async () => { return await userSvc.get('178509735',{})},
     basePoll: async () => {
       return await pollSvc.get('504310091');
     },
@@ -68,12 +68,50 @@ function pollingEventsTestSet(){
   return testData;
 }
 
+function newEntitiesFunc(){
 
+  let newValidPollingEvent = {
+    title: "Årsmøte 2021 Oslo/Follo!!!!!!!!!!!!!",
+    description: "Årlig møte med hele menigheten",
+    type: "live_event",
+    status: "not_started",
+    startDateTime: "2021-06-11T11:00:00",
+    creatorId: 12345,
+    participantFilter: {
+        org: "69",
+        roles: "all",
+        minAge: 0,
+        maxAge: 100
+    }
+}
+
+let newValidPoll = {
+  title: "This poll has custom explanations. Nice, isn't it?",
+  description: "",
+  pollingEventId: "504279890",
+  activeStatus: "not_started",
+  resultVisibility: "public",
+  answers: [{
+      label: "Yes",
+      explanation: "This means that you like having things explained",
+      answerId: 1
+  }, {
+      label: "No",
+      explanation: "This means that you don't like having things explained",
+      answerId: 2
+  }]
+}
+newValidPollingEvent = JSON.parse(JSON.stringify(newValidPollingEvent))
+newValidPoll = JSON.parse(JSON.stringify(newValidPoll))
+
+  return { newValidPollingEvent, newValidPoll }
+}
 
 
 export {
   generateFreshContext,
   getAranoDBConfigFromFeathers,
-  pollingEventsTestSet
+  pollingEventsTestSet,
+  newEntitiesFunc
 };
 
