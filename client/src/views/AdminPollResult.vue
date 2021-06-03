@@ -1,11 +1,9 @@
 <template>
   <div>
     {{poll}}
-    {{answers}}
+    {{answersSorted}}
   </div>
-
 </template>
-
 <script lang="ts">
 import {defineComponent} from 'vue'
 import { Poll, Answer } from '../domain'
@@ -13,18 +11,16 @@ export default defineComponent({
     data(){
         return{
             poll: {} as Poll,
-            answers: [] as Array<number>,
-
-            // this is a map for mapping answerIds to indexes in the list of answers (in python it is called a dictionary and in cpp we call that an unordered_map) in javaScript Object as any can serve this purpose
-            answerMap: {} as {[name: number]: number}
+            answers: [] as Array<Answer>,
+            sortedAnswers: {} as {[answerId: number]: { count:number}}
         }
     },
     async created(){
         await this.loadPoll()
-        this.createAnswerMap()
+        this.createSortedAnswer()
         await this.loadAnswers()
 
-        this.$client.service('answer').on('created', this.updateAnswers)
+        this.$client.service('answer').on('created', this.addAnswer)
     },
     methods: {
         async loadPoll(){
@@ -33,31 +29,28 @@ export default defineComponent({
                     this.poll = res
                 }).catch(this.$showError)
         },
-        createAnswerMap(){
-            // The way it works is that it maps answerIds to the actual index in the answers array so that later I know where to put the answers 
-
-            let answerIndex = 0
-            this.poll.answers.forEach((ans: Answer) => {
-                this.answerMap[ans.answerId] = answerIndex
-                answerIndex++
+        createSortedAnswer(){
+            this.poll.answers.forEach((answer: Answer) => {
+                this.sortedAnswers[answer.answerId] = {
+                    count: 0,
+                    ...answer
+                }
             })
-      
-            this.answers = new Array<number>(answerIndex).fill(0)
         },
         async loadAnswers(){
-            await this.$client.service('answer').find({
-                query:{
-                    _from: 'poll/'+this.$route.params.id,
-                    $select: ['answerId']
-                }
-            }).then((allAnswers: Answer[])=>{
-                allAnswers.forEach((ans: Answer) => {
-                    this.answers[this.answerMap[ans.answerId]] ++
+            const query = {
+                _from: this.poll._id,
+                $select: ['answerId']
+            }
+            await this.$client.service('answer').find(query)
+                .then((allAnswers: Answer[])=>{
+                    allAnswers.forEach(this.addAnswer)
                 })
-            }).catch(this.$showError)
+                .catch(this.$showError)
         },
-        updateAnswers(ans: Answer){
-            this.answers[this.answerMap[ans.answerId]] ++
+        addAnswer(answer: Answer){
+            this.answers.push(answer)
+            this.sortedAnswers[answer.answerId].count ++
         }
     }
 })
