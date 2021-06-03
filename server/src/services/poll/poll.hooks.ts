@@ -14,7 +14,7 @@ export default {
     get: [],
     create: [validateAndFormat],
     update: [validateAndFormat],
-    patch: [validateAndFormat],
+    patch: [],
     remove: []
   },
 
