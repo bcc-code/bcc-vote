@@ -23,7 +23,7 @@ class Auth0Strategy extends OAuthStrategy {
       const userSvc = this.app?.services.user;
       const memberSvc = this.app?.services.person;
       let member = (await memberSvc.find({ query:{ personID: personID}})).data[0];
-      member = pick(member,['_id','_key','personID','churchID','displayName','age','roles','administrator']);
+      member = pick(member,['_id','_key','personID','churchID','church','displayName','age','roles','administrator']);
 
       // Reduce member object to fields needed for voting app
       member._id = `user/${member._key}`
