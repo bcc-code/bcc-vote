@@ -51,7 +51,7 @@ export default defineComponent({
             this.$router.push({ path: '/create' })
         },
         async loadMeetings(){
-            const roleIds = this.$user.roles.map((r:any) => r.id)
+            const roleIds = this.$user.roles.map((r: any) => r.id)
             this.pollingEvents = await this.$client.service('polling-event').find({})
         }
     }

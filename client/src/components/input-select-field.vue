@@ -11,33 +11,36 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon'
+import { PropType, defineComponent } from 'vue'
 
-export default {
+type ModelType = number|Array<number>
+
+export default defineComponent({
     components: {
         ChevronDownIcon,
     },
     props: {
         options: Array,
-        modelValue: Number|Array,
+        modelValue: {type: Object as PropType<ModelType>, required: true}
     },
     computed: {
         model: {
-            get(){
+            get():ModelType{
                 return this.modelValue
             },
-            set(val){
+            set(val:ModelType):void{
                 this.$emit('update:modelValue', val)
             }
         },
-        isMultiple(){
-            return typeof this.modelValue == 'object'
+        isMultiple():boolean{
+            return typeof this.modelValue === 'object'
         }
     },
     emits: ['update:modelValue']
-}
+})
 </script>
 
 <style scoped>

@@ -24,7 +24,7 @@ export default defineComponent({
     computed: {
         layoutHeight() {
             let height = 376
-            if(this.$route.path == "/") {
+            if(this.$route.path === "/") {
                 height = height - 48
             }
             return height

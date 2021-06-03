@@ -35,6 +35,9 @@ import RadioField from './input-radio-field.vue'
 import XIcon from 'heroicons-vue3/solid/XIcon'
 
 import { defineComponent,PropType } from 'vue'
+
+type modelType = number|string|boolean|Array<string>
+
 export default defineComponent({
     components: {
         DateField,
@@ -45,7 +48,7 @@ export default defineComponent({
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: Object as PropType<any>,
+        modelValue: {type: Object as PropType<modelType>, required: true},
 
         // General props 
         translation: { type: String, required: true },
@@ -65,11 +68,11 @@ export default defineComponent({
     },
     computed: {
         model: {
-            get():any {
+            get():modelType {
                 return this.modelValue
             },
-            set (val:any) {
-                if(this.type == 'number')
+            set (val:modelType) {
+                if(this.type === 'number' && typeof val === 'string')
                     val = parseInt(val)
                 this.$emit('update:modelValue', val)
             }

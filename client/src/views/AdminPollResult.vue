@@ -16,7 +16,7 @@ export default defineComponent({
             answers: [] as Array<number>,
 
             // this is a map for mapping answerIds to indexes in the list of answers (in python it is called a dictionary and in cpp we call that an unordered_map) in javaScript Object as any can serve this purpose
-            answerMap: {} as any
+            answerMap: {} as {[name: number]: number}
         }
     },
     async created(){
@@ -28,7 +28,7 @@ export default defineComponent({
     },
     methods: {
         async loadPoll(){
-            this.$client.service('poll').get(this.$route.params.id)
+            await this.$client.service('poll').get(this.$route.params.id)
                 .then((res: Poll) => {
                     this.poll = res
                 }).catch(this.$showError)
@@ -38,26 +38,26 @@ export default defineComponent({
 
             let answerIndex = 0
             this.poll.answers.forEach((ans: Answer) => {
-                this.answerMap[ans.answerId.toString()] = answerIndex
+                this.answerMap[ans.answerId] = answerIndex
                 answerIndex++
             })
       
             this.answers = new Array<number>(answerIndex).fill(0)
         },
         async loadAnswers(){
-            this.$client.service('answer').find({
+            await this.$client.service('answer').find({
                 query:{
                     _from: 'poll/'+this.$route.params.id,
                     $select: ['answerId']
                 }
             }).then((allAnswers: Answer[])=>{
                 allAnswers.forEach((ans: Answer) => {
-                    this.answers[this.answerMap[ans.answerId.toString()]] ++
+                    this.answers[this.answerMap[ans.answerId]] ++
                 })
             }).catch(this.$showError)
         },
         updateAnswers(ans: Answer){
-            this.answers[this.answerMap[ans.answerId.toString()]] ++
+            this.answers[this.answerMap[ans.answerId]] ++
         }
     }
 })

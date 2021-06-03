@@ -37,13 +37,13 @@ export default defineComponent({
     },
     computed: {
         isNotStarted(): boolean{
-            return PollActiveStatus["Not Started"] == this.poll.activeStatus
+            return PollActiveStatus["Not Started"] === this.poll.activeStatus
         },
         isLive(): boolean{
-            return PollActiveStatus["Live"] == this.poll.activeStatus
+            return PollActiveStatus["Live"] === this.poll.activeStatus
         },
         isFinished(): boolean{
-            return PollActiveStatus["Finished"] == this.poll.activeStatus
+            return PollActiveStatus["Finished"] === this.poll.activeStatus
         }
     },
     methods: {

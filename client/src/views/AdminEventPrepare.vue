@@ -38,7 +38,6 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import InfoBox from '../components/info-box.vue'
 import PollForm from '../components/poll-form.vue'
 import SavedPoll from '../components/saved-poll.vue'
-import AddButton from '../components/add-button.vue'
 
 import { PollingEvent, PollingEventStatus, PollingEventType } from '../domain'
 import { Poll } from '../domain/Poll'
@@ -50,7 +49,6 @@ export default defineComponent({
         PencilIcon,
         PollForm,
         SavedPoll,
-        AddButton,
     },
     data() {
         return {

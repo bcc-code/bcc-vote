@@ -24,7 +24,7 @@ export default defineComponent({
     },
     computed: {
         showNavigationBar(){
-            if(this.$route.path == "/")
+            if(this.$route.path === "/")
                 return false
             return true
         },

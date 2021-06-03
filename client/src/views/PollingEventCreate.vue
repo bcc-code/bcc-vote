@@ -24,7 +24,7 @@
         <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
       </div>
 
-      <FormField v-model="eventData.participantFilter.roles" type='select' translation="poll-roles" :options="allRoles"/>
+      <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
 
       <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
         <div>
@@ -50,20 +50,33 @@
 
 import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
-import PollForm from '../components/poll-form.vue'
 import { PollingEventPrepare, PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
+
+interface Role {
+    name: string,
+    _key: string,
+}
+
+interface Org {
+    name: string,
+    churchID: number
+}
+
+interface SelectObject {
+    name: string,
+    val: string|number
+}
 
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
         InfoBox,
         FormField,
-        PollForm,
     },
     data() {
         return {
-            allChurches: [],
-            allRoles: [],
+            allChurches: [] as SelectObject[],
+            allRoles: [] as SelectObject[],
             eventData: {
                 title: '',
                 description: '',
@@ -99,7 +112,7 @@ export default defineComponent({
                 }
             })
             res.unshift({name: "All churches", churchID: 'all'})
-            this.allChurches = res.map((c: any) => {
+            this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
                     val: c.churchID.toString(),
@@ -116,22 +129,16 @@ export default defineComponent({
                     $select: ['name', '_key'],
                 }
             })
-            this.allRoles = res.map((c:any) => {
+            this.allRoles = res.map((c: Role) => {
                 return {
                     name: c.name,
                     val: c._key.toString(),
                 }
             })
-            res.unshift({name: "All roles", _key: 'all'})
-            this.allRoles = res.map((c: any) => {
-                return {
-                    name: c.name,
-                    val: c._key.toString(),
-                }
-            })
+            this.allRoles.unshift({name: "All roles", val: 'all'})
         },
         createPollingEvent(){
-            const data:any = this.eventData
+            const data = this.eventData
             data.creatorId = this.$user.personID
         
           

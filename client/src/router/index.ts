@@ -20,9 +20,9 @@ async function authentication() {
 
         return { user, authenticated: true }
 
-    } catch(err: any) {
+    } catch(err) {
         if(err.message === "No accessToken found in storage" || err.message.includes('jwt')) {
-            location.href = window.location.hostname == 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
+            location.href = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
             return { authenticated: false }        
         } else {
             console.log('Routing Error:',err)

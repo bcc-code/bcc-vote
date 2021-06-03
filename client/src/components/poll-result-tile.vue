@@ -13,7 +13,7 @@
 <script lang="ts">
 
 import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon'
-import { Poll, Answer } from '../domain/Poll'
+import { Poll } from '../domain/Poll'
 
 import { defineComponent, PropType } from 'vue'
 
