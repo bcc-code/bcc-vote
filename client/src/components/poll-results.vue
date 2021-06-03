@@ -14,8 +14,15 @@
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
                 <div v-for="answer in answers" :key="answer._key">
-                    {{answer.displayName}}
-                    {{answer.churchName}}
+                    <div class="py-2 flex justify-between items-center border-gray-200 border-b-half">
+                        <div>
+                            <h4 class="font-bold">{{answer.displayName}}</h4>    
+                            <label class=" text-gray-700">{{answer.churchName}}</label>    
+                        </div>
+                        <div :class="['px-6 py-1 mr-1 rounded-lg bg-red-600 text-white']">
+                            <h4 class="font-bold">Option label</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
             <Spinner v-else />
@@ -66,8 +73,7 @@ export default defineComponent({
         },
         async loadAnswers(poll:Poll){
             const query = {
-                _from: poll._id,
-                $select: ['answerId','displayName','churchName']
+                _from: poll._id
             }
             const answers = await this.$client.service('answer').find({query}).catch(this.$showError)
             answers.forEach((a:Answer) => {this.addAnswer(a)})
