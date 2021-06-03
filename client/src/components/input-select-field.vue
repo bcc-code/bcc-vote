@@ -16,7 +16,7 @@
 import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon'
 import { PropType, defineComponent } from 'vue'
 
-type ModelType = String|Array<String>
+type ModelType = string|Array<string>
 
 export default defineComponent({
     components: {

@@ -13,21 +13,21 @@ import { PropType, defineComponent } from 'vue'
 export default defineComponent({
     props: {
         value: { default: true },
-        modelValue: {type: [String, Boolean] as PropType<String | Boolean>, required: true}
+        modelValue: {type: [String, Boolean] as PropType<string | boolean>, required: true}
     },
     computed: {
         model: {
-            get(): (String | Boolean) {
+            get(): (string | boolean) {
                 return this.modelValue
             },
-            set(val: (String | Boolean)):void {
+            set(val: (string | boolean)):void {
                 if(val)
                     this.$emit('update:modelValue', this.value)
                 else if(typeof this.value == "boolean")
                     this.$emit('update:modelValue', !this.value)
             }
         },
-        isSet():Boolean {
+        isSet():boolean {
             return this.value === this.modelValue
         }
     },

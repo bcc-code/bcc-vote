@@ -36,7 +36,7 @@ import XIcon from 'heroicons-vue3/solid/XIcon'
 
 import { defineComponent,PropType } from 'vue'
 
-type ModelType = Number|String|Boolean|Array<String>|Date|null
+type ModelType = number|string|boolean|Array<string>|Date|null
 
 export default defineComponent({
     components: {
