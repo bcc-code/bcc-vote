@@ -64,8 +64,8 @@ export default defineComponent({
                 participantFilter: {
                     org: 'all',
                     role: 'all',
-                    minAge: undefined,
-                    maxAge: undefined
+                    minAge: NaN,
+                    maxAge: NaN
                 }
             } as PollingEvent,
             savedPolls: [] as Poll[],

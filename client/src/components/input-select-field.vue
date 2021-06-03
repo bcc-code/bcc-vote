@@ -16,7 +16,7 @@
 import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon'
 import { PropType, defineComponent } from 'vue'
 
-type ModelType = number|Array<number>
+type ModelType = String|Array<String>
 
 export default defineComponent({
     components: {
@@ -24,7 +24,7 @@ export default defineComponent({
     },
     props: {
         options: Array,
-        modelValue: {type: Object as PropType<ModelType>, required: true}
+        modelValue: {type: [String, Array] as PropType<ModelType>, required: true}
     },
     computed: {
         model: {

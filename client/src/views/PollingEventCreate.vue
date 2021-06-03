@@ -87,8 +87,8 @@ export default defineComponent({
                 participantFilter: {
                     org: 'all',
                     role: 'all',
-                    minAge: undefined,
-                    maxAge: undefined,
+                    minAge: NaN,
+                    maxAge: NaN,
                 }
             } as PollingEventPrepare,
         
@@ -110,7 +110,7 @@ export default defineComponent({
                         name: 1
                     }
                 }
-            })
+            }).catch(this.$showError)
             res.unshift({name: "All churches", churchID: 'all'})
             this.allChurches = res.map((c: Org) => {
                 return {
@@ -128,7 +128,7 @@ export default defineComponent({
               
                     $select: ['name', '_key'],
                 }
-            })
+            }).catch(this.$showError)
             this.allRoles = res.map((c: Role) => {
                 return {
                     name: c.name,
@@ -145,7 +145,7 @@ export default defineComponent({
             this.$client.service('polling-event').create(data)
                 .then((res: PollingEvent) => {
                     this.$router.push(`/polling-event/prepare/${res._key}`)
-                })
+                }).catch(this.$showError)
         },
         goHome(){
             this.$router.push('/')

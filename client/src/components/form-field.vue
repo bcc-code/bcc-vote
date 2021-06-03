@@ -36,7 +36,7 @@ import XIcon from 'heroicons-vue3/solid/XIcon'
 
 import { defineComponent,PropType } from 'vue'
 
-type modelType = number|string|boolean|Array<string>
+type ModelType = Number|String|Boolean|Array<String>|Date|null
 
 export default defineComponent({
     components: {
@@ -48,7 +48,7 @@ export default defineComponent({
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: {type: Object as PropType<modelType>, required: true},
+        modelValue: {type: [Number, String, Boolean, Array, Date] as PropType<ModelType>, required: true},
 
         // General props 
         translation: { type: String, required: true },
@@ -58,7 +58,7 @@ export default defineComponent({
         removable: { type: Boolean, requiered: false},
         placeholder: { type: String, required: false},
 
-        additionalText: { type: String, required: false},
+        additionalText: { type: [String, Number], required: false},
 
         // For select
         options: { type: Array, required: false },
@@ -68,10 +68,10 @@ export default defineComponent({
     },
     computed: {
         model: {
-            get():modelType {
+            get():ModelType {
                 return this.modelValue
             },
-            set (val:modelType) {
+            set (val:ModelType) {
                 if(this.type === 'number' && typeof val === 'string')
                     val = parseInt(val)
                 this.$emit('update:modelValue', val)
