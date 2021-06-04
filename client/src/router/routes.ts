@@ -10,19 +10,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/create',
         name: 'Create a Polling event',
         component: () => require('../views/PollingEventCreate.vue')
-    },
-    {
-        name: 'Prepare the Polling event',
-        path: '/polling-event/prepare/:id',
-        component: () => require('../views/AdminEventPrepare.vue')
-    },
+    }, 
     {
         name: 'Administrate the Live polling event',
-        path: '/polling-event/live/:id',
-        component: () => require('../views/AdminEventLive.vue'),
-        meta: {
-            bgColor: "bg-blue-900"
-        }
+        path: '/polling-event/admin/:id',
+        component: () => require('../views/AdminEvent.vue'),
     },
     {
         name: 'Polling event lobby',

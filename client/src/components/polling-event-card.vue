@@ -54,7 +54,7 @@ export default defineComponent({
             this.$router.push({ path: `/polling-event/lobby/${pollingEventKey}`, params: { id: pollingEventKey}})
         },
         adminEvent(pollingEventKey:string) {
-            this.$router.push({ path: `/polling-event/prepare/${pollingEventKey}`, params: { id: pollingEventKey}})
+            this.$router.push({ path: `/polling-event/admin/${pollingEventKey}`, params: { id: pollingEventKey}})
         }
     }
 })
