@@ -7,7 +7,7 @@
                 {{$t('descriptions.home')}}
             </p>
             <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-5">
-                <h4>{{$t('actions.create-meeting')}}</h4>
+                <h4>{{$t('actions.create-polling-event')}}</h4>
             </button>
         </div>
     </div>

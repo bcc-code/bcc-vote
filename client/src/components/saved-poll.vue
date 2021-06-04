@@ -1,11 +1,11 @@
 <template>
-  <div v-if="!editing" class="py-8 px-5 border-2 border-with-bar" :class="{'opacity-50 cursor-default': !active, 'blue-border': isLive, 'bg-gray-100 text-gray-800': isFinished}">
+  <div v-if="!editMode" class="py-8 px-5 border-2 border-with-bar" :class="{'opacity-50 cursor-default': inactiveMode, 'blue-border': isLive, 'bg-gray-100 text-gray-800': isFinished}">
     <div class="flex justify-between mb-1">
-      <h3 class="font-bold">{{pollIndex}}. {{poll.title}}</h3>
-      <PencilIcon v-if="isNotStarted" class="w-10 h-10 p-2 text-blue-900" :class="{'cursor-pointer': active}" @click="startEditing"/>
+      <h3 class="font-bold">{{pollIndex + 1}}. {{poll.title}}</h3>
+      <PencilIcon v-if="isNotStarted" class="w-10 h-10 p-2 text-blue-900" :class="{'cursor-pointer': !inactiveMode}" @click="startEditing"/>
     </div>
     <div v-if="poll.description" class="text-xl mb-8">{{poll.description}}</div>
-    <div v-if="isNotStarted" class="flex items-center text-red-500 mt-4" :class="{'cursor-pointer': active}" @click="deletePoll">
+    <div v-if="isNotStarted" class="flex items-center text-red-500 mt-4" :class="{'cursor-pointer': !inactiveMode}" @click="deletePoll">
       <TrashIcon class="w-5 h-5 mr-2"/>
       <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
     </div>
@@ -54,8 +54,8 @@ export default defineComponent({
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
         pollIndex: Number,
-        active: Boolean,
-        editing: Boolean,
+        inactiveMode: Boolean,
+        editMode: Boolean,
         isEventLive: Boolean,
     },
     computed: {
@@ -71,8 +71,7 @@ export default defineComponent({
     },
     methods: {
         startEditing(){
-            if(this.active){
-        
+            if(!this.inactiveMode){
                 this.$emit('edit')
             }
         },
@@ -80,7 +79,7 @@ export default defineComponent({
             this.$emit('stopEdit')
         },
         async deletePoll(){
-            if(this.active){
+            if(!this.inactiveMode){
                 await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError)
                 this.$emit('stopEdit')
             }
