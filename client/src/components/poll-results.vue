@@ -1,10 +1,16 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div v-for="(option,index) in poll.answers" :key="option.answerId" class="mb-6">
-                <div class="result-bar">
-                    <span :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%`">
-                        <h5 class="font-bold text-white">{{option.label}}</h5>
+            <div v-for="(option,index) in poll.answers" :key="option.answerId">
+                <div class="result-bar mb-6">
+                    <div class="absolute py-4 top-0">
+                        <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+                    </div>
+                    <span 
+                        :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%;`"
+                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'"
+                    >
+                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </span>
                 </div>
             </div>
@@ -13,14 +19,17 @@
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
-                <div v-for="answer in answers" :key="answer._key">
-                    <div class="py-2 flex justify-between items-center border-gray-200 border-b-half">
+                <div v-for="(answer,index) in answers" :key="answer._key">
+                    <div class="py-2 flex justify-between items-center border-gray-200" 
+                        :class="index + 1 === answers.length ? '' : 'border-b-half'">
                         <div>
                             <h4 class="font-bold">{{answer.displayName}}</h4>    
                             <label class=" text-gray-700">{{answer.churchName}}</label>    
                         </div>
-                        <div :class="['px-6 py-1 mr-1 rounded-lg bg-red-600 text-white']">
-                            <h4 class="font-bold">Option label</h4>
+                        <div
+                            :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`" 
+                            :class="['px-6 py-1 mr-1 rounded-lg text-white']">
+                            <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
                         </div>
                     </div>
                 </div>
@@ -39,10 +48,10 @@ export default defineComponent({
     data() {
         return {
             loaded: false as boolean,
-            answerColors: ['#758CDF','#FFA462','#F57988'],
+            answerColors: ['#758CDF','#FFA462','#F57988','#FFEB3B','#009688','#009688'],
             answers: [] as Array<Answer>,
             totalCount: 0 as number,
-            sortedAnswers: {} as {[answerId: number]: { count:number}}
+            sortedAnswers: {} as {[answerId: number]: { count:number, bgColor: string}}
         }
     },
     async created(){
@@ -64,11 +73,14 @@ export default defineComponent({
     },
     methods: {
         createSortedAnswer(poll:Poll){
+            let colorIndex = 0
             poll.answers.forEach((option: Option) => {
                 this.sortedAnswers[option.answerId] = {
                     count: 0,
+                    bgColor: this.answerColors[colorIndex],
                     ...option
                 }
+                colorIndex++
             })
         },
         async loadAnswers(poll:Poll){
@@ -94,14 +106,11 @@ export default defineComponent({
   box-sizing: content-box;
   position: relative;
   border-width: 1.5px;
-  @apply border-gray-200;
   @apply rounded-lg;
-  @apply mb-4;
 }
 
 .result-bar > span {
-  @apply p-4;
-  @apply rounded-l-lg;
+  @apply py-4;
   display: block;
   height: 100%;
   position: relative;

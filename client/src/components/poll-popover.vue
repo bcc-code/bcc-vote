@@ -1,17 +1,19 @@
 <template>
-    <div class="h-full w-full px-4 md:px-6 py-8 bg-white rounded-t-lg">
-        <h4 class="font-bold mb-2">{{poll.title}}</h4>
-        <p>{{poll.description}}</p>
-        <div v-if="!hasSavedAnswer" class="h-full py-10">
-            <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
-        </div>
-        <div v-else class="h-full py-10">
-            <PollResults :poll="poll" :key="poll._key"/>
+    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 96px);`">
+        <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
+            <h4 class="font-bold mb-2">{{poll.title}}</h4>
+            <p>{{poll.description}}</p>
+            <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
+                <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
+            </div>
+            <div v-else class="py-10">
+                <PollResults :poll="poll" :key="poll._key"/>
+            </div>
         </div>
   </div>
 </template>
 <script lang="ts">
-import PollVote from './poll-popover-vote.vue'
+import PollVote from './poll-vote.vue'
 import PollResults from './poll-results.vue'
 import { Poll, Answer } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
