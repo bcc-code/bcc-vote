@@ -1,10 +1,14 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div v-for="(option,index) in poll.answers" :key="option.answerId" class="mb-6">
-                <div class="result-bar">
-                    <span :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%`">
-                        <h5 class="font-bold text-white">{{option.label}}</h5>
+            {{totalCount}}
+            <div v-for="(option,index) in poll.answers" :key="option.answerId">
+                <div class="result-bar mb-6" :style="` border-color: ${answerBorderColors[index]}`">
+                    <div class="absolute p-4 top-0">
+                        <h5 class="font-bold ml-8" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+                    </div>
+                    <span :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%;`">
+                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-8" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </span>
                 </div>
             </div>
@@ -40,6 +44,7 @@ export default defineComponent({
         return {
             loaded: false as boolean,
             answerColors: ['#758CDF','#FFA462','#F57988'],
+            answerBorderColors: ['rgba(28, 28, 28, 0.1)','rgba(16, 16, 16, 0.1)','rgba(62, 62, 62, 0.1)'],
             answers: [] as Array<Answer>,
             totalCount: 0 as number,
             sortedAnswers: {} as {[answerId: number]: { count:number}}
@@ -94,13 +99,13 @@ export default defineComponent({
   box-sizing: content-box;
   position: relative;
   border-width: 1.5px;
-  @apply border-gray-200;
+  /* @apply border-gray-200; */
   @apply rounded-lg;
-  @apply mb-4;
 }
 
 .result-bar > span {
   @apply p-4;
+  @apply pr-0;
   @apply rounded-l-lg;
   display: block;
   height: 100%;
