@@ -27,7 +27,6 @@ const addUserData = async (context:HookContext) => {
     if(!user) {
         throw Error('User is undefined');
     }
-    console.log(user)
     const withUserFields = {
         ...context.data,
         displayName: user.displayName,

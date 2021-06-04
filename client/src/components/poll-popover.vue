@@ -6,7 +6,7 @@
             <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
         </div>
         <div v-else class="h-full py-10">
-            <PollResults :poll="poll"/>
+            <PollResults :poll="poll" :key="poll._key"/>
         </div>
   </div>
 </template>

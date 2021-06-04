@@ -79,12 +79,11 @@ export default defineComponent({
             answers.forEach((a:Answer) => {this.addAnswer(a)})
         },
         addAnswer(answer: Answer){
-            this.answers.push(answer)
-            this.sortedAnswers[answer.answerId].count ++
-            this.totalCount ++
-        },
-        addcount(){
-            this.totalCount ++
+            if(this.poll && answer._from === this.poll._id) {  
+                this.answers.push(answer)
+                this.sortedAnswers[answer.answerId].count ++
+                this.totalCount ++
+            }
         }
     }
 
