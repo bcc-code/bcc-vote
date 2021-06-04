@@ -1,39 +1,43 @@
 <template>
-  <div class="max-w-5xl mx-auto">
-    <div class="w-full h-full px-4 py-8">
-      <div class="form-section padding-md mb-2">
-        <div class="flex justify-between items-center mb-5">
-          <h2 class="font-bold">{{pollingEvent.title}}</h2>
-          <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-5"/>
+    <div class="max-w-5xl mx-auto">
+        <div class="w-full h-full px-4 py-8">
+            <div class="form-section padding-md mb-2">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="font-bold">{{pollingEvent.title}}</h2>
+                    <div class="flex">
+                        <LinkIcon @click="copyLink" class="text-blue-900 cursor-pointer h-5 mr-3"/>
+                        <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-5"/>
+                    </div>
+                </div>
+                <p class="text-gray-700">{{pollingEvent.description}}</p>
+                <div class="w-full flex justify-center mt-8">
+                <button class="gradient-button md-button text-lg" @click="activatePollingEvent">{{$t('actions.start-live-poll')}}</button>
+                </div>
+            </div>
+            <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
+                <h3 :class="currentTab == 'polls' ? 'text-blue-900': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+                <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
+            </div>
+            <div v-if="currentTab === 'polls'" class="form-section padding-md">
+                <h3 class="font-bold">{{$t('labels.polls')}}</h3>
+                <div class="pt-4 pb-8">
+                    <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
+                </div>
+                <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
+                <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="reloadPolls"/>
+                <div class="flex justify-center pt-4">
+                    <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || currentlyEdited)}" @click="createNewPoll">
+                        {{$t('actions.add-poll')}}
+                    </div>
+                </div>
+            </div>
+            <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
         </div>
-        <p class="text-gray-700">{{pollingEvent.description}}</p>
-        <div class="w-full flex justify-center mt-8">
-          <button class="gradient-button md-button text-lg" @click="activatePollingEvent">{{$t('actions.start-live-poll')}}</button>
-        </div>
-      </div>
-      <div class="flex py-4 gap-6 text-gray-700  font-bold justify-center cursor-pointer">
-          <h3 :class="currentTab == 'polls' ? 'text-blue-900': ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
-          <h3 :class="currentTab == 'results' ? 'text-blue-900': ''" @click="currentTab='results'">{{$t('labels.results')}}</h3>
-      </div>
-      <div v-if="currentTab === 'polls'" class="form-section padding-md">
-        <h3 class="font-bold">{{$t('labels.polls')}}</h3>
-        <div class="pt-4 pb-8">
-        <InfoBox>{{$t('info.polls-will-be-invisible')}}</InfoBox>
-        </div>
-        <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind + 1" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :active="!currentlyEdited" :editing="currentlyEdited === ind + 1"/>
-        <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" pollIndex="1" @close="reloadPolls"/>
-        <div class="flex justify-center pt-4">
-          <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || currentlyEdited)}" @click="createNewPoll">
-            {{$t('actions.add-poll')}}
-          </div>
-        </div>
-      </div>
-      <div v-if="currentTab === 'results'" class="form-section padding-md">Results</div>
     </div>
-  </div>
 </template>
 <script lang="ts">
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
+import LinkIcon from 'heroicons-vue3/outline/LinkIcon'
 
 import InfoBox from '../components/info-box.vue'
 import PollForm from '../components/poll-form.vue'
@@ -47,6 +51,7 @@ export default defineComponent({
     components: {
         InfoBox,
         PencilIcon,
+        LinkIcon,
         PollForm,
         SavedPoll,
     },
