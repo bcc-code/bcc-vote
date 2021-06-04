@@ -1,9 +1,8 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            {{totalCount}}
             <div v-for="(option,index) in poll.answers" :key="option.answerId">
-                <div class="result-bar mb-6" :style="`border-color: ${answerBorderColors[index]};`">
+                <div class="result-bar mb-6">
                     <div class="absolute py-4 top-0">
                         <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </div>
@@ -20,14 +19,17 @@
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
-                <div v-for="answer in answers" :key="answer._key">
-                    <div class="py-2 flex justify-between items-center border-gray-200 border-b-half">
+                <div v-for="(answer,index) in answers" :key="answer._key">
+                    <div class="py-2 flex justify-between items-center border-gray-200" 
+                        :class="index + 1 === answers.length ? '' : 'border-b-half'">
                         <div>
                             <h4 class="font-bold">{{answer.displayName}}</h4>    
                             <label class=" text-gray-700">{{answer.churchName}}</label>    
                         </div>
-                        <div :class="['px-6 py-1 mr-1 rounded-lg bg-red-600 text-white']">
-                            <h4 class="font-bold">Option label</h4>
+                        <div
+                            :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`" 
+                            :class="['px-6 py-1 mr-1 rounded-lg text-white']">
+                            <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
                         </div>
                     </div>
                 </div>
@@ -46,11 +48,10 @@ export default defineComponent({
     data() {
         return {
             loaded: false as boolean,
-            answerColors: ['#758CDF','#FFA462','#F57988'],
-            answerBorderColors: ['rgba(28, 28, 28, 0.1)','rgba(16, 16, 16, 0.1)','rgba(62, 62, 62, 0.1)'],
+            answerColors: ['#758CDF','#FFA462','#F57988','#FFEB3B','#009688','#009688'],
             answers: [] as Array<Answer>,
             totalCount: 0 as number,
-            sortedAnswers: {} as {[answerId: number]: { count:number}}
+            sortedAnswers: {} as {[answerId: number]: { count:number, bgColor: string}}
         }
     },
     async created(){
@@ -72,11 +73,14 @@ export default defineComponent({
     },
     methods: {
         createSortedAnswer(poll:Poll){
+            let colorIndex = 0
             poll.answers.forEach((option: Option) => {
                 this.sortedAnswers[option.answerId] = {
                     count: 0,
+                    bgColor: this.answerColors[colorIndex],
                     ...option
                 }
+                colorIndex++
             })
         },
         async loadAnswers(poll:Poll){
