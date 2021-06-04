@@ -16,7 +16,7 @@ import router from './router'
 const messages = {
     master: Object.assign({}, require('./localization/master.json')),
     no: Object.assign({}, require('./localization/no_master.json'))
-}
+};
 
 const i18n = createI18n({
     locale: 'master',
@@ -52,7 +52,6 @@ app.mixin({
         }
     }
 })
-app.mount('#mixins-global')
 
 const client = feathers()
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`)

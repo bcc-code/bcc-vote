@@ -6,13 +6,13 @@
             <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
         </div>
         <div v-else class="h-full py-10">
-            <PollResults :options="poll.answers"/>
+            <PollResults :poll="poll" :key="poll._key"/>
         </div>
   </div>
 </template>
 <script lang="ts">
-import PollVote from '../components/poll-popover-vote.vue'
-import PollResults from '../components/poll-popover-results.vue'
+import PollVote from './poll-popover-vote.vue'
+import PollResults from './poll-results.vue'
 import { Poll, Answer } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({

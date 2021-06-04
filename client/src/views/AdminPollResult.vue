@@ -1,30 +1,29 @@
 <template>
-  <div>
-    {{poll}}
-    {{answers}}
-  </div>
-
+    <div class="max-w-5xl mx-auto py-6 px-4">
+        <Spinner v-if="!loaded" />
+        <div v-else class="form-section p-4 md:p-12">
+            <h3 class="font-bold mb-6">{{poll.title}}</h3>
+            <PollResults class="py-3" :poll="poll"/>
+        </div>
+    </div>
 </template>
-
 <script lang="ts">
+import PollResults from '../components/poll-results.vue'
 import {defineComponent} from 'vue'
-import { Poll, Answer } from '../domain'
+import { Poll } from '../domain'
 export default defineComponent({
+    components: {
+        PollResults
+    },
     data(){
         return{
+            loaded: false as boolean,
             poll: {} as Poll,
-            answers: [] as Array<number>,
-
-            // this is a map for mapping answerIds to indexes in the list of answers (in python it is called a dictionary and in cpp we call that an unordered_map) in javaScript Object as any can serve this purpose
-            answerMap: {} as {[name: number]: number}
         }
     },
     async created(){
         await this.loadPoll()
-        this.createAnswerMap()
-        await this.loadAnswers()
-
-        this.$client.service('answer').on('created', this.updateAnswers)
+        this.loaded = true
     },
     methods: {
         async loadPoll(){
@@ -32,32 +31,6 @@ export default defineComponent({
                 .then((res: Poll) => {
                     this.poll = res
                 }).catch(this.$showError)
-        },
-        createAnswerMap(){
-            // The way it works is that it maps answerIds to the actual index in the answers array so that later I know where to put the answers 
-
-            let answerIndex = 0
-            this.poll.answers.forEach((ans: Answer) => {
-                this.answerMap[ans.answerId] = answerIndex
-                answerIndex++
-            })
-      
-            this.answers = new Array<number>(answerIndex).fill(0)
-        },
-        async loadAnswers(){
-            await this.$client.service('answer').find({
-                query:{
-                    _from: 'poll/'+this.$route.params.id,
-                    $select: ['answerId']
-                }
-            }).then((allAnswers: Answer[])=>{
-                allAnswers.forEach((ans: Answer) => {
-                    this.answers[this.answerMap[ans.answerId]] ++
-                })
-            }).catch(this.$showError)
-        },
-        updateAnswers(ans: Answer){
-            this.answers[this.answerMap[ans.answerId]] ++
         }
     }
 })
