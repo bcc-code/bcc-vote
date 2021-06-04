@@ -4,10 +4,26 @@
             <h4 class="font-bold mb-2">{{poll.title}}</h4>
             <p>{{poll.description}}</p>
             <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
-                <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
+                <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
             <div v-else class="py-10">
                 <PollResults :poll="poll" :key="poll._key"/>
+            </div>
+        </div>
+        <div class="h-1/2 w-full absolute bg-white rounded-t-lg p-10" :class="showConfirm && !hasSavedAnswer ? 'h-full' : 'hidden'">
+            <div class="h-full flex flex-col justify-around"> 
+                <div class="text-center">
+                    <h1 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h1>
+                    <p>{{chosenOption.explanation}}</p>
+                </div>
+                <div class="w-full pb-6 flex justify-between">
+                    <button class="w-full rounded-full p-4 bg-gray-200 mx-2" @click="showConfirm = false">
+                        <h5 class="font-bold text-white">{{$t('actions.cancel')}}</h5>
+                    </button>
+                    <button class="w-full rounded-full p-4 bg-blue-900 mx-2" @click="submitAnswer(chosenOption)">
+                        <h5 class="font-bold text-white">{{$t('actions.confirm')}}</h5>
+                    </button>
+                </div>
             </div>
         </div>
   </div>
@@ -27,11 +43,16 @@ export default defineComponent({
     },
     data() {
         return {
-            chosenAnswer: {} as Answer,
+            showConfirm: false as boolean,
+            chosenOption: {} as Answer,
             hasSavedAnswer: false as boolean
         }
     },
     methods: {
+        checkConfirm(option:Answer) {
+            this.chosenOption = option
+            this.showConfirm = true
+        },
         async submitAnswer(option:Answer) {
             if(this.poll && this.$user) {
                 const participantAnswer = {
@@ -42,7 +63,6 @@ export default defineComponent({
                 }
                 this.$client.service('answer').create(participantAnswer)
                     .then(() => {
-                        this.chosenAnswer = option
                         this.hasSavedAnswer = true
                     })
                     .catch(this.$showError)

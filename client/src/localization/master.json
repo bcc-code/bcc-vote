@@ -8,6 +8,8 @@
   },
   "actions": {
     "vote": "Vote",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
     "create-meeting": "Create a voting event",
     "show-events": "Voting events",
     "show-history": "History",
@@ -39,6 +41,7 @@
     "results": "Results",
     "voters": "Voters",
     "votes": "Votes",
+    "vote-confirmation":"Vote confirmation",
     "answers": "Answers",
     "option": "Option",
     "event-results": "Polling event results",
