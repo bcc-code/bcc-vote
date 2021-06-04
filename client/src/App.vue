@@ -5,7 +5,7 @@
       <div :class="['app-container',backgroundClass]">
         <Header />
         <router-view :key="$route.fullPath" :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
-        <Footer />
+        <Footer v-if="isHome"/>
       </div>
     </template>
   </div>
@@ -22,14 +22,17 @@ export default defineComponent({
         Header,
     },
     computed: {
-        layoutHeight() {
-            let height = 376
-            if(this.$route.path === "/") {
-                height = height - 48
+        isHome():Boolean{
+            return this.$route.path === "/"
+        },
+        layoutHeight():number {
+            let height = 96
+            if(this.isHome) {
+                height = 328
             }
             return height
         },
-        backgroundClass() {
+        backgroundClass():string {
             let bgClass = 'bg-gray-100'
             if(this.$route.meta && this.$route.meta.bgColor) {
                 bgClass = this.$route.meta.bgColor as string
