@@ -15,9 +15,6 @@
           <template v-else-if="isEventLive">
               <button class="gradient-button md-button text-lg" @click="closePollingEvent">{{$t('actions.close-live-poll')}}</button>
           </template>
-          <template v-else>
-              <button class="gradient-button md-button text-lg" @click="closePollingEvent">restart?</button>
-          </template>
         </div>
       </div>
       <div class="flex py-8 gap-6 font-bold justify-center cursor-pointer" :class="inactiveTabColor">
