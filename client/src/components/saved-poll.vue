@@ -9,8 +9,30 @@
       <TrashIcon class="w-5 h-5 mr-2"/>
       <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
     </div>
-    <slot>
-    </slot>
+    <div v-if="isEventLive" class='flex justify-between items-center mt-10 gap-12'>
+        <label class='text-gray-700'>
+            <template v-if="isNotStarted">
+                {{$t('info.publish-poll')}}
+            </template>
+            <template v-if="isLive">
+                {{$t('info.close-poll')}}
+            </template>
+            <template v-if="isFinished">
+                {{$t('info.republish-poll')}}
+            </template>
+        </label>
+        <h5 class="md-button rounded-full flex-shrink-0 cursor-pointer font-bold" :class="{'gradient-blue text-white': !isFinished, 'text-red-500 border-2 border-red-500': isFinished}" @click="$emit('changeStatus')">
+            <template v-if="isNotStarted">
+                {{$t('actions.publish-poll')}}
+            </template>
+            <template v-if="isLive">
+                {{$t('actions.close-poll')}}
+            </template>
+            <template v-if="isFinished">
+                {{$t('actions.republish-poll')}}
+            </template>
+        </h5>
+    </div>
   </div>
   <PollForm v-else :eventId="$route.params.id" :poll="poll" :pollIndex="pollIndex" @close="stopEditing" @delete="deletePoll"/>
 </template>
@@ -34,6 +56,7 @@ export default defineComponent({
         pollIndex: Number,
         active: Boolean,
         editing: Boolean,
+        isEventLive: Boolean,
     },
     computed: {
         isNotStarted(): boolean{
@@ -61,9 +84,9 @@ export default defineComponent({
                 await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError)
                 this.$emit('stopEdit')
             }
-        }
+        },
     },
-    emits: ['edit', 'stopEdit']
+    emits: ['edit', 'stopEdit', 'changeStatus']
 })
 </script>
 
