@@ -3,12 +3,15 @@
         <div v-if="loaded">
             {{totalCount}}
             <div v-for="(option,index) in poll.answers" :key="option.answerId">
-                <div class="result-bar mb-6" :style="` border-color: ${answerBorderColors[index]}`">
-                    <div class="absolute p-4 top-0">
-                        <h5 class="font-bold ml-8" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+                <div class="result-bar mb-6" :style="`border-color: ${answerBorderColors[index]};`">
+                    <div class="absolute py-4 top-0">
+                        <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </div>
-                    <span :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%;`">
-                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-8" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+                    <span 
+                        :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%;`"
+                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'"
+                    >
+                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </span>
                 </div>
             </div>
@@ -99,14 +102,11 @@ export default defineComponent({
   box-sizing: content-box;
   position: relative;
   border-width: 1.5px;
-  /* @apply border-gray-200; */
   @apply rounded-lg;
 }
 
 .result-bar > span {
-  @apply p-4;
-  @apply pr-0;
-  @apply rounded-l-lg;
+  @apply py-4;
   display: block;
   height: 100%;
   position: relative;

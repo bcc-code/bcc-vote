@@ -1,9 +1,9 @@
 <template>
-    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: 75vh`">
-        <div class="h-full w-full px-4 md:px-6 py-8" :class="hasSavedAnswer ? 'relative' : 'absolute'">
+    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 96px);`">
+        <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
             <h4 class="font-bold mb-2">{{poll.title}}</h4>
             <p>{{poll.description}}</p>
-            <div v-if="!hasSavedAnswer" class="h-full py-10">
+            <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
                 <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
             </div>
             <div v-else class="py-10">
