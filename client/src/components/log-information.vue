@@ -17,10 +17,6 @@ export default defineComponent({
     },
     created(){
         console.log(this.$client.io);
-        setTimeout( () => {
-            console.log('closing')
-            this.$client.io.close();
-        }, 2000)
         setInterval( () => {
             this.refreshCount ++;
         }, 200)
