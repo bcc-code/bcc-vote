@@ -65,7 +65,12 @@ export default defineComponent({
                     .then(() => {
                         this.hasSavedAnswer = true
                     })
-                    .catch(this.$showError)
+                    .catch((err:Error) => {
+                        if(err.message.includes('You cannot vote 2 times')) {
+                            this.hasSavedAnswer = true
+                        }
+                        this.$showError
+                    })
             }
         }
     }
