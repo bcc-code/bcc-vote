@@ -1,7 +1,7 @@
 <template>
     <section>
+        <log-information/>
         <div class="max-w-screen-md mx-auto px-4 md:px-6">
-            {{testNumber}}
             <div class="flex flex-col justify-center" :style="`height: 15vh`">
                 <div class="text-white">
                     <h3 class="font-bold">{{pollingEvent.title}}</h3>
@@ -20,18 +20,19 @@
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
+import LogInformation from '../components/log-information.vue'
 import { PollingEvent } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
-        PollPopOver
+        PollPopOver,
+        LogInformation,
     },
     data() {
         return {
             pollingEvent: {} as PollingEvent,
             currentPoll: undefined as (undefined | Poll),
-            testNumber: 0
         }
     },
     async created() {
@@ -47,14 +48,7 @@ export default defineComponent({
             this.currentPoll = res[0]
 
         this.$client.service('poll').on('patched', this.getPoll)
-
         
-    },
-    activated(){
-        this.$showError('activation now');
-        setInterval(() => {
-            this.testNumber++;
-        }, 1000)
     },
     methods: {
         getPoll(data: Poll){
