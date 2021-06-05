@@ -86,6 +86,7 @@
     "poll-anonymous": "Anonymous (Hidden for everybody)",
     "optional": "Optional",
     "group": "Voting group",
+    "confirmation": "Confirmation",
     "answer-option": "Option",
     "answer-explanation": "Answer Explanation",
     "if-chosen": "If choose"

@@ -3,7 +3,6 @@
         <div class="max-w-5xl mx-auto" >
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
-
                 <div class="flex py-8 gap-6 font-bold justify-center cursor-pointer" :class="inactiveTabColor">
                     <h3 :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
                     <h3 :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>

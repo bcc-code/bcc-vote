@@ -12,6 +12,7 @@
         <InfoBox class="mb-8">
             {{$t('info.answer-explanations')}}
         </InfoBox>
+        <FormField v-model="pollData.confirmAnswer" translation="confirmation" type="checkbox"/>
         <div v-for="ind in pollData.answers.length" :key="ind"  class="flex gap-10">
             <FormField v-model="pollData.answers[ind - 1].label" translation="answer-option" :additionalText="ind" type="string" :removable="ind > 2" @remove="removeOption(ind - 1)"/>
             <FormField v-model="pollData.answers[ind - 1].explanation" translation="answer-explanation" :additionalText="`(${$t('labels.option')} ${ind})`" type="string" :removable="ind > 2" @remove="removeOption(ind - 1)" :placeholder="`${$t('fields.if-chosen')} ${pollData.answers[ind - 1].label ? pollData.answers[ind - 1].label: $t('fields.this-option')}...`"/>
@@ -71,6 +72,7 @@ export default defineComponent({
                 pollingEventId: this.eventId,
                 activeStatus: PollActiveStatus['Not Started'],
                 resultVisibility: PollResultVisibility['Public'],
+                confirmAnswer: true,
                 answers: [
                     {
                         label: "Yes",
