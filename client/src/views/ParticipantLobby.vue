@@ -36,26 +36,40 @@ export default defineComponent({
         }
     },
     async created() {
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError) as PollingEvent
-
-        const res = await this.$client.service('poll').find({
-            query: {
-                pollingEventId: this.$route.params.id,
-                activeStatus: PollActiveStatus['Live']
-            }
-        }).catch(this.$showError)
-        if(res.length > 0)
-            this.currentPoll = res[0]
-
-        this.$client.service('poll').on('patched', this.getPoll)
         
+        this.loadPollingEvent();
+        this.loadCurrentPoll();
+        
+        this.$client.service('poll').on('patched', this.getPoll)
+
+        this.$client.io.on('reconnect', () => {
+            this.loadCurrentPoll();
+        })
     },
     methods: {
+        async loadPollingEvent(){
+            this.pollingEvent = await this.$client.service('polling-event')
+            .get(this.$route.params.id)
+            .catch(this.$showError) as PollingEvent
+        },
+        async loadCurrentPoll(){
+            const res = await this.$client.service('poll').find({
+                query: {
+                    pollingEventId: this.$route.params.id,
+                    activeStatus: PollActiveStatus['Live']
+                }
+            }).catch(this.$showError)
+            if(res.length > 0)
+                this.currentPoll = res[0]
+        },
         getPoll(data: Poll){
             if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
+        },
+        connected(){
+            console.log('connected');
         }
     }
 })
