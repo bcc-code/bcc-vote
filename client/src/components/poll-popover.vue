@@ -60,7 +60,7 @@ export default defineComponent({
                         if(err.message.includes('You cannot vote 2 times')) {
                             this.hasSavedAnswer = true
                         }
-                        this.$showError
+                        this.$showError(err)
                     })
             }
         }
