@@ -4,15 +4,14 @@
             <div class="pl-5">
                 <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
             </div>
-            <div class="pr-8 flex justify-end" style="width: 10rem"> 
-            </div>     
+            <LogInformation/>  
         </nav>
         <div class="h-12"></div>
     </div>
 </template>
 
 <script>
-
+import LogInformation from './log-information'
 import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon'
 
 import { defineComponent } from 'vue'
@@ -20,6 +19,7 @@ import loadjs from "loadjs"
 
 export default defineComponent({
     components: {
+        LogInformation,
         ArrowLeft,
     },
     computed: {
