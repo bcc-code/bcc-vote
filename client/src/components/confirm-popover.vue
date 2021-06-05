@@ -2,14 +2,14 @@
     <div class="h-screen w-full fixed top-0 left-0 z-50 flex items-center justify-center bg-dark-55 text-black">
         <div class="dialog-size">
             <div class="w-full h-full bg-white rounded-t-lg">
-                <div class="h-half flex flex-col justify-between pt-10 px-10"> 
+                <div class="h-min-half flex flex-col justify-between pt-10 px-6 md:px-10"> 
                     <div class="text-center">
-                        <h1 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h1>
-                        <p>{{chosenOption.explanation}}</p>
+                        <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
+                        <p class="mb-6">{{chosenOption.explanation}}</p>
                     </div>
                     <div class="w-full flex justify-between">
                         <button class="w-full rounded-full p-4 bg-gray-200 mx-2" @click="$emit('cancel')">
-                            <h5 class="font-bold text-white">{{$t('actions.cancel')}}</h5>
+                            <h5 class="font-bold text-blue-900">{{$t('actions.cancel')}}</h5>
                         </button>
                         <button class="w-full rounded-full p-4 bg-blue-900 mx-2" @click="$emit('confirm')">
                             <h5 class="font-bold text-white">{{$t('actions.confirm')}}</h5>

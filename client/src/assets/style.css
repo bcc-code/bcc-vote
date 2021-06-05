@@ -110,8 +110,8 @@
       border-style: solid;
   }
 
-  .h-half {
-      height: 50%;
+  .h-min-half {
+      min-height: 50%;
   }
 
   .lg-button {

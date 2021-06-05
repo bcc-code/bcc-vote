@@ -10,10 +10,12 @@
                 <PollResults :poll="poll" :key="poll._key"/>
             </div>
         </div>
-        <div v-if="showConfirm && !hasSavedAnswer">
-            <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
-        </div>
-  </div>
+        <transition name="fade">
+            <div v-if="showConfirm && !hasSavedAnswer">
+                <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
+            </div>
+        </transition>
+    </div>
 </template>
 <script lang="ts">
 import PollVote from './poll-vote.vue'
@@ -65,3 +67,14 @@ export default defineComponent({
     }
 })
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
