@@ -4,34 +4,46 @@
             <h4 class="font-bold mb-2">{{poll.title}}</h4>
             <p>{{poll.description}}</p>
             <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
-                <PollVote :options="poll.answers" @voteConfirmed="submitAnswer"/>
+                <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
             <div v-else class="py-10">
                 <PollResults :poll="poll" :key="poll._key"/>
             </div>
         </div>
-  </div>
+        <transition name="fade">
+            <div v-if="showConfirm && !hasSavedAnswer">
+                <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
+            </div>
+        </transition>
+    </div>
 </template>
 <script lang="ts">
 import PollVote from './poll-vote.vue'
 import PollResults from './poll-results.vue'
+import VoteConfirm from './confirm-popover.vue'
 import { Poll, Answer } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
         PollVote,
-        PollResults
+        PollResults,
+        VoteConfirm
     },
     props: {
         poll: Object as PropType<Poll>,
     },
     data() {
         return {
-            chosenAnswer: {} as Answer,
+            showConfirm: false as boolean,
+            chosenOption: {} as Answer,
             hasSavedAnswer: false as boolean
         }
     },
     methods: {
+        checkConfirm(option:Answer) {
+            this.chosenOption = option
+            this.showConfirm = true
+        },
         async submitAnswer(option:Answer) {
             if(this.poll && this.$user) {
                 const participantAnswer = {
@@ -42,17 +54,27 @@ export default defineComponent({
                 }
                 this.$client.service('answer').create(participantAnswer)
                     .then(() => {
-                        this.chosenAnswer = option
                         this.hasSavedAnswer = true
                     })
                     .catch((err:Error) => {
                         if(err.message.includes('You cannot vote 2 times')) {
                             this.hasSavedAnswer = true
                         }
-                        this.$showError
+                        this.$showError(err)
                     })
             }
         }
     }
 })
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
