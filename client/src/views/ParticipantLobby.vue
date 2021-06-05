@@ -48,6 +48,10 @@ export default defineComponent({
 
         this.$client.service('poll').on('patched', this.getPoll)
 
+        
+    },
+    activated(){
+        this.$showError('activation now');
         setInterval(() => {
             this.testNumber++;
         }, 1000)
