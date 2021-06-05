@@ -1,5 +1,5 @@
-export enum ActiveStatusCodes {
-  Inactive = 0,
-  Active = 1,
-  Closed = 2,
+export enum PollActiveStatus {
+    'Not Started' = 'not_started',
+    'Live' = 'live',
+    'Finished' = 'finished'
 }
