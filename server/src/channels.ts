@@ -7,6 +7,8 @@ export default function(app: Application): void {
     }
 
     app.on('login', (payload:any, { connection }:any) => {
+        if(!connection)
+            return;
         const lastChannel = connection.user.lastChannel;
         if(lastChannel){
             app.channel(lastChannel).join(connection);
