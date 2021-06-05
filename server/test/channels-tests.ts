@@ -18,7 +18,7 @@ describe('channels', () => {
     //server.close(done);
   });
 
-  it.only('Add user to a polling-event channel', async () => {
+  it('Add user to a polling-event channel', async () => {
     try {
       // Prepare
       var context  = await generateFreshContext()
