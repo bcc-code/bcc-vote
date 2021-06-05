@@ -1,7 +1,7 @@
 import { HookContext } from "@feathersjs/feathers";
 import { Answer, PollActiveStatus } from "../../domain";
 
-const checkIfOnlyOne = async (context: HookContext) => {
+const preventMultipleVotes= async (context: HookContext) => {
     const query = {
         _from: context.data._from,
         _to: context.data._to,
@@ -13,7 +13,7 @@ const checkIfOnlyOne = async (context: HookContext) => {
     return context;
 };
 
-const checkPollActive = async (context:HookContext) => {
+const preventVoteOnInactivePoll = async (context:HookContext) => {
     const pollKey = context.data._from.split('/')[1];
     const poll = await context.app.service('poll').get(pollKey);
     if(poll.activeStatus !== PollActiveStatus['Live']){
@@ -41,7 +41,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [checkIfOnlyOne, checkPollActive, addUserData],
+        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData],
         update: [],
         patch: [],
         remove: []
