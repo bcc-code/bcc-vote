@@ -1,7 +1,9 @@
 <template>
     <div class="absolute log-container p-4 bg-black opacity-75 text-white" :key="refreshCount">
         <h4>Logging information {{refreshCount}}</h4>
-        connection: {{$client.io.connected}}
+        <h5>connection: {{$client.io.connected}}</h5>
+        <h5>pingTimeoutTimer: {{$client.io.io.engine.pingTimeoutTimer}}</h5>
+        <h5>ready state: {{$client.io.io.engine.readyState}}</h5>
         <h4 @click="sendRequest">Send some request</h4>
     </div>
 </template>
@@ -24,7 +26,7 @@ export default defineComponent({
     },
     methods: {
         sendRequest(){
-            console.log(this.$user);
+            console.log(this.$client.io);
             this.$client.service('user').find({})
             .then((res: any) => {
                 this.$showError('Found '+res.total+' users')
@@ -35,7 +37,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    .log-container {
+    h4 {
+        @apply my-3
+    }
+.log-container {
         top: 48px;
         left: 0px;
     }
