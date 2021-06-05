@@ -110,6 +110,10 @@
       border-style: solid;
   }
 
+  .h-half {
+      height: 50%;
+  }
+
   .lg-button {
     @apply py-4;
     @apply px-6;

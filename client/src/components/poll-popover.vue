@@ -10,33 +10,22 @@
                 <PollResults :poll="poll" :key="poll._key"/>
             </div>
         </div>
-        <div class="h-1/2 w-full absolute bg-white rounded-t-lg p-10" :class="showConfirm && !hasSavedAnswer ? 'h-full' : 'hidden'">
-            <div class="h-full flex flex-col justify-around"> 
-                <div class="text-center">
-                    <h1 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h1>
-                    <p>{{chosenOption.explanation}}</p>
-                </div>
-                <div class="w-full pb-6 flex justify-between">
-                    <button class="w-full rounded-full p-4 bg-gray-200 mx-2" @click="showConfirm = false">
-                        <h5 class="font-bold text-white">{{$t('actions.cancel')}}</h5>
-                    </button>
-                    <button class="w-full rounded-full p-4 bg-blue-900 mx-2" @click="submitAnswer(chosenOption)">
-                        <h5 class="font-bold text-white">{{$t('actions.confirm')}}</h5>
-                    </button>
-                </div>
-            </div>
+        <div v-if="showConfirm && !hasSavedAnswer">
+            <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
         </div>
   </div>
 </template>
 <script lang="ts">
 import PollVote from './poll-vote.vue'
 import PollResults from './poll-results.vue'
+import VoteConfirm from './confirm-popover.vue'
 import { Poll, Answer } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
         PollVote,
-        PollResults
+        PollResults,
+        VoteConfirm
     },
     props: {
         poll: Object as PropType<Poll>,
