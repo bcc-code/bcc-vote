@@ -1,17 +1,13 @@
 <template>
-    <div class="absolute log-container p-2 bg-black opacity-75 text-white">
-        <div v-if="open" :key="refreshCount">
-            <div class="flex justify-between items-center mb-2">
+    <div class="p-3 relative">
+        <div v-if="open" class="absolute positioning size opacity-75 bg-black text-white p-3">
             <h4>Logging{{dots}}</h4>
-            <XIcon class="w-6 h-6 block" @click="open = false"/>
-            </div>
             <h5>id: {{$client.io.io.engine.id}}</h5>
             <h5>connection: {{$client.io.connected}}</h5>
             <h5>ping timer: {{$client.io.io.engine.pingTimeoutTimer}}</h5>
             <h5>ready state: {{$client.io.io.engine.readyState}}</h5>
-            
-            <h4 @click="sendRequest">Send some request</h4>
         </div>
+        <XIcon v-if="open" class="w-6 h-6 block" @click="open = false"/>
         <AdjustmentsIcon v-else class="w-6 h-6 block" @click="open = true"/>
     </div>
 </template>
@@ -65,10 +61,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    .log-container {
-        top: 48px;
-        right: 0px;
-        z-index: 100;
-        @apply rounded-bl-lg
+    .positioning {
+        top: 100%;
+        right: 0;
+    }
+    .size {
+        width: max-content
     }
 </style>

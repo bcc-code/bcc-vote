@@ -1,6 +1,5 @@
 <template>
     <section>
-        <LogInformation/>
         <div class="max-w-screen-md mx-auto px-4 md:px-6">
             <div class="flex flex-col justify-center" :style="`height: 15vh`">
                 <div class="text-white">

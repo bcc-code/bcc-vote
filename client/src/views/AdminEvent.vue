@@ -1,6 +1,5 @@
 <template>
     <div :class="backgroundColor">
-        <LogInformation/>
         <div class="max-w-5xl mx-auto" >
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
