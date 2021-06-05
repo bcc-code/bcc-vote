@@ -1,5 +1,6 @@
 <template>
     <div :class="backgroundColor">
+        <LogInformation/>
         <div class="max-w-5xl mx-auto" >
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
@@ -15,6 +16,7 @@
     </div>
 </template>
 <script lang="ts">
+import LogInformation from '../components/log-information.vue'
 import PollingEventPanel from '../components/admin-polling-event-panel.vue'
 import PollsPanel from '../components/admin-polls-panel.vue'
 import ResultsPanel from '../components/admin-results-panel.vue'
@@ -25,6 +27,7 @@ import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
+        LogInformation,
         PollsPanel,
         ResultsPanel,
         PollingEventPanel,
