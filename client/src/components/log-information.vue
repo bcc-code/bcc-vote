@@ -1,9 +1,11 @@
 <template>
     <div class="absolute log-container p-4 bg-black opacity-75 text-white" :key="refreshCount">
         <h4>Logging information {{refreshCount}}</h4>
+        <h5>id: {{$client.io.io.engine.id}}</h5>
         <h5>connection: {{$client.io.connected}}</h5>
-        <h5>pingTimeoutTimer: {{$client.io.io.engine.pingTimeoutTimer}}</h5>
+        <h5>ping timer: {{$client.io.io.engine.pingTimeoutTimer}}</h5>
         <h5>ready state: {{$client.io.io.engine.readyState}}</h5>
+        
         <h4 @click="sendRequest">Send some request</h4>
     </div>
 </template>
@@ -19,7 +21,7 @@ export default defineComponent({
         }
     },
     created(){
-        console.log(this.$client.io);
+        console.log(this.$client.io.io.engine);
         setInterval( () => {
             this.refreshCount ++;
         }, 200)
@@ -40,8 +42,9 @@ export default defineComponent({
     h4 {
         @apply my-3
     }
-.log-container {
+    .log-container {
         top: 48px;
         left: 0px;
+        z-index: 100;
     }
 </style>
