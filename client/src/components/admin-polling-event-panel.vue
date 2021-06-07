@@ -7,7 +7,7 @@
                     <CopyText :toCopy="eventUrl">
                         <LinkIcon @click="getLink" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
                     </CopyText>
-                    <PencilIcon @click="editPollingEvent" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
+                    <PencilIcon v-if="isEventNotStarted" @click="editPollingEvent" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
@@ -78,7 +78,7 @@ export default defineComponent({
         },
         closePollingEvent() {
             this.$client.service('polling-event').patch(this.$route.params.id, {
-              status: PollingEventStatus['Not Started']
+              status: PollingEventStatus['Finished']
             }).then(() => {
                 this.$emit('reloadPollingEvent')
             }).catch(this.$showError)
