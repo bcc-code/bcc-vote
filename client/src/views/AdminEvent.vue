@@ -3,9 +3,9 @@
         <div class="max-w-5xl mx-auto" >
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
-                <div class="flex py-8 gap-6 font-bold justify-center cursor-pointer" :class="inactiveTabColor">
-                    <h3 v-if="!isEventFinished" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
-                    <h3 :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
+                <div class="flex py-8 gap-6 font-bold justify-center" :class="inactiveTabColor">
+                    <h3 v-if="!isEventFinished" class="cursor-pointer" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+                    <h3 class="cursor-pointer" :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
                 </div>
                 <template v-if="arePollsLoaded">
                     <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
