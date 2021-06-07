@@ -6,10 +6,8 @@
                     <div class="absolute py-4 top-0">
                         <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </div>
-                    <span 
-                        :style="`background-color: ${answerColors[index]}; width: ${sortedAnswers[option.answerId].count / totalCount *100}%;`"
-                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'"
-                    >
+                    <span :style="[`background-color: ${answerColors[index]};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
+                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
                         <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </span>
                 </div>
@@ -34,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <Spinner v-else />
+            <Spinner inline v-else />
         </div>
     </div>
 </template>
@@ -56,7 +54,6 @@ export default defineComponent({
     },
     async created(){
         await this.init()
-
         this.$client.service('answer').on('created', this.addAnswer)
 
         this.$client.io.on('reconnect', this.init);
