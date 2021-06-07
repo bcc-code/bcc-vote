@@ -35,6 +35,7 @@ export default defineComponent({
     },
     data() {
         return {
+            arePollsLoaded: false as Boolean,
             currentTab: 'polls' as string,
             pollingEvent: {} as PollingEvent,
             savedPolls: [] as Poll[],
@@ -72,6 +73,7 @@ export default defineComponent({
                     }
                 }
             }).catch(this.$showError)
+            this.arePollsLoaded = true;
         },
     } 
 })
