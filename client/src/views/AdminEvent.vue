@@ -43,6 +43,8 @@ export default defineComponent({
     created(){
         this.loadPollingEvent()
         this.loadSavedPolls()
+
+        this.$client.io.on('reconnect', this.loadPollingEvent);
     },
     computed: {
         isEventLive():Boolean{
