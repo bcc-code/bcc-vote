@@ -25,6 +25,14 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
+        name: 'Thank you for participating',
+        path: '/thank-you',
+        component: () => require('../views/ThankYou.vue'),
+        meta: {
+            bgColor: "bg-blue-900"
+        }
+    },
+    {
         name: 'Polling event report',
         path: '/polling-event/report/:id',
         component: () => require('../views/Report.vue')

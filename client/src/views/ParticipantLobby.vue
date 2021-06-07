@@ -20,7 +20,7 @@
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import LogInformation from '../components/log-information.vue'
-import { PollingEvent } from '../domain'
+import { PollingEvent, PollingEventStatus } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -40,6 +40,8 @@ export default defineComponent({
         this.loadCurrentPoll();
         
         this.$client.service('poll').on('patched', this.getPoll)
+
+        this.$client.service('polling-event').on('patched', this.patchEvent);
 
         this.$client.io.on('reconnect', () => {
             this.loadCurrentPoll();
@@ -67,8 +69,9 @@ export default defineComponent({
             else
                 this.currentPoll = undefined
         },
-        connected(){
-            console.log('connected');
+        patchEvent(data: PollingEvent){
+            if(data.status === PollingEventStatus['Finished'])
+                this.$router.push('/thank-you')
         }
     }
 })
