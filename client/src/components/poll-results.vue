@@ -61,6 +61,10 @@ export default defineComponent({
         }
         this.loaded = true
         this.$client.service('answer').on('created', this.addAnswer)
+        this.$client.io.on('reconnect', () => {
+            if(this.poll)
+                this.reloadAnswers(this.poll)
+        });
     },
     computed: {
         pollResultsAreHidden() {
@@ -96,6 +100,12 @@ export default defineComponent({
                 this.sortedAnswers[answer.answerId].count ++
                 this.totalCount ++
             }
+        },
+        async reloadAnswers(poll: Poll){
+            poll.answers.forEach((option: Option) => {
+                this.sortedAnswers[option.answerId].count = 0;
+            })
+            this.loadAnswers(poll);
         }
     }
 
