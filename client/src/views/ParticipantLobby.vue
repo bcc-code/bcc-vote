@@ -35,17 +35,19 @@ export default defineComponent({
         }
     },
     async created() {
-        
-        this.loadPollingEvent();
-        this.loadCurrentPoll();
+        this.init()
         
         this.$client.service('poll').on('patched', this.getPoll)
 
         this.$client.io.on('reconnect', () => {
-            this.loadCurrentPoll();
+            this.init();
         })
     },
     methods: {
+        init() {
+            this.loadPollingEvent();
+            this.loadCurrentPoll();
+        },
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event')
             .get(this.$route.params.id)
