@@ -10,7 +10,7 @@
                 {{$t('info.results-will-be-visible')}}
             </p>
             <router-link to="/">
-                <button class="bg-gray-200 w-full p-4 rounded-full mb-5">
+                <button class="bg-gray-200 w-full max-w-xs p-4 rounded-full mb-5">
                     <h5 class="text-blue-900 font-bold">{{$t('actions.go-back-home')}}</h5>
                 </button>
             </router-link>
