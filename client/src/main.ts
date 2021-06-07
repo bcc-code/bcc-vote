@@ -28,7 +28,7 @@ const app = createApp(App)
 
 app.component('Spinner', Spinner)
 app.component('InfoBox', InfoBox)
-app.use(Toast,{duration:50000, positionX: 'right',positionY:'bottom'})
+app.use(Toast,{duration:2000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
