@@ -8,8 +8,10 @@
                     <h3 :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
                     <h3 :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
                 </div>
-                <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
-                <ResultsPanel v-else :savedPolls="savedPolls"/>
+                <template v-if="arePollsLoaded">
+                    <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
+                    <ResultsPanel v-else :savedPolls="savedPolls" :pollingEventId="pollingEvent._key"/>
+                </template>
             </div>
         </div>
     </div>
