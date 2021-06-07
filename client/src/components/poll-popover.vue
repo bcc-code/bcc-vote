@@ -42,7 +42,11 @@ export default defineComponent({
     methods: {
         checkConfirm(option:Answer) {
             this.chosenOption = option
-            this.showConfirm = true
+            if(this.poll && this.poll.confirmAnswer) { 
+                this.showConfirm = true
+            } else {
+                this.submitAnswer(option)
+            }
         },
         async submitAnswer(option:Answer) {
             if(this.poll && this.$user) {

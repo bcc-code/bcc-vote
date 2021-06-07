@@ -3,6 +3,7 @@ export interface Poll {
   _key: string,
   title: string;
   description: string;
+  confirmAnswer: boolean;
   answers: Option[],
   activeStatus: PollActiveStatus;
   resultVisibility: PollResultVisibility;
