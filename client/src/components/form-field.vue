@@ -1,11 +1,15 @@
 <template>
     <div v-if="type == 'checkbox'" class="flex items-center mb-5">
-        <CheckboxField v-model="model" :value="value"/>
-        <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
+        <label class="inline-flex cursor-pointer">
+            <CheckboxField v-model="model" :value="value"/>
+            <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
+        </label>
     </div>
     <div v-else-if="type == 'radio'" class="flex items-center mb-5">
-        <RadioField v-model="model" :value="value"/>
-        <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
+        <label class="inline-flex cursor-pointer">
+            <RadioField v-model="model" :value="value"/>
+            <h5 class="font-bold ml-3">{{$t(`fields.${translation}`)}}</h5>
+        </label>
     </div>
     <section v-else class="mb-5 w-full max-w-sm relative">
         <div class="flex justify-between">
