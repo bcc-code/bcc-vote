@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base cursor-pointer" @click="goToEvent()">
+    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base" :class="{'cursor-pointer': !isEventFinished}" @click="goToEvent()">
         <div class="flex items-center justify-between mb-2">
             <div>
                 <label>{{formattedDate}}</label>
@@ -10,7 +10,7 @@
             </div>
         </div>
         <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
-        <div class="flex justify-center mb-3">
+        <div v-if="!isEventFinished" class="flex justify-center mb-3">
             <button class="gradient-button md-button">
                 <template v-if="$user.personID === pollingEvent.creatorId" >
                 {{$t(`actions.admin-this-event`)}}
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { PollingEvent } from '../domain'
+import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
@@ -41,6 +41,9 @@ export default defineComponent({
         }
     },
     computed: {
+        isEventFinished():boolean {
+            return this.pollingEvent.status === PollingEventStatus['Finished'];
+        },
         formattedDate():string {
             let date = ''
             if(this.pollingEvent && this.pollingEvent.startDateTime) {
@@ -53,6 +56,8 @@ export default defineComponent({
     },
     methods: {
         goToEvent() {
+            if(this.isEventFinished)
+                return
             if (this.$user.personID === this.pollingEvent.creatorId)
                 this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
             else
