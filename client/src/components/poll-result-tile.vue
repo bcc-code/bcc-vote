@@ -1,13 +1,12 @@
 <template>
-  <div class="border rounded-md py-3 px-4">
-    <div class="flex justify-between">
-      <h4 class="font-bold">{{poll.title}}</h4>
-      <router-link :to="`/poll/result/${poll._key}`">
-        <ArrowRightIcon class="ml-4 w-6 h-6 text-blue-900 cursor-pointer"/>
-      </router-link>
-    </div>
-    <label class="text-gray-700">{{$t('labels.poll-result-visibility.'+poll.resultVisibility)}} - {{votes}} {{$t('labels.votes')}}</label>
-  </div>
+  
+    <router-link :to="`/poll/result/${poll._key}`" class="border rounded-md py-3 px-4 cursor-pointer">
+        <div class="flex justify-between">
+            <h4 class="font-bold">{{poll.title}}</h4>
+            <ArrowRightIcon class="ml-4 w-6 h-6 text-blue-900"/>
+        </div>
+        <label class="text-gray-700">{{$t('labels.poll-result-visibility.'+poll.resultVisibility)}} - {{votes}} {{$t('labels.votes')}}</label>
+    </router-link>
 </template>
 
 <script lang="ts">

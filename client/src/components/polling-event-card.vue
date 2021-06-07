@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base">
+    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base" :class="{'cursor-pointer': !isEventFinished}" @click="goToEvent()">
         <div class="flex items-center justify-between mb-2">
             <div>
                 <label>{{formattedDate}}</label>
@@ -10,24 +10,26 @@
             </div>
         </div>
         <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
-        <div class="flex justify-center mb-3">
-            <button v-if="$user.personID === pollingEvent.creatorId" class="gradient-button md-button" @click="adminEvent(pollingEvent._key)">
+        <div v-if="!isEventFinished" class="flex justify-center mb-3">
+            <button class="gradient-button md-button">
+                <template v-if="$user.personID === pollingEvent.creatorId" >
                 {{$t(`actions.admin-this-event`)}}
-            </button>
-            <button v-else-if="pollingEvent.status !== 'finished'" class="gradient-button md-button" @click="goToLobby(pollingEvent._key)">
-                {{$t(`actions.join-this-event`)}}
+                </template>
+                <template v-else>
+                    {{$t(`actions.join-this-event`)}}
+                </template>
             </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { PollingEvent } from '../domain'
+import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
     props: {
-        pollingEvent: Object as PropType<PollingEvent>,
+        pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
     },
     data () {
         return {
@@ -39,6 +41,9 @@ export default defineComponent({
         }
     },
     computed: {
+        isEventFinished():boolean {
+            return this.pollingEvent.status === PollingEventStatus['Finished'];
+        },
         formattedDate():string {
             let date = ''
             if(this.pollingEvent && this.pollingEvent.startDateTime) {
@@ -50,11 +55,13 @@ export default defineComponent({
         }
     },
     methods: {
-        goToLobby(pollingEventKey:string) {
-            this.$router.push({ path: `/polling-event/lobby/${pollingEventKey}`, params: { id: pollingEventKey}})
-        },
-        adminEvent(pollingEventKey:string) {
-            this.$router.push({ path: `/polling-event/admin/${pollingEventKey}`, params: { id: pollingEventKey}})
+        goToEvent() {
+            if(this.isEventFinished)
+                return
+            if (this.$user.personID === this.pollingEvent.creatorId)
+                this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
+            else
+                this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
         }
     }
 })
