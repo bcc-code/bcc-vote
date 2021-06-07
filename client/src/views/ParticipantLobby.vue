@@ -35,7 +35,7 @@ export default defineComponent({
         }
     },
     async created() {
-        this.init()
+        await this.init()
         
         this.$client.service('poll').on('patched', this.getPoll)
 
@@ -43,8 +43,9 @@ export default defineComponent({
     },
     methods: {
         init() {
-            this.loadPollingEvent();
-            this.loadCurrentPoll();
+            const a = this.loadPollingEvent();
+            const b = this.loadCurrentPoll();
+            return Promise.all([a, b]);
         },
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event')
