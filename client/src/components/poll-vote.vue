@@ -8,11 +8,10 @@
                     </span>
                     <h5 class="font-bold text-blue-900">{{option.label}}</h5>
                 </button>
-                <h6 v-if="selectedOption == option" class="font-bold text-gray-700 mt-2">{{option.explanation}}</h6>
             </div>
         </div>
         <div class="w-full pb-6 flex justify-center">
-            <button class="vote-button" :style="selectedOption == null ? 'opacity:0.3' : ''" @click="submitAnswer(selectedOption)">
+            <button class="vote-button" :style="selectedOption == null ? 'opacity:0.3' : ''" @click="$emit('vote', selectedOption)">
                 <h5 class="font-bold text-white">{{$t('actions.vote')}}</h5>
             </button>
         </div>
@@ -34,12 +33,7 @@ export default defineComponent({
             selectedOption: null
         }
     },
-    methods: {
-        async submitAnswer(option:Option) {
-            this.$emit('voteConfirmed', option)
-        }
-    },
-    emits: ['voteConfirmed']
+    emits: ['vote']
 })
 </script>
 <style>

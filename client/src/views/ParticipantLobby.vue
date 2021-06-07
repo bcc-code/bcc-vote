@@ -12,17 +12,21 @@
                 <Spinner />
             </div>
         </div>
-        <PollPopOver v-if="currentPoll" class="w-full h-full md:max-w-screen-md md:mx-auto" :poll="currentPoll" :style="`height: 75vh`"/>
+        <div class="md:max-w-screen-md md:mx-auto">
+            <PollPopOver v-if="currentPoll" :poll="currentPoll"/>
+        </div>
     </section>
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
+import LogInformation from '../components/log-information.vue'
 import { PollingEvent } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
-        PollPopOver
+        PollPopOver,
+        LogInformation,
     },
     data() {
         return {
@@ -31,25 +35,40 @@ export default defineComponent({
         }
     },
     async created() {
-        this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id).catch(this.$showError) as PollingEvent
-
-        const res = await this.$client.service('poll').find({
-            query: {
-                pollingEventId: this.$route.params.id,
-                activeStatus: PollActiveStatus['Live']
-            }
-        }).catch(this.$showError)
-        if(res.length > 0)
-            this.currentPoll = res[0]
-
+        
+        this.loadPollingEvent();
+        this.loadCurrentPoll();
+        
         this.$client.service('poll').on('patched', this.getPoll)
+
+        this.$client.io.on('reconnect', () => {
+            this.loadCurrentPoll();
+        })
     },
     methods: {
+        async loadPollingEvent(){
+            this.pollingEvent = await this.$client.service('polling-event')
+            .get(this.$route.params.id)
+            .catch(this.$showError) as PollingEvent
+        },
+        async loadCurrentPoll(){
+            const res = await this.$client.service('poll').find({
+                query: {
+                    pollingEventId: this.$route.params.id,
+                    activeStatus: PollActiveStatus['Live']
+                }
+            }).catch(this.$showError)
+            if(res.length > 0)
+                this.currentPoll = res[0]
+        },
         getPoll(data: Poll){
             if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
+        },
+        connected(){
+            console.log('connected');
         }
     }
 })
