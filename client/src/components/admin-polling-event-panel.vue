@@ -18,6 +18,9 @@
                 <template v-else-if="isEventLive">
                     <button class="gradient-button md-button text-lg" @click="closePollingEvent">{{$t('actions.close-live-poll')}}</button>
                 </template>
+                <template v-else-if="isEventFinished">
+                    <button class="gradient-button md-button text-lg" @click="startPollingEvent">{{$t('actions.restart-live-poll')}}</button>
+                </template>
             </div>
         </template>
         <template v-else>
