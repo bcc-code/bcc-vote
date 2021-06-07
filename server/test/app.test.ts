@@ -27,11 +27,14 @@ describe('Feathers application server tests', () => {
   });
 
   it('starts and shows the index page', async () => {
-    const { data } = await axios.get(getUrl());
-
-    assert.ok(data.indexOf('<html lang="">') !== -1);
+    try {
+      const res = await axios.get(getUrl('does/not/exist'));
+      assert.fail("This method should not pass since the page does not exist");
+    } catch (error) {
+      assert.equal(error.response.status,404)
+    }
   });
 
-  
+
 
 });
