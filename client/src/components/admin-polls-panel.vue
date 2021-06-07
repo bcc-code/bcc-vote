@@ -38,6 +38,10 @@ export default defineComponent({
             currentlyEditedIndex: null as (null|number),
         }
     },
+    created(){
+        if(this.savedPolls.length === 0)
+            this.addingPoll = true;
+    },
     computed: {
         isAnythingEdited(): boolean{
             return this.currentlyEditedIndex !== null
