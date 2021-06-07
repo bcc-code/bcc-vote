@@ -35,7 +35,25 @@ async function generateFreshContext() {
       route: {},
       connection: {
         provider: 'socketio',
-        headers: {}
+        headers: {
+          host: "localhost:4040",
+          connection: "keep-alive",
+          pragma: "no-cache",
+          "cache-control": "no-cache",
+          "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+          accept: "*/*",
+          "sec-ch-ua-mobile": "?0",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36",
+          origin: "http://localhost:8080",
+          "sec-fetch-site": "same-site",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-dest": "empty",
+          referer: "http://localhost:8080/",
+          "accept-encoding": "gzip, deflate, br",
+          "accept-language": "en-US,en;q=0.9",
+          cookie: "connect.sid=s%3Af-0neIU5xP7ltIV_cQDr5m57RvYiPyn0.n7VKOEMMiJCQiJhyMvVNQIKUQSLZoT0vY4sjrKKResw; io=qTpW6DZyyxb__QrkAAAA",
+        },
+        user:loggedInUser
       },
       provider: 'socketio',
       headers: {},
