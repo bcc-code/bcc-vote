@@ -47,6 +47,7 @@
     "answers": "Answers",
     "option": "Option",
     "event-results": "Polling event results",
+    "result-visibility": "Results visibility",
     "polling-event-status": {
       "live": "Live",
       "not_started": "Not started",
@@ -63,7 +64,7 @@
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
     "number-of-participants": "Number of participants",
     "question-visibility": "The questions won't be visible until the question is started",
-    "names-available-for": "Name of all participants and their votes will be available for:",
+    "names-available-for": "Names of all participants and their votes will be available for:",
     "answer-explanations": "You can decide if voters will be asked to confirm their decision. You have the possibility to edit the confirmation below",
     "polls-will-appear": "The question will appear on the screen when it's published.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
