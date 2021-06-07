@@ -10,7 +10,7 @@
                 </div>
                 <template v-if="arePollsLoaded">
                     <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
-                    <ResultsPanel v-else :savedPolls="savedPolls"/>
+                    <ResultsPanel v-else :savedPolls="savedPolls" :pollingEventId="pollingEvent._key"/>
                 </template>
             </div>
         </div>
@@ -35,7 +35,7 @@ export default defineComponent({
     },
     data() {
         return {
-            arePollsLoaded: false,
+            arePollsLoaded: false as Boolean,
             currentTab: 'polls' as string,
             pollingEvent: {} as PollingEvent,
             savedPolls: [] as Poll[],
