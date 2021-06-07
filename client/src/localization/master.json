@@ -28,7 +28,8 @@
     "publish-poll": "Publish this question",
     "republish-poll": "Republish this question",
     "close-poll": "Close this question",
-    "get-report": "Get a report"
+    "get-report": "Get a report",
+    "go-back-home": "Back to the home screen"
   },
   "labels": {
     "polling-events": "Polling events",
@@ -57,7 +58,9 @@
       "public": "Public",
       "non_public": "Not Public",
       "anonymous": "Anonymous"
-    }
+    },
+    "bcc-vote": "BCC Vote",
+    "thank-you": "Thank you for participating!"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
@@ -73,7 +76,8 @@
     "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
     "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
     "poll-anonymous": "This question is anonymous and the participants are hidden for this question",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "results-will-be-visible": "Thank you for participating in this poll! The results will be avaliable for the next few days on the homescreen."
   },
   "fields": {
     "poll-title": "Question title",

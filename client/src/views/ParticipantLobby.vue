@@ -52,6 +52,8 @@ export default defineComponent({
             this.pollingEvent = await this.$client.service('polling-event')
             .get(this.$route.params.id)
             .catch(this.$showError) as PollingEvent
+            if(this.pollingEvent.status === PollingEventStatus['Finished'])
+                this.$router.push('/thank-you')
         },
         async loadCurrentPoll(){
             const res = await this.$client.service('poll').find({
