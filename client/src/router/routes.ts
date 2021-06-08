@@ -4,7 +4,10 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Home',
-        component: () => require('../views/Home.vue')
+        component: () => require('../views/Home.vue'),
+        meta: {
+            bgColor: "bg-white"
+        }
     },
     {
         path: '/create',

@@ -1,6 +1,6 @@
 {
   "titles": {
-    "home": "Voting App"
+    "home": "BCC Vote"
   },
   "pages": {
     "home": "Home",
@@ -28,7 +28,8 @@
     "publish-poll": "Publish this question",
     "republish-poll": "Republish this question",
     "close-poll": "Close this question",
-    "get-report": "Get a report"
+    "get-report": "Get a report",
+    "customer-support": "Customer support"
   },
   "labels": {
     "polling-events": "Polling events",
@@ -48,6 +49,7 @@
     "option": "Option",
     "event-results": "Polling event results",
     "result-visibility": "Results visibility",
+    "contact": "Contact",
     "polling-event-status": {
       "live": "Live",
       "not_started": "Not started",
@@ -94,6 +96,6 @@
     "if-chosen": "If choose"
   },
   "descriptions": {
-    "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    "home": "This app gives you the possibility to participate in the live vote events"
   }
 }
