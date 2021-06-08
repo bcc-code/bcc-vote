@@ -79,6 +79,7 @@ export default defineComponent({
     @apply absolute;
     top: 48px;
     right: 16px;
+    @apply text-left;
 }
 
 .profile-dropdown * {
