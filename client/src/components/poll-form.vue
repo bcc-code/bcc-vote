@@ -11,9 +11,9 @@
         <h3 class="font-bold">{{$t('labels.answers')}}</h3>
         <p class="mb-7">{{$t('info.answer-explanations')}}</p>
         <FormField v-model="pollData.confirmAnswer" class="mb-8" translation="confirmation" type="checkbox"/>
-        <div v-for="ind in pollData.answers.length" :key="ind"  class="flex gap-10">
-            <FormField v-model="pollData.answers[ind - 1].label" translation="answer-option" :additionalText="ind" type="string" :removable="ind > 2" @remove="removeOption(ind - 1)"/>
-            <FormField v-model="pollData.answers[ind - 1].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${ind})`" type="string" :removable="ind > 2" @remove="removeOption(ind - 1)" :placeholder="`${$t('fields.if-chosen')} ${pollData.answers[ind - 1].label ? pollData.answers[ind - 1].label: $t('fields.this-option')}...`"/>
+        <div v-for="(answer, index) in pollData.answers" :key="index"  class="flex gap-10">
+            <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index" type="string" :removable="index > 1" @remove="removeOption(index)"/>
+            <FormField v-model="pollData.answers[index].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${index})`" type="string" :removable="index > 1" @remove="removeOption(index)"/>
         </div>
         <AddButton class="mb-8" translation="add-option" @click="addOption"/>
         <h3 class="font-bold mb-1">{{$t('labels.result-visibility')}}</h3>
@@ -35,22 +35,15 @@
         </div>
     </div>
 </template>
-
 <script lang="ts">
-
-
-import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 import AddButton from '../components/add-button.vue'
 import TrashIcon from 'heroicons-vue3/outline/TrashIcon'
-
 import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/Poll'
-
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
-        InfoBox,
         FormField,
         XIcon,
         TrashIcon,

@@ -71,4 +71,5 @@ router.$user = user
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
 
+document.title = 'BCC Vote'
 app.mount("#app")
