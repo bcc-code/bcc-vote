@@ -4,8 +4,10 @@
             <div class="pl-5">
                 <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
             </div>
-             <LogInformation/> 
-            <Logout/>            
+            <div class="flex items-center py-2 pr-5">
+                <LogInformation/> 
+                <Logout/>  
+            </div>          
         </nav>
         <div class="h-12"></div>
     </div>
