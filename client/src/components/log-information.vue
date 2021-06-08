@@ -8,19 +8,19 @@
             <h5>ready state: {{$client.io.io.engine.readyState}}</h5>
         </div>
         <XIcon v-if="open" class="w-6 h-6 block" @click="open = false"/>
-        <AdjustmentsIcon v-else class="w-6 h-6 block" @click="open = true"/>
+        <StatusOnline v-else class="w-6 h-6 block" @click="open = true"/>
     </div>
 </template>
 
 
 <script lang="ts">
-import AdjustmentsIcon from 'heroicons-vue3/outline/AdjustmentsIcon'
+import StatusOnline from 'heroicons-vue3/outline/StatusOnlineIcon'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
     components: {
-        AdjustmentsIcon,
+        StatusOnline,
         XIcon,
     },
     data(){
