@@ -36,7 +36,8 @@
   },
   "labels": {
     "polling-events": "Polling events",
-    "history": "History",
+    "settings": "Settings",
+    "connection-status": "Connection status",
     "polls": "Questions",
     "poll": "Question",
     "participants": "Participants",

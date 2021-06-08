@@ -1,33 +1,39 @@
 <template>
-    <div  >
-        <nav class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
-            <div  v-if="!showBCCLogo" class="pl-5">
-                <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
+    <div class="pb-12">
+        <nav class="flex flex-row-reverse justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white px-3 md:px-6">
+            <button class="profile-icon">
+                <img src="../assets/profile.svg" />
+                <div class="profile-dropdown dropdown-box">
+                    <h6 class="text-gray-700">{{$t('labels.settings')}}</h6>
+                    <h5 @click="openConnection = !openConnection">{{$t('labels.connection-status')}}</h5>
+                    <h5 @click="logout">{{$t('actions.logout')}}</h5>
+                </div>
+            </button>
+            <div v-if="!showBCCLogo" class="pl-5">
+                <ArrowLeft class="cursor-pointer h-6 w-6 text-black" @click="navigateBack"/>
             </div>
-            <div  v-if="showBCCLogo" class="pl-5">
-            </div>
-            <div class="flex items-center py-2 pr-5">
-                <LogInformation/> 
-                <Logout/>  
-            </div>          
         </nav>
-        <div class="h-12"></div>
+        <div v-if="openConnection" class="dropdown-box absolute positioning p-3">
+            <h4>Logging{{dots}}</h4>
+            <h5>id: {{$client.io.io.engine.id}}</h5>
+            <h5>connection: {{$client.io.connected}}</h5>
+            <h5>ping timer: {{$client.io.io.engine.pingTimeoutTimer}}</h5>
+            <h5>ready state: {{$client.io.io.engine.readyState}}</h5>
+        </div>
     </div>
 </template>
-
-<script>
-import LogInformation from './log-information'
+<script lang="ts">
 import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon'
-import Logout from './logout.vue'
-
 import { defineComponent } from 'vue'
-import loadjs from "loadjs"
-
 export default defineComponent({
     components: {
-        LogInformation,
-        ArrowLeft,
-        Logout
+        ArrowLeft
+    },
+    data(){
+        return {
+            openConnection: false as boolean,
+            refreshCount: 0 as number
+        }
     },
     computed: {
         showBCCLogo(){
@@ -35,39 +41,57 @@ export default defineComponent({
                 return true
             return false
         },
+        dots():string{
+            return '.'.repeat(this.refreshCount % 4)
+        }
     },
     methods: {
-        initTopbar() {
-            var scriptId = "script-bcc-topbar"
-            if (document.getElementById(scriptId) == null) {
-                var scriptPath = "https://widgets.bcc.no/widgets/TopbarJs"
-                loadjs([scriptPath,"https://widgets.bcc.no/styles/widgets.css"], {
-                    async: true,
-                    error: function (path) {
-                        console.error('could not load resource: ' + path)
-                    },
-                    before: function (path, element) {
-                        if(path === scriptPath ){
-                            element.id = scriptId
-                            element.setAttribute("data-authentication-type", "SPA")
-                            element.setAttribute(
-                                "data-authentication-location",
-                                "feathers-jwt"
-                            )
-                        }
-                    }
-                })
-            }
-        },
         navigateBack(){
             this.$router.go(-1)
         },
         logout(){
             this.$router.push({name:'logout'})
         }
-    },
-    mounted: function(){
-        this.initTopbar()
-    },
+    }
 })
 </script>
+<style>
+.profile-icon {
+    @apply h-12;
+    @apply w-12;
+    @apply p-4;
+    @apply relative;
+}
+
+.profile-icon:hover .profile-dropdown {
+    @apply block;
+}
+
+.dropdown-box {
+    background-color: #16171A;
+    @apply text-white;
+    @apply rounded-b-lg;
+    width: max-content
+}
+
+.profile-dropdown {
+    @apply hidden;
+    @apply absolute;
+    top: 48px;
+    right: 16px;
+    @apply text-left;
+}
+
+.profile-dropdown * {
+    padding: 10px 16px;
+}
+
+.profile-dropdown h5:hover {
+    background: rgba(96, 130, 206, 0.1);
+}
+
+.positioning {
+    top: 48px;
+    left: 16px;
+}
+</style>
