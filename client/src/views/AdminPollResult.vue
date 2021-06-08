@@ -21,16 +21,18 @@ export default defineComponent({
             poll: {} as Poll,
         }
     },
-    async created(){
-        await this.loadPoll()
-        this.loaded = true
+    created(){
+        this.loadPoll()
+        this.$client.io.on('reconnect', this.loadPoll);
     },
     methods: {
         async loadPoll(){
+            this.loaded = false;
             await this.$client.service('poll').get(this.$route.params.id)
                 .then((res: Poll) => {
                     this.poll = res
                 }).catch(this.$showError)
+            this.loaded = true
         }
     }
 })

@@ -1,6 +1,6 @@
 {
   "titles": {
-    "home": "Voting App"
+    "home": "BCC Vote"
   },
   "pages": {
     "home": "Home",
@@ -28,7 +28,8 @@
     "publish-poll": "Publish this question",
     "republish-poll": "Republish this question",
     "close-poll": "Close this question",
-    "get-report": "Get a report"
+    "get-report": "Get a report",
+    "customer-support": "Customer support"
   },
   "labels": {
     "polling-events": "Polling events",
@@ -48,6 +49,7 @@
     "option": "Option",
     "event-results": "Polling event results",
     "result-visibility": "Results visibility",
+    "contact": "Contact",
     "polling-event-status": {
       "live": "Live",
       "not_started": "Not started",
@@ -73,7 +75,12 @@
     "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
     "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
     "poll-anonymous": "This question is anonymous and the participants are hidden for this question",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "result-visibility": {
+      "public": "This is a public vote, your name and answer will be available for all participants of this polling event",
+      "non_public": "Your name and answer will be available for administrators of this polling event",
+      "anonymous": "This is an anonymous voting, nobody will see your name and answer"
+    }
   },
   "fields": {
     "poll-title": "Question title",
@@ -94,6 +101,6 @@
     "if-chosen": "If choose"
   },
   "descriptions": {
-    "home": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    "home": "This app gives you the possibility to participate in live vote events"
   }
 }

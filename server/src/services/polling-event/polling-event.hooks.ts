@@ -21,9 +21,6 @@ const addChannel = async (context: HookContext) => {
         const channelName = context.id.toString();
         const connection = context.params.connection;
         context.app.channel(channelName).join(connection);
-        context.app.services.user.patch(connection.user._key, {
-            lastChannel: channelName,
-        });
     }
 };
 
@@ -34,7 +31,7 @@ export default {
         get: [ addChannel ],
         create: [ validateAndFormat ],
         update: [validateAndFormat ],
-        patch: [ ],
+        patch: [],
         remove: []
     },
 
