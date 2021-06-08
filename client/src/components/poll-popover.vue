@@ -15,7 +15,11 @@
         </div>
         <transition name="fade">
             <div v-if="showConfirm && !hasSavedAnswer">
-                <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
+                <VoteConfirm @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"><div class="text-center">
+                    <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
+                    <p class="mb-6">{{chosenOption.explanation}}</p>
+                    </div>
+                </VoteConfirm>
             </div>
         </transition>
     </div>

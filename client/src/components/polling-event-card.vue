@@ -1,5 +1,6 @@
 <template>
-    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base" :class="{'cursor-pointer': !isEventFinished}" @click="goToEvent()">
+    <div>
+    <div class="p-4 border-2 border-gray-200 rounded-lg shadow-base" :class="{'cursor-pointer': !isEventFinished}" @click="showConfirm = true">
         <div class="flex items-center justify-between mb-2">
             <div>
                 <label>{{formattedDate}}</label>
@@ -20,14 +21,27 @@
                 </template>
             </button>
         </div>
+            
+    </div>
+    <transition name="fade">
+        <ConfirmPopover v-if="showConfirm" @cancel="showConfirm = false" @confirm="goToEvent()"><div class="text-center">
+            <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
+            <p class="mb-6">hello world</p>
+            </div>
+        </ConfirmPopover>
+    </transition>
     </div>
 </template>
 
 <script lang="ts">
+import ConfirmPopover from './confirm-popover.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
+    components: {
+        ConfirmPopover
+    },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
     },
@@ -37,7 +51,8 @@ export default defineComponent({
                 'live':'text-red-600 bg-red-200',
                 'not_started':'text-bland-green bg-bland-green',
                 'finished':'text-gray-700 bg-gray-200'
-            }
+            },
+            showConfirm: false,
         }
     },
     computed: {
@@ -62,7 +77,7 @@ export default defineComponent({
                 this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
             else
                 this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
-        }
+        },
     }
 })
 </script>
