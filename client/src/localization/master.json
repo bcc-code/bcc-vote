@@ -28,7 +28,8 @@
     "publish-poll": "Publish this question",
     "republish-poll": "Republish this question",
     "close-poll": "Close this question",
-    "get-report": "Get a report"
+    "get-report": "Get a report",
+    "logout": "Sign Out"
   },
   "labels": {
     "polling-events": "Polling events",
