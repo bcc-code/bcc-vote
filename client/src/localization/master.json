@@ -75,9 +75,9 @@
     "poll-anonymous": "This question is anonymous and the participants are hidden for this question",
     "copied": "Copied!",
     "result-visibility": {
-      "public": "This is a public vote, your name and vote option will be available for all participants of this poll event",
-      "non_public": "Your name and vote option will be available for administartors of this poll event",
-      "anonymous": "This is an anonymous voting, nobody will see your name and vote option"
+      "public": "This is a public vote, your name and answer will be available for all participants of this polling event",
+      "non_public": "Your name and answer will be available for administrators of this polling event",
+      "anonymous": "This is an anonymous voting, nobody will see your name and answer"
     }
   },
   "fields": {
