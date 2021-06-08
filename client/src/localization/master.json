@@ -103,8 +103,7 @@
     "group": "Voting group",
     "confirmation": "Confirmation",
     "answer-option": "Option",
-    "answer-confirmation": "Confirmation",
-    "if-chosen": "If choose"
+    "answer-confirmation": "Confirmation"
   },
   "descriptions": {
     "home": "This app gives you the possibility to participate in live vote events"
