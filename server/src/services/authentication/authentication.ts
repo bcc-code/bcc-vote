@@ -8,6 +8,7 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import pick from 'lodash/pick';
+import { getRolesForPerson } from './authentication-helpers'
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -26,20 +27,14 @@ class Auth0Strategy extends OAuthStrategy {
 
             console.log(`Member with PersonID ${member.personID} succesfully retrieved from the members api`);
 
-            member = pick(member,['_id','_key','personID','churchID','church','displayName','age','roles', 'administrator']);
+            member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
 
-            // Reduce member object to fields needed for voting app
+
             member._id = `user/${member._key}`;
-
-            if(!member.roles)
-                member.roles = [{enumName: 'Member'}];
-            for (const role of member.roles ) {
-                if (role.scope) delete role.scope;
-                if (role.name) delete role.name;
-                if (role.active !== undefined) delete role.active;
-                if (role.securityLevel) delete role.securityLevel;
-                if (role.administrator !== undefined) delete role.administrator;
-            }
+            member.roles = getRolesForPerson(member)
+            member.churchName = member.church.org.name
+            delete member.church
+            delete member.related
 
             const existingUsers = (await userSvc.find({ query: { _key: member._key }})).data;
 
