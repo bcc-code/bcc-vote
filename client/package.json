@@ -17,7 +17,6 @@
     "autoprefixer": "^9.0.0",
     "core-js": "^3.6.5",
     "heroicons-vue3": "^1.0.1",
-    "loadjs": "^4.2.0",
     "moment": "^2.29.1",
     "socket.io-client": "^2.4.0",
     "tailwindcss": "^1.9.6",
