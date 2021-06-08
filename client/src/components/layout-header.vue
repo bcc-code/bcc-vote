@@ -1,8 +1,11 @@
 <template>
-    <div v-if="showNavigationBar" >
+    <div  >
         <nav class="flex justify-between items-center fixed left-0 w-full h-12 z-10 shadow-md bg-white">
-            <div class="pl-5">
+            <div  v-if="!showBCCLogo" class="pl-5">
                 <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
+            </div>
+            <div  v-if="showBCCLogo" class="pl-5">
+                
             </div>
             <div class="flex items-center py-2 pr-5">
                 <LogInformation/> 
@@ -28,10 +31,10 @@ export default defineComponent({
         Logout
     },
     computed: {
-        showNavigationBar(){
+        showBCCLogo(){
             if(this.$route.path === "/")
-                return false
-            return true
+                return true
+            return false
         },
     },
     methods: {
