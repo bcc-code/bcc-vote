@@ -1,6 +1,9 @@
 <template>
     <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 96px);`">
         <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
+            <InfoBox class="mb-9">
+                {{$t('info.result-visibility.'+poll.resultVisibility)}}
+            </InfoBox>
             <h4 class="font-bold mb-2">{{poll.title}}</h4>
             <p>{{poll.description}}</p>
             <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
@@ -71,14 +74,3 @@ export default defineComponent({
     }
 })
 </script>
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
