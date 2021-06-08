@@ -55,7 +55,8 @@ export default defineComponent({
     async created(){
         await this.init()
         this.$client.service('answer').on('created', this.addAnswer)
-        this.$client.io.on('reconnect', this.init())
+
+        this.$client.io.on('reconnect', this.init)
     },
     computed: {
         pollResultsAreHidden() {
@@ -93,7 +94,7 @@ export default defineComponent({
             }
         },
         async init(){
-            this.loaded = false;
+            this.loaded = false
             this.answers =  []
             this.totalCount = 0
             if(this.poll){
