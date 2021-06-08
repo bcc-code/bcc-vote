@@ -60,14 +60,24 @@ export default defineComponent({
             const ind =  this.savedPolls.findIndex((p: Poll) => {
                 return p.activeStatus === PollActiveStatus['Live']
             })
-            if(ind > -1)
+            if(ind > -1){
                 await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
                     activeStatus: PollActiveStatus['Finished']
                 }).catch(this.$showError)
-            if(poll)
+            }
+                
+            if(poll){
+                if(poll.activeStatus === PollActiveStatus['Finished'])
+                    await this.$client.service('answer').remove(null, {
+                        query: {
+                            _from: poll._id,
+                        }
+                    }).catch(this.$showError)
                 await this.$client.service('poll').patch(poll._key, {
                     activeStatus: PollActiveStatus['Live']
                 }).catch(this.$showError)
+            }
+                
         },
         createNewPoll(){
             if(!this.isAnythingEdited){
