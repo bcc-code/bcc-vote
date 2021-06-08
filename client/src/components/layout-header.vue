@@ -75,13 +75,10 @@ export default defineComponent({
 }
 
 .profile-dropdown {
-    @apply text-left;
+    @apply hidden;
     @apply absolute;
     top: 48px;
     right: 16px;
-    @apply w-auto;
-    @apply hidden;
-    min-width: 128px;
 }
 
 .profile-dropdown * {
