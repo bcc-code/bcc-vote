@@ -26,11 +26,12 @@ export default defineComponent({
             return this.$route.path === "/"
         },
         layoutHeight():number {
-            let height = 96
+            let header = 96
+            let footer = 208
             if(this.isHome) {
-                height = 328
+                header = 48
             }
-            return height
+            return header + footer
         },
         backgroundClass():string {
             let bgClass = 'bg-gray-100'

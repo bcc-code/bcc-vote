@@ -1,17 +1,19 @@
 <template>
   <div>
-    <div class="flex justify-center items-center w-full background-home h-64 sm:h-128">
-        <div class="max-w-md text-center text-blue-900 pt-12 sm:pt-32">
-            <h1 class="font-bold">{{$t('titles.home')}}</h1>
-            <p class="hidden sm:block mt-1">
-                {{$t('descriptions.home')}}
-            </p>
-            <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-5">
-                <h4>{{$t('actions.create-polling-event')}}</h4>
-            </button>
+    <div class="flex justify-center items-end w-full background-home h-64 sm:h-128">
+        <div class="banner-text flex items-center">
+            <div class="max-w-md text-center text-blue-900">
+                    <h1 class="font-bold mb-3">{{$t('titles.home')}}</h1>
+                    <p class="hidden sm:block mb-8 pb-3">
+                        {{$t('descriptions.home')}}
+                    </p>
+                <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-2 md:mb-8">
+                    <h4>{{$t('actions.create-polling-event')}}</h4>
+                </button>
+            </div>
         </div>
     </div>
-    <div class="max-w-screen-lg mx-auto px-4 pt-8">
+    <div class="max-w-screen-lg mx-auto px-4 pt-8 pb-16">
         <h2 class="font-bold mb-8">{{$t('labels.polling-events')}}</h2>
         <div>
             <div v-if="pollingEvents.length">
@@ -57,3 +59,14 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped>
+    .banner-text{
+        height: 190px;
+    }
+    @media (min-width: 640px) {
+    .banner-text{
+      height: 310px;
+    }
+  }
+</style>
