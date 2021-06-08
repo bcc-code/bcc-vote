@@ -31,10 +31,32 @@ async function authentication() {
     }
 }
 
-
+function logout() {
+    router.$client.logout()
+    localStorage.clear()
+    sessionStorage.clear()
+    var cookies = document.cookie.split(";")
+    for (var i = 0; i < cookies.length; i++) {   
+        var spcook = cookies[i].split("=")
+        spcook.forEach((cookiename) => {
+            var d = new Date()
+            d.setDate(d.getDate() - 1)
+            var expires = ";expires="+d
+            var name=cookiename
+            var value=""
+            document.cookie = name + "=" + value + expires + "; path=/acc/html"  
+        })
+    }
+    const url = `https://bcc-sso.eu.auth0.com/v2/logout?client_id=e9qdZ4dhMhhG9YbDPmo9hzI7Sp644ulH&returnTo=${location.origin}&federated`
+    location.href = url               
+}
   
 
 router.beforeEach(async(to: any, from: any, next: any) => {
+    if(to.meta.logout){
+        logout()
+    }
+
     const { user, authenticated, error } = await authentication()
     if(authenticated) {        
         next()

@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <div class="max-w-screen-lg mx-auto px-4 pt-8">
+    <div class="max-w-screen-lg mx-auto px-4 pt-8 pb-16">
         <h2 class="font-bold mb-8">{{$t('labels.polling-events')}}</h2>
         <div>
             <div v-if="pollingEvents.length">

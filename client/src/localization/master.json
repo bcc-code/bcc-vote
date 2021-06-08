@@ -31,6 +31,7 @@
     "close-poll": "Close this question",
     "get-report": "Get a report",
     "go-back-home": "Back to the home screen",
+    "logout": "Sign Out",
     "customer-support": "Customer support"
   },
   "labels": {
