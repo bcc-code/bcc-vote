@@ -24,9 +24,12 @@
             
     </div>
     <transition name="fade">
-        <ConfirmPopover v-if="showConfirm" @cancel="showConfirm = false" @confirm="goToEvent()"><div class="text-center">
-            <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
-            <p class="mb-6">hello world</p>
+        <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToEvent()" cancelTranslation="go-to-login" confirmTranslation="ok-continue">
+            <div class="text-center mb-12">
+                <h3 class="font-bold mb-5">{{$t('labels.logged-as')}}
+                    <span class="text-blue-900 block md:inline-block">{{$user.name}}</span>
+                </h3>
+                <p class="text-gray-700">{{$t('info.not-you')}}</p>
             </div>
         </ConfirmPopover>
     </transition>
@@ -78,6 +81,9 @@ export default defineComponent({
             else
                 this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
         },
+        goToLogout(){
+            this.$router.push({name:'logout'})
+        }
     }
 })
 </script>

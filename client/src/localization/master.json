@@ -32,7 +32,9 @@
     "get-report": "Get a report",
     "go-back-home": "Back to the home screen",
     "logout": "Sign Out",
-    "customer-support": "Customer support"
+    "customer-support": "Customer support",
+    "go-to-login": "Go to login page",
+    "ok-continue": "Okay, continue"
   },
   "labels": {
     "polling-events": "Polling events",
@@ -64,7 +66,8 @@
       "anonymous": "Anonymous"
     },
     "bcc-vote": "BCC Vote",
-    "thank-you": "Thank you for participating!"
+    "thank-you": "Thank you for participating!",
+    "logged-as": "You are now voting as"
   },
   "info": {
     "no-meetings": "There are no meetings currently available",
@@ -86,7 +89,8 @@
       "public": "This is a public vote, your name and answer will be available for all participants of this polling event",
       "non_public": "Your name and answer will be available for administrators of this polling event",
       "anonymous": "This is an anonymous voting, nobody will see your name and answer"
-    }
+    },
+    "not-you": "Not you? Please go to login page"
   },
   "fields": {
     "poll-title": "Question title",
