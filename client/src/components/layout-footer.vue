@@ -6,7 +6,7 @@
         </div>
         <div class="py-8 text-center">
           Copyright © {{ year }}
-          <a href="https://bcc.no" class="font-bold text-xl">Brunstad Christian Church</a>
+          <a href="https://bcc.no" class="font-bold text-xl block md:inline-block">Brunstad Christian Church</a>
         </div>
     </footer>
 </template>
