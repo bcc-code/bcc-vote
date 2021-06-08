@@ -17,7 +17,7 @@ module.exports = {
         xl: ['14px', '24px'], //label
         '2xl': ['17px', '24px'], //h4
         '3xl': ['20px', '28px'], //h3
-        '4xl': ['28px', '36px'], //h2
+        '4xl': ['24px', '32px'], //h2
         '5xl': ['32px', '44px'], //h1
       },
       borderRadius: {
@@ -54,6 +54,7 @@ module.exports = {
         },
         blue: {
           300: '#EBF4FF',
+          500: '#758CDF',
           600: '#6297FF',
           800: '#23687D',
           900: '#2A4E96',

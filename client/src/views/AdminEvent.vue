@@ -3,9 +3,9 @@
         <div class="max-w-5xl mx-auto" >
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
-                <div class="flex py-8 gap-6 font-bold justify-center cursor-pointer" :class="inactiveTabColor">
-                    <h3 :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
-                    <h3 :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
+                <div class="flex py-8 gap-6 font-bold justify-center" :class="inactiveTabColor">
+                    <h3 v-if="!isEventFinished" class="cursor-pointer" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+                    <h3 class="cursor-pointer" :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
                 </div>
                 <template v-if="arePollsLoaded">
                     <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
@@ -48,6 +48,9 @@ export default defineComponent({
         isEventLive():Boolean{
             return this.pollingEvent.status === PollingEventStatus['Live']
         },
+        isEventFinished():Boolean{
+            return this.pollingEvent.status === PollingEventStatus['Finished']
+        },
         backgroundColor(): String{
             return this.isEventLive? 'bg-blue-900': 'bg-gray-100'
         },
@@ -62,6 +65,8 @@ export default defineComponent({
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
                 .catch(this.$showError)
+            if(this.isEventFinished)
+                this.currentTab = 'results';
         },
         async loadSavedPolls(){
             this.savedPolls = await this.$client.service('poll').find({

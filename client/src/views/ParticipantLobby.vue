@@ -20,7 +20,7 @@
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import LogInformation from '../components/log-information.vue'
-import { PollingEvent } from '../domain'
+import { PollingEvent, PollingEventStatus } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -39,6 +39,7 @@ export default defineComponent({
         
         this.$client.service('poll').on('patched', this.getPoll)
 
+        this.$client.service('polling-event').on('patched', this.patchEvent);
         this.$client.io.on('reconnect', this.init)
     },
     methods: {
@@ -51,6 +52,8 @@ export default defineComponent({
             this.pollingEvent = await this.$client.service('polling-event')
             .get(this.$route.params.id)
             .catch(this.$showError) as PollingEvent
+            if(this.pollingEvent.status === PollingEventStatus['Finished'])
+                this.$router.push('/thank-you')
         },
         async loadCurrentPoll(){
             const res = await this.$client.service('poll').find({
@@ -63,13 +66,14 @@ export default defineComponent({
                 this.currentPoll = res[0]
         },
         getPoll(data: Poll){
-            if(data.activeStatus === PollActiveStatus['Live'])
+            if(data.pollingEventId === this.$route.params.id && data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
         },
-        connected(){
-            console.log('connected');
+        patchEvent(data: PollingEvent){
+            if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
+                this.$router.push('/thank-you')
         }
     }
 })
