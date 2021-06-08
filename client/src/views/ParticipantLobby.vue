@@ -66,13 +66,13 @@ export default defineComponent({
                 this.currentPoll = res[0]
         },
         getPoll(data: Poll){
-            if(data.activeStatus === PollActiveStatus['Live'])
+            if(data.pollingEventId === this.$route.params.id && data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
         },
         patchEvent(data: PollingEvent){
-            if(this.pollingEvent._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
+            if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
                 this.$router.push('/thank-you')
         }
     }

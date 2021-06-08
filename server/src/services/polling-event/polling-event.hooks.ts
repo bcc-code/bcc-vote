@@ -24,18 +24,10 @@ const addChannel = async (context: HookContext) => {
     }
 };
 
-
-const removeConnections = async (context: HookContext) => {
-    // remove the user from all the channels
-    if(context.params.connection && context.app.channels.length)
-        context.app.channel(context.app.channels).leave(context.params.connection);
-    return context;
-};
-
 export default {
     before: {
         all: [ ],
-        find: [ removeConnections ],
+        find: [],
         get: [ addChannel ],
         create: [ validateAndFormat ],
         update: [validateAndFormat ],

@@ -2,6 +2,7 @@ export interface Poll {
   _id: string,
   _key: string,
   title: string;
+  pollingEventId: string;
   description: string;
   confirmAnswer: boolean;
   answers: Option[],
