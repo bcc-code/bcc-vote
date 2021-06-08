@@ -5,7 +5,6 @@
                 <ArrowLeft class="cursor-pointer h-6 w-6 text-blue-800" @click="navigateBack"/>
             </div>
             <div  v-if="showBCCLogo" class="pl-5">
-                
             </div>
             <div class="flex items-center py-2 pr-5">
                 <LogInformation/> 
