@@ -17,20 +17,22 @@
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
-                <div v-for="(answer,index) in answers" :key="answer._key">
-                    <div class="py-2 flex justify-between items-center border-gray-200" 
-                        :class="index + 1 === answers.length ? '' : 'border-b-half'">
-                        <div>
-                            <h4 class="font-bold">{{answer.displayName}}</h4>    
-                            <label class=" text-gray-700">{{answer.churchName}}</label>    
-                        </div>
-                        <div
-                            :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`" 
-                            :class="['px-6 py-1 mr-1 rounded-lg text-white']">
-                            <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
+                <transition-group name="list" tag="div">
+                    <div v-for="(answer,index) in answers" :key="answer._key">
+                        <div class="py-2 flex justify-between items-center border-gray-200"
+                            :class="index === 0 ? '' : 'border-t-half'">
+                            <div>
+                                <h4 class="font-bold">{{answer.displayName}}</h4>
+                                <label class=" text-gray-700">{{answer.churchName}}</label>
+                            </div>
+                            <div
+                                :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`"
+                                :class="['px-6 py-1 mr-1 rounded-lg text-white']">
+                                <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </transition-group>
             </div>
             <Spinner inline v-else />
         </div>
@@ -88,7 +90,7 @@ export default defineComponent({
         },
         addAnswer(answer: Answer){
             if(this.poll && answer._from === this.poll._id) {  
-                this.answers.push(answer)
+                this.answers.unshift(answer)
                 this.sortedAnswers[answer.answerId].count ++
                 this.totalCount ++
             }
