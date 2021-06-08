@@ -68,12 +68,12 @@ export default defineComponent({
                 
             if(poll){
                 if(poll.activeStatus === PollActiveStatus['Finished'])
-                    this.$client.service('answer').remove(null, {
+                    await this.$client.service('answer').remove(null, {
                         query: {
                             _from: poll._id,
                         }
                     }).catch(this.$showError)
-                this.$client.service('poll').patch(poll._key, {
+                await this.$client.service('poll').patch(poll._key, {
                     activeStatus: PollActiveStatus['Live']
                 }).catch(this.$showError)
             }
