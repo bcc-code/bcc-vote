@@ -2,74 +2,39 @@ import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
 import { generateFreshContext }  from './setup-tests/test-set';
-import io from 'socket.io-client';
-import feathers from '@feathersjs/feathers';
-import socketio from '@feathersjs/socketio-client';
 
 describe('channels', () => {
+    let context:any;
 
-
-    before(function() {
-        // server = app.listen(port);
-        // server.once('listening', () => done());
+    beforeEach(async() => {
+        context  = await generateFreshContext();
+        context.params.provider = '';
+        await app.service('polling-event').get('504279890', context.params);
     });
 
-    after(function() {
+    afterEach(function() {
+        app.channel('504279890').connections = [];
         //server.close(done);
     });
 
-    it('Add user to a polling-event channel via getting this event', async () => {
+    it('Check if user got added to the channel', async () => {
         try {
-            // Prepare
-            const context  = await generateFreshContext();
-            context.params.provider = '';
-
-            // Act
-            await app.service('polling-event').get('504279890',context.params);
-            const channels = app.channels;
-
-            // Assert
-            assert.equal(channels[0],'504279890');
+            assert.equal(context.params.connection, app.channel('504279890').connections[0]);
         } catch (error) {
             assert.fail('There should be no error. Error:',error);
         }
 
     });
-
-    it('Add user to a polling-event channel via getting a poll from this event', async () => {
-        try {
-            // Prepare
-            const context  = await generateFreshContext();
-            context.params.provider = '';
-
-            // Act
-            await app.service('poll').get('504310091',context.params);
-            const channels = app.channels;
-
-            // Assert
-            assert.equal(channels[0],'504279890');
-        } catch (error) {
-            assert.fail('There should be no error. Error:',error);
-        }
-
-    });
-
     it('Get data via socket -> poll patched', async () => {
         try {
-            // Prepare
-            const context  = await generateFreshContext();
-            context.params.provider = '';
-
-            // Act
-            await app.service('polling-event').get('504279890',context.params);
-
             let res:any;
-            app.service('poll').on('patched', (poll:any)=>{ 
-                res = poll;
+            context.app.service('poll').on('patched', (poll:any)=>{ 
+                if(poll.pollingEventId === app.channels[0])
+                    res = poll;
             });
             await app.service('poll').patch('504310091', {
                 activeStatus: 'not_started',
-            }, null);
+            }, context.params);
 
             // Assert
             assert.equal(res._key,'504310091');
@@ -80,56 +45,78 @@ describe('channels', () => {
     });
     it('Get data via socket -> polling event patched', async () => {
         try {
-            // Prepare
-            const context  = await generateFreshContext();
-            context.params.provider = '';
-
             // Act
-            await app.service('polling-event').get('504279890',context.params);
-
             let res:any;
-            app.service('polling-event').on('patched', (event:any)=>{ 
-                res = event;
+            context.app.service('polling-event').on('patched', (pollingEvent:any)=>{ 
+                if(pollingEvent._key === app.channels[0])
+                    res = pollingEvent;
             });
             await app.service('polling-event').patch('504279890', {
-                activeStatus: 'not_started',
-            }, null);
-
+                status: 'live',
+            }, context.params);
+            
             // Assert
-            assert.equal(res._key,'504279890');
-            assert.equal(res.activeStatus,'not_started');
+            assert.equal(res._key, '504279890');
+            assert.equal(res.status, 'live');
         } catch (error) {
             assert.fail('There should be no error. Error:',error);
         }
     });
-    it.only('Get data via socket -> answer created', async () => {
+    it('Get data via socket -> answer created', async () => {
         try {
-            // Prepare
-            const context  = await generateFreshContext();
-            context.params.provider = '';
+            let res:any;
+            context.app.service('answer').on('created', (ans:any)=>{
+                if(ans.pollingEventId === app.channels[0])
+                    res = ans;
+            });
 
-            const client = feathers();
-            const socket = io('http://localhost:4040');
-            client.configure(socketio(socket));
-
-            // Act
-            await client.service('polling-event').get('504279890',context.params);
-
-            // console.log(app.channel('504279890'));
-
-            // let res:any;
-            // app.service('answer').on('created', (ans:any)=>{ 
-            //     res = ans;
-            // });
-            // await app.service('answer').create({
-            //     _from: 'poll/504310092',
-            //     _to: 'user/178509735',
-            //     answerId: '1232',
-            //     pollingEventId: '1232',
-            // }, context.params);
-
+            const ans:any = await app.service('answer').create({
+                _from: 'poll/504310092',
+                _to: 'user/178509735',
+                answerId: '1',
+                pollingEventId: '504279890',
+            }, context.params);
             // // Assert
-            // assert.equal(res.answerId, '1232');
+            assert.equal(res._key, ans._key);
+            assert.equal(res.answerId, '1');
+        } catch (error) {
+            assert.fail('There should be no error. Error:', error);
+        }
+    });
+
+    it('different polling event gets patched', async () => {
+        try {
+            // Act
+            let res:any;
+            context.app.service('polling-event').on('patched', (pollingEvent:any)=>{ 
+                if(pollingEvent._key === app.channels[0])
+                    res = pollingEvent;
+            });
+            await app.service('polling-event').patch('504306892', {
+                status: 'finished',
+            }, context.params);
+            
+            // Assert
+            assert.equal(res, undefined);
+        } catch (error) {
+            assert.fail('There should be no error. Error:',error);
+        }
+    });
+
+    it('poll from different polling event gets patched', async () => {
+        try {
+            let res:any;
+            context.app.service('poll').on('patched', (poll:any)=>{ 
+                if(poll.pollingEventId === app.channels[0])
+                    res = poll;
+            });
+            await app.service('poll').patch('504310091', {
+                activeStatus: 'not_started',
+            }, context.params);
+
+            // Assert
+            assert.equal(res._key,'504310091');
+            assert.equal(res.activeStatus,'not_started');
         } catch (error) {
             assert.fail('There should be no error. Error:',error);
         }
