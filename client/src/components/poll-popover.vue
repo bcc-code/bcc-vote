@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 96px);`">
+    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
         <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
             <InfoBox class="mb-9">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
