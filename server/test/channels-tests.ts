@@ -54,6 +54,31 @@ describe('channels', () => {
 
     });
 
+    it('Data transfer', async () => {
+        try {
+            // Prepare
+            const context  = await generateFreshContext();
+            context.params.provider = '';
+
+            // Act
+            await app.service('polling-event').get('504279890',context.params);
+
+            let res:any;
+            app.service('poll').on('patched', (poll:any)=>{ 
+                res = poll;
+            });
+            await app.service('poll').patch('504310091', {
+                activeStatus: 'not_started',
+            }, null);
+
+            // Assert
+            assert.equal(res._key,'504310091');
+        } catch (error) {
+            assert.fail('There should be no error. Error:',error);
+        }
+
+    });
+
 
 
 });
