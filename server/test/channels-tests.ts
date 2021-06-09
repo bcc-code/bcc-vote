@@ -54,7 +54,7 @@ describe('channels', () => {
 
     });
 
-    it('Data transfer', async () => {
+    it('Get data via socket -> poll patched', async () => {
         try {
             // Prepare
             const context  = await generateFreshContext();
@@ -76,7 +76,29 @@ describe('channels', () => {
         } catch (error) {
             assert.fail('There should be no error. Error:',error);
         }
+    });
+    it('Get data via socket -> polling event patched', async () => {
+        try {
+            // Prepare
+            const context  = await generateFreshContext();
+            context.params.provider = '';
 
+            // Act
+            await app.service('polling-event').get('504279890',context.params);
+
+            let res:any;
+            app.service('polling-event').on('patched', (poll:any)=>{ 
+                res = poll;
+            });
+            await app.service('polling-event').patch('504279890', {
+                activeStatus: 'not_started',
+            }, null);
+
+            // Assert
+            assert.equal(res._key,'504310091');
+        } catch (error) {
+            assert.fail('There should be no error. Error:',error);
+        }
     });
 
 
