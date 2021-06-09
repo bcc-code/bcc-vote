@@ -34,7 +34,7 @@
                 </transition-group>
                 <Spinner v-if="answers.length === 0" inline/>
             </div>
-            <InfoBox v-else>{{infoOnVisibility}}</InfoBox>
+            <InfoBox v-else>{{$t('info.poll-is.'+poll.resultVisibility)}}</InfoBox>
         </div>
     </div>
 </template>
@@ -44,7 +44,7 @@ import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
-        isAdmin: {type: Boolean, default: false}
+        isEventCreator: {type: Boolean, default: false}
     },
     data() {
         return {
@@ -68,13 +68,10 @@ export default defineComponent({
                 return true
             if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
                 return false
-            if(this.isAdmin)
+            if(this.isEventCreator)
                 return true
                  
             return false
-        },
-        infoOnVisibility():string{
-            return this.$t('info.poll-is.'+this.poll.resultVisibility)
         }
     },
     methods: {
