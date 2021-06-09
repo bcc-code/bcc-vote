@@ -1,7 +1,7 @@
 <template>
     <div class="h-full">
-        <div v-for="option in options" :key="option.answerId" class="mb-6">
-            <button class="w-full option-button flex" :class="selectedOption == option ? 'border-blue-900' : 'border-gray-200'" @click="selectedOption = option">
+        <div v-for="option in options" :key="option.answerId">
+            <button class="w-full option-button flex mb-4" :class="selectedOption == option ? 'border-blue-900' : 'border-gray-200'" @click="selectedOption = option">
                 <span class="h-5 w-5 p-1 mr-4 bg-gray-100 rounded-full" :class="selectedOption == option ? 'bg-blue-900' : 'bg-gray-100'">
                     <CheckIcon class="text-white" v-if="selectedOption == option"/>
                 </span>

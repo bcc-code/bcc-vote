@@ -2,7 +2,7 @@
     <div class="h-full">
         <div v-if="loaded">
             <div v-for="(option,index) in poll.answers" :key="option.answerId">
-                <div class="result-bar mb-6">
+                <div class="result-bar mb-4">
                     <div class="absolute py-4 top-0">
                         <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </div>
@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="py-4">
+        <div class="py-5">
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
             <div v-else-if="answers.length">
