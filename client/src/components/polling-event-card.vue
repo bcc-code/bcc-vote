@@ -27,7 +27,7 @@
             <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToLobby()" cancelTranslation="go-to-login" confirmTranslation="ok-continue">
                 <div class="text-center mb-12">
                     <h3 class="font-bold mb-5">{{$t('labels.logged-as')}}
-                        <span class="text-blue-900 block md:inline-block">{{$user.name}}</span>
+                        <span class="text-blue-900 block md:inline-block">{{$user.displayName}}</span>
                     </h3>
                     <p class="text-gray-700">{{$t('info.not-you')}}</p>
                 </div>
