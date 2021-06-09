@@ -19,14 +19,12 @@
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
-import LogInformation from '../components/log-information.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
         PollPopOver,
-        LogInformation,
     },
     data() {
         return {

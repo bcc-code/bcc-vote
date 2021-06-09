@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 96px);`">
+    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
         <div class="h-full w-full px-4 md:px-6 p-8">
             <InfoBox class="mb-9">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
@@ -15,7 +15,12 @@
         </div>
         <transition name="fade">
             <div v-if="showConfirm && !hasSavedAnswer">
-                <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
+                <VoteConfirm @cancel="showConfirm = false" @resign="showConfirm = false" @confirm="submitAnswer(chosenOption)">
+                    <div class="text-center">
+                        <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
+                        <p class="mb-6">{{chosenOption.explanation}}</p>
+                    </div>
+                </VoteConfirm>
             </div>
         </transition>
     </div>

@@ -26,10 +26,9 @@ export default defineComponent({
             return this.$route.path === "/"
         },
         layoutHeight():number {
-            let header = 96
+            let header = 48
             let footer = 0
             if(this.isHome) {
-                header = 48
                 footer = 208
             }
             return header + footer
