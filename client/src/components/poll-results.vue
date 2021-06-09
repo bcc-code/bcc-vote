@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="py-4">
-            <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
             <div v-if="pollResultsAreVisible">
+                <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
                         <div class="py-2 flex justify-between items-center border-gray-200"
@@ -43,7 +43,8 @@ import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
-        poll: {type: Object as PropType<Poll>, required: true}
+        poll: {type: Object as PropType<Poll>, required: true},
+        isAdmin: {type: Boolean, default: false}
     },
     data() {
         return {
@@ -65,17 +66,15 @@ export default defineComponent({
             
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
-
             if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
                 return false
-
-            if(this.poll.creatorId === this.$user._key)
+            if(this.isAdmin)
                 return true
                  
             return false
         },
         infoOnVisibility():string{
-            return this.$t('info.poll-is'+this.poll.resultVisibility)
+            return this.$t('info.poll-is.'+this.poll.resultVisibility)
         }
     },
     methods: {
