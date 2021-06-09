@@ -33,7 +33,7 @@ export default defineComponent({
         VoteConfirm
     },
     props: {
-        poll: Object as PropType<Poll>,
+        poll: {type: Object as PropType<Poll>, required: true}
     },
     data() {
         return {

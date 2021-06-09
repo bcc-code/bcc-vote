@@ -15,8 +15,7 @@
         </div>
         <div class="py-4">
             <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
-            <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
-            <div v-else-if="answers.length">
+            <div v-if="pollResultsAreVisible">
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
                         <div class="py-2 flex justify-between items-center border-gray-200"
@@ -33,8 +32,9 @@
                         </div>
                     </div>
                 </transition-group>
+                <Spinner v-if="answers.length === 0" inline/>
             </div>
-            <Spinner inline v-else />
+            <InfoBox v-else>{{infoOnVisibility}}</InfoBox>
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@ import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
-        poll: Object as PropType<Poll>
+        poll: {type: Object as PropType<Poll>, required: true}
     },
     data() {
         return {
@@ -61,12 +61,21 @@ export default defineComponent({
         this.$client.io.on('reconnect', this.init)
     },
     computed: {
-        pollResultsAreHidden() {
-            if(this.poll && this.poll.resultVisibility !== PollResultVisibility['Public']) {
+        pollResultsAreVisible():boolean {
+            
+            if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
-            } else {
+
+            if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
                 return false
-            }
+
+            if(this.poll.creatorId === this.$user._key)
+                return true
+                 
+            return false
+        },
+        infoOnVisibility():string{
+            return this.$t('info.poll-is'+this.poll.resultVisibility)
         }
     },
     methods: {
