@@ -1,15 +1,17 @@
 <template>
     <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
-        <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
-            <InfoBox class="mb-9">
+        <div class="h-full w-full p-4 md:p-6">
+            <InfoBox v-if="!hasSavedAnswer" class="mb-4" @closed="infoBoxClosed = true">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
             </InfoBox>
-            <h4 class="font-bold mb-2">{{poll.title}}</h4>
-            <p>{{poll.description}}</p>
-            <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
+            <div :class="infoBoxClosed ? 'pt-4 pb-8' : 'pb-5'"> 
+                <h4 class="font-bold" >{{poll.title}}</h4>
+                <p v-if="poll.description" class="mt-2">{{poll.description}}</p>
+            </div>
+            <div v-if="!hasSavedAnswer" class="h-full mb-20">
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
-            <div v-else class="py-10">
+            <div v-else class="mb-5">
                 <PollResults :poll="poll" :key="poll._key"/>
             </div>
         </div>
@@ -42,6 +44,7 @@ export default defineComponent({
     },
     data() {
         return {
+            infoBoxClosed: false as boolean,
             showConfirm: false as boolean,
             chosenOption: {} as Answer,
             hasSavedAnswer: false as boolean
