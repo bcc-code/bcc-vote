@@ -48,7 +48,7 @@ export default defineComponent({
             let date = ''
             if(this.pollingEvent && this.pollingEvent.startDateTime) {
                 const day = moment(this.pollingEvent.startDateTime).format('MMMM D')
-                const time = moment(this.pollingEvent.startDateTime).format('hh:mm')
+                const time = moment(this.pollingEvent.startDateTime).format('HH:mm')
                 date = day + ' , ' + time
             }
             return date
