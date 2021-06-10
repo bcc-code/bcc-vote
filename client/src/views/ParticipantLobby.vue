@@ -50,7 +50,7 @@ export default defineComponent({
             .get(this.$route.params.id)
             .catch(this.$showError) as PollingEvent
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
-                this.$router.push('/thank-you')
+                this.goToThankYouPage(this.pollingEvent);
         },
         async loadCurrentPoll(){
             const res = await this.$client.service('poll').find({
@@ -70,7 +70,10 @@ export default defineComponent({
         },
         patchEvent(data: PollingEvent){
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
-                this.$router.push('/thank-you')
+                this.goToThankYouPage(data);
+        },
+        goToThankYouPage(data: PollingEvent){
+            this.$router.push('/thank-you/'+data.title)
         }
     }
 })
