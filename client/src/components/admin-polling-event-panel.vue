@@ -11,7 +11,7 @@
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
-            <div class="w-full flex justify-center mt-8 gap-10">
+            <div class="w-full flex flex-col gap-4 md:flex-row md:gap-10 justify-center mt-8 ">
                 <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button px-15" @click="archivePollingEvent">
                     {{$t('actions.archive-polling-event')}}
                 </button>
