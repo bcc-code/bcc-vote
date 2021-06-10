@@ -125,11 +125,20 @@ newValidPoll = JSON.parse(JSON.stringify(newValidPoll))
   return { newValidPollingEvent, newValidPoll }
 }
 
+async function getFeahtersToken() {
+  //const user = (await standardFamilyTestSet()).loggedInUser
+  const token = await app.service('authentication').createAccessToken({
+    sub: 'user/178509735'
+    //user: user.related
+  });
+  return token
+}
 
 export {
   generateFreshContext,
   getAranoDBConfigFromFeathers,
   pollingEventsTestSet,
-  newEntitiesFunc
+  newEntitiesFunc,
+  getFeahtersToken
 };
 
