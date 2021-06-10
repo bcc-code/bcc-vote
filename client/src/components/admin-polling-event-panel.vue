@@ -11,16 +11,22 @@
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
-            <div class="w-full flex justify-center mt-8">
-                <div v-if="isEventNotStarted" :key="pollingEvent.status">
-                    <button class="gradient-button md-button text-lg" @click="startPollingEvent">{{$t('actions.start-live-poll')}}</button>
-                </div>
-                <template v-else-if="isEventLive">
-                    <button class="gradient-button md-button text-lg" @click="closePollingEvent">{{$t('actions.close-live-poll')}}</button>
-                </template>
-                <template v-else-if="isEventFinished">
-                    <button class="gradient-button md-button text-lg" @click="startPollingEvent">{{$t('actions.restart-live-poll')}}</button>
-                </template>
+            <div class="w-full flex justify-center mt-8 gap-10 h-12">
+                <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button px-15" @click="archivePollingEvent">
+                    {{$t('actions.archive-polling-event')}}
+                </button>
+                <button v-if="isEventNotStarted" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
+                    {{$t('actions.start-polling-event')}}
+                </button>
+                <button v-else-if="isEventLive" class="bg-red-500 text-white activation-button px-10" @click="closePollingEvent">
+                    {{$t('actions.close-polling-event')}}
+                </button>
+                <button v-else-if="isEventFinished" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
+                    {{$t('actions.restart-polling-event')}}
+                </button>
+                <button v-else class="bg-green-500 text-white activation-button px-10" @click="closePollingEvent">
+                    {{$t('actions.unarchive-polling-event')}}
+                </button>
             </div>
         </template>
         <template v-else>
@@ -67,6 +73,9 @@ export default defineComponent({
         isEventFinished():Boolean{
             return this.pollingEvent.status === PollingEventStatus['Finished']
         },
+        isEventArchived():Boolean{
+            return this.pollingEvent.status === PollingEventStatus['Archived']
+        },
     },
     methods: {
         editPollingEvent() {
@@ -86,6 +95,13 @@ export default defineComponent({
                 this.$emit('reloadPollingEvent')
             }).catch(this.$showError)
         },
+        archivePollingEvent(){
+            this.$client.service('polling-event').patch(this.$route.params.id, {
+              status: PollingEventStatus['Archived']
+            }).then(() => {
+                this.$emit('reloadPollingEvent')
+            }).catch(this.$showError)
+        },
         getLink(){
             const url = location.origin + '/polling-event/lobby/' + this.pollingEvent._key;
             navigator.clipboard.writeText(url)
@@ -98,3 +114,12 @@ export default defineComponent({
     emits: ['reloadPollingEvent']
 })
 </script>
+
+<style scoped>
+    .activation-button{
+        @apply font-bold;
+        @apply text-lg;
+        @apply rounded-full;
+    }
+
+</style>

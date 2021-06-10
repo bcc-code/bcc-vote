@@ -148,6 +148,8 @@ export default defineComponent({
         sendPollingEvent(){
             const data = this.eventData
             data.creatorId = this.$user.personID
+            if(data.startDateTime.getTime() === 0)
+                data.startDateTime = new Date()
             if(this.pollingEvent)
                 this.$client.service('polling-event').update(data._key, data)
                     .then(() => {

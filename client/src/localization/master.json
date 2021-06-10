@@ -18,9 +18,11 @@
     "add-poll": "Add another question",
     "admin-this-event": "Administrate this voting event",
     "join-this-event": "Join this voting event",
-    "start-live-poll": "Start this polling event",
-    "close-live-poll": "Close this polling event",
-    "restart-live-poll": "Restart this polling event",
+    "start-polling-event": "Start this polling event",
+    "close-polling-event": "Close this polling event",
+    "archive-polling-event": "Archive",
+    "unarchive-polling-event": "Unarchive",
+    "restart-polling-event": "Restart this polling event",
     "save-poll": "Save this question",
     "change-poll": "Save changes",
     "delete-poll": "Delete this question",
@@ -38,6 +40,7 @@
   },
   "labels": {
     "polling-events": "Polling events",
+    "archive": "Archive",
     "settings": "Settings",
     "connection-status": "Connection status",
     "polls": "Questions",
@@ -59,7 +62,8 @@
     "polling-event-status": {
       "live": "Live",
       "not_started": "Not started",
-      "finished": "Finished"
+      "finished": "Finished",
+      "archived": "Archived"
     },
     "poll-result-visibility": {
       "public": "Public",
@@ -71,7 +75,8 @@
     "logged-as": "You are now voting as"
   },
   "info": {
-    "no-meetings": "There are no meetings currently available",
+    "no-polling-events": "There are no polling events currently available",
+    "no-archived-events": "There are no archived events currently available",
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
     "number-of-participants": "Number of participants",
     "question-visibility": "The questions won't be visible until the question is started",

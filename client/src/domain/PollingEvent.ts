@@ -36,5 +36,6 @@ export enum PollingEventType {
 export enum PollingEventStatus {
     'Live' = 'live',
     'Not Started' = 'not_started',
-    'Finished' = 'finished'
+    'Finished' = 'finished',
+    'Archived' = 'archived',
 }
