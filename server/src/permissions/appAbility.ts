@@ -13,7 +13,7 @@ export class AppAbility extends Ability<AppAbilities>{}
 type DefinePermissions = (user: UserDetails, builder: AbilityBuilder<AppAbility>) => void;
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
-    can('create','answer', {});
+    can('create','answer', { _to: user._id });
     can('find', 'answer');
     can('find','poll');
     can('get', 'poll');
@@ -48,7 +48,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can(['find','get'],'polling-event', {'participantFilter.role': { $in: superAdminRoles } as any});
     },
     VotingAdmin(user, { can, cannot }) {
-        const userChurchID = user.churchID.toString()
+        const userChurchID = user.churchID.toString();
         can('create','poll');
         can('update', 'poll');
         can('remove', 'poll');
@@ -57,11 +57,11 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('patch', 'polling-event', { 'participantFilter.org': userChurchID });
         can('update', 'polling-event', { 'participantFilter.org': userChurchID });
         can('create','polling-event', { 'participantFilter.org': userChurchID });
-        can('remove', 'answer');
         
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
+        can('remove', 'answer');
     },
     Member(user, { can, cannot }) {
     }
