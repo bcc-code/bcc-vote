@@ -109,6 +109,7 @@
     "poll-public": "Public (Everybody)",
     "poll-non-public": "Event creator (Hidden for members)",
     "poll-anonymous": "Anonymous (Hidden for everybody)",
+    "polling-event-title": "Polling event title",
     "optional": "Optional",
     "group": "Voting group",
     "confirmation": "Confirmation",
