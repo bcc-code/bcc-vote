@@ -10,28 +10,13 @@ export type UserDetails = {[key: string]: any} & {
 export type Role = {
     name: string;
     enumName: string;
-    org: [];
+    org: Array<string>;
     scope: string;
-    active: boolean;
     securityLevel: number;
 }
 
 export type RoleName = 'CentralAdministrator'
-    | 'Arrangementsansvarlige'
     | 'SentralInformasjonsmedarbeider'
-    | 'BrunstadKontaktperson'
-    | 'PMOManager'
-    | 'BCCAnsatt'
     | 'Developer'
-    | 'Innmelder'
-    | 'Forstander'
-    | 'HeadOfCommunications'
-    | 'ChairmanOfTheBoard'
-    | 'FinanceManager'
-    | 'SundaySchoolLeader'
-    | 'Informasjonsmedarbeider'
-    | 'OrgRepresentative'
-    | 'VotingAdmin'
     | 'Member'
-    | 'Org'
-    | 'None';
+    | 'VotingAdmin';
