@@ -24,6 +24,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}});
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}});
+    cannot('find', 'polling-event', {'status': 'archived' as any});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
 };
 
