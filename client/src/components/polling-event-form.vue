@@ -107,19 +107,35 @@ export default defineComponent({
         this.loadOrgs()
         this.loadRoles()
     },
+    computed: {
+        votingAdminRole():any {
+            if(this.$user.activeRole === 'VotingAdmin') {
+                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0]
+                return role
+            } else {
+                return false
+            }
+        }
+    },
     methods: {
         async loadOrgs(){
-            const res = await this.$client.service('org').find({
-                query: {
-                    activeStatusCode: 0,
-                    type: 'church',
-                    $select: ['name', 'churchID'],
-                    $sort: {
-                        name: 1
-                    }
+            let query = {
+                activeStatusCode: 0,
+                type: 'church',
+                $select: ['name', 'churchID'],
+                $sort: {
+                    name: 1
                 }
-            }).catch(this.$showError)
-            res.unshift({name: "All churches", churchID: 'all'})
+            } as any
+            if(this.votingAdminRole) {
+                query._id = { $in: this.votingAdminRole.org}
+            }
+            const res = await this.$client.service('org').find({query}).catch(this.$showError)
+            
+            if(!this.votingAdminRole) {
+                res.unshift({name: "All churches", churchID: 'all'})
+            }
+
             this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
