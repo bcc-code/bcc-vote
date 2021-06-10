@@ -69,7 +69,7 @@ const superAdminRoles = ['Developer','CentralAdministrator','SentralInformasjons
 
 export function defineAbilityFor(user:UserDetails, activeRole?:RoleName): AppAbility {
     const builder = new AbilityBuilder<AppAbility>(AppAbility);
-    let abilityRole = activeRole ? activeRole : user.highestLevelRole;
+    let abilityRole = user.activeRole ? user.activeRole : user.highestLevelRole;
     if(superAdminRoles.includes(abilityRole)) {
         abilityRole = 'SuperAdmin';
     }

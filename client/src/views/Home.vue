@@ -17,7 +17,7 @@
         <h3 class="cursor-pointer" :class="currentTab === 'polling-events' ? 'text-blue-900' : ''" @click="currentTab='polling-events'">
             {{$t('labels.polling-events')}}
         </h3>
-        <h3 class="cursor-pointer" :class="currentTab === 'archived' ? 'text-blue-900' : ''"  @click="currentTab='archived'">
+        <h3 v-if="$canAdministratePollingEvents" class="cursor-pointer" :class="currentTab === 'archived' ? 'text-blue-900' : ''"  @click="currentTab='archived'">
             {{$t('labels.archive')}}
         </h3>
     </div>
