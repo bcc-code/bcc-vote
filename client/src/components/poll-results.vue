@@ -15,7 +15,7 @@
                         {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
                     </h5>
                     
-                    <span v-if="chosenOption === option.answerId" class="h-5 w-5 p-1 border border-black-100 mr-4 bg-black-100 rounded-full">
+                    <span v-if="chosenOption === option.answerId" class="h-5 w-5 p-1 border border-dark-100 mr-4 bg-dark-100 rounded-full">
                         <CheckIcon class="text-white"/>
                     </span>
                 </div>
