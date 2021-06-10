@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="md:max-w-screen-md md:mx-auto">
-            <PollPopOver v-if="currentPoll" :poll="currentPoll"/>
+            <PollPopOver v-if="currentPoll" :poll="currentPoll" :key="currentPoll"/>
         </div>
     </section>
 </template>
@@ -33,7 +33,7 @@ export default defineComponent({
         }
     },
     async created() {
-        await this.init()
+        this.init()
         
         this.$client.service('poll').on('patched', this.getPoll)
 
@@ -42,9 +42,8 @@ export default defineComponent({
     },
     methods: {
         init() {
-            const a = this.loadPollingEvent();
-            const b = this.loadCurrentPoll();
-            return Promise.all([a, b]);
+            this.loadPollingEvent();
+            this.loadCurrentPoll();
         },
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event')
