@@ -62,7 +62,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'answer');
     },
     Member(user, { can, cannot }) {
-    },
+    }
 };
 
 const superAdminRoles = ['Developer','CentralAdministrator','SentralInformasjonsmedarbeider'];
