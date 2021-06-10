@@ -12,7 +12,7 @@ export class AppAbility extends Ability<AppAbilities>{}
 type DefinePermissions = (user: UserDetails, builder: AbilityBuilder<AppAbility>) => void;
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
-    can('create','answer');
+    can('create','answer', { _to: user._id });
     can('find', 'answer');
     can('find','poll');
     can('get', 'poll');
@@ -47,38 +47,39 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can(['find','get'],'polling-event', {'participantFilter.role': { $in: superAdminRoles } as any});
     },
     VotingAdmin(user, { can, cannot }) {
+        const userChurchID = user.churchID.toString();
         can('create','poll');
         can('update', 'poll');
         can('remove', 'poll');
         can('patch', 'poll');
 
-        can('patch', 'polling-event');
-        can('update', 'polling-event');
-        can('create','polling-event');
-        can('remove', 'answer');
+        can('patch', 'polling-event', { 'participantFilter.org': userChurchID });
+        can('update', 'polling-event', { 'participantFilter.org': userChurchID });
+        can('create','polling-event', { 'participantFilter.org': userChurchID });
         
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
+        can('remove', 'answer');
     },
     Member(user, { can, cannot }) {
-    },
+    }
 };
 
 const superAdminRoles = ['Developer','CentralAdministrator','SentralInformasjonsmedarbeider'];
 
 export function defineAbilityFor(user:UserDetails, activeRole?:RoleName): AppAbility {
     const builder = new AbilityBuilder<AppAbility>(AppAbility);
-    let abilityRole = user.activeRole ? user.activeRole : user.highestLevelRole;
+    let abilityRole = activeRole === undefined ? user.activeRole : activeRole as string;
+    if(!abilityRole) {
+        throw new Error(`Trying to use invalid role ${abilityRole}`);    
+    }
+
     if(superAdminRoles.includes(abilityRole)) {
         abilityRole = 'SuperAdmin';
     }
-    if (typeof rolePermissions[abilityRole] === 'function') {
-        globalPermissions(user, builder);
-        rolePermissions[abilityRole](user, builder);
-    } else {
-        throw new Error(`Trying to use unknown role ${abilityRole}`);
-    }
+    globalPermissions(user, builder);
+    rolePermissions[abilityRole](user, builder);
     
     return builder.build();
 }

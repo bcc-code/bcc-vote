@@ -28,10 +28,12 @@ describe('permissions - app ability', async () => {
             const ability = defineAbilityFor(user,activeRole);
             const entity = await (testSet[entityName])() as any;
 
+            console.log('Role',activeRole)
+            console.log('Entity',entity)
             let result = false;
             switch (action) {
             case "create":
-                result = ability.can(action,entity);
+                result = ability.can(action,subject(onEntity, entity));
                 break;
             case "get":
                 result = ability.can(action,subject(onEntity, entity));
@@ -82,20 +84,32 @@ describe('permissions - app ability', async () => {
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
       { action:"create", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
+
       { action:"find", subject:"role", entity:'user', activeRole:"Member", expected: false },
       { action:"find", subject:"org", entity:'user', activeRole:"Member", expected: false },
+
       { action:"update", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
       { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
       { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
 
       { action:"update", subject:"polling-event", activeRole:"Developer", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
       { action:"patch", subject:"polling-event", activeRole:"Developer", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+
       { action:"find", subject:"role", entity:'user', activeRole:"Developer", expected: true },
       { action:"find", subject:"org", entity:'user', activeRole:"Developer", expected: true },
 
-      { action:"update", subject:"poll", entity:'basePoll', expected: true },
-      { action:"patch", subject:"poll", entity:'basePoll', expected: true },
-      { action:"remove", subject:"poll", entity:'basePoll', expected: true },
+      { action:"update", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+
+      { action:"create", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"create", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"patch", subject:"polling-event", activeRole:"VotingAdmin", entity:'eventForAllOrgs', expected: false },
+      { action:"remove", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+
+      { action:"update", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
   ];
 
   useCases.forEach((useCase) => {

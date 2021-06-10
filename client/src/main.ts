@@ -42,7 +42,7 @@ app.mixin({
     computed: {
         $canAdministratePollingEvents():boolean {
             if(this.$user.roles) {
-                const allowedRoles = ['Developer','SentralInformasjonsmedarbeider','CentralAdministrator']
+                const allowedRoles = ['Developer','SentralInformasjonsmedarbeider','CentralAdministrator','VotingAdmin']
                 const allowedUserRoles = this.$user.roles.filter((r:Role) => allowedRoles.includes(r.enumName))
                 if(allowedUserRoles.length) {
                     return true
@@ -64,6 +64,7 @@ const user = {
     churchID: null,
     personID: null,
     roles: null,
+    activeRole: ''
 }
 
 router.$client = client
