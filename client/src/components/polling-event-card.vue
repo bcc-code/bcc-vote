@@ -24,7 +24,7 @@
                 
         </div>
         <transition name="fade">
-            <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToLobby()" cancelTranslation="go-to-login" confirmTranslation="ok-continue">
+            <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToLobby()" cancelTranslation="logout" confirmTranslation="ok-continue">
                 <div class="text-center mb-12">
                     <h3 class="font-bold mb-5">{{$t('labels.logged-as')}}
                         <span class="text-blue-900 block md:inline-block">{{$user.displayName}}</span>

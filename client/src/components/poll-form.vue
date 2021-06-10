@@ -18,9 +18,15 @@
         <AddButton class="mb-8" translation="add-option" @click="addOption"/>
         <h3 class="font-bold mb-1">{{$t('labels.result-visibility')}}</h3>
         <p class="mb-6">{{$t('info.names-available-for')}}</p>
-        <FormField v-model="pollData.resultVisibility" :value="visibility['Public']" translation="poll-public" type="radio"/>
-        <FormField v-model="pollData.resultVisibility" :value="visibility['Non Public']" translation="poll-non-public" type="radio"/>
-        <FormField v-model="pollData.resultVisibility" :value="visibility['Anonymous']" translation="poll-anonymous" type="radio"/>
+        <ToolTip :translation="$t('info.tooltips.poll-public')">
+            <FormField v-model="pollData.resultVisibility" :value="visibility['Public']" translation="poll-public" type="radio" />
+        </ToolTip>
+        <ToolTip :translation="$t('info.tooltips.poll-non-public')">
+            <FormField v-model="pollData.resultVisibility" :value="visibility['Non Public']" translation="poll-non-public" type="radio"/>
+        </ToolTip>
+        <ToolTip :translation="$t('info.tooltips.poll-anonymous')">
+            <FormField v-model="pollData.resultVisibility" :value="visibility['Anonymous']" translation="poll-anonymous" type="radio"/>
+        </ToolTip>
         <div v-if="poll" class="flex items-center text-red-500 cursor-pointer mt-10" @click="$emit('delete')">
             <TrashIcon class="w-5 h-5 mr-2"/>
             <div class="text-xl font-bold">{{$t('actions.delete-poll')}}</div>
@@ -36,6 +42,7 @@
     </div>
 </template>
 <script lang="ts">
+import ToolTip from '../components/tooltip.vue'
 import FormField from '../components/form-field.vue'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 import AddButton from '../components/add-button.vue'
@@ -44,6 +51,7 @@ import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/P
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
+        ToolTip,
         FormField,
         XIcon,
         TrashIcon,

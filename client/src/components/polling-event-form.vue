@@ -8,9 +8,9 @@
         </InfoBox>
         <FormField v-model="eventData.title" translation="polling-event-title" type="string"/>
 
-        <FormField v-model="eventData.description" translation="poll-description" type="string" :optional="true"/>
+        <FormField v-model="eventData.description" translation="poll-description" type="string" optional/>
 
-        <FormField v-model="eventData.startDateTime" translation="poll-date" type="date"/>
+        <FormField v-model="eventData.startDateTime" translation="poll-date" type="date" optional/>
 
         <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
@@ -21,8 +21,8 @@
         <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allChurches"/>
 
         <div class="flex w-full gap-10 max-w-sm">
-            <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
-            <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
+            <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number" optional />
+            <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number" optional />
         </div>
 
         <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
