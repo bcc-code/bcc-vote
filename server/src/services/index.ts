@@ -5,6 +5,7 @@ import poll from './poll/poll.service';
 import answer from './answer/answer.service';
 import participant from './participant/participant.service';
 import membersExternal from './members-external/members-external-services';
+import fireStore from './members-external/firestore';
 
 export default function (app: Application): void {
   app.configure(user);
@@ -13,4 +14,6 @@ export default function (app: Application): void {
   app.configure(answer);
   app.configure(participant);
   app.configure(membersExternal);
+
+  app.configure(fireStore);
 }
