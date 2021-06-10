@@ -18,7 +18,7 @@ export default defineComponent({
     },
     props: {
         value: { default: true },
-        modelValue: {type: Object as PropType<string | boolean>, required: true},
+        modelValue: {type: [String, Boolean], required: true},
     },
     computed: {
         model: {

@@ -4,7 +4,7 @@
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
                 <div class="flex py-8 gap-6 font-bold justify-center" :class="inactiveTabColor">
-                    <h3 v-if="!isEventFinished" class="cursor-pointer" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
+                    <h3 v-if="!isEventFinished && !isEventArchived" class="cursor-pointer" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
                     <h3 class="cursor-pointer" :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
                 </div>
                 <template v-if="arePollsLoaded">
@@ -49,6 +49,9 @@ export default defineComponent({
         isEventFinished():Boolean{
             return this.pollingEvent.status === PollingEventStatus['Finished']
         },
+        isEventArchived():Boolean{
+            return this.pollingEvent.status === PollingEventStatus['Archived']
+        },
         backgroundColor(): String{
             return this.isEventLive? 'bg-blue-900': 'bg-gray-100'
         },
@@ -63,7 +66,7 @@ export default defineComponent({
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
                 .catch(this.$showError)
-            if(this.isEventFinished)
+            if(this.isEventFinished || this.isEventArchived)
                 this.currentTab = 'results';
         },
         async loadSavedPolls(){
