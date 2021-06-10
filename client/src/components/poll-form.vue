@@ -12,8 +12,8 @@
         <p class="mb-7">{{$t('info.answer-explanations')}}</p>
         <FormField v-model="pollData.confirmAnswer" class="mb-8" translation="confirmation" type="checkbox"/>
         <div v-for="(answer, index) in pollData.answers" :key="index"  class="flex gap-10">
-            <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index" type="string" :removable="index > 1" @remove="removeOption(index)"/>
-            <FormField v-model="pollData.answers[index].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${index})`" type="string" :removable="index > 1" @remove="removeOption(index)"/>
+            <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index + 1" type="string" :removable="index > 1" @remove="removeOption(index)"/>
+            <FormField v-if="pollData.confirmAnswer" v-model="pollData.answers[index].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${index + 1})`" type="string" :removable="index > 1" @remove="removeOption(index)"/>
         </div>
         <AddButton class="mb-8" translation="add-option" @click="addOption"/>
         <h3 class="font-bold mb-1">{{$t('labels.result-visibility')}}</h3>
@@ -67,13 +67,13 @@ export default defineComponent({
                 confirmAnswer: true,
                 answers: [
                     {
-                        label: "Yes",
-                        explanation: "Yes, I agree with the question",
+                        label: this.$t('labels.yes'),
+                        explanation: this.$t('explanations.agree'),
                         answerId: new Date().getTime(),
                     },
                     {
-                        label: "No",
-                        explanation: "No, I disagree with the question",
+                        label: this.$t('labels.no'),
+                        explanation: this.$t('explanations.disagree'),
                         answerId: new Date().getTime() + 1,
                     }
                 ]
