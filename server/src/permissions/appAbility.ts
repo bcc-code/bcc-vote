@@ -21,6 +21,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
         'participantFilter.org': 'all'as any,
         'participantFilter.role': 'all'as any
     });
+    can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}});
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
@@ -62,7 +63,6 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('remove', 'answer');
     },
     Member(user, { can, cannot }) {
-        can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
     }
 };
 
