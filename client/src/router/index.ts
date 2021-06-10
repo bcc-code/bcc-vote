@@ -18,6 +18,7 @@ async function authentication() {
         router.$user.churchID = user.churchID
         router.$user.personID = user.personID
         router.$user.roles = user.roles
+        router.$user.activeRole = user.activeRole
 
         return { user, authenticated: true }
 
