@@ -1,33 +1,40 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div v-for="option in poll.answers" :key="option">
-                <div class="result-bar mb-4">
-                    <div class="absolute py-4 top-0">
-                        <h5 class="font-bold ml-12" :style="`color: ${sortedAnswers[option.answerId].bgColor}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
-                    </div>
-                    <span :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
-                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
-                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+            <div  v-for="option in poll.answers" :key="option" class="result-bar mb-2">
+                <div class="absolute py-3 top-0">
+                    <h5 class="font-bold ml-12" :style="`color: ${sortedAnswers[option.answerId].bgColor}; white-space: nowrap;`">
+                        {{option.label}}</h5>
+                </div>
+                <span :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
+                    :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
+                    <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}}</h5>
+                </span>
+                <div class="absolute top-0 flex flex-row-reverse justify-between w-full p-3">
+                    <h5 class="font-bold text-gray-600">
+                        {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
+                    </h5>
+                    
+                    <span v-if="chosenOption === option.answerId" class="h-5 w-5 p-1 border border-black-100 mr-4 bg-black-100 rounded-full">
+                        <CheckIcon class="text-white"/>
                     </span>
                 </div>
             </div>
         </div>
         <div class="py-5">
             <div v-if="pollResultsAreVisible">
-                <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
+                <h5 class="font-bold mb-3 text-gray-600">{{$t('labels.participants')}}</h5>
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
-                        <div class="py-2 flex justify-between items-center border-gray-200"
+                        <div class="py-3 flex justify-between items-center border-gray-200"
                             :class="index === 0 ? '' : 'border-t-half'">
                             <div>
                                 <h4 class="font-bold">{{answer.displayName}}</h4>
-                                <label class=" text-gray-700">{{answer.churchName}}</label>
                             </div>
                             <div
                                 :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`"
-                                :class="['px-6 py-1 mr-1 rounded-lg text-white']">
-                                <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
+                                :class="['px-6 py-0.5 mr-1 rounded-lg text-white']">
+                                <h5 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h5>
                             </div>
                         </div>
                     </div>
@@ -39,11 +46,16 @@
     </div>
 </template>
 <script lang="ts">
+import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
 import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
+    components: {
+        CheckIcon
+    },
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
+        chosenOption: {type: Number},
         isEventCreator: {type: Boolean, default: false}
     },
     data() {
@@ -130,23 +142,11 @@ export default defineComponent({
 }
 
 .result-bar > span {
-  @apply py-4;
+  @apply py-3;
   display: block;
   height: 100%;
   position: relative;
   overflow: hidden;
   transition: width 2s;
-}
-.result-bar > span:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  background-size: 50px 50px;
-  transition: width 0.3 ease-out;
-  overflow: hidden;
 }
 </style>
