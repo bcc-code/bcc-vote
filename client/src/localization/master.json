@@ -102,7 +102,12 @@
       "non_public": "Your name and answer will be available for administrators of this polling event",
       "anonymous": "This is an anonymous voting, nobody will see your name and answer"
     },
-    "not-you": "Not you? Please go to login page"
+    "not-you": "Not you? Please sign out",
+    "tooltips": {
+        "poll-public": "Participants and administrators will see who voted for what",
+        "poll-non-public": "Only administrators will see who voted for what",
+        "poll-anonymous": "No one will see who voted for what"
+    }
   },
   "fields": {
     "poll-title": "Question title",
@@ -112,9 +117,9 @@
     "poll-min-age": "Min. Age",
     "poll-max-age": "Max. Age",
     "poll-roles": "Roles",
-    "poll-public": "Public (Everybody)",
-    "poll-non-public": "Event creator (Hidden for members)",
-    "poll-anonymous": "Anonymous (Hidden for everybody)",
+    "poll-public": "Public",
+    "poll-non-public": "Administrators",
+    "poll-anonymous": "Anonymous",
     "polling-event-title": "Polling event title",
     "optional": "Optional",
     "group": "Voting group",

@@ -1,31 +1,31 @@
 <template>
-    <div class="relative" @click="copy">
-        <div v-show="visible" class="absolute bg-black p-2 rounded-lg text-white" style="bottom: 120%; left: -50%">
-            {{$t('info.copied')}}
-        </div>
+    <ToolTip :translation="$t('info.copied')" :toggledTooltip="showToolTip" @click="copy">
         <slot>
         </slot>
-    </div>
+    </ToolTip>
 </template>
 
 <script lang="ts">
+import ToolTip from '../components/tooltip.vue'
 import { defineComponent } from 'vue'
-
 export default defineComponent({
+    components: {
+        ToolTip
+    },
     props: {
         toCopy: {type: String, required: true},
     },
     data() {
         return {
-            visible: false
+            showToolTip: false
         }
     },
     methods: {
         copy(){
             navigator.clipboard.writeText(this.toCopy).then(() => {
-                this.visible = true;
+                this.showToolTip = true;
                 setTimeout(() => {
-                    this.visible = false;
+                    this.showToolTip = false;
                 }, 1000)
             }, () => {
                 this.$showError('Unable to copy');
