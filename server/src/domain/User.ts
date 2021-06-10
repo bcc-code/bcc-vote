@@ -30,6 +30,8 @@ export type RoleName = 'CentralAdministrator'
     | 'FinanceManager'
     | 'SundaySchoolLeader'
     | 'Informasjonsmedarbeider'
+    | 'OrgRepresentative'
+    | 'VotingAdmin'
     | 'Member'
     | 'Org'
     | 'None';
