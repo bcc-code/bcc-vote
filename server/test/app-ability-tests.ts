@@ -104,7 +104,12 @@ describe('permissions - app ability', async () => {
 
       { action:"create", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
       { action:"create", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"patch", subject:"polling-event", activeRole:"VotingAdmin", entity:'eventForAllOrgs', expected: false },
+      { action:"remove", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
 
+      { action:"update", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+      { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
   ];
 
   useCases.forEach((useCase) => {

@@ -1,10 +1,5 @@
 export type UserDetails = {[key: string]: any} & {
-    personKey?:string,
-    twoFaDisabled?:boolean,
-    activeRole?:string,
-    verifiedCode?: any,
-    secretInUse?: any,
-    tempSecret?: any
+    activeRole?:RoleName,
 }
 
 export type Role = {
