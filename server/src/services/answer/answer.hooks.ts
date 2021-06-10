@@ -30,10 +30,17 @@ const addUserData = async (context:HookContext) => {
     const withUserFields = {
         ...context.data,
         displayName: user.displayName,
-        churchName: user.churchName
+        churchName: user.churchName,
     } as Answer;
+
     context.data = withUserFields;
     return context;
+};
+
+const addLastChangedTime = (context: HookContext) => {
+  const { data } = context;
+  data.lastChanged = Date.now()
+  return context;
 };
 
 export default {
@@ -41,7 +48,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData],
+        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
         update: [],
         patch: [],
         remove: []
