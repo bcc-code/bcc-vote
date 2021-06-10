@@ -1,5 +1,4 @@
 import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
-import { StringChain } from 'lodash';
 import { RoleName, UserDetails } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
@@ -22,7 +21,6 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
         'participantFilter.org': 'all'as any,
         'participantFilter.role': 'all'as any
     });
-    can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}});
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
@@ -64,6 +62,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('remove', 'answer');
     },
     Member(user, { can, cannot }) {
+        can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
     }
 };
 
