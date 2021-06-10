@@ -37,6 +37,8 @@
     "ok-continue": "Okay, continue"
   },
   "labels": {
+    "yes": "Yes",
+    "no": "No",
     "polling-events": "Polling events",
     "settings": "Settings",
     "connection-status": "Connection status",
@@ -115,5 +117,9 @@
   },
   "descriptions": {
     "home": "This app gives you the possibility to participate in live vote events"
+  },
+  "explanations": {
+    "disagree": "No, I disagree with the question",
+    "agree": "Yes, I agree with the question"
   }
 }
