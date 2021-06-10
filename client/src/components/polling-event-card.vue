@@ -23,8 +23,8 @@
                     </template>
                 </button>
             </div>
-            <div v-else class="text-blue-900 py-5">
-                <h5 class="inline-block font-bold mr-2">View event</h5>
+            <div v-else class="text-blue-900 pb-5">
+                <h5 class="inline-block font-bold mr-2">{{$t('actions.view-event')}}</h5>
                 <ArrowRightIcon class="h-5 inline-block"/>
             </div>
         </div>

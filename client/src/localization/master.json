@@ -18,6 +18,7 @@
     "add-poll": "Add another question",
     "admin-this-event": "Administrate this voting event",
     "join-this-event": "Join this voting event",
+    "view-event": "View event",
     "start-polling-event": "Start this polling event",
     "close-polling-event": "Close this polling event",
     "archive-polling-event": "Archive",
