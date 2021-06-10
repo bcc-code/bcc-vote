@@ -84,7 +84,6 @@ export default defineComponent({
             this.$router.push({ path: '/create' })
         },
         async loadPollingEvents(){
-            const roleIds = this.$user.roles.map((r: any) => r.id)
             const allEvents = await this.$client.service('polling-event').find({})
             allEvents.forEach((event: PollingEvent) => {
                 if(event.status === PollingEventStatus['Archived']){
@@ -111,7 +110,7 @@ export default defineComponent({
     .banner-text{
         height: 190px;
     }
-    @media (min-width: 720px) {
+    @media (min-width: 768px) {
         .event-grid {
             @apply grid-cols-2
         }
