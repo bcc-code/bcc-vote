@@ -6,7 +6,7 @@
         <InfoBox class="mb-8">
             {{$t('info.define-group')}}
         </InfoBox>
-        <FormField v-model="eventData.title" translation="poll-title" type="string"/>
+        <FormField v-model="eventData.title" translation="polling-event-title" type="string"/>
 
         <FormField v-model="eventData.description" translation="poll-description" type="string" :optional="true"/>
 
@@ -82,7 +82,7 @@ export default defineComponent({
         return {
             allChurches: [] as SelectObject[],
             allRoles: [] as SelectObject[],
-            numberOfVoters: 5,
+            numberOfVoters: 0,
             eventData: {
                 title: '',
                 description: '',

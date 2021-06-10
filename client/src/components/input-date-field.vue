@@ -59,8 +59,6 @@ export default defineComponent({
             if (Number.isNaN(time)) {
                 return
             }
-            if(time < new Date().getTime())
-                return
             this.$emit('update:modelValue', new Date(time))
         },
         resetValue():void {

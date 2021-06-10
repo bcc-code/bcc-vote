@@ -39,6 +39,8 @@
     "ok-continue": "Okay, continue"
   },
   "labels": {
+    "yes": "Yes",
+    "no": "No",
     "polling-events": "Polling events",
     "archive": "Archive",
     "settings": "Settings",
@@ -112,6 +114,7 @@
     "poll-public": "Public (Everybody)",
     "poll-non-public": "Event creator (Hidden for members)",
     "poll-anonymous": "Anonymous (Hidden for everybody)",
+    "polling-event-title": "Polling event title",
     "optional": "Optional",
     "group": "Voting group",
     "confirmation": "Confirmation",
@@ -120,5 +123,9 @@
   },
   "descriptions": {
     "home": "This app gives you the possibility to participate in live vote events"
+  },
+  "explanations": {
+    "disagree": "No, I disagree with the question",
+    "agree": "Yes, I agree with the question"
   }
 }

@@ -31,10 +31,12 @@ class Auth0Strategy extends OAuthStrategy {
 
 
             member._id = `user/${member._key}`;
-            member.roles = getRolesForPerson(member)
-            member.churchName = member.church.org.name
-            delete member.church
-            delete member.related
+            member.roles = getRolesForPerson(member);
+            member.churchName = member.church.org.name;
+            const highestLevelRole = member.roles[0];
+            member.activeRole = highestLevelRole.enumName;
+            delete member.church;
+            delete member.related;
 
             const existingUsers = (await userSvc.find({ query: { _key: member._key }})).data;
 

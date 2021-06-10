@@ -4,6 +4,7 @@ import { importDB } from '@bcc-code/arango-migrate';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { subject } from '@casl/ability';
 import { defineAbilityFor,subjects,actions  } from '../src/permissions/appAbility';
+import { RoleName } from '../src/domain';
 
 describe('permissions - app ability', async () => {
     type actionsType = (typeof actions)[number]
@@ -20,11 +21,11 @@ describe('permissions - app ability', async () => {
         testSet = pollingEventsTestSet();
     });
 
-    const runPermissionsTest = async function (action:actionsType, onEntity:any, expected: boolean, entityName:any="", changedData:any="") {
+    const runPermissionsTest = async function (action:actionsType, onEntity:any, expected: boolean, entityName:any="", activeRole?:RoleName, changedData:any="") {
 
         try {
             const user = await testSet.user();
-            const ability = defineAbilityFor(user);
+            const ability = defineAbilityFor(user,activeRole);
             const entity = await (testSet[entityName])() as any;
 
             let result = false;
@@ -65,26 +66,32 @@ describe('permissions - app ability', async () => {
     subject: subjectType,
     expected:boolean,
     field?:any,
-    entity?:string
+    entity?:string,
+    activeRole?:RoleName
  }
 
   const useCases:Array<useCaseType> = [
       // Permissions for get and find should be identical for polling events
-      { action:"find", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-      { action:"find", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-      { action:"find", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
-      { action:"find", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+      { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
 
-      { action:"get", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-      { action:"get", subject:"polling-event", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-      { action:"get", subject:"polling-event", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
-      { action:"get", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-      
-      { action:"update", subject:"polling-event", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+      { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"create", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
+      { action:"find", subject:"role", entity:'user', activeRole:"Member", expected: false },
+      { action:"find", subject:"org", entity:'user', activeRole:"Member", expected: false },
+      { action:"update", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
+      { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
+      { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Member", expected: false },
 
-      { action:"patch", subject:"polling-event", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-      { action:"find", subject:"role", entity:'user', expected: true },
-      { action:"find", subject:"org", entity:'user', expected: true },
+      { action:"update", subject:"polling-event", activeRole:"Developer", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"patch", subject:"polling-event", activeRole:"Developer", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"find", subject:"role", entity:'user', activeRole:"Developer", expected: true },
+      { action:"find", subject:"org", entity:'user', activeRole:"Developer", expected: true },
 
       { action:"update", subject:"poll", entity:'basePoll', expected: true },
       { action:"patch", subject:"poll", entity:'basePoll', expected: true },
@@ -97,7 +104,8 @@ describe('permissions - app ability', async () => {
           useCase.action,
           useCase.subject,
           useCase.expected,
-          useCase.entity
+          useCase.entity,
+          useCase.activeRole
       );
       });
 

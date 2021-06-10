@@ -20,11 +20,7 @@ describe('Form Validation', async () => {
 
         poll = await (testSet['basePoll'])() as any;
         user = await (testSet['user'])() as any;
-        user.church = {
-            org: {
-                name: 'Terwolde'
-            }
-        };
+        user.churchName = 'Terwolde';
     });
 
     it('Get a user', async () => {

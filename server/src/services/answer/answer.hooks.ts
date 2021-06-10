@@ -32,6 +32,7 @@ const addUserData = async (context:HookContext) => {
         displayName: user.displayName,
         churchName: user.churchName
     } as Answer;
+
     context.data = withUserFields;
     return context;
 };
