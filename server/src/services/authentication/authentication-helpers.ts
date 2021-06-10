@@ -1,16 +1,15 @@
 
 var _ = require('lodash');
-import { Role } from '../../domain';
+import { Role, RoleName } from '../../domain';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
-export function getRolesForPerson(existingPerson:any):Array<Role> {
+export function getRolesForPerson(existingPerson:any): { roles: Array<Role>, activeRole: RoleName} {
 
     const roles = existingPerson.related.roles;
-    const rolesFiltered = roles.filter((r:any) => rolesInUseInApp.includes(r.enumName));
 
-    const rolesFormattet: Role[] = [];
-    for (const i of rolesFiltered) {
+    let rolesFormattet: Array<Role> = [];
+    for (const i of roles) {
         const item:Role = {
             name: i.name,
             enumName: i.enumName,
@@ -30,13 +29,10 @@ export function getRolesForPerson(existingPerson:any):Array<Role> {
     };
     rolesFormattet.push(memberRole);
 
-    // Sort the permission from highest level to lowest level
-    rolesFormattet.sort(function (a, b) {
-        return a.securityLevel - b.securityLevel;
-    });
-
+    const activeRole = getActiveRole(rolesFormattet);
     const withoutDuplicates = combineRolesTypes(rolesFormattet);
-    return withoutDuplicates;
+
+    return { roles: withoutDuplicates, activeRole: activeRole};
 }
 
 function combineRolesTypes(roles:any){
@@ -51,4 +47,21 @@ function combineRolesTypes(roles:any){
         }
     }
     return combined;
+}
+
+function getActiveRole(userRoles:any):RoleName{
+    let activeRole = 'None' as RoleName;
+    let possibleActiveRoles = userRoles.filter((role:Role) => rolesInUseInApp.includes(role.enumName));
+
+    // Sort the permission from highest level to lowest level
+    possibleActiveRoles.sort(function (a:Role, b:Role) {
+        return a.securityLevel - b.securityLevel;
+    });
+
+    if(possibleActiveRoles.some((role:Role) => role.enumName === 'VotingAdmin')) { 
+        activeRole = 'VotingAdmin';
+    } else {
+        activeRole = possibleActiveRoles[0].enumName;
+    }
+    return activeRole;
 }
