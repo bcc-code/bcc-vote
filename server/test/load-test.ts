@@ -32,7 +32,7 @@ describe('Feathers application server tests', () => {
   //   server.close(done);
   // });
 
-  it.only('starts and shows the index page', async (done) => {
+  it.skip('Perform a socket load test on an environment', async (done) => {
 
     try {
       let numberOfConnections = 10
@@ -58,9 +58,9 @@ describe('Feathers application server tests', () => {
     }
 
 
-     var answer = await clients[0].service('answer').create(a,{})
+     var answer = await clients[0]?.service('answer').create(a,{})
 
-      let events = await  clients[0].service('polling-event').find({}) as any[];
+      let events = await  clients[0]?.service('polling-event').find({}) as any[];
 
       while (true) {
         await sleep(100)
@@ -107,7 +107,7 @@ async function newFeathersClient() {
 
 }
 
-async function sleep(msec) {
+async function sleep(msec:any) {
   return new Promise(resolve => setTimeout(resolve, msec));
 }
 

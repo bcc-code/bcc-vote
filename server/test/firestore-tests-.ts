@@ -43,11 +43,11 @@ describe('Firebase', () => {
 
       const doc = db.collection('123245')
 
-      const observer = doc.onSnapshot(docSnapshot => {
+      const observer = doc.onSnapshot((docSnapshot:any) => {
         //console.log(`Received doc snapshot: ${docSnapshot}`);
         //console.log(docSnapshot.docChanges());
 
-        docSnapshot.docChanges().forEach(change => {
+        docSnapshot.docChanges().forEach((change:any) => {
           if (change.type === 'added') {
             console.log('New city: ', change.doc.data());
           }
@@ -59,7 +59,7 @@ describe('Firebase', () => {
           }
         });
 
-      }, err => {
+      }, (err:any) => {
         console.log(`Encountered error: ${err}`);
       });
 
@@ -85,7 +85,7 @@ describe('Firebase', () => {
 
   });
 
-  async function sleep(msec) {
+  async function sleep(msec:any) {
     return new Promise(resolve => setTimeout(resolve, msec));
   }
 
