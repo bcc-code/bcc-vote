@@ -16,8 +16,8 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-poll": "Add another question",
-    "admin-this-event": "Administrate voting event",
-    "join-this-event": "Join voting event",
+    "admin-this-event": "Administrate",
+    "join-this-event": "Participate",
     "view-event": "View event",
     "start-polling-event": "Start polling event",
     "close-polling-event": "Close polling event",
@@ -105,9 +105,9 @@
     },
     "not-you": "Not you? Please sign out",
     "tooltips": {
-        "poll-public": "Participants and administrators will see who voted for what",
-        "poll-non-public": "Only administrators will see who voted for what",
-        "poll-anonymous": "No one will see who voted for what"
+      "poll-public": "Participants and administrators will see who voted for what",
+      "poll-non-public": "Only administrators will see who voted for what",
+      "poll-anonymous": "No one will see who voted for what"
     }
   },
   "fields": {

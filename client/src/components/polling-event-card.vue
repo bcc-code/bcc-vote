@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="p-4 h-full flex flex-col justify-between border-2 border-gray-200 rounded-lg shadow-base cursor-pointer" @click="clickOnEvent">
+        <div class="p-4 h-full flex flex-col justify-between border-2 border-gray-200 rounded-lg shadow-base">
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <div>
@@ -13,14 +13,12 @@
                 </div>
                 <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
             </div>
-            <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3">
-                <button class="gradient-button md-button">
-                    <template v-if="$user.personID === pollingEvent.creatorId" >
+            <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3 gap-5">
+                <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full" @click="goToAdmin()">
                     {{$t(`actions.admin-this-event`)}}
-                    </template>
-                    <template v-else>
+                </button>
+                <button v-if="canParticipate" class="md-button rounded-full text-white bg-blue-900 font-bold" @click="showConfirm = true">
                         {{$t(`actions.join-this-event`)}}
-                    </template>
                 </button>
             </div>
             <div v-else class="text-blue-900 pb-5">
@@ -82,6 +80,19 @@ export default defineComponent({
                 date = day + ' , ' + time
             }
             return date
+        },
+        canParticipate():boolean{
+            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
+            const filter = this.pollingEvent.participantFilter;
+            if(this.$user.age >= filter.maxAge)
+                return false;
+            if(this.$user.age < filter.minAge)
+                return false;
+            if(filter.org !== 'all' && this.$user.churchID != filter.org)
+                return false;
+            if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
+                return false
+            return true
         }
     },
     methods: {
@@ -91,11 +102,8 @@ export default defineComponent({
         goToLogout(){
             this.$router.push({name:'logout'})
         },
-        clickOnEvent(){
-            if(this.$user.personID === this.pollingEvent.creatorId)
-                this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
-            else
-                this.showConfirm = true
+        goToAdmin() {
+            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
         }
     }
 })

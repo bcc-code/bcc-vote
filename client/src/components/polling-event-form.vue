@@ -55,7 +55,7 @@ import { PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
 
 interface Role {
     name: string,
-    _key: string,
+    enumName: string,
 }
 
 interface Org {
@@ -150,13 +150,13 @@ export default defineComponent({
                         name: 1
                     },
               
-                    $select: ['name', '_key'],
+                    $select: ['name', 'enumName'],
                 }
             }).catch(this.$showError)
             this.allRoles = res.map((c: Role) => {
                 return {
                     name: c.name,
-                    val: c._key.toString(),
+                    val: c.enumName.toString(),
                 }
             })
             this.allRoles.unshift({name: "All roles", val: 'all'})
