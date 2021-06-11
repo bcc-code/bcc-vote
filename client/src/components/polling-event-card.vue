@@ -7,11 +7,11 @@
                         <label>{{formattedDate}}</label>
                         <h3 class="font-bold">{{pollingEvent.title}}</h3>
                     </div>
-                    <div :class="['px-2 py-1 mr-1 rounded-lg border-2 flex-shrink-0',statusColors[pollingEvent.status]]">
+                    <div :class="['px-2 py-0.5 mr-1 rounded-lg border-2 flex-shrink-0',statusColors[pollingEvent.status]]">
                         <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
                     </div>
                 </div>
-                <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
+                <p class="text-gray-700 mb-10 text-limit-2">{{pollingEvent.description}}</p>
             </div>
             <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3 gap-5">
                 <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full" @click="goToAdmin()">
@@ -108,3 +108,13 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped>
+.text-limit-2 {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+}
+</style>
