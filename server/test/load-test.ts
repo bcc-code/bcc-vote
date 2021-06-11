@@ -1,21 +1,14 @@
 import 'mocha';
-import { assert, use } from 'chai';
+import { assert } from 'chai';
 import { Server } from 'http';
-import url from 'url';
-import axios from 'axios';
 const socketio = require('@feathersjs/socketio-client');
 const io = require('socket.io-client');
 import feathers from '@feathersjs/feathers';
 import { getFeahtersToken }  from './setup-tests/test-set'
 import app from '../src/app';
 
-const port = app.get('port') || 8998;
-const getUrl = (pathname?: string): string => url.format({
-  hostname: app.get('host') || 'localhost',
-  protocol: 'http',
-  port,
-  pathname
-});
+
+
 
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
@@ -25,16 +18,15 @@ const getUrl = (pathname?: string): string => url.format({
 // to be present
 // -----------------------------------------------------------------------------------------
 
-describe('Feathers application server tests', () => {
-    let server: Server;
+describe('load test', () => {
     const testingVariables = app.get('testingSet')
     const host = app.get('host')
     const protocol = app.get('protocol')
 
-  it.only('Perform a socket load test on an environment', async (done) => {
+  it.skip('Perform a socket load test on an environment', async (done) => {
 
     try {
-      let numberOfConnections = 2000
+      let numberOfConnections = 1500
       let counter = 1
       let clientsPromises = []
       while (counter != numberOfConnections) {
