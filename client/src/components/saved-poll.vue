@@ -91,6 +91,6 @@ export default defineComponent({
 
 <style scoped>
   .blue-border{
-    border-left-color: #2A4E96;
+    border-left-color: #004C78;
   }
 </style>
