@@ -1,24 +1,26 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div  v-for="option in poll.answers" :key="option" class="result-bar mb-2">
-                <div class="absolute py-3 top-0">
-                    <h5 class="font-bold ml-12" :style="`color: ${sortedAnswers[option.answerId].bgColor}; white-space: nowrap;`">
-                        {{option.label}}</h5>
-                </div>
-                <span :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
-                    :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
-                    <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}}</h5>
-                </span>
-                <div class="absolute top-0 flex flex-row-reverse justify-between w-full p-3">
-                    <h5 class="font-bold text-gray-600">
+            <div  v-for="option in poll.answers" :key="option" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
+                <div class="absolute top-0 w-full bar-flex">
+                    <h5 :style="`color: ${sortedAnswers[option.answerId].bgColor};`">
+                        {{option.label}}
+                    </h5>
+                    <h5 class="text-gray-600">
                         {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
                     </h5>
-                    
-                    <span v-if="chosenOption === option.answerId" class="h-5 w-5 p-1 border border-dark-100 mr-4 bg-dark-100 rounded-full">
-                        <CheckIcon class="text-white"/>
-                    </span>
                 </div>
+                <div class="relative h-full overflow-hidden dark-ring rounded-l-lg animation" :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${barWidthPercent(option)}%;`]" :class="{'rounded-r-lg': isEndRounded(option)}">
+                    <div class="bar-flex calc-width text-white">
+                        <h5>{{option.label}}</h5>
+                        <h5>
+                            {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
+                        </h5>
+                    </div>
+                </div>
+                <span v-if="chosenOption === option.answerId" class="absolute top-0 h-5 w-5 p-1 check-icon rounded-full">
+                    <CheckIcon class="text-white"/>
+                </span>
             </div>
         </div>
         <div class="py-5">
@@ -83,11 +85,16 @@ export default defineComponent({
                 return false
             if(this.isEventCreator)
                 return true
-                 
             return false
-        }
+        },
     },
     methods: {
+        barWidthPercent(opt: Option): number{
+            return this.sortedAnswers[opt.answerId].count / this.totalCount * 100;
+        },
+        isEndRounded(opt: Option): boolean{
+            return this.barWidthPercent(opt) > 97;
+        },
         createSortedAnswer(poll:Poll){
             let colorIndex = 0
             poll.answers.forEach((option: Option) => {
@@ -134,19 +141,33 @@ export default defineComponent({
 })
 </script>
 <style>
-.result-bar {
-  box-sizing: content-box;
-  position: relative;
-  border-width: 1.5px;
-  @apply rounded-lg;
+.dark-ring{
+    box-shadow: inset 0 0 0 2.5px rgba(0, 0, 0, 0.1);
+}
+.calc-width {
+    width: calc(100vw - 32px)
 }
 
-.result-bar > span {
-  @apply py-3;
-  display: block;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: width 2s;
+@media screen and (min-width: 768px){
+    .calc-width {
+        width: 720px;
+    }
+}
+.bar-flex{
+    @apply flex;
+    @apply justify-between;
+    @apply h-full;
+    @apply items-center;
+    @apply pl-10;
+    @apply pr-4;
+    @apply font-bold;
+}
+.animation {
+    transition: width 0.5s ease-in-out
+}
+.check-icon {
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    @apply dark-ring
 }
 </style>
