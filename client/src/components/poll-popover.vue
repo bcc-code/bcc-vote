@@ -1,21 +1,28 @@
 <template>
     <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
-        <div class="h-full w-full px-4 md:px-6 p-8" :class="hasSavedAnswer ? 'relative' : 'absolute overflow-hidden'">
-            <InfoBox class="mb-9">
+        <div class="h-full w-full p-4 md:p-6">
+            <InfoBox v-if="!hasSavedAnswer" class="mb-4" @closed="infoBoxClosed = true">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
             </InfoBox>
-            <h4 class="font-bold mb-2">{{poll.title}}</h4>
-            <p>{{poll.description}}</p>
-            <div v-if="!hasSavedAnswer" class="h-full pt-10 pb-20">
+            <div :class="infoBoxClosed ? 'pt-4 pb-8' : 'pb-5'"> 
+                <h4 class="font-bold" >{{poll.title}}</h4>
+                <p v-if="poll.description" class="mt-2">{{poll.description}}</p>
+            </div>
+            <div v-if="!hasSavedAnswer" class="h-full mb-20">
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
-            <div v-else class="py-10">
+            <div v-else class="mb-5">
                 <PollResults :poll="poll" :key="poll._key"/>
             </div>
         </div>
         <transition name="fade">
             <div v-if="showConfirm && !hasSavedAnswer">
-                <VoteConfirm :chosenOption="chosenOption" @cancel="showConfirm = false" @confirm="submitAnswer(chosenOption)"/>
+                <VoteConfirm @cancel="showConfirm = false" @resign="showConfirm = false" @confirm="submitAnswer(chosenOption)">
+                    <div class="text-center">
+                        <h3 class="font-bold mb-3">{{$t('labels.vote-confirmation')}}</h3>
+                        <p class="mb-6">{{chosenOption.explanation}}</p>
+                    </div>
+                </VoteConfirm>
             </div>
         </transition>
     </div>
@@ -33,10 +40,11 @@ export default defineComponent({
         VoteConfirm
     },
     props: {
-        poll: Object as PropType<Poll>,
+        poll: {type: Object as PropType<Poll>, required: true}
     },
     data() {
         return {
+            infoBoxClosed: false as boolean,
             showConfirm: false as boolean,
             chosenOption: {} as Answer,
             hasSavedAnswer: false as boolean

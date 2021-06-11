@@ -1,22 +1,21 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div v-for="(option,index) in poll.answers" :key="option.answerId">
-                <div class="result-bar mb-6">
+            <div v-for="option in poll.answers" :key="option">
+                <div class="result-bar mb-4">
                     <div class="absolute py-4 top-0">
-                        <h5 class="font-bold ml-12" :style="`color: ${answerColors[index]}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
+                        <h5 class="font-bold ml-12" :style="`color: ${sortedAnswers[option.answerId].bgColor}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </div>
-                    <span :style="[`background-color: ${answerColors[index]};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
+                    <span :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
                         :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
                         <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
                     </span>
                 </div>
             </div>
         </div>
-        <div class="py-4">
-            <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
-            <InfoBox v-if="pollResultsAreHidden">{{$t('info.poll-anonymous')}}</InfoBox>
-            <div v-else-if="answers.length">
+        <div class="py-5">
+            <div v-if="pollResultsAreVisible">
+                <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
                         <div class="py-2 flex justify-between items-center border-gray-200"
@@ -33,8 +32,9 @@
                         </div>
                     </div>
                 </transition-group>
+                <Spinner v-if="answers.length === 0" inline/>
             </div>
-            <Spinner inline v-else />
+            <InfoBox v-else>{{$t('info.poll-is.'+poll.resultVisibility)}}</InfoBox>
         </div>
     </div>
 </template>
@@ -43,12 +43,14 @@ import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     props: {
-        poll: Object as PropType<Poll>
+        poll: {type: Object as PropType<Poll>, required: true},
+        isEventCreator: {type: Boolean, default: false}
     },
     data() {
         return {
             loaded: false as boolean,
-            answerColors: ['#758CDF','#FFA462','#F57988','#FFEB3B','#009688','#009688'],
+            answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
+            neutralColor: '#C1C7DA',
             answers: [] as Array<Answer>,
             totalCount: 0 as number,
             sortedAnswers: {} as {[answerId: number]: { count:number, bgColor: string}}
@@ -61,12 +63,16 @@ export default defineComponent({
         this.$client.io.on('reconnect', this.init)
     },
     computed: {
-        pollResultsAreHidden() {
-            if(this.poll && this.poll.resultVisibility !== PollResultVisibility['Public']) {
+        pollResultsAreVisible():boolean {
+            
+            if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
-            } else {
+            if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
                 return false
-            }
+            if(this.isEventCreator)
+                return true
+                 
+            return false
         }
     },
     methods: {
@@ -79,7 +85,11 @@ export default defineComponent({
                     ...option
                 }
                 colorIndex++
+                if(colorIndex >= this.answerColors.length)
+                    colorIndex = 0;
             })
+            const lastAnswer = poll.answers[poll.answers.length - 1]
+            this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor;
         },
         async loadAnswers(poll:Poll){
             const query = {

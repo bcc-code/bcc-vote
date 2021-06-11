@@ -1,89 +1,67 @@
 
 var _ = require('lodash');
+import { Role, RoleName } from '../../domain';
 
+const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
-export function getRolesForPerson(existingPerson:any) {
+export function getRolesForPerson(existingPerson:any): { roles: Array<Role>, activeRole: RoleName} {
 
-  var roles = existingPerson.related.roles;
+    const roles = existingPerson.related.roles;
 
-  let rolesFormattet: PermissionRole[] = [];
-  for (let i of roles) {
-    const item: PermissionRole = {
-      name: i.name,
-      enumName: i.enumName,
-      org: [i.personRole.org],
-      scope: i.personRole.scope,
-      securityLevel: i.securityLevel,
+    let rolesFormattet: Array<Role> = [];
+    for (const i of roles) {
+        const item:Role = {
+            name: i.name,
+            enumName: i.enumName,
+            org: [i.personRole.org],
+            scope: i.personRole.scope,
+            securityLevel: i.securityLevel,
+        };
+        rolesFormattet.push(item);
+    }
+
+    const memberRole: Role = {
+        name: "Member",
+        enumName: "Member",
+        org: ["org/"],
+        scope: "churchLevel",
+        securityLevel: 8,
     };
-    rolesFormattet.push(item);
-  }
+    rolesFormattet.push(memberRole);
 
-  let memberRole: PermissionRole = {
-    name: "Member",
-    enumName: "Member",
-    org: ["org/"],
-    scope: "churchLevel",
-    securityLevel: 8,
-  };
-  rolesFormattet.push(memberRole);
+    const activeRole = getActiveRole(rolesFormattet);
+    const withoutDuplicates = combineRolesTypes(rolesFormattet);
 
-  // Sort the permission from highest level to lowest level
-  rolesFormattet.sort(function (a, b) {
-    return a.securityLevel - b.securityLevel;
-  });
-
-
-  const withoutDuplicates = combineRolesTypes(rolesFormattet)
-  return withoutDuplicates;
+    return { roles: withoutDuplicates, activeRole: activeRole};
 }
 
 function combineRolesTypes(roles:any){
-  let combined :any =[]
-  for (const role of roles) {
-    let exist = _.find(combined,['name',role.name])
+    let combined:any = [];
+    for (const role of roles) {
+        let exist = _.find(combined,['name',role.name]);
 
-    if(!exist){
-      combined.push(role)
-    }else{
-      exist.org = [...exist.org, ...role.org]
+        if(!exist){
+            combined.push(role);
+        }else{
+            exist.org = [...exist.org, ...role.org];
+        }
     }
-  }
-  return combined
+    return combined;
 }
 
+function getActiveRole(userRoles:any):RoleName{
+    let activeRole = 'None' as RoleName;
+    let possibleActiveRoles = userRoles.filter((role:Role) => rolesInUseInApp.includes(role.enumName));
 
-export type RoleName = 'CentralAdministrator'
-    | 'Arrangementsansvarlige'
-    | 'SentralInformasjonsmedarbeider'
-    | 'BrunstadKontaktperson'
-    | 'PMOManager'
-    | 'BCCAnsatt'
-    | 'Developer'
-    | 'Innmelder'
-    | 'Forstander'
-    | 'HeadOfCommunications'
-    | 'ChairmanOfTheBoard'
-    | 'FinanceManager'
-    | 'SundaySchoolLeader'
-    | 'Informasjonsmedarbeider'
-    | 'OrgRepresentative'
-    | 'VotingAdmin'
-    | 'Member'
-    | 'Org'
-    | 'None';
+    // Sort the permission from highest level to lowest level
+    possibleActiveRoles.sort(function (a:Role, b:Role) {
+        return a.securityLevel - b.securityLevel;
+    });
 
-export interface Role {
-    _id: string;
-    enumName: RoleName;
-    name: string;
-    roleID?: number;
-    securityLevel: number;
-}
-
-export interface PermissionRole {
-    name: string;
-    enumName: RoleName;
-    org?: [string];
-    scope: string;
-    securityLevel: number;
+    if(possibleActiveRoles.some((role:Role) => role.enumName === 'VotingAdmin')) { 
+        activeRole = 'VotingAdmin';
+    } else {
+        activeRole = possibleActiveRoles[0].enumName;
+    }
+    return activeRole;
 }

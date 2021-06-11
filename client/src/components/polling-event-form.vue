@@ -6,11 +6,11 @@
         <InfoBox class="mb-8">
             {{$t('info.define-group')}}
         </InfoBox>
-        <FormField v-model="eventData.title" translation="poll-title" type="string"/>
+        <FormField v-model="eventData.title" translation="polling-event-title" type="string"/>
 
-        <FormField v-model="eventData.description" translation="poll-description" type="string" :optional="true"/>
+        <FormField v-model="eventData.description" translation="poll-description" type="string" optional/>
 
-        <FormField v-model="eventData.startDateTime" translation="poll-date" type="date"/>
+        <FormField v-model="eventData.startDateTime" translation="poll-date" type="date" optional/>
 
         <h3 class="font-bold mt-10 mb-5">{{$t('fields.group')}}</h3>
 
@@ -21,8 +21,8 @@
         <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allChurches"/>
 
         <div class="flex w-full gap-10 max-w-sm">
-            <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number"/>
-            <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number"/>
+            <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number" optional />
+            <FormField class="flex-grow" v-model="eventData.participantFilter.maxAge" translation="poll-max-age" type="number" optional />
         </div>
 
         <FormField v-model="eventData.participantFilter.role" type='select' translation="poll-roles" :options="allRoles"/>
@@ -82,7 +82,7 @@ export default defineComponent({
         return {
             allChurches: [] as SelectObject[],
             allRoles: [] as SelectObject[],
-            numberOfVoters: 5,
+            numberOfVoters: 0,
             eventData: {
                 title: '',
                 description: '',
@@ -107,19 +107,35 @@ export default defineComponent({
         this.loadOrgs()
         this.loadRoles()
     },
+    computed: {
+        votingAdminRole():any {
+            if(this.$user.activeRole === 'VotingAdmin') {
+                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0]
+                return role
+            } else {
+                return false
+            }
+        }
+    },
     methods: {
         async loadOrgs(){
-            const res = await this.$client.service('org').find({
-                query: {
-                    activeStatusCode: 0,
-                    type: 'church',
-                    $select: ['name', 'churchID'],
-                    $sort: {
-                        name: 1
-                    }
+            let query = {
+                activeStatusCode: 0,
+                type: 'church',
+                $select: ['name', 'churchID'],
+                $sort: {
+                    name: 1
                 }
-            }).catch(this.$showError)
-            res.unshift({name: "All churches", churchID: 'all'})
+            } as any
+            if(this.votingAdminRole) {
+                query._id = { $in: this.votingAdminRole.org}
+            }
+            const res = await this.$client.service('org').find({query}).catch(this.$showError)
+            
+            if(!this.votingAdminRole) {
+                res.unshift({name: "All churches", churchID: 'all'})
+            }
+
             this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
@@ -148,6 +164,8 @@ export default defineComponent({
         sendPollingEvent(){
             const data = this.eventData
             data.creatorId = this.$user.personID
+            if(data.startDateTime.getTime() === 0)
+                data.startDateTime = new Date()
             if(this.pollingEvent)
                 this.$client.service('polling-event').update(data._key, data)
                     .then(() => {

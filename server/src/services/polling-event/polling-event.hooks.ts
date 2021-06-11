@@ -13,6 +13,7 @@ const validateAndFormat = (context: HookContext) => {
     if (!data.title || data.title === '') throw Error('Validation Error: Please provide a title');
     if (!data.startDateTime || isNaN(Date.parse(data.startDateTime))) throw Error('Validation Error: Date is invalid');
     if (data.creatorId) data.creatorId = Number(data.creatorId);
+
     return context;
 };
 

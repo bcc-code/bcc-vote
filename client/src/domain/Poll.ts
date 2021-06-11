@@ -38,7 +38,7 @@ export interface Answer {
 export enum PollActiveStatus {
   'Not Started' = 'not_started',
   'Live' = 'live',
-  'Finished' = 'finished'
+  'Finished' = 'finished',
 }
 
 export enum PollResultVisibility {

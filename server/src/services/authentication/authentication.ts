@@ -29,12 +29,14 @@ class Auth0Strategy extends OAuthStrategy {
 
             member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
 
-
+            const { roles, activeRole} = getRolesForPerson(member);
+            
             member._id = `user/${member._key}`;
-            member.roles = getRolesForPerson(member)
-            member.churchName = member.church.org.name
-            delete member.church
-            delete member.related
+            member.roles = roles;
+            member.activeRole = activeRole;
+            member.churchName = member.church.org.name;
+            delete member.church;
+            delete member.related;
 
             const existingUsers = (await userSvc.find({ query: { _key: member._key }})).data;
 

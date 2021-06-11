@@ -10,13 +10,15 @@ const router: any = createRouter({
 async function authentication() {
     try {
         const { user } = await router.$client.reAuthenticate()
-        
+
         router.$user._key = user._key
         router.$user._id = user._id
+        router.$user.displayName = user.displayName
         router.$user.age = user.age
         router.$user.churchID = user.churchID
         router.$user.personID = user.personID
         router.$user.roles = user.roles
+        router.$user.activeRole = user.activeRole
 
         return { user, authenticated: true }
 
