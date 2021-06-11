@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen w-full fixed top-0 left-0 z-50 bg-dark-55 text-black" @click="$emit('resign')">
+    <div class="h-screen w-full fixed top-0 left-0 z-50 bg-dark text-black" @click="$emit('resign')">
         <div class="dialog-size bg-white rounded-lg py-8 px-6 md:px-10 relative" @click.stop>
             <slot></slot>
             <XIcon class="hidden w-6 h-6 p-1 mt-8 mr-4 absolute top-0 right-0 cursor-pointer md:block" @click="$emit('resign')"/>
@@ -29,8 +29,8 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.bg-dark-55 {
-    background: #00000055;
+.bg-dark {
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .dialog-size {
