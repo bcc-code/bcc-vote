@@ -53,7 +53,7 @@ import XIcon from 'heroicons-vue3/outline/XIcon'
 
 import { PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
 
-interface Role {
+interface RoleName {
     name: string,
     enumName: string,
 }
@@ -153,7 +153,7 @@ export default defineComponent({
                     $select: ['name', 'enumName'],
                 }
             }).catch(this.$showError)
-            this.allRoles = res.map((c: Role) => {
+            this.allRoles = res.map((c: RoleName) => {
                 return {
                     name: c.name,
                     val: c.enumName.toString(),
