@@ -1,33 +1,42 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div v-for="option in poll.answers" :key="option">
-                <div class="result-bar mb-4">
-                    <div class="absolute py-4 top-0">
-                        <h5 class="font-bold ml-12" :style="`color: ${sortedAnswers[option.answerId].bgColor}; white-space: nowrap;`">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
-                    </div>
-                    <span :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${totalCount === 0 ? 0 : sortedAnswers[option.answerId].count / totalCount * 100}%;`]"
-                        :class="sortedAnswers[option.answerId].count == totalCount ? 'rounded-lg' : 'rounded-l-lg'">
-                        <h5 class="font-bold text-white whitespace-nowrap overflow-hidden ml-12" style="white-space: nowrap;">{{option.label}} ({{sortedAnswers[option.answerId].count}})</h5>
-                    </span>
+            <div  v-for="option in poll.answers" :key="option" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
+                <div class="absolute top-0 w-full bar-flex">
+                    <h5 :style="`color: ${sortedAnswers[option.answerId].bgColor};`">
+                        {{option.label}}
+                    </h5>
+                    <h5 class="text-gray-600">
+                        {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
+                    </h5>
                 </div>
+                <div class="relative h-full overflow-hidden dark-ring rounded-l-lg animation" :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${barWidthPercent(option)}%;`]" :class="{'rounded-r-lg': isEndRounded(option)}">
+                    <div class="bar-flex calc-width text-white">
+                        <h5>{{option.label}}</h5>
+                        <h5>
+                            {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
+                        </h5>
+                    </div>
+                </div>
+                <span v-if="chosenOption === option.answerId" class="absolute top-0 h-5 w-5 p-1 check-icon rounded-full">
+                    <CheckIcon class="text-white"/>
+                </span>
             </div>
         </div>
         <div class="py-5">
             <div v-if="pollResultsAreVisible">
-                <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
+                <h5 class="font-bold mb-3 text-gray-600">{{$t('labels.participants')}}</h5>
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
                         <div class="py-2 flex justify-between items-center border-gray-500"
                             :class="index === 0 ? '' : 'border-t-half'">
                             <div>
                                 <h4 class="font-bold">{{answer.displayName}}</h4>
-                                <label class=" text-gray-700">{{answer.churchName}}</label>
                             </div>
                             <div
                                 :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`"
-                                :class="['px-6 py-1 mr-1 rounded-lg text-white']">
-                                <h4 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h4>
+                                :class="['px-6 py-0.5 mr-1 rounded-lg text-white']">
+                                <h5 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h5>
                             </div>
                         </div>
                     </div>
@@ -39,11 +48,16 @@
     </div>
 </template>
 <script lang="ts">
+import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
 import { Poll, PollResultVisibility, Answer, Option } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
+    components: {
+        CheckIcon
+    },
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
+        chosenOption: {type: Number},
         isEventCreator: {type: Boolean, default: false}
     },
     data() {
@@ -71,11 +85,16 @@ export default defineComponent({
                 return false
             if(this.isEventCreator)
                 return true
-                 
             return false
-        }
+        },
     },
     methods: {
+        barWidthPercent(opt: Option): number{
+            return this.sortedAnswers[opt.answerId].count / this.totalCount * 100;
+        },
+        isEndRounded(opt: Option): boolean{
+            return this.barWidthPercent(opt) > 97;
+        },
         createSortedAnswer(poll:Poll){
             let colorIndex = 0
             poll.answers.forEach((option: Option) => {
@@ -121,32 +140,34 @@ export default defineComponent({
 
 })
 </script>
-<style>
-.result-bar {
-  box-sizing: content-box;
-  position: relative;
-  border-width: 1.5px;
-  @apply rounded-lg;
+<style scoped>
+.dark-ring{
+    box-shadow: inset 0 0 0 2.5px rgba(0, 0, 0, 0.1);
+}
+.calc-width {
+    width: calc(100vw - 32px)
 }
 
-.result-bar > span {
-  @apply py-4;
-  display: block;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: width 2s;
+@media screen and (min-width: 768px){
+    .calc-width {
+        width: 720px;
+    }
 }
-.result-bar > span:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  background-size: 50px 50px;
-  transition: width 0.3 ease-out;
-  overflow: hidden;
+.bar-flex{
+    @apply flex;
+    @apply justify-between;
+    @apply h-full;
+    @apply items-center;
+    @apply pl-10;
+    @apply pr-4;
+    @apply font-bold;
+}
+.animation {
+    transition: width 0.5s ease-in-out
+}
+.check-icon {
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    @apply dark-ring
 }
 </style>
