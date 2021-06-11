@@ -7,7 +7,7 @@
         <SavedPoll v-for="(poll, ind) in savedPolls" :key="ind" :poll="poll" :pollIndex="ind" class="mb-6" @edit="startEditing(ind)" @stopEdit="reloadPolls" :inactiveMode="isAnythingEdited" :editMode="currentlyEditedIndex === ind" :isEventLive="isEventLive" @changeStatus="changePollStatus(poll)"/>
         <PollForm v-if="addingPoll" class="mb-5" :eventId="$route.params.id" @close="reloadPolls"/>
         <div class="flex justify-center pt-4">
-            <div class="gradient-blue lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || isAnythingEdited)}" @click="createNewPoll">
+            <div class="bg-blue-900 lg-button rounded-full text-white font-bold opacity-50 cursor-default"  :class="{'opacity-100 cursor-pointer': !(addingPoll || isAnythingEdited)}" @click="createNewPoll">
                 {{$t('actions.add-poll')}}
             </div>
         </div>

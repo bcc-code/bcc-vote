@@ -28,6 +28,11 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
+        name: 'Polling event live results',
+        path: '/polling-event/live-results/:id',
+        component: () => require('../views/LiveResults.vue')
+    },
+    {
         name: 'Thank you for participating',
         path: '/thank-you/:title',
         component: () => require('../views/ThankYou.vue'),

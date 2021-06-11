@@ -39,7 +39,7 @@
 
         <div class="flex justify-center py-5 gap-5 sm:mt-4">
             <h5 @click="$emit('close')" class="md-button text-gray-800 font-bold cursor-pointer">{{$t('actions.discard')}}</h5>
-            <h5 class="gradient-button md-button cursor-pointer" @click="sendPollingEvent">
+            <h5 class="primary-button md-button cursor-pointer" @click="sendPollingEvent">
                 {{pollingEvent? $t('actions.save-changes'):$t('actions.create-polling-event')}}
             </h5>
         </div>

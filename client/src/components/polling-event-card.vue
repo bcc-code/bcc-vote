@@ -14,7 +14,7 @@
                 <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
             </div>
             <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3">
-                <button class="gradient-button md-button">
+                <button class="primary-button md-button">
                     <template v-if="$user.personID === pollingEvent.creatorId" >
                     {{$t(`actions.admin-this-event`)}}
                     </template>
@@ -62,7 +62,7 @@ export default defineComponent({
                 'live':'text-red-600 bg-red-200 border-red-600 px-6',
                 'not_started':'text-blue-500 bg-blue-200 border-blue-500',
                 'finished':'text-green-400 bg-green-200 border-green-400',
-                'archived': 'text-gray-700 bg-gray-200 border-gray-700'
+                'archived': 'text-gray-700 bg-gray-500 border-gray-700'
             },
             showConfirm: false,
         }
