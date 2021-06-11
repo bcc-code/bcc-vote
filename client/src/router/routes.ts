@@ -29,7 +29,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         name: 'Thank you for participating',
-        path: '/thank-you',
+        path: '/thank-you/:title',
         component: () => require('../views/ThankYou.vue'),
         meta: {
             bgColor: "bg-blue-900"

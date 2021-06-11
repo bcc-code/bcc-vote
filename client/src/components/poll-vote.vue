@@ -38,7 +38,7 @@ export default defineComponent({
 .option-button {
     border-width: 1.5px;
     @apply rounded-lg;
-    @apply p-4;
+    @apply p-3;
 }
 .vote-button {
     @apply w-full;
