@@ -126,10 +126,10 @@ newValidPoll = JSON.parse(JSON.stringify(newValidPoll))
 }
 
 async function getFeahtersToken() {
-  //const user = (await standardFamilyTestSet()).loggedInUser
+  const testingVariables = app.get('testingSet')
+
   const token = await app.service('authentication').createAccessToken({
-    sub: 'user/178509735'
-    //user: user.related
+    sub: testingVariables.userId
   });
   return token
 }

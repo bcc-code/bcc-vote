@@ -18,32 +18,56 @@ const getUrl = (pathname?: string): string => url.format({
 });
 
 describe('Feathers application server tests', () => {
-  let server: Server;
+    let server: Server;
+    const testingVariables = app.get('testingSet')
+    const host = app.get('host')
+    const protocol = app.get('protocol')
 
-  before(function(done) {
-    server = app.listen(port);
-    server.once('listening', () => done());
-  });
+  // before(function(done) {
+  //   server = app.listen(port);
+  //   server.once('listening', () => done());
+  // });
 
-  after(function(done) {
-    server.close(done);
-  });
+  // after(function(done) {
+  //   server.close(done);
+  // });
 
-  it('starts and shows the index page', async (done) => {
+  it.only('starts and shows the index page', async (done) => {
 
     try {
-      let numberOfConnections = 500
+      let numberOfConnections = 10
       let counter = 1
-     let clients = []
+     let clientsPromises = []
      while (counter != numberOfConnections) {
-       clients.push(await newFeathersClient())
-
+      clientsPromises.push(newFeathersClient())
+      console.log('new conainer added no:',counter)
        counter++
      }
 
+     var clients = await Promise.all(clientsPromises)
+     //var answer = await clients[0].service('answer').get('1340021880',{})
+     var a = {
+       "_id": testingVariables.answerId,
+       "_from": testingVariables.pollId,
+       "_to": testingVariables.userId,
+      "answerId": 1623243249532,
+      "pollingEventId": "1339667582",
+      "displayName": "Philip Dalen",
+      "churchName": "Oslo/Follo",
+      "lastChanged": 1623335253622
+    }
+
+
+     var answer = await clients[0].service('answer').create(a,{})
+
       let events = await  clients[0].service('polling-event').find({}) as any[];
-      assert.isTrue(events.length > 0)
-     done()
+
+      while (true) {
+        await sleep(100)
+      }
+
+
+
     } catch (error) {
       assert.fail(error.message)
     }
@@ -53,14 +77,15 @@ describe('Feathers application server tests', () => {
   });
 
 async function newFeathersClient() {
+  try {
 
-  let url = `http://${app.get('host')}:${app.get('port')}`
+    let url = `${protocol}://${host}`
       let token = await getFeahtersToken()
       const socket = io(url, {
         extraHeaders: {
           'Authorization': `bearer ${token}`
         }
-      });
+    });
 
       const membersClient = feathers()
 
@@ -68,7 +93,22 @@ async function newFeathersClient() {
         timeout: 400000
       }));
 
+      var event = await membersClient.service('polling-event').get(testingVariables.pollingEentId,{})
+
+      membersClient.service('answer').on('created',(a:any)=>{
+        console.log('[RECEIVED PUBLISHED ANSWER IN CLIENT]')
+      })
+
       return membersClient
+
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+async function sleep(msec) {
+  return new Promise(resolve => setTimeout(resolve, msec));
 }
 
 });

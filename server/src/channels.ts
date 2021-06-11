@@ -17,7 +17,7 @@ export default function(app: Application): void {
       if(!data.firestore){
         data.firestore = true
         var docRef =  await db.collection('polling-event').add(data)
-        console.log("Document written with ID: ", docRef.id);
+        //console.log("Document written with ID: ", docRef.id);
       }else{
         return app.channel(data._key);
       }
@@ -30,7 +30,7 @@ export default function(app: Application): void {
       if(!data.firestore){
         data.firestore = true
         var docRef =  await db.collection('answer').add(data)
-        console.log("Document written with ID: ", docRef.id);
+        //console.log("Document written with ID: ", docRef.id);
       }else{
         return app.channel(data.pollingEventId);
       }
@@ -42,7 +42,7 @@ export default function(app: Application): void {
       if(!data.firestore){
         data.firestore = true
         var docRef =  await db.collection('poll').add(data)
-        console.log("Document written with ID: ", docRef.id);
+        //console.log("Document written with ID: ", docRef.id);
       }else{
         return app.channel(data.pollingEventId);
       }
@@ -55,7 +55,7 @@ export default function(app: Application): void {
       docSnapshot.docChanges().forEach((change:any) => {
         if (change.type === 'added') {
           app.service('answer').emit('created',change.doc.data())
-          console.log('new answer: ', change.doc.data());
+          //console.log('new answer: ', change.doc.data());
         }
       });
     })
@@ -66,7 +66,7 @@ export default function(app: Application): void {
       docSnapshot.docChanges().forEach((change:any) => {
         if (change.type === 'added') {
           app.service('poll').emit('patched',change.doc.data())
-          console.log('patched poll: ', change.doc.data());
+          //console.log('patched poll: ', change.doc.data());
         }
       });
     })
@@ -77,7 +77,7 @@ export default function(app: Application): void {
       docSnapshot.docChanges().forEach((change:any) => {
         if (change.type === 'added') {
           app.service('polling-event').emit('patched',change.doc.data())
-          console.log('patched polling-event: ', change.doc.data());
+          //console.log('patched polling-event: ', change.doc.data());
         }
       });
     })

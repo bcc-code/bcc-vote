@@ -5,12 +5,7 @@ import url from 'url';
 import feathers from '@feathersjs/feathers';
 import { getFeahtersToken }  from './setup-tests/test-set'
 import app from '../src/app';
-
-const firebase = require("firebase");
 const Firestore = require('@google-cloud/firestore');
-// Required for side-effects
-require("firebase/firestore");
-var admin = require("firebase-admin");
 
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string): string => url.format({
@@ -32,7 +27,7 @@ describe('Firebase', () => {
     server.close(done);
   });
 
-  it.only('setup a firebase instance', async (done) => {
+  it.skip('setup a firebase instance', async (done) => {
 
     try {
 

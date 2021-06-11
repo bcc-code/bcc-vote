@@ -24,6 +24,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
         can('find', 'org');
         can('find', 'role');
         can('remove', 'answer');
+        can('get', 'answer');
     }
 
     can('create','answer');
