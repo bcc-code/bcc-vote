@@ -140,7 +140,7 @@ export default defineComponent({
 
 })
 </script>
-<style>
+<style scoped>
 .dark-ring{
     box-shadow: inset 0 0 0 2.5px rgba(0, 0, 0, 0.1);
 }
