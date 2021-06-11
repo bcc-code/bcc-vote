@@ -110,6 +110,6 @@ $RECYCLE.BIN/
 # Others
 lib/
 data/
-
+public/
 .env
 .nyc_output

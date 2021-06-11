@@ -51,7 +51,9 @@ app.configure(services);
 app.configure(channels);
 
 // Configure a middleware for 404s and the error handler
+app.use("/loaderio-130e15d149cbac9df52e3162eeb68298.txt", express.static("load-testing"));
 app.use("/*", express.static(app.get("public")));
+
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
