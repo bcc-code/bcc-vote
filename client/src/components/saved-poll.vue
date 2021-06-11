@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!editMode" class="py-6 px-5 border-with-bar" :class="{'opacity-50 cursor-default': inactiveMode, 'blue-border': isLive, 'bg-gray-100 text-gray-800': isFinished}">
+        <div v-if="!editMode" class="py-6 px-5 border-with-bar" :class="{'opacity-50 cursor-default': inactiveMode, 'border-red': isLive, 'bg-gray-100 text-gray-800': isFinished}">
             <div class="flex justify-between mt-1 mb-2">
                 <h5 class="text-blue-900 font-bold">{{$t('labels.vote-type.'+poll.resultVisibility)}}</h5>
                 <div v-if="isNotStarted" class="flex gap-4">
@@ -27,11 +27,11 @@
                 </button>
                 </ToolTip>
                 <ToolTip v-else-if="isLive" :translation="$t('info.tooltips.close-poll')" align="right">
-                <button  class="md-button rounded-full font-bold bg-blue-900 text-white" @click="$emit('changeStatus')">
+                <button  class="md-button rounded-full font-bold bg-red-500 text-white" @click="$emit('changeStatus')">
                     {{$t('actions.close-poll')}}
                 </button>
                 </ToolTip>
-                <button v-else class="md-button rounded-full font-bold text-red-500 border-2 border-red-500" @click="republishConfirm = true">
+                <button v-else class="md-button rounded-full font-bold text-gray-800 border-2 border-gray-800" @click="republishConfirm = true">
                     {{$t('actions.republish-poll')}}
                 </button>
             </div>
@@ -120,7 +120,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .blue-border{
-    border-left-color: #004C78;
-  }
+    .border-red{
+         border-left-color: #EB7362;
+    }
 </style>
+
