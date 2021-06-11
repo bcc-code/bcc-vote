@@ -17,48 +17,48 @@ const getUrl = (pathname?: string): string => url.format({
   pathname
 });
 
+// -----------------------------------------------------------------------------------------
+// NB!!! Before running this performance test you have to run
+// npm run mocha-dev-in-cloud
+// this will set the NODE_ENV to dev-in-cloud which will use the dev-in-cloud config file
+// in the config file you will notice the performacnce test are reliying on hard coded data
+// to be present
+// -----------------------------------------------------------------------------------------
+
 describe('Feathers application server tests', () => {
     let server: Server;
     const testingVariables = app.get('testingSet')
     const host = app.get('host')
     const protocol = app.get('protocol')
 
-  // before(function(done) {
-  //   server = app.listen(port);
-  //   server.once('listening', () => done());
-  // });
-
-  // after(function(done) {
-  //   server.close(done);
-  // });
-
-  it.skip('Perform a socket load test on an environment', async (done) => {
+  it.only('Perform a socket load test on an environment', async (done) => {
 
     try {
-      let numberOfConnections = 10
+      let numberOfConnections = 2000
       let counter = 1
-     let clientsPromises = []
-     while (counter != numberOfConnections) {
-      clientsPromises.push(newFeathersClient())
-      console.log('new conainer added no:',counter)
-       counter++
-     }
+      let clientsPromises = []
+      while (counter != numberOfConnections) {
+        clientsPromises.push(newFeathersClient())
+        console.log('new conainer added no:',counter)
+        counter++
+      }
 
-     var clients = await Promise.all(clientsPromises)
+      var clients = await Promise.all(clientsPromises)
      //var answer = await clients[0].service('answer').get('1340021880',{})
-     var a = {
-       "_id": testingVariables.answerId,
-       "_from": testingVariables.pollId,
-       "_to": testingVariables.userId,
-      "answerId": 1623243249532,
-      "pollingEventId": "1339667582",
-      "displayName": "Philip Dalen",
-      "churchName": "Oslo/Follo",
-      "lastChanged": 1623335253622
-    }
+      var a = {
+        "_id": testingVariables.answerId,
+        "_from": testingVariables.pollId,
+        "_to": testingVariables.userId,
+        "answerId": 1623243249532,
+        "pollingEventId": "1339667582",
+        "displayName": "Philip Dalen",
+        "churchName": "Oslo/Follo",
+        "lastChanged": 1623335253622
+      }
 
 
-     var answer = await clients[0]?.service('answer').create(a,{})
+      var answer = await clients[0]?.service('answer').create(a,{})
+      var deletedAnswer = await clients[0]?.service('answer').remove(answer._key,{})
 
       let events = await  clients[0]?.service('polling-event').find({}) as any[];
 
@@ -66,15 +66,11 @@ describe('Feathers application server tests', () => {
         await sleep(100)
       }
 
-
-
     } catch (error) {
       assert.fail(error.message)
     }
-    const membersConfig = app.get("members");
-
-
   });
+
 
 async function newFeathersClient() {
   try {
@@ -82,6 +78,7 @@ async function newFeathersClient() {
     let url = `${protocol}://${host}`
       let token = await getFeahtersToken()
       const socket = io(url, {
+        transports:["websocket", "polling"],
         extraHeaders: {
           'Authorization': `bearer ${token}`
         }
@@ -93,7 +90,9 @@ async function newFeathersClient() {
         timeout: 400000
       }));
 
+
       var event = await membersClient.service('polling-event').get(testingVariables.pollingEentId,{})
+      console.log('Socket was added to the polling-event channel')
 
       membersClient.service('answer').on('created',(a:any)=>{
         console.log('[RECEIVED PUBLISHED ANSWER IN CLIENT]')
