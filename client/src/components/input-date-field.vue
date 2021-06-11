@@ -41,7 +41,6 @@ export default defineComponent({
     },
     methods: {
         init():void {
-            console.log(this.modelValue)
             if(this.modelValue.getTime()){
                 const date = this.modelValue
                 this.day = this.format(date.getDate())
