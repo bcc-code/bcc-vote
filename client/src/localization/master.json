@@ -96,7 +96,7 @@
     "answer-explanations": "You can decide if voters will be asked to confirm their decision. You have the possibility to edit the confirmation below",
     "polls-will-appear": "The question will appear on the screen when it's published.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
-    "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To inactive this polling event press “Close polling event” at the top.",
+    "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To deactivate this polling event press “Close polling event” at the top.",
     "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this question event and they can vote on it.",
     "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
     "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
