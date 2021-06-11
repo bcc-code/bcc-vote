@@ -35,7 +35,7 @@
             <h5 class="md-button text-gray-800 font-bold cursor-pointer" @click="$emit('close')">
                 {{$t('actions.discard')}}
             </h5>
-            <h5 class="gradient-button md-button cursor-pointer" @click="sendPoll">
+            <h5 class="primary-button md-button cursor-pointer" @click="sendPoll">
                 {{poll ? $t('actions.change-poll'): $t('actions.save-poll')}}
             </h5>
         </div>

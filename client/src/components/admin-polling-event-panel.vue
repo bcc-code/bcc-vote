@@ -3,11 +3,12 @@
         <template v-if="!edit">
             <div class="flex justify-between items-center mb-5">
                 <h2 class="font-bold">{{pollingEvent.title}}</h2>
-                <div class="flex gap-3">
+                <div class="flex items-center gap-3">
                     <CopyText :toCopy="eventUrl">
                         <LinkIcon @click="getLink" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
                     </CopyText>
                     <PencilIcon v-if="isEventNotStarted" @click="editPollingEvent" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
+                    <button v-if="false" @click="openLiveResults" class="text-blue-900 border-blue-900 border-2 sm-button rounded-xl font-bold">{{$t('labels.show-results-live')}}</button>
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
@@ -106,7 +107,11 @@ export default defineComponent({
             const url = location.origin + '/polling-event/lobby/' + this.pollingEvent._key;
             navigator.clipboard.writeText(url)
         },
-        updateEvent(){
+        openLiveResults() {
+            let routeData = this.$router.resolve({ path: `/polling-event/live-results/${this.pollingEvent._key}`})
+            window.open(routeData.href, '_blank')
+        },
+        updateEvent() {
             this.edit = false;
             this.$emit('reloadPollingEvent');
         }

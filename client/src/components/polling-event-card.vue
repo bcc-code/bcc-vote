@@ -60,7 +60,7 @@ export default defineComponent({
                 'live':'text-red-600 bg-red-200 border-red-600 px-6',
                 'not_started':'text-blue-500 bg-blue-200 border-blue-500',
                 'finished':'text-green-400 bg-green-200 border-green-400',
-                'archived': 'text-gray-700 bg-gray-200 border-gray-700'
+                'archived': 'text-gray-700 bg-gray-500 border-gray-700'
             },
             showConfirm: false,
         }

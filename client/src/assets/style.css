@@ -95,14 +95,10 @@
     background-color: rgba(209, 232, 238, 0.6);
   }
   
-  .gradient-blue {
-    background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
-  }
-  
-  .gradient-button {
+  .primary-button {
     @apply font-bold;
     @apply text-white;
-    @apply gradient-blue;
+    @apply bg-blue-900;
     @apply rounded-full;
   }
   
@@ -115,6 +111,12 @@
     min-height: 50%;
   }
   
+  .sm-button {
+    @apply py-2;
+    @apply pr-3;
+    @apply pl-4;
+  }
+
   .lg-button {
     @apply py-4;
     @apply px-6;

@@ -7,7 +7,7 @@
                 <p class="hidden sm:block mb-8 pb-3">
                     {{$t('descriptions.home')}}
                 </p>
-                <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="gradient-button md-button mt-2 md:mb-8">
+                <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="primary-button md-button mt-2 md:mb-8">
                     <h4>{{$t('actions.create-polling-event')}}</h4>
                 </button>
             </div>

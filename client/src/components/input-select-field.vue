@@ -46,7 +46,7 @@ export default defineComponent({
 <style scoped>
   .box-field {
       @apply border-2;
-      @apply border-gray-200;
+      @apply border-gray-500;
       @apply rounded;
 
       @apply w-full;
