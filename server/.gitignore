@@ -112,5 +112,4 @@ lib/
 data/
 
 .env
-public/
 .nyc_output
