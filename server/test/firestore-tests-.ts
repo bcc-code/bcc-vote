@@ -1,19 +1,9 @@
 import 'mocha';
-import { assert, use } from 'chai';
+import { assert } from 'chai';
 import { Server } from 'http';
-import url from 'url';
-import feathers from '@feathersjs/feathers';
-import { getFeahtersToken }  from './setup-tests/test-set'
 import app from '../src/app';
 const Firestore = require('@google-cloud/firestore');
-
 const port = app.get('port') || 8998;
-const getUrl = (pathname?: string): string => url.format({
-  hostname: app.get('host') || 'localhost',
-  protocol: 'http',
-  port,
-  pathname
-});
 
 describe('Firebase', () => {
   let server: Server;
