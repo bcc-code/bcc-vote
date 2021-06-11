@@ -21,7 +21,7 @@
                         {{$t(`actions.join-this-event`)}}
                 </button>
             </div>
-            <div v-else class="text-blue-900 pb-5">
+            <div v-else class="text-blue-900 pb-5 cursor-pointer" @click="viewEvent">
                 <h5 class="inline-block font-bold mr-2">{{$t('actions.view-event')}}</h5>
                 <ArrowRightIcon class="h-5 inline-block"/>
             </div>
@@ -97,13 +97,19 @@ export default defineComponent({
     },
     methods: {
         goToLobby() {
-            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
+            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`)
         },
         goToLogout(){
             this.$router.push({name:'logout'})
         },
         goToAdmin() {
-            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
+            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`)
+        },
+        viewEvent() {
+            if(this.pollingEvent.creatorId === this.$user.personID)
+                this.goToAdmin()
+            else
+                this.goToLobby()
         }
     }
 })
