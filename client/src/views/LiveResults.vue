@@ -1,21 +1,17 @@
 <template>
-    <div :class="[backgroundColor,'max-w-5xl mx-auto px-4']">
-        <h3 class="font-bold px-4 py-6 text-blue-900">{{pollingEvent.title}}</h3>
-        <div>
-            <div class="w-full h-full">
-                <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
+    <div :class="backgroundColor">
+        <div class="max-w-5xl mx-auto px-4">
+            <h3 class="font-bold px-4 py-6 text-blue-900">{{pollingEvent.title}}</h3>
+            <div class="form-section">
+                Results
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import PollingEventPanel from '../components/admin-polling-event-panel.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent } from 'vue'
 export default defineComponent({
-    components: {
-        PollingEventPanel,
-    },
     data() {
         return {
             pollingEvent: {} as PollingEvent

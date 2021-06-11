@@ -8,7 +8,9 @@
                         <LinkIcon @click="getLink" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
                     </CopyText>
                     <PencilIcon v-if="isEventNotStarted" @click="editPollingEvent" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
-                    <button v-if="false" @click="openLiveResults" class="text-blue-900 border-blue-900 border-2 sm-button rounded-xl font-bold">{{$t('labels.show-results-live')}}</button>
+                    <button v-if="isEventLive" @click="openLiveResults" class="border-blue-900 border-2 sm-button rounded-xl">
+                        <h5 class="text-blue-900 font-bold">{{$t('labels.show-results-live')}}</h5>
+                    </button>
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
@@ -63,18 +65,18 @@ export default defineComponent({
     },
     computed: {
         eventUrl():string{
-            return location.origin + '/polling-event/lobby/' + this.pollingEvent._key;
+            return location.origin + '/polling-event/lobby/' + this.pollingEvent._key
         },
-        isEventNotStarted():Boolean{
+        isEventNotStarted():boolean{
             return this.pollingEvent.status === PollingEventStatus['Not Started']
         },
-        isEventLive():Boolean{
+        isEventLive():boolean{
             return this.pollingEvent.status === PollingEventStatus['Live']
         },
-        isEventFinished():Boolean{
+        isEventFinished():boolean{
             return this.pollingEvent.status === PollingEventStatus['Finished']
         },
-        isEventArchived():Boolean{
+        isEventArchived():boolean{
             return this.pollingEvent.status === PollingEventStatus['Archived']
         },
     },
