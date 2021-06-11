@@ -1,6 +1,6 @@
 <template>
   <div class="relative w-5 h-5">
-    <div v-show="isSet" class="absolute top-0 gradient-blue w-5 h-5 rounded">
+    <div v-show="isSet" class="absolute top-0 bg-blue-900 w-5 h-5 rounded">
       <CheckIcon class="w-5 h-5 text-white absolute top-0"/>
     </div>
     <div class="absolute the-border rounded w-5 h-5"></div>

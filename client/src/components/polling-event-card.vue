@@ -14,7 +14,7 @@
                 <p class="text-gray-700 mb-10">{{pollingEvent.description}}</p>
             </div>
             <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3">
-                <button class="gradient-button md-button">
+                <button class="primary-button md-button">
                     <template v-if="$user.personID === pollingEvent.creatorId" >
                     {{$t(`actions.admin-this-event`)}}
                     </template>

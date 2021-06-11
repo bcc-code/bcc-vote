@@ -21,7 +21,7 @@
                 {{$t('info.republish-poll')}}
             </template>
         </label>
-        <h5 class="md-button rounded-full flex-shrink-0 cursor-pointer font-bold" :class="{'gradient-blue text-white': !isFinished, 'text-red-500 border-2 border-red-500': isFinished}" @click="$emit('changeStatus')">
+        <h5 class="md-button rounded-full flex-shrink-0 cursor-pointer font-bold" :class="{'bg-blue-900 text-white': !isFinished, 'text-red-500 border-2 border-red-500': isFinished}" @click="$emit('changeStatus')">
             <template v-if="isNotStarted">
                 {{$t('actions.publish-poll')}}
             </template>
