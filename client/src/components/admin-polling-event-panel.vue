@@ -8,7 +8,7 @@
                         <LinkIcon @click="getLink" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
                     </CopyText>
                     <PencilIcon v-if="isEventNotStarted" @click="editPollingEvent" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
-                    <button @click="openLiveResults" class="text-blue-900 border-blue-900 border-2 sm-button rounded-xl font-bold">Live Results</button>
+                    <button v-if="false" @click="openLiveResults" class="text-blue-900 border-blue-900 border-2 sm-button rounded-xl font-bold">{{$t('labels.show-results-live')}}</button>
                 </div>
             </div>
             <p class="text-gray-700">{{pollingEvent.description}}</p>
