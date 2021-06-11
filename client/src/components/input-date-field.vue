@@ -41,10 +41,11 @@ export default defineComponent({
     },
     methods: {
         init():void {
+            console.log(this.modelValue)
             if(this.modelValue.getTime()){
                 const date = this.modelValue
-                this.day = this.format(date.getDay())
-                this.month = this.format(date.getMonth())
+                this.day = this.format(date.getDate())
+                this.month = this.format(date.getMonth() + 1)
                 this.year = this.format(date.getFullYear())
                 this.hour = this.format(date.getHours())
                 this.minute = this.format(date.getMinutes())
