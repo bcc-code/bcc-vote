@@ -18,7 +18,7 @@
                 <h4 class="font-bold mb-8">{{$t('labels.participants')}}</h4>
                 <transition-group name="list" tag="div">
                     <div v-for="(answer,index) in answers" :key="answer._key">
-                        <div class="py-2 flex justify-between items-center border-gray-200"
+                        <div class="py-2 flex justify-between items-center border-gray-500"
                             :class="index === 0 ? '' : 'border-t-half'">
                             <div>
                                 <h4 class="font-bold">{{answer.displayName}}</h4>
