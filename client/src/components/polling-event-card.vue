@@ -11,19 +11,15 @@
                         <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
                     </div>
                 </div>
-                <p class="text-gray-700 mb-10 text-limit-2">{{pollingEvent.description}}</p>
+                <p class="text-gray-700 text-limit-2">{{pollingEvent.description}}</p>
             </div>
-            <div v-if="isEventNotStarted || isEventLive" class="flex justify-center mb-3 gap-5">
-                <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full" @click="goToAdmin()">
+            <div class="flex justify-center mb-3 gap-5">
+                <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full mt-10" @click="goToAdmin()">
                     {{$t(`actions.admin-this-event`)}}
                 </button>
-                <button v-if="canParticipate" class="md-button rounded-full text-white bg-blue-900 font-bold" @click="showConfirm = true">
+                <button v-if="canParticipate" class="md-button rounded-full text-white bg-blue-900 font-bold mt-10" @click="showConfirm = true">
                         {{$t(`actions.join-this-event`)}}
                 </button>
-            </div>
-            <div v-else class="text-blue-900 pb-5">
-                <h5 class="inline-block font-bold mr-2">{{$t('actions.view-event')}}</h5>
-                <ArrowRightIcon class="h-5 inline-block"/>
             </div>
         </div>
         <transition name="fade">
@@ -82,6 +78,10 @@ export default defineComponent({
             return date
         },
         canParticipate():boolean{
+            if(this.pollingEvent.status === PollingEventStatus['Finished'])
+                return false
+            if(this.pollingEvent.status === PollingEventStatus['Archived'])
+                return false
             const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
             const filter = this.pollingEvent.participantFilter;
             if(this.$user.age >= filter.maxAge)
@@ -97,13 +97,13 @@ export default defineComponent({
     },
     methods: {
         goToLobby() {
-            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
+            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`)
         },
         goToLogout(){
             this.$router.push({name:'logout'})
         },
         goToAdmin() {
-            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
+            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`)
         }
     }
 })
