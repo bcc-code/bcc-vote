@@ -30,7 +30,6 @@ const addUserData = async (context:HookContext) => {
     const withUserFields = {
         ...context.data,
         displayName: user.displayName,
-        churchName: user.churchName,
     } as Answer;
 
     context.data = withUserFields;

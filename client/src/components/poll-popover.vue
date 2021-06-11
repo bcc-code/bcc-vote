@@ -12,7 +12,7 @@
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
             <div v-else class="mb-5">
-                <PollResults :poll="poll" :key="poll._key"/>
+                <PollResults :chosenOption="chosenOption.answerId" :poll="poll" :key="poll._key"/>
             </div>
         </div>
         <transition name="fade">
@@ -73,6 +73,7 @@ export default defineComponent({
                     })
                     .catch((err:Error) => {
                         if(err.message.includes('You cannot vote 2 times')) {
+                            this.chosenOption = {} as Answer;
                             this.hasSavedAnswer = true
                         }
                         this.$showError(err)

@@ -1,6 +1,6 @@
 <template>
   <div class="relative w-5 h-5">
-    <div v-show="isSet" class="absolute top-0 gradient-blue w-5 h-5 rounded-full">
+    <div v-show="isSet" class="absolute top-0 bg-blue-900 w-5 h-5 rounded-full">
         <div class="w-2 h-2 m-1.5 rounded-full bg-white"></div>
     </div>
     <div class="absolute the-border rounded-full w-5 h-5"></div>

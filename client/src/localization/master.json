@@ -16,8 +16,8 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-poll": "Add another question",
-    "admin-this-event": "Administrate voting event",
-    "join-this-event": "Join voting event",
+    "admin-this-event": "Administrate",
+    "join-this-event": "Participate",
     "view-event": "View event",
     "start-polling-event": "Start polling event",
     "close-polling-event": "Close polling event",
@@ -29,15 +29,16 @@
     "delete-poll": "Delete question",
     "save-changes": "Save changes",
     "discard": "Discard",
-    "publish-poll": "Publish question",
-    "republish-poll": "Republish question",
-    "close-poll": "Close question",
+    "publish-poll": "Publish",
+    "republish-poll": "Republish",
+    "close-poll": "Close",
     "get-report": "Get a report",
     "go-back-home": "Back to the home screen",
     "logout": "Sign Out",
     "customer-support": "Customer support",
     "go-to-login": "Go to login page",
-    "ok-continue": "Okay, continue"
+    "ok-continue": "Okay, continue",
+    "yes-continue": "Yes, continue"
   },
   "labels": {
     "yes": "Yes",
@@ -52,12 +53,14 @@
     "new-poll": "New Question",
     "new-polling-event": "New polling event",
     "edit-polling-event": "Edit polling event",
-    "poll-queue": "Question Queue",
+    "poll-queue": "Questions",
     "results": "Results",
+    "show-results-live": "Show results live",
     "voters": "Voters",
     "votes": "Votes",
+    "vote": "Vote",
     "vote-confirmation": "Vote confirmation",
-    "answers": "Answers",
+    "answers": "Alternatives",
     "option": "Option",
     "event-results": "Polling event results",
     "result-visibility": "Results visibility",
@@ -68,6 +71,11 @@
       "finished": "Finished",
       "archived": "Archived"
     },
+    "vote-type": {
+      "public": "Public",
+      "non_public": "Administrators only",
+      "anonymous": "Anonymous"
+    },
     "poll-result-visibility": {
       "public": "Public",
       "non_public": "Not Public",
@@ -75,7 +83,8 @@
     },
     "bcc-vote": "BCC Vote",
     "thank-you": "Thank you for participating!",
-    "logged-as": "You are now voting as"
+    "logged-as": "You are now voting as",
+    "sure-republish": "Are you sure that you want to republish this question?"
   },
   "info": {
     "no-polling-events": "There are no polling events currently available",
@@ -87,7 +96,7 @@
     "answer-explanations": "You can decide if voters will be asked to confirm their decision. You have the possibility to edit the confirmation below",
     "polls-will-appear": "The question will appear on the screen when it's published.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
-    "polls-activation-explaination": "In the question queue you can see the list of questions that have been added to the event. In order to activate a question for users - press “Publish this question”. To deactivate this event session press “Close this question” at the bottom of this section.",
+    "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To deactivate this polling event press “Close polling event” at the top.",
     "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this question event and they can vote on it.",
     "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
     "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
@@ -104,9 +113,13 @@
     },
     "not-you": "Not you? Please sign out",
     "tooltips": {
-        "poll-public": "Participants and administrators will see who voted for what",
-        "poll-non-public": "Only administrators will see who voted for what",
-        "poll-anonymous": "No one will see who voted for what"
+      "poll-public": "Participants and administrators will see who voted for what",
+      "poll-non-public": "Only administrators will see who voted for what",
+      "poll-anonymous": "No one will see who voted for what",
+      "publish-poll": "Participants will see the question, can vote and see the results",
+      "close-poll": "Participant won't see the question or the results",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "fields": {

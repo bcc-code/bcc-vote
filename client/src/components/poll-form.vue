@@ -9,7 +9,7 @@
         <FormField v-model="pollData.title" translation = "poll-title" type="string"/>
         <FormField v-model="pollData.description" translation = "poll-description" type="string" optional/>
         <h3 class="font-bold">{{$t('labels.answers')}}</h3>
-        <p class="mb-7">{{$t('info.answer-explanations')}}</p>
+        <p class="mb-7 text-gray-800">{{$t('info.answer-explanations')}}</p>
         <FormField v-model="pollData.confirmAnswer" class="mb-8" translation="confirmation" type="checkbox"/>
         <div v-for="(answer, index) in pollData.answers" :key="index"  class="flex gap-10">
             <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index + 1" type="string" :removable="index > 1" @remove="removeOption(index)"/>
@@ -17,7 +17,7 @@
         </div>
         <AddButton class="mb-8" translation="add-option" @click="addOption"/>
         <h3 class="font-bold mb-1">{{$t('labels.result-visibility')}}</h3>
-        <p class="mb-6">{{$t('info.names-available-for')}}</p>
+        <p class="mb-6 text-gray-800">{{$t('info.names-available-for')}}</p>
         <ToolTip :translation="$t('info.tooltips.poll-public')">
             <FormField v-model="pollData.resultVisibility" :value="visibility['Public']" translation="poll-public" type="radio" />
         </ToolTip>
@@ -35,7 +35,7 @@
             <h5 class="md-button text-gray-800 font-bold cursor-pointer" @click="$emit('close')">
                 {{$t('actions.discard')}}
             </h5>
-            <h5 class="gradient-button md-button cursor-pointer" @click="sendPoll">
+            <h5 class="primary-button md-button cursor-pointer" @click="sendPoll">
                 {{poll ? $t('actions.change-poll'): $t('actions.save-poll')}}
             </h5>
         </div>

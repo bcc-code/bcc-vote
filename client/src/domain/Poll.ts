@@ -32,7 +32,6 @@ export interface Answer {
     answerId: number;
     pollingEventId: number;
     displayName: string;
-    churchName: string;
   }
 
 export enum PollActiveStatus {

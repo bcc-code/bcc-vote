@@ -95,24 +95,26 @@
     background-color: rgba(209, 232, 238, 0.6);
   }
   
-  .gradient-blue {
-    background: linear-gradient(41.97deg, #2A4E96 8.17%, #6297FF 155.75%);
-  }
-  
-  .gradient-button {
+  .primary-button {
     @apply font-bold;
     @apply text-white;
-    @apply gradient-blue;
+    @apply bg-blue-900;
     @apply rounded-full;
   }
   
   .border-t-half {
-      border-top-width: 1.5px;
-      border-style: solid;
+    border-top-width: 1.5px;
+    border-style: solid;
   }
   
   .h-min-half {
     min-height: 50%;
+  }
+  
+  .sm-button {
+    @apply py-2;
+    @apply pr-3;
+    @apply pl-4;
   }
   
   .lg-button {
@@ -136,10 +138,10 @@
   }
   
   .border-with-bar {
-    @apply border-2;
     @apply border-gray-200;
     @apply rounded-lg;
     border-left-width: 17px;
+    box-shadow: 0 0 0 3px #EEF0F5
   }
   
   .form-section {
@@ -178,27 +180,25 @@
       @apply bg-center;
     }
   }
-
-
-/* Transitions */
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.3s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
-}
+  /* Transitions */
+  
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+  
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+  
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 0.3s ease;
+  }
+  
+  .list-enter-from,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
