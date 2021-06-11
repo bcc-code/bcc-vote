@@ -8,9 +8,13 @@
   },
   "authentication": {
     "oauth": {
+      "defaults": {
+        "transport": "session",
+        "response": ["tokens"]
+      },
       "redirect": "VOTE_AUTH_SUCCESS_CLIENT_REDIRECT",
       "auth0": {
-        "scope": ["openid", "profile", "email", "church", "country"],
+        "scope": ["openid"],
         "key": "VOTE_AUTH0_CLIENT_KEY",
         "secret": "VOTE_AUTH0_CLIENT_SECRET",
         "subdomain": "VOTE_AUTH0_SUBDOMAIN"
