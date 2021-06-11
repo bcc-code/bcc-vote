@@ -29,15 +29,16 @@
     "delete-poll": "Delete question",
     "save-changes": "Save changes",
     "discard": "Discard",
-    "publish-poll": "Publish question",
-    "republish-poll": "Republish question",
-    "close-poll": "Close question",
+    "publish-poll": "Publish",
+    "republish-poll": "Republish",
+    "close-poll": "Close",
     "get-report": "Get a report",
     "go-back-home": "Back to the home screen",
     "logout": "Sign Out",
     "customer-support": "Customer support",
     "go-to-login": "Go to login page",
-    "ok-continue": "Okay, continue"
+    "ok-continue": "Okay, continue",
+    "yes-continue": "Yes, continue"
   },
   "labels": {
     "yes": "Yes",
@@ -70,6 +71,11 @@
       "finished": "Finished",
       "archived": "Archived"
     },
+    "vote-type": {
+      "public": "Public vote",
+      "non_public": "Administrators vote",
+      "anonymous": "Anonymous vote"
+    },
     "poll-result-visibility": {
       "public": "Public",
       "non_public": "Not Public",
@@ -77,7 +83,8 @@
     },
     "bcc-vote": "BCC Vote",
     "thank-you": "Thank you for participating!",
-    "logged-as": "You are now voting as"
+    "logged-as": "You are now voting as",
+    "sure-republish": "Are you sure that you want to republish this question?"
   },
   "info": {
     "no-polling-events": "There are no polling events currently available",
@@ -108,7 +115,11 @@
     "tooltips": {
       "poll-public": "Participants and administrators will see who voted for what",
       "poll-non-public": "Only administrators will see who voted for what",
-      "poll-anonymous": "No one will see who voted for what"
+      "poll-anonymous": "No one will see who voted for what",
+      "publish-poll": "Participants will see the question, can vote and see the results",
+      "close-poll": "Participant won't see the question or the results",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "fields": {
