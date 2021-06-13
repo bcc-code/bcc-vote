@@ -16,8 +16,8 @@
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
-import { PollingEventStatus } from '../domain'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { PollingEventStatus, Answer } from '../domain'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -29,6 +29,7 @@ export default defineComponent({
     },
     async created(){
         await this.loadAnswers()
+        this.$client.service('answer').on('created', this.addAnswer)
     },
     computed: {
         ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
@@ -40,14 +41,19 @@ export default defineComponent({
             return this.isEventLive ? {
                 bg: 'bg-blue-900',
                 text: 'text-white'
-            }: {
+            } : {
                 bg: 'bg-gray-100',
                 text: 'text-blue-900'
             }
         }
     },
     methods: {
-        ...mapActions('result',['loadAnswers'])
+        ...mapMutations('result',['ADD_ANSWER']),
+        ...mapActions('result',['loadAnswers']),
+        addAnswer(answer: Answer) {
+            console.log('ADd Answer',answer)
+            this.ADD_ANSWER(answer)
+        }
     }
 })
 </script>

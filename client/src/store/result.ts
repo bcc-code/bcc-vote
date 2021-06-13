@@ -3,9 +3,7 @@ import { Poll, PollingEvent, PollActiveStatus, Answer, SortedOptions, Option } f
 import { store, RootState } from '../store/index'
 
 export interface ResultState {
-  count: number,
   pollingEvent?: PollingEvent | null,
-  activePoll?: Poll | null,
   polls?: Array<Poll>,
   answers?: Array<Answer>
 }
@@ -13,15 +11,15 @@ export interface ResultState {
 const result: Module<ResultState,RootState> = ({
     namespaced: true,
     state: ():ResultState => ({
-        count: 10,
         pollingEvent: null,
-        polls: []
+        polls: [],
+        answers: []
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
-        'UPDATE_ACTIVEPOLL': (state:ResultState, value:Poll) => (state.activePoll = value),
         'UPDATE_POLLS': (state:ResultState, value:Array<Poll>) => (state.polls = value),
-        'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value)
+        'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
+        'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value))
     },
     actions: {
         async loadAnswers({ commit, state: ResultState, getters }) {
@@ -47,20 +45,22 @@ const result: Module<ResultState,RootState> = ({
         },
         sortedOptions: (state:ResultState, getters: any):SortedOptions => {
             let colorIndex = 0
+            const colors = ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3']
             let sortedOptions = {} as SortedOptions
             const activePoll = getters.activePoll
             activePoll.answers.forEach((option: Option) => {
+                const answers = state.answers?.filter((ans:Answer) => ans.answerId == option.answerId)
                 sortedOptions[option.answerId] = {
-                    count: 0,
-                    bgColor: '000000',
+                    count: answers ? answers.length : 0,
+                    bgColor: colors[colorIndex],
                     ...option
                 }
                 colorIndex++
             })
-            // if(activePoll.answers.length > 2) {
-            //     const lastAnswer = poll.answers[poll.answers.length - 1]
-            //     this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor
-            // }
+            if(activePoll.answers.length > 2) {
+                const lastAnswer = activePoll.answers[activePoll.answers.length - 1]
+                sortedOptions[lastAnswer.answerId].bgColor = '#C1C7DA'
+            }
             return sortedOptions
         },
         answerCount: (state:ResultState):number => {
