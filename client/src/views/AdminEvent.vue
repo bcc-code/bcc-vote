@@ -1,6 +1,6 @@
 <template>
     <div :class="backgroundColor">
-        <div class="max-w-5xl mx-auto" >
+        <div class="max-w-5xl mx-auto">
             <div class="w-full h-full px-4 py-8">
                 <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
                 <div class="flex py-8 gap-6 font-bold justify-center" :class="inactiveTabColor">
@@ -19,10 +19,9 @@
 import PollingEventPanel from '../components/admin-polling-event-panel.vue'
 import PollsPanel from '../components/admin-polls-panel.vue'
 import ResultsPanel from '../components/admin-results-panel.vue'
-
 import { Poll } from '../domain'
 import { PollingEvent, PollingEventStatus } from '../domain'
-
+import { mapMutations, mapState } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -32,7 +31,7 @@ export default defineComponent({
     },
     data() {
         return {
-            arePollsLoaded: false as Boolean,
+            arePollsLoaded: false as boolean,
             currentTab: 'polls' as string,
             pollingEvent: {} as PollingEvent,
             savedPolls: [] as Poll[],
@@ -43,6 +42,7 @@ export default defineComponent({
         this.loadSavedPolls()
     },
     computed: {
+        ...mapState('result', ['pollingEvent']),
         isEventLive():Boolean{
             return this.pollingEvent.status === PollingEventStatus['Live']
         },
@@ -63,9 +63,11 @@ export default defineComponent({
         },
     },
     methods: {
+        ...mapMutations('result',['UPDATE_POLLING_EVENT','UPDATE_POLLS']),
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
                 .catch(this.$showError)
+            this.UPDATE_POLLING_EVENT(this.pollingEvent)
             if(this.isEventFinished || this.isEventArchived)
                 this.currentTab = 'results';
         },
@@ -78,6 +80,7 @@ export default defineComponent({
                     }
                 }
             }).catch(this.$showError)
+            this.UPDATE_POLLS(this.savedPolls)
             this.arePollsLoaded = true;
         },
     } 

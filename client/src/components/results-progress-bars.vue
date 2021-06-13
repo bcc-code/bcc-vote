@@ -5,16 +5,12 @@
                 <h5 :style="`color: ${option.bgColor};`">
                     {{option.label}}
                 </h5>
-                <h5 class="text-gray-600">
-                    {{option.count}} {{option.count === 1? $t('labels.vote'): $t('labels.votes')}}
-                </h5>
+                <h5 v-if="barWidthPercent(option) < 90" class="text-gray-600">{{option.count}} {{option.count === 1? $t('labels.vote'): $t('labels.votes')}}</h5>
             </div>
             <div class="relative h-full overflow-hidden dark-ring rounded-l-lg animation" :style="[`background-color: ${option.bgColor};`,`width: ${barWidthPercent(option)}%;`]" :class="{'rounded-r-lg': isEndRounded(option)}">
                 <div class="bar-flex w-full text-white">
                     <h5>{{option.label}}</h5>
-                    <h5>
-                        {{option.count}} {{option.count === 1? $t('labels.vote'): $t('labels.votes')}}
-                    </h5>
+                    <h5 v-if="barWidthPercent(option) >= 90">{{option.count}} {{option.count === 1? $t('labels.vote'): $t('labels.votes')}}</h5>
                 </div>
             </div>
             <span v-if="chosenOption === answerId" class="absolute top-0 h-5 w-5 p-1 check-icon rounded-full">
@@ -37,14 +33,14 @@ export default defineComponent({
         chosenOption: {type: Number}
     },
     methods: {
-        barWidthPercent(option:SortedOption): number{
+        barWidthPercent(option:SortedOption):number {
             if(option.count) {
                 return option.count / this.totalCount * 100 
             } else {
                 return 0
             }
         },
-        isEndRounded(option:SortedOption): boolean{
+        isEndRounded(option:SortedOption):boolean {
             return this.barWidthPercent(option) > 97
         }
     }
