@@ -84,7 +84,7 @@ export default defineComponent({
             this.$router.push({ path: '/create' })
         },
         async loadPollingEvents(){
-            const allEvents = await this.$client.service('polling-event').find({})
+            const allEvents = await this.$client.service('polling-event').find()
             allEvents.forEach((event: PollingEvent) => {
                 if(event.status === PollingEventStatus['Archived']){
                     if(event.creatorId === this.$user.personID)
