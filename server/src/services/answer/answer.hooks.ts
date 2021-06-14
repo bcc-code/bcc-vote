@@ -1,5 +1,4 @@
 import { HookContext } from "@feathersjs/feathers";
-import { QuerySnapshot } from "@google-cloud/firestore";
 import { Answer, PollActiveStatus } from "../../domain";
 import { db } from '../../firestore';
 
@@ -45,6 +44,32 @@ const addLastChangedTime = (context: HookContext) => {
     return context;
 };
 
+const removeFromFirestore = async (context: HookContext) => {
+    console.log(context.params.query);
+    const toRemove = db.collection('answer').where('_from', '==', context.params.query?._from);
+
+
+    let batch = db.batch();
+
+    const allAnswers = await toRemove.get();
+
+    let batchCount = 0;
+    allAnswers.forEach(async (ans:any) => {
+        batch.delete(ans.ref);
+        batchCount ++;
+
+        // we cannot have more than 500 deletes in one batch
+        if(batchCount >= 500){
+            await batch.commit();
+            batch = db.batch();
+            batchCount = 0;
+        }
+    });
+    await batch.commit();
+
+    return context;
+};
+
 export default {
     before: {
         all: [ ],
@@ -53,7 +78,7 @@ export default {
         create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
         update: [],
         patch: [],
-        remove: []
+        remove: [removeFromFirestore]
     },
     after: {
         all: [],
