@@ -1,7 +1,7 @@
 <template>
     <div :class="pageColors.bg">
-        {{answers}}
-        <div class="max-w-5xl mx-auto px-4">
+        <Spinner v-if="loading"/>
+        <div v-else class="max-w-5xl mx-auto px-4">
             <h3 :class="['font-bold px-4 py-6',pageColors.text]">{{pollingEvent.title}}</h3>
             <div class="form-section px-10 py-8">
                 <h3 class="font-bold mt-1 mb-6">{{activePoll.title}}</h3>
@@ -25,16 +25,18 @@ export default defineComponent({
     },
     data() {
         return {
+            loading: false
         }
     },
     async created(){
-        await this.loadAnswers()
+        await this.loadInit()
         this.$client.service('answer').on('created', this.addAnswer)
+        this.$client.io.on('reconnect', this.loadInit)
     },
     computed: {
         ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
         ...mapState('result', ['pollingEvent','polls','answers']),
-        isEventLive(): boolean{
+        isEventLive(): boolean {
             return this.pollingEvent && this.pollingEvent.status === PollingEventStatus['Live']
         },
         pageColors(): {bg:string, text:string} {
@@ -49,9 +51,16 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations('result',['ADD_ANSWER']),
-        ...mapActions('result',['loadAnswers']),
+        ...mapActions('result',['getPollingEvent','loadAnswers']),
+        async loadInit() {
+            this.loading = true
+            const pollingEventKey = this.$route.params.id
+            await this.getPollingEvent(pollingEventKey)
+            await this.loadAnswers()
+            this.loading = false
+        },
         addAnswer(answer: Answer) {
-            console.log('ADd Answer',answer)
+            console.log('Add Answer',answer)
             this.ADD_ANSWER(answer)
         }
     }

@@ -22,12 +22,15 @@ const result: Module<ResultState,RootState> = ({
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value))
     },
     actions: {
+        async getPollingEvent({ commit, state: ResultState, getters },pollingEventKey:string) {
+            const results = await store.$client.service('polling-event').get(pollingEventKey)
+            commit('UPDATE_POLLING_EVENT',results)
+        },
         async loadAnswers({ commit, state: ResultState, getters }) {
             const poll = getters.activePoll;
             const query = {
                 _from: poll._id
             }
-            console.log(query)
             const results = await store.$client.service('answer').find({query})
             commit('UPDATE_ANSWERS',results)
             //answers.forEach((a:Answer) => {this.addAnswer(a)})
