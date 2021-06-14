@@ -69,7 +69,6 @@ export default function(app: Application): void {
     // Listen for poll changes and re-emit the events
     const pollingEvent = db.collection('polling-event');
     const pollingEventObserver = pollingEvent.onSnapshot((docSnapshot:any) => {
-        console.log(docSnapshot);
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('polling-event').emit('patched',change.doc.data());
