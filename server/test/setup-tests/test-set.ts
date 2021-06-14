@@ -126,11 +126,20 @@ function newEntitiesFunc(){
     return { newValidPollingEvent, newValidPoll };
 }
 
+async function getFeahtersToken() {
+  const testingVariables = app.get('testingSet')
+
+  const token = await app.service('authentication').createAccessToken({
+    sub: testingVariables.userId
+  });
+  return token
+}
 
 export {
-    generateFreshContext,
-    getAranoDBConfigFromFeathers,
-    pollingEventsTestSet,
-    newEntitiesFunc
+  generateFreshContext,
+  getAranoDBConfigFromFeathers,
+  pollingEventsTestSet,
+  newEntitiesFunc,
+  getFeahtersToken
 };
 

@@ -1,0 +1,10 @@
+{
+  "host": "dev.vote.bcc.no",
+  "protocol":"https",
+  "testingSet":{
+    "userId":"user/1308675719",
+    "pollingEentId":"1339667582",
+    "pollId":"poll/1339667629",
+    "answerId":"answer/516222868"
+  }
+}

@@ -53,14 +53,14 @@
     "new-poll": "New Question",
     "new-polling-event": "New polling event",
     "edit-polling-event": "Edit polling event",
-    "poll-queue": "Question Queue",
+    "poll-queue": "Questions",
     "results": "Results",
     "show-results-live": "Show results live",
     "voters": "Voters",
     "votes": "Votes",
     "vote": "Vote",
     "vote-confirmation": "Vote confirmation",
-    "answers": "Answers",
+    "answers": "Alternatives",
     "option": "Option",
     "event-results": "Polling event results",
     "result-visibility": "Results visibility",
@@ -72,9 +72,9 @@
       "archived": "Archived"
     },
     "vote-type": {
-      "public": "Public vote",
-      "non_public": "Administrators vote",
-      "anonymous": "Anonymous vote"
+      "public": "Public",
+      "non_public": "Administrators only",
+      "anonymous": "Anonymous"
     },
     "poll-result-visibility": {
       "public": "Public",

@@ -40,7 +40,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('update', 'polling-event');
         can('create','polling-event');
         can('remove', 'answer');
-        
+
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
@@ -57,11 +57,12 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('patch', 'polling-event', { 'participantFilter.org': userChurchID });
         can('update', 'polling-event', { 'participantFilter.org': userChurchID });
         can('create','polling-event', { 'participantFilter.org': userChurchID });
-        
+
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
         can('remove', 'answer');
+        can('get', 'answer');
     },
     Member(user, { can, cannot }) {
     }
@@ -73,7 +74,7 @@ export function defineAbilityFor(user:UserDetails, activeRole?:RoleName): AppAbi
     const builder = new AbilityBuilder<AppAbility>(AppAbility);
     let abilityRole = activeRole === undefined ? user.activeRole : activeRole as string;
     if(!abilityRole) {
-        throw new Error(`Trying to use invalid role ${abilityRole}`);    
+        throw new Error(`Trying to use invalid role ${abilityRole}`);
     }
 
     if(superAdminRoles.includes(abilityRole)) {
@@ -81,6 +82,6 @@ export function defineAbilityFor(user:UserDetails, activeRole?:RoleName): AppAbi
     }
     globalPermissions(user, builder);
     rolePermissions[abilityRole](user, builder);
-    
+
     return builder.build();
 }

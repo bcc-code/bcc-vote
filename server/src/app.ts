@@ -20,6 +20,7 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './services/authentication/authentication';
+var cookieSession = require('cookie-session')
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -30,6 +31,12 @@ app.configure(configuration());
 app.use(helmet({
   contentSecurityPolicy: false
 }));
+app.use(cookieSession({
+  name: 'session',
+  secret:app.get('authentication').secret,
+  maxAge: 24 * 60 * 60 * 1000,
+  signed:true // 24 hours
+}))
 app.use(cors());
 app.use(compress());
 app.use(express.json());
@@ -51,7 +58,9 @@ app.configure(services);
 app.configure(channels);
 
 // Configure a middleware for 404s and the error handler
+app.use("/loaderio-130e15d149cbac9df52e3162eeb68298.txt", express.static("load-testing"));
 app.use("/*", express.static(app.get("public")));
+
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
