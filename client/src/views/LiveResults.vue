@@ -3,7 +3,7 @@
         <Spinner v-if="loading"/>
         <div v-else class="max-w-5xl mx-auto px-4">
             <h3 :class="['font-bold px-4 py-6',pageColors.text]">{{pollingEvent.title}}</h3>
-            <div class="form-section px-10 py-8">
+            <div v-if="activePoll" class="form-section px-10 py-8">
                 <h3 class="font-bold mt-1 mb-6">{{activePoll.title}}</h3>
                 <div class="flex justify-between mb-4">
                     <h4 class="font-bold">Votes</h4>
@@ -32,10 +32,10 @@ export default defineComponent({
         this.loading = true
         const pollingEventKey = this.$route.params.id
         await this.getPollingEvent(pollingEventKey)
-        await this.loadAnswers()
+        this.loading = false
         this.$client.service('answer').on('created', this.addAnswer)
         this.$client.service('poll').on('patched', this.patchedPoll)
-        this.$client.io.on('reconnect', this.loadAnswers)
+        this.$client.io.on('reconnect', this.loadResults)
     },
     computed: {
         ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
@@ -54,11 +54,11 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapMutations('result',['ADD_ANSWER','']),
-        ...mapActions('result',['getPollingEvent','loadAnswers','patchedPoll']),
-        async loadAnswers() {
+        ...mapMutations('result',['ADD_ANSWER']),
+        ...mapActions('result',['getPollingEvent','findAnswers','patchedPoll']),
+        async loadResults() {
             this.loading = true
-            await this.loadAnswers()
+            await this.findAnswers()
             this.loading = false
         },
         addAnswer(answer: Answer) {
@@ -68,8 +68,8 @@ export default defineComponent({
     },
     watch: {
         activePoll(newPoll:Poll, oldPoll:Poll) {
-            if(newPoll._id === oldPoll._id) {
-                this.loadAnswers()
+            if(newPoll && (!oldPoll || newPoll._id !== oldPoll._id)) {
+                this.loadResults()
             }
         }
     }

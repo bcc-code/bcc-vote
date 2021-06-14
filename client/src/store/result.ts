@@ -26,14 +26,13 @@ const result: Module<ResultState,RootState> = ({
             const results = await store.$client.service('polling-event').get(pollingEventKey)
             commit('UPDATE_POLLING_EVENT',results)
         },
-        async loadAnswers({ commit, getters }) {
-            const poll = getters.activePoll;
+        async findAnswers({ commit, getters }) {
+            const activePoll = getters.activePoll
             const query = {
-                _from: poll._id
+                _from: activePoll._id
             }
             const results = await store.$client.service('answer').find({query})
             commit('UPDATE_ANSWERS',results)
-            //answers.forEach((a:Answer) => {this.addAnswer(a)})
         },
         patchedPoll({commit,state}, patchedPoll:Poll) {
             console.log('Patched Poll came in:',patchedPoll)
@@ -50,6 +49,15 @@ const result: Module<ResultState,RootState> = ({
                 }
                 commit('UPDATE_POLLS',updatedPollsArray)
             }
+        },
+        addedAnswer({commit,state}, addedAnswer:Answer) {
+            if(state.answers) {
+                const existingAnswer = state.answers.filter(a => a._id == addedAnswer._id)
+                if(existingAnswer.length) {
+                    return
+                }
+            }
+            commit('ADD_ANSWER',addedAnswer)
         }
     },
     getters: {

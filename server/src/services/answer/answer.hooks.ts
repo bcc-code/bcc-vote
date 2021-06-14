@@ -47,7 +47,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
+        create: [ preventVoteOnInactivePoll, addUserData, addLastChangedTime],
         update: [],
         patch: [],
         remove: []
