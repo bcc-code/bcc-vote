@@ -59,7 +59,6 @@ export default function(app: Application): void {
     const poll = db.collection('poll').where('lastChanged','>',Date.now() - (1000 * 3));
     const pollObserver = poll.onSnapshot((docSnapshot:any) => {
         docSnapshot.docChanges().forEach((change:any) => {
-            console.log(change);
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('poll').emit('patched',change.doc.data());
                 //console.log('patched poll: ', change.doc.data());
@@ -72,7 +71,6 @@ export default function(app: Application): void {
     const pollingEventObserver = pollingEvent.onSnapshot((docSnapshot:any) => {
         console.log(docSnapshot);
         docSnapshot.docChanges().forEach((change:any) => {
-            console.log(change);
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('polling-event').emit('patched',change.doc.data());
                 //console.log('patched polling-event: ', change.doc.data());
