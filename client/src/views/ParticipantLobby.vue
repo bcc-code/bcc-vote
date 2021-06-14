@@ -65,7 +65,9 @@ export default defineComponent({
                 this.currentPoll = res[0]
         },
         getPoll(data: Poll){
-            if(data.pollingEventId === this.$route.params.id && data.activeStatus === PollActiveStatus['Live'])
+            if(data.pollingEventId !== this.$route.params.id)
+                return
+            if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
