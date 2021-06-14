@@ -2,7 +2,6 @@ import '@feathersjs/transport-commons';
 import { Application } from './declarations';
 import { db } from './firestore';
 
-
 export default function(app: Application): void {
     if(typeof app.channel !== 'function') {
         return;
@@ -16,7 +15,6 @@ export default function(app: Application): void {
         }else{
             return app.channel(data._key);
         }
-
         //return app.channel(data._key);
     });
 
@@ -29,7 +27,6 @@ export default function(app: Application): void {
         }else{
             return app.channel(data.pollingEventId);
         }
-
     });
 
     app.services.poll.publish('patched', async (data:any) => {
@@ -41,7 +38,6 @@ export default function(app: Application): void {
         }else{
             return app.channel(data.pollingEventId);
         }
-
     });
 
     // Listen for answers from firestore
@@ -76,7 +72,4 @@ export default function(app: Application): void {
             }
         });
     });
-
-
-
 }

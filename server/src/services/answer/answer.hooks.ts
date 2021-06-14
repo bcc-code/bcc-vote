@@ -48,11 +48,9 @@ const removeFromFirestore = async (context: HookContext) => {
     console.log(context.params.query);
     const toRemove = db.collection('answer').where('_from', '==', context.params.query?._from);
 
-
-    let batch = db.batch();
-
     const allAnswers = await toRemove.get();
 
+    let batch = db.batch();
     let batchCount = 0;
     allAnswers.forEach(async (ans:any) => {
         batch.delete(ans.ref);
