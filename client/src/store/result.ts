@@ -22,11 +22,11 @@ const result: Module<ResultState,RootState> = ({
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value))
     },
     actions: {
-        async getPollingEvent({ commit, state: ResultState, getters },pollingEventKey:string) {
+        async getPollingEvent({ commit },pollingEventKey:string) {
             const results = await store.$client.service('polling-event').get(pollingEventKey)
             commit('UPDATE_POLLING_EVENT',results)
         },
-        async loadAnswers({ commit, state: ResultState, getters }) {
+        async loadAnswers({ commit, getters }) {
             const poll = getters.activePoll;
             const query = {
                 _from: poll._id
@@ -35,6 +35,22 @@ const result: Module<ResultState,RootState> = ({
             commit('UPDATE_ANSWERS',results)
             //answers.forEach((a:Answer) => {this.addAnswer(a)})
         },
+        patchedPoll({commit,state}, patchedPoll:Poll) {
+            console.log('Patched Poll came in:',patchedPoll)
+            let updatedPollsArray = [] as Array<Poll>
+            if(!state.polls) {
+                updatedPollsArray.push(patchedPoll)
+                commit('UPDATE_POLLS',updatedPollsArray)
+            } else {
+                const matchedPolls = state.polls.filter((p:Poll) => p._id === patchedPoll._id)
+                if(matchedPolls) {
+                    updatedPollsArray = state.polls.map(previous => matchedPolls.find((matched:Poll) => matched._id === previous._id) || previous)
+                } else {
+                    updatedPollsArray.push(patchedPoll)
+                }
+                commit('UPDATE_POLLS',updatedPollsArray)
+            }
+        }
     },
     getters: {
         activePoll: (state:ResultState) => {

@@ -57,7 +57,6 @@ export default defineComponent({
     },
     computed: {
         pollResultsAreVisible():boolean {
-            
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
             if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])

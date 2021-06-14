@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
-import { PollingEventStatus, Answer } from '../domain'
+import { Poll, PollingEventStatus, Answer } from '../domain'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -29,9 +29,13 @@ export default defineComponent({
         }
     },
     async created(){
-        await this.loadInit()
+        this.loading = true
+        const pollingEventKey = this.$route.params.id
+        await this.getPollingEvent(pollingEventKey)
+        await this.loadAnswers()
         this.$client.service('answer').on('created', this.addAnswer)
-        this.$client.io.on('reconnect', this.loadInit)
+        this.$client.service('poll').on('patched', this.patchedPoll)
+        this.$client.io.on('reconnect', this.loadAnswers)
     },
     computed: {
         ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
@@ -50,18 +54,23 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapMutations('result',['ADD_ANSWER']),
-        ...mapActions('result',['getPollingEvent','loadAnswers']),
-        async loadInit() {
+        ...mapMutations('result',['ADD_ANSWER','']),
+        ...mapActions('result',['getPollingEvent','loadAnswers','patchedPoll']),
+        async loadAnswers() {
             this.loading = true
-            const pollingEventKey = this.$route.params.id
-            await this.getPollingEvent(pollingEventKey)
             await this.loadAnswers()
             this.loading = false
         },
         addAnswer(answer: Answer) {
             console.log('Add Answer',answer)
             this.ADD_ANSWER(answer)
+        }
+    },
+    watch: {
+        activePoll(newPoll:Poll, oldPoll:Poll) {
+            if(newPoll._id === oldPoll._id) {
+                this.loadAnswers()
+            }
         }
     }
 })
