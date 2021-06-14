@@ -64,6 +64,9 @@ export default defineComponent({
     props: {
         mobile: Boolean,
     },
+    created(){
+        this.loadPollingEvents()
+    },
     data () {
         return {
             pollingEvents: {
@@ -76,15 +79,12 @@ export default defineComponent({
             noEvents: true,
         }
     },
-    async mounted(){
-        await this.loadPollingEvents()
-    },
     methods: {
         goToCreate() {
             this.$router.push({ path: '/create' })
         },
         async loadPollingEvents(){
-            const allEvents = await this.$client.service('polling-event').find({})
+            const allEvents = await this.$client.service('polling-event').find()
             allEvents.forEach((event: PollingEvent) => {
                 if(event.status === PollingEventStatus['Archived']){
                     if(event.creatorId === this.$user.personID)
