@@ -20,47 +20,43 @@ class Auth0Strategy extends OAuthStrategy {
         const { ...params } = originalParams;
         const profile = await this.getProfile(authentication,params);
         const personID = profile["https://login.bcc.no/claims/personId"];
+
+        let member:any = {};
         try {
+            member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
+            console.log(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
+            member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
 
-            let member:any = {};
-            try {
-                member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
-                console.log(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
-                member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
+            const { roles, activeRole} = getRolesForPerson(member);
 
-                const { roles, activeRole} = getRolesForPerson(member);
+            member._id = `user/${member._key}`;
+            member.roles = roles;
+            member.activeRole = activeRole;
+            member.churchName = member.church.org.name;
+            delete member.church;
+            delete member.related;
 
-                member._id = `user/${member._key}`;
-                member.roles = roles;
-                member.activeRole = activeRole;
-                member.churchName = member.church.org.name;
-                delete member.church;
-                delete member.related;
+            const existingUsers = (await this.app?.service('user').find({ query: { _key: member._key }})).data;
 
-                const existingUsers = (await this.app?.service('user').find({ query: { _key: member._key }})).data;
-
-                if(existingUsers.length == 0) {
-                    await this.app?.service('user').create(member);
-                } else if(existingUsers.length == 1) {
-                    await this.app?.service('user').update(member._key,member);
-                }
-            } catch (error) {
-                console.error(error.message);
-                console.log(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api, please check if the members api is available and configured correctly`);
-                console.log(`AUTHENTICATE METHOD: Trying to retrieve member with personID:${personID} from local database`);
-                member = (await this.app?.service('user').find({ query:{ personID: personID}})).data[0];
-                if(member == undefined){
-                    throw new Error(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api and local database, its is therefore not possible to log the user in`);
-                }
-                console.log(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
+            if(existingUsers.length == 0) {
+                await this.app?.service('user').create(member);
+            } else if(existingUsers.length == 1) {
+                await this.app?.service('user').update(member._key,member);
             }
-            return {
-                authentication: { strategy: this.name ? this.name : 'unknown' },
-                [entity]: member
-            };
-        } catch(err) {
-            throw err;
+        } catch (error) {
+            console.error(error.message);
+            console.log(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api, please check if the members api is available and configured correctly`);
+            console.log(`AUTHENTICATE METHOD: Trying to retrieve member with personID:${personID} from local database`);
+            member = (await this.app?.service('user').find({ query:{ personID: personID}})).data[0];
+            if(member == undefined){
+                throw new Error(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api and local database, its is therefore not possible to log the user in`);
+            }
+            console.log(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
         }
+        return {
+            authentication: { strategy: this.name ? this.name : 'unknown' },
+            [entity]: member
+        };
     }
 }
 
