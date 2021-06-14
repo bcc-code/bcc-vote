@@ -73,8 +73,7 @@ export default defineComponent({
     async created(){
         await this.init()
         this.$client.service('answer').on('created', this.addAnswer)
-        
-        this.$client.io.off('reconnect')
+
         this.$client.io.on('reconnect', this.init)
     },
     computed: {

@@ -24,7 +24,6 @@ export default defineComponent({
     created(){
         this.loadPoll()
         
-        this.$client.io.off('reconnect');
         this.$client.io.on('reconnect', this.loadPoll);
     },
     methods: {

@@ -58,6 +58,8 @@ router.beforeEach(async(to: any, from: any, next: any) => {
     if(to.meta.logout){
         logout()
     }
+    
+    router.$client.io.removeListener('reconnect')
 
     const { user, authenticated, error } = await authentication()
     if(authenticated) {        

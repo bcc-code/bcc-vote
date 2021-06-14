@@ -64,6 +64,9 @@ export default defineComponent({
     props: {
         mobile: Boolean,
     },
+    created(){
+        this.loadPollingEvents()
+    },
     data () {
         return {
             pollingEvents: {
@@ -75,9 +78,6 @@ export default defineComponent({
             currentTab: 'polling-events',
             noEvents: true,
         }
-    },
-    async mounted(){
-        await this.loadPollingEvents()
     },
     methods: {
         goToCreate() {
