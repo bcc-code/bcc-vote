@@ -34,7 +34,14 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
     } else {
         try {
             const { user } = await router.$client.reAuthenticate()
-            router.$user = user
+            router.$user._key = user._key
+            router.$user._id = user._id
+            router.$user.displayName = user.displayName
+            router.$user.age = user.age
+            router.$user.churchID = user.churchID
+            router.$user.personID = user.personID
+            router.$user.roles = user.roles
+            router.$user.activeRole = user.activeRole
             next()
         } catch(error) {
             const authEndpoint = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
