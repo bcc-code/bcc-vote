@@ -62,8 +62,11 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        path: '/error',
+        path: '/error-:message',
         name: 'error',
-        component: () => require('../views/Error.vue')
+        component: () => require('../views/Error.vue'),
+        meta: {
+            unprotected: true 
+        }
     }
 ]

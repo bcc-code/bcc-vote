@@ -6,33 +6,6 @@ const router: any = createRouter({
     routes
 })
 
-
-async function authentication() {
-    try {
-        const { user } = await router.$client.reAuthenticate()
-
-        router.$user._key = user._key
-        router.$user._id = user._id
-        router.$user.displayName = user.displayName
-        router.$user.age = user.age
-        router.$user.churchID = user.churchID
-        router.$user.personID = user.personID
-        router.$user.roles = user.roles
-        router.$user.activeRole = user.activeRole
-
-        return { user, authenticated: true }
-
-    } catch(err) {
-        if(err.message === "No accessToken found in storage" || err.message.includes('jwt')) {
-            location.href = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
-            return { authenticated: false }        
-        } else {
-            console.log('Routing Error:',err)
-            return { authenticated: false, error: err }
-        }
-    }
-}
-
 function logout() {
     router.$client.logout()
     localStorage.clear()
@@ -53,18 +26,26 @@ function logout() {
     location.href = url               
 }
 
-router.beforeEach(async(to: any, from: any, next: any) => {
-    if(to.meta.logout){
-        logout()
-    }
-    
+router.beforeEach(async(to: any, from: any, next: Function) => {
     router.$client.io.removeListener('reconnect')
-
-    const { user, authenticated, error } = await authentication()
-    if(authenticated) {        
+    if(to.meta.unprotected){
         next()
-    } else if(error) {
-        next({ name: "error" })
+    } else if(to.meta.logout){
+        logout()
+    } else {
+        try {
+            const { user } = await router.$client.reAuthenticate()
+            router.$user = user
+            next()
+        } catch(error) {
+            const authEndpoint = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
+            const requiresAuth = error.message === "No accessToken found in storage" || error.message.includes('jwt')
+            if(requiresAuth) {
+                location.href = authEndpoint
+            } else {
+                next({ name: "error", params: { message: error.message}})
+            }
+        }
     }
 })
 
