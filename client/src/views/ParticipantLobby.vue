@@ -38,6 +38,8 @@ export default defineComponent({
         this.$client.service('poll').on('patched', this.getPoll)
 
         this.$client.service('polling-event').on('patched', this.patchEvent);
+
+        this.$client.io.off('reconnect')
         this.$client.io.on('reconnect', this.init)
     },
     methods: {
