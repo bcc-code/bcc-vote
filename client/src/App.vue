@@ -3,9 +3,9 @@
     <router-view v-if="$route.path.includes('/prototype')"></router-view>
     <template v-else>
       <div :class="['app-container',backgroundClass]">
-        <Header />
+        <Header :showingFooter="showFooter"/>
         <router-view :key="$route.fullPath" :style="`min-height: calc(100vh - ${layoutHeight}px);`"/>
-        <Footer v-if="isHome"/>
+        <Footer v-if="showFooter"/>
       </div>
     </template>
   </div>
@@ -22,13 +22,13 @@ export default defineComponent({
         Header,
     },
     computed: {
-        isHome():Boolean{
-            return this.$route.path === "/"
+        showFooter():boolean{
+            return this.$route.path === "/" || this.$route.path.includes('/error')
         },
         layoutHeight():number {
             let header = 48
             let footer = 0
-            if(this.isHome) {
+            if(this.showFooter) {
                 footer = 208
             }
             return header + footer

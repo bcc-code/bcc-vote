@@ -20,14 +20,20 @@ const addTime = async (context: HookContext):Promise<HookContext> => {
     return context;
 };
 
+const addLastChangedTime = (context: HookContext) => {
+  const { data } = context;
+  data.lastChanged = Date.now()
+  return context;
+};
+
 export default {
     before: {
         all: [],
         find: [],
         get: [],
-        create: [validateAndFormat, addTime],
-        update: [validateAndFormat],
-        patch: [],
+        create: [validateAndFormat, addTime,addLastChangedTime],
+        update: [validateAndFormat, addLastChangedTime],
+        patch: [addLastChangedTime],
         remove: []
     },
 
