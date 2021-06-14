@@ -38,6 +38,7 @@ export default defineComponent({
         this.$client.service('poll').on('patched', this.getPoll)
 
         this.$client.service('polling-event').on('patched', this.patchEvent);
+
         this.$client.io.on('reconnect', this.init)
     },
     methods: {
@@ -63,7 +64,9 @@ export default defineComponent({
                 this.currentPoll = res[0]
         },
         getPoll(data: Poll){
-            if(data.pollingEventId === this.$route.params.id && data.activeStatus === PollActiveStatus['Live'])
+            if(data.pollingEventId !== this.$route.params.id)
+                return
+            if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined

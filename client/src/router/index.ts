@@ -27,6 +27,7 @@ function logout() {
 }
 
 router.beforeEach(async(to: any, from: any, next: Function) => {
+    router.$client.io.removeListener('reconnect')
     if(to.meta.unprotected){
         next()
     } else if(to.meta.logout){
