@@ -9,7 +9,7 @@
                     <h5 @click="logout">{{$t('actions.logout')}}</h5>
                 </div>
             </button>
-            <div v-if="!showBCCLogo" class="pl-5">
+            <div v-if="!showingFooter" class="pl-5">
                 <ArrowLeft class="cursor-pointer h-6 w-6 text-black" @click="navigateBack"/>
             </div>
         </nav>
@@ -29,6 +29,9 @@ export default defineComponent({
     components: {
         ArrowLeft
     },
+    props: {
+        showingFooter: { type: Boolean, required: true}
+    },
     data(){
         return {
             openConnection: false as boolean,
@@ -36,11 +39,6 @@ export default defineComponent({
         }
     },
     computed: {
-        showBCCLogo(){
-            if(this.$route.path === "/")
-                return true
-            return false
-        },
         dots():string{
             return '.'.repeat(this.refreshCount % 4)
         }
