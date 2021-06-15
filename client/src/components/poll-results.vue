@@ -1,27 +1,7 @@
 <template>
     <div class="h-full">
         <div v-if="loaded">
-            <div  v-for="option in poll.answers" :key="option" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
-                <div class="absolute top-0 w-full bar-flex">
-                    <h5 :style="`color: ${sortedAnswers[option.answerId].bgColor};`">
-                        {{option.label}}
-                    </h5>
-                    <h5 class="text-gray-600">
-                        {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
-                    </h5>
-                </div>
-                <div class="relative h-full overflow-hidden dark-ring rounded-l-lg animation" :style="[`background-color: ${sortedAnswers[option.answerId].bgColor};`,`width: ${barWidthPercent(option)}%;`]" :class="{'rounded-r-lg': isEndRounded(option)}">
-                    <div class="bar-flex calc-width text-white">
-                        <h5>{{option.label}}</h5>
-                        <h5>
-                            {{sortedAnswers[option.answerId].count}} {{sortedAnswers[option.answerId].count === 1? $t('labels.vote'): $t('labels.votes')}}
-                        </h5>
-                    </div>
-                </div>
-                <span v-if="chosenOption === option.answerId" class="absolute top-0 h-5 w-5 p-1 check-icon rounded-full">
-                    <CheckIcon class="text-white"/>
-                </span>
-            </div>
+            <ProgressBars :sortedOptions="sortedAnswers" :totalCount="totalCount" :chosenOption="chosenOption"/>
         </div>
         <div class="py-5">
             <div v-if="pollResultsAreVisible">
@@ -48,12 +28,12 @@
     </div>
 </template>
 <script lang="ts">
-import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
-import { Poll, PollResultVisibility, Answer, Option, PollResult } from '../domain'
+import ProgressBars from '../components/results-progress-bars.vue'
+import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
-        CheckIcon
+        ProgressBars
     },
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
@@ -63,11 +43,11 @@ export default defineComponent({
     data() {
         return {
             loaded: false as boolean,
+            answers: [] as Array<Answer>,
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
-            answers: [] as Array<Answer>,
             totalCount: 0 as number,
-            sortedAnswers: {} as {[answerId: number]: { count:number, bgColor: string}}
+            sortedAnswers: {} as SortedOptions
         }
     },
     async created(){
@@ -79,7 +59,6 @@ export default defineComponent({
     },
     computed: {
         pollResultsAreVisible():boolean {
-            
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
             if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
@@ -117,10 +96,12 @@ export default defineComponent({
                 }
                 colorIndex++
                 if(colorIndex >= this.answerColors.length)
-                    colorIndex = 0;
+                    colorIndex = 0
             })
-            const lastAnswer = poll.answers[poll.answers.length - 1]
-            this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor;
+            if(poll.answers.length > 2) {
+                const lastAnswer = poll.answers[poll.answers.length - 1]
+                this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor
+            }
         },
         async loadBars(poll:Poll){
             const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
@@ -145,34 +126,3 @@ export default defineComponent({
 
 })
 </script>
-<style scoped>
-.dark-ring{
-    box-shadow: inset 0 0 0 2.5px rgba(0, 0, 0, 0.1);
-}
-.calc-width {
-    width: calc(100vw - 32px)
-}
-
-@media screen and (min-width: 768px){
-    .calc-width {
-        width: 720px;
-    }
-}
-.bar-flex{
-    @apply flex;
-    @apply justify-between;
-    @apply h-full;
-    @apply items-center;
-    @apply pl-10;
-    @apply pr-4;
-    @apply font-bold;
-}
-.animation {
-    transition: width 0.5s ease-in-out
-}
-.check-icon {
-    margin: 10px;
-    background-color: rgba(0, 0, 0, 0.1);
-    @apply dark-ring
-}
-</style>

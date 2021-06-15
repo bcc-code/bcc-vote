@@ -1,42 +1,107 @@
 <template>
-    <div :class="[backgroundColor,'max-w-5xl mx-auto px-4']">
-        <h3 class="font-bold px-4 py-6 text-blue-900">{{pollingEvent.title}}</h3>
-        <div>
-            <div class="w-full h-full">
-                <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
+    <div :class="pageColors.bg">
+        <Spinner v-if="loading"/>
+        <div v-else class="max-w-5xl mx-auto px-4">
+            <h3 :class="['font-bold px-4 py-6',pageColors.text]">{{pollingEvent.title}}</h3>
+            <div v-if="activePoll" class="form-section px-10 py-8">
+                <h3 class="font-bold mt-1 mb-6">{{activePoll.title}}</h3>
+                <div class="flex justify-between mb-4">
+                    <h4 class="font-bold">{{$t('labels.votes')}}</h4>
+                    <h4 class="font-bold text-blue-900">{{answerCount + ' ' + $t('labels.count')}}</h4>
+                </div>
+                <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" />
+                <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
+                <div v-if="resultsVisible" class="w-full">
+                    <Spinner inline v-if="answers.length === 0"/>
+                    <transition-group name="list" tag="div" class="flex flex-wrap -mx-2">
+                        <div v-for="answer in answers" :key="answer._id" class="w-1/3 p-2">
+                            <div class="answer-box">
+                                <div class="p-2">
+                                    <h4 class="font-bold">{{answer.displayName}}</h4>
+                                </div>
+                                <div class="flex items-center px-4 rounded-r-lg" :style="`background-color:${sortedOptions[answer.answerId].bgColor};`">
+                                    <h4 class="font-bold text-white">{{sortedOptions[answer.answerId].label}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </transition-group>
+                </div>
+                <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import PollingEventPanel from '../components/admin-polling-event-panel.vue'
-import { PollingEvent, PollingEventStatus } from '../domain'
+import ProgressBars from '../components/results-progress-bars.vue'
+import { Poll, PollingEventStatus, PollResultVisibility } from '../domain'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
-        PollingEventPanel,
+        ProgressBars
     },
     data() {
         return {
-            pollingEvent: {} as PollingEvent
+            loading: false
         }
     },
-    created(){
-        this.loadPollingEvent()
+    async created(){
+        this.loading = true
+        const pollingEventKey = this.$route.params.id
+        await this.getPollingEvent(pollingEventKey)
+        this.loading = false
+        this.$client.service('answer').on('created', this.ADD_ANSWER)
+        this.$client.service('poll').on('patched', this.patchedPoll)
+        this.$client.io.on('reconnect', this.loadResults)
     },
     computed: {
-        isEventLive(): boolean{
-            return this.pollingEvent.status === PollingEventStatus['Live']
+        ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
+        ...mapState('result', ['pollingEvent','polls','answers']),
+        isEventLive(): boolean {
+            return this.pollingEvent && this.pollingEvent.status === PollingEventStatus['Live']
         },
-        backgroundColor(): string{
-            return this.isEventLive? 'bg-blue-900': 'bg-gray-100'
+        pageColors(): {bg:string, text:string} {
+            return this.isEventLive ? {
+                bg: 'bg-blue-900',
+                text: 'text-white'
+            } : {
+                bg: 'bg-gray-100',
+                text: 'text-blue-900'
+            }
+        },
+        resultsVisible():boolean {
+            let visible = false
+            if(this.activePoll && this.activePoll.resultVisibility === PollResultVisibility['Public']) {
+                visible = true
+            }
+            return visible
         }
     },
     methods: {
-        async loadPollingEvent(){
-            this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
-                .catch(this.$showError)
+        ...mapMutations('result',['ADD_ANSWER']),
+        ...mapActions('result',['getPollingEvent','findAnswers','patchedPoll']),
+        async loadResults() {
+            this.loading = true
+            await this.findAnswers()
+            this.loading = false
         }
-    } 
+    },
+    watch: {
+        activePoll(newPoll:Poll, oldPoll:Poll) {
+            if(newPoll && (!oldPoll || newPoll._id !== oldPoll._id)) {
+                this.loadResults()
+            }
+        }
+    }
 })
 </script>
+<style scoped>
+.answer-box {
+    @apply flex;
+    @apply justify-between;
+    border-width: 1.5px;
+    border-style: solid;
+    @apply border-gray-500;
+    @apply rounded-lg;
+}
+</style>

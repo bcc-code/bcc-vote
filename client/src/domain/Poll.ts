@@ -24,6 +24,17 @@ export interface Option {
   answerId: number,
 }
 
+export interface SortedOptions {
+    [answerId: number]: SortedOption
+}
+
+export interface SortedOption {
+    label: string,
+    explanation: string,
+    answerId: number,
+    count:number, 
+    bgColor: string
+}
 export interface Answer {
     _id: string;
     _key: string;

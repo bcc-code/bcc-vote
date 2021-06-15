@@ -4,23 +4,22 @@ import Toast from 'vue-dk-toast'
 import Spinner from "@/components/spinner.vue"
 import InfoBox from '@/components/info-box.vue'
 import './assets/style.css'
-import store from './store'
 import App from './App.vue'
 import feathers from '@feathersjs/feathers'
 import socketio from '@feathersjs/socketio-client'
 import auth from '@feathersjs/authentication-client'
 import io from 'socket.io-client'
 import { Role } from './domain/User'
+import { store } from './store'
 import router from './router'
 
-const messages = {
-    master: Object.assign({}, require('./localization/master.json')),
-    no: Object.assign({}, require('./localization/no_master.json'))
+const messages = {    
+    no: Object.assign({}, require('./localization/no_vote_master.json'))
 };
 
 const i18n = createI18n({
-    locale: 'master',
-    fallbackLocale: 'master',
+    locale: 'no',
+    fallbackLocale: 'no',
     messages
 })
 
@@ -70,6 +69,7 @@ const user = {
 }
 
 router.$client = client
+store.$client = client
 router.$user = user
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
