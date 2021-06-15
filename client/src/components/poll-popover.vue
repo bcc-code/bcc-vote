@@ -4,14 +4,14 @@
             <InfoBox v-if="!hasSavedAnswer" class="mb-4" @closed="infoBoxClosed = true">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
             </InfoBox>
-            <div :class="infoBoxClosed ? 'pt-4 pb-8' : 'pb-5'"> 
+            <div> 
                 <h4 class="font-bold" >{{poll.title}}</h4>
                 <p v-if="poll.description" class="mt-2">{{poll.description}}</p>
             </div>
-            <div v-if="!hasSavedAnswer" class="h-full mb-20">
+            <div v-if="!hasSavedAnswer" class="h-full mb-20 mt-5">
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
-            <div v-else class="mb-5">
+            <div v-else class="mb-5 mt-2">
                 <PollResults :chosenOption="chosenOption.answerId" :poll="poll" :key="poll._key"/>
             </div>
         </div>

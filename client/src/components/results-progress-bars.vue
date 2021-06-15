@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="(option, answerId) in sortedOptions" :key="answerId" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
+        <div v-for="(option, answerId) in sortedOptions" :key="answerId" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden" :class="(modelValue && modelValue !== answerId) ? 'opacity-50': ''"  @click="clickOption(answerId)">
             <div class="absolute top-0 w-full bar-flex">
                 <h5 :style="`color: ${option.bgColor};`">
                     {{option.label}}
@@ -30,7 +30,8 @@ export default defineComponent({
     props: {
         sortedOptions: {type: Object as PropType<SortedOptions>, required: true},
         totalCount: {type: Number, required: true},
-        chosenOption: {type: Number}
+        chosenOption: {type: Number},
+        modelValue: {type: String, required: true},
     },
     methods: {
         barWidthPercent(option:SortedOption):number {
@@ -42,9 +43,15 @@ export default defineComponent({
         },
         isEndRounded(option:SortedOption):boolean {
             return this.barWidthPercent(option) > 97
+        },
+        clickOption(answerId: number):void {
+            if(this.modelValue === answerId.toString())
+                this.$emit('update:modelValue', "");
+            else
+                this.$emit('update:modelValue', answerId);
         }
-    }
-
+    },
+    emits: ['update:modelValue']
 })
 </script>
 <style scoped>
