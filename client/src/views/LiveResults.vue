@@ -12,7 +12,7 @@
                 <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" v-model="selectedOption"/>
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
-                    <AdminVoterList :sortedOptions="sortedOptions" :voterList="answers"/>
+                    <AdminVoterList :sortedOptions="sortedOptions" :voterList="voterList"/>
                 </div>
                 <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
@@ -68,9 +68,14 @@ export default defineComponent({
             return visible
         },
         voterList():Array<Answer>{
-            if(this.selectedOption)
-                return this.answers.filter((ans: Answer) => ans.answerId === this.selectedOption)
-
+            if(this.selectedOption){
+                console.log(this.selectedOption);
+                return this.answers.filter((ans: Answer) => {
+                    console.log(ans.answerId);
+                    return ans.answerId == this.selectedOption
+                })
+            }
+                
             return this.answers
 
         }
