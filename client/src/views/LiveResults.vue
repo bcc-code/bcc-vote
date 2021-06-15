@@ -6,11 +6,11 @@
             <div v-if="activePoll" class="form-section px-10 py-8">
                 <h3 class="font-bold mt-1 mb-6">{{activePoll.title}}</h3>
                 <div class="flex justify-between mb-4">
-                    <h4 class="font-bold">Votes</h4>
-                    <h4 class="font-bold text-blue-900">{{answerCount}} Count</h4>
+                    <h4 class="font-bold">{{$t('labels.votes')}}</h4>
+                    <h4 class="font-bold text-blue-900">{{answerCount + ' ' + $t('labels.count')}}</h4>
                 </div>
                 <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" />
-                <h4 class="font-bold mb-3">Deltaker</h4>
+                <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div class="w-full">
                     <transition-group name="list" tag="div" class="flex flex-wrap -mx-2">
                         <div v-for="answer in answers" :key="answer._id" class="w-1/3 p-2">
@@ -18,8 +18,8 @@
                                 <div class="p-2">
                                     <h4 class="font-bold">{{answer.displayName}}</h4>
                                 </div>
-                                <div class="flex items-center px-4 rounded-r-lg" :style="`background-color:${sortedOptions[answer.answerId].bgColor}`">
-                                    <h4 class="font-bold text-white">Ja</h4>
+                                <div class="flex items-center px-4 rounded-r-lg" :style="`background-color:${sortedOptions[answer.answerId].bgColor};`">
+                                    <h4 class="font-bold text-white">{{sortedOptions[answer.answerId].label}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
-import { Poll, PollingEventStatus, Answer } from '../domain'
+import { Poll, PollingEventStatus } from '../domain'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({

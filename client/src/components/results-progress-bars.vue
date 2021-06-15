@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="(option, answerId) in sortedOptions" :key="option" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
+        <div v-for="(option, answerId) in sortedOptions" :key="answerId" class="relative mb-2 h-10 dark-ring rounded-lg overflow-hidden">
             <div class="absolute top-0 w-full bar-flex">
                 <h5 :style="`color: ${option.bgColor};`">
                     {{option.label}}
@@ -61,7 +61,7 @@ export default defineComponent({
     @apply font-bold;
 }
 .animation {
-    transition: width 0.5s ease-in-out
+    transition: width 0.5s ease-in-out;
 }
 .check-icon {
     margin: 10px;
