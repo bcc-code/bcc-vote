@@ -49,7 +49,7 @@
 </template>
 <script lang="ts">
 import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
-import { Poll, PollResultVisibility, Answer, Option } from '../domain'
+import { Poll, PollResultVisibility, Answer, Option, PollResult } from '../domain'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
@@ -73,6 +73,7 @@ export default defineComponent({
     async created(){
         await this.init()
         this.$client.service('answer').on('created', this.addAnswer)
+        this.$client.service('poll-result').on('patched', this.changeBars)
 
         this.$client.io.on('reconnect', this.init)
     },
@@ -89,6 +90,17 @@ export default defineComponent({
         },
     },
     methods: {
+        async init(){
+            this.loaded = false
+            this.answers =  []
+            this.totalCount = 0
+            if(this.poll){
+                this.sortedAnswers = {} as {[answerId: number]: { count:number, bgColor: string}}
+                this.createSortedAnswer(this.poll)
+                await this.loadBars(this.poll)
+                this.loaded = true
+            }
+        },
         barWidthPercent(opt: Option): number{
             return this.sortedAnswers[opt.answerId].count / this.totalCount * 100;
         },
@@ -110,31 +122,24 @@ export default defineComponent({
             const lastAnswer = poll.answers[poll.answers.length - 1]
             this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor;
         },
-        async loadAnswers(poll:Poll){
-            const query = {
-                _from: poll._id
-            }
-            const answers = await this.$client.service('answer').find({query}).catch(this.$showError)
-            answers.forEach((a:Answer) => {this.addAnswer(a)})
+        async loadBars(poll:Poll){
+            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
+            this.changeBars(pollResults);
         },
         addAnswer(answer: Answer){
             if(this.poll && answer._from === this.poll._id) {  
                 this.answers.unshift(answer)
-                this.sortedAnswers[answer.answerId].count ++
-                this.totalCount ++
             }
         },
-        async init(){
-            this.loaded = false
-            this.answers =  []
-            this.totalCount = 0
-            if(this.poll){
-                this.sortedAnswers = {} as {[answerId: number]: { count:number, bgColor: string}}
-                this.createSortedAnswer(this.poll)
-                await this.loadAnswers(this.poll)
-                this.loaded = true
+        changeBars(data: PollResult){
+            console.log(data);
+            this.totalCount = 0;
+            for(const ans in data.answerCount){
+                if(data.answerCount.hasOwnProperty(ans)){
+                    this.sortedAnswers[ans].count = data.answerCount[ans];
+                    this.totalCount += data.answerCount[ans];
+                }
             }
-            
         },
     }
 

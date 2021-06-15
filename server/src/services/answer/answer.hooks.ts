@@ -1,6 +1,6 @@
 import { HookContext } from "@feathersjs/feathers";
 import { Answer, PollActiveStatus } from "../../domain";
-import { db } from '../../firestore';
+import { db, FieldValue, FieldPath } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
     const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
@@ -35,6 +35,18 @@ const addUserData = async (context:HookContext) => {
     } as Answer;
 
     context.data = withUserFields;
+    return context;
+};
+
+const incrementCounter = async (context:HookContext) => {
+    const { data } = context;
+    const pollRef = db.collection('poll-result').doc(data.pollId);
+
+    const countUpdate = {} as any;
+    countUpdate['answerCount.'+context.data.answerId] = FieldValue.increment(1);
+
+    await pollRef.update(countUpdate);
+
     return context;
 };
 
@@ -73,7 +85,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
+        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: [removeFromFirestore]

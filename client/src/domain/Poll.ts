@@ -32,7 +32,12 @@ export interface Answer {
     answerId: number;
     pollingEventId: number;
     displayName: string;
-  }
+}
+
+export interface PollResult {
+    pollingEventId: number;
+    answerCount: {[answerId: number]: number}
+}
 
 export enum PollActiveStatus {
   'Not Started' = 'not_started',
