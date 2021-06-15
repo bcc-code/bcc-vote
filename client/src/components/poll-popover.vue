@@ -31,7 +31,7 @@
 import PollVote from './poll-vote.vue'
 import PollResults from './poll-results.vue'
 import VoteConfirm from './confirm-popover.vue'
-import { Poll, Answer } from '../domain/Poll'
+import { Poll, Answer, SortedOptions, Option } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
@@ -47,7 +47,7 @@ export default defineComponent({
             infoBoxClosed: false as boolean,
             showConfirm: false as boolean,
             chosenOption: {} as Answer,
-            hasSavedAnswer: false as boolean
+            hasSavedAnswer: false as boolean,
         }
     },
     methods: {

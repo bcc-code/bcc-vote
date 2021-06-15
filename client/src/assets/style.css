@@ -194,11 +194,11 @@
   
   .list-enter-active,
   .list-leave-active {
-    transition: all 0.3s ease;
+    transition: all 0.9s ease;
   }
   
   .list-enter-from,
   .list-leave-to {
     opacity: 0;
-    transform: translateY(-30px);
+    height: 0;
   }

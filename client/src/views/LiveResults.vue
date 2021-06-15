@@ -12,19 +12,7 @@
                 <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" />
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
-                    <Spinner inline v-if="answers.length === 0"/>
-                    <transition-group name="list" tag="div" class="flex flex-wrap -mx-2">
-                        <div v-for="answer in answers" :key="answer._id" class="w-1/3 p-2">
-                            <div class="answer-box">
-                                <div class="p-2">
-                                    <h4 class="font-bold">{{answer.displayName}}</h4>
-                                </div>
-                                <div class="flex items-center px-4 rounded-r-lg" :style="`background-color:${sortedOptions[answer.answerId].bgColor};`">
-                                    <h4 class="font-bold text-white">{{sortedOptions[answer.answerId].label}}</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </transition-group>
+                    <AdminVoterList :sortedOptions="sortedOptions" :voterList="answers"/>
                 </div>
                 <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
@@ -33,12 +21,14 @@
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
+import AdminVoterList from '../components/admin-voter-list.vue'
 import { Poll, PollingEventStatus, PollResultVisibility } from '../domain'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
-        ProgressBars
+        ProgressBars,
+        AdminVoterList
     },
     data() {
         return {
@@ -95,13 +85,4 @@ export default defineComponent({
     }
 })
 </script>
-<style scoped>
-.answer-box {
-    @apply flex;
-    @apply justify-between;
-    border-width: 1.5px;
-    border-style: solid;
-    @apply border-gray-500;
-    @apply rounded-lg;
-}
-</style>
+

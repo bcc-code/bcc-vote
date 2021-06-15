@@ -4,7 +4,7 @@ export type Answer = {
     _from: string;
     _to: string;
     firestore?: boolean;
-    answerId: number;
+    answerId: string;
     pollingEventId: string;
     displayName: string;
     churchName: string;
