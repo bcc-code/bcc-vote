@@ -37,9 +37,9 @@ const addUserData = async (context:HookContext) => {
 };
 
 const addLastChangedTime = (context: HookContext) => {
-  const { data } = context;
-  data.lastChanged = Date.now()
-  return context;
+    const { data } = context;
+    data.lastChanged = Date.now();
+    return context;
 };
 
 export default {
@@ -47,7 +47,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [ preventVoteOnInactivePoll, addUserData, addLastChangedTime],
+        create: [ preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
         update: [],
         patch: [],
         remove: []
