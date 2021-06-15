@@ -9,7 +9,7 @@
                     <h4 class="font-bold">{{$t('labels.votes')}}</h4>
                     <h4 class="font-bold text-blue-900">{{answerCount + ' ' + $t('labels.count')}}</h4>
                 </div>
-                <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" />
+                <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" v-model="selectedOption"/>
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
                     <AdminVoterList :sortedOptions="sortedOptions" :voterList="answers"/>
@@ -22,7 +22,7 @@
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
 import AdminVoterList from '../components/admin-voter-list.vue'
-import { Poll, PollingEventStatus, PollResultVisibility } from '../domain'
+import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -32,7 +32,8 @@ export default defineComponent({
     },
     data() {
         return {
-            loading: false
+            loading: false,
+            selectedOption: "",
         }
     },
     async created(){
@@ -65,6 +66,13 @@ export default defineComponent({
                 visible = true
             }
             return visible
+        },
+        voterList():Array<Answer>{
+            if(this.selectedOption)
+                return this.answers.filter((ans: Answer) => ans.answerId === this.selectedOption)
+
+            return this.answers
+
         }
     },
     methods: {
