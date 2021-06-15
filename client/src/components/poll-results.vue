@@ -74,7 +74,7 @@ export default defineComponent({
             this.answers =  []
             this.totalCount = 0
             if(this.poll){
-                this.sortedAnswers = {} as {[answerId: number]: { count:number, bgColor: string}}
+                this.sortedAnswers = {} as SortedOptions
                 this.createSortedAnswer(this.poll)
                 await this.loadBars(this.poll)
                 this.loaded = true
