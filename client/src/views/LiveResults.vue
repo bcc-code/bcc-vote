@@ -9,7 +9,7 @@
                     <h4 class="font-bold">{{$t('labels.votes')}}</h4>
                     <h4 class="font-bold text-blue-900">{{answerCount + ' ' + $t('labels.count')}}</h4>
                 </div>
-                <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" v-model="selectedOption"/>
+                <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" v-model="selectedOption" :visibleResults="resultsVisible"/>
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
                     <AdminVoterList :sortedOptions="sortedOptions" :voterList="voterList"/>

@@ -1,16 +1,17 @@
 <template>
     <div v-if="loaded" class="h-full">
-        <div class="text-gray-700 text-xl pb-4">{{$t('info.select-option')}}</div>
-        <div v-if="loaded">
-            <ProgressBars :sortedOptions="sortedOptions" :totalCount="totalCount" :chosenOption="chosenOption" v-model="selectedOption"/>
-        </div>
-        <div class="py-5">
+        <div v-if="pollResultsAreVisible" class="text-gray-700 text-xl pb-4">{{$t('info.select-option')}}</div>
+        <div v-if="loaded" class="pt-4">
+            <ProgressBars :sortedOptions="sortedOptions" :totalCount="totalCount" :chosenOption="chosenOption" v-model="selectedOption" :visibleResults="pollResultsAreVisible"/>
+            <div class="py-5">
             <div v-if="pollResultsAreVisible">
                 <h5 class="font-bold mb-3 text-gray-600">{{$t('labels.participants')}}</h5>
                 <VoterList :voterList="voterList" :sortedOptions="sortedOptions"/>
             </div>
             <InfoBox v-else>{{$t('info.poll-is.'+poll.resultVisibility)}}</InfoBox>
+            </div>
         </div>
+        
     </div>
 </template>
 <script lang="ts">

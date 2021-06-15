@@ -32,6 +32,7 @@ export default defineComponent({
         totalCount: {type: Number, required: true},
         chosenOption: {type: Number},
         modelValue: {type: String, required: true},
+        visibleResults: Boolean,
     },
     methods: {
         barWidthPercent(option:SortedOption):number {
@@ -45,6 +46,8 @@ export default defineComponent({
             return this.barWidthPercent(option) > 97
         },
         clickOption(answerId: number):void {
+            if(!this.visibleResults)
+                return
             if(this.modelValue === answerId.toString())
                 this.$emit('update:modelValue', "");
             else

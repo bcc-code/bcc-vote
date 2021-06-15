@@ -85,7 +85,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [ preventVoteOnInactivePoll, addUserData, addLastChangedTime, incrementCounter],
+        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: [removeFromFirestore]
