@@ -69,9 +69,7 @@ export default defineComponent({
         },
         voterList():Array<Answer>{
             if(this.selectedOption){
-                console.log(this.selectedOption);
                 return this.answers.filter((ans: Answer) => {
-                    console.log(ans.answerId);
                     return ans.answerId == this.selectedOption
                 })
             }

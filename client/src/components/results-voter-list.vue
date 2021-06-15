@@ -23,9 +23,6 @@ export default defineComponent({
         voterList: {type: Array as PropType<Array<Answer>>, required: true},
         sortedOptions: {type: Object as PropType<SortedOptions>, required: true},
     },
-    created(){
-        console.log('create');
-    },
     data(){
         return {
             selectedOption: undefined as undefined|number,
