@@ -3,13 +3,13 @@
     "home": "BCC Vote"
   },
   "pages": {
-    "home": "Home",
+    "home": "Hjem",
     "error": "Error"
   },
   "actions": {
-    "vote": "Vote",
-    "confirm": "Confirm",
-    "cancel": "Cancel",
+    "vote": "Stem",
+    "confirm": "Bekreft",
+    "cancel": "Avbryt",
     "create-polling-event": "Create a polling event",
     "show-events": "Voting events",
     "show-history": "History",
@@ -17,7 +17,7 @@
     "add-option": "Add another option",
     "add-poll": "Add another question",
     "admin-this-event": "Administrate",
-    "join-this-event": "Participate",
+    "join-this-event": "Delta",
     "view-event": "View event",
     "start-polling-event": "Start polling event",
     "close-polling-event": "Close polling event",
@@ -36,30 +36,29 @@
     "go-back-home": "Back to the home screen",
     "logout": "Logg ut",
     "customer-support": "Customer support",
-    "go-to-login": "Go to login page",
-    "ok-continue": "Okay, continue",
-    "yes-continue": "Yes, continue"
+    "go-to-login": "Tilbake til pålogging",
+    "ok-continue": "Ok, fortsett",
+    "yes-continue": "Ja, fortsett"
   },
   "labels": {
-    "yes": "Yes",
-    "no": "No",
-    "polling-events": "Polling events",
+    "yes": "Ja",
+    "no": "Nei",
+    "polling-events": "Avstemninger",
     "archive": "Archive",
     "settings": "Innstillinger",
     "connection-status": "Connection status",
     "polls": "Questions",
     "poll": "Question",
-    "participants": "Participants",
+    "participants": "Avgitte stemmer",
     "new-poll": "New Question",
     "new-polling-event": "New polling event",
     "edit-polling-event": "Edit polling event",
     "poll-queue": "Questions",
     "results": "Results",
     "show-results-live": "Show results live",
-    "count": "Count",
     "voters": "Voters",
     "votes": "Votes",
-    "vote": "Vote",
+    "vote": "Stem",
     "vote-confirmation": "Vote confirmation",
     "answers": "Alternatives",
     "option": "Option",
@@ -67,8 +66,8 @@
     "result-visibility": "Results visibility",
     "contact": "Kontakt",
     "polling-event-status": {
-      "live": "Live",
-      "not_started": "Not started",
+      "live": "Aktiv",
+      "not_started": "Ikke aktiv",
       "finished": "Finished",
       "archived": "Archived"
     },
@@ -83,19 +82,19 @@
       "anonymous": "Anonymous"
     },
     "bcc-vote": "BCC Vote",
-    "thank-you": "Thank you for participating!",
-    "logged-as": "You are now voting as",
+    "thank-you": "Takk for din deltakelse!",
+    "logged-as": "Du stemmer nå som",
     "sure-republish": "Are you sure that you want to republish this question?"
   },
   "info": {
-    "no-polling-events": "There are no polling events currently available",
+    "no-polling-events": "Det er ikke noe avstemninger tilgjengelig",
     "no-archived-events": "There are no archived events currently available",
     "define-group": "You can define a user group for this voting event. Only users of this voting group will be able to see it.",
     "number-of-participants": "Number of participants",
     "question-visibility": "The questions won't be visible until the question is started",
     "names-available-for": "Names of all participants and their votes will be available for:",
     "answer-explanations": "You can decide if voters will be asked to confirm their decision. You have the possibility to edit the confirmation below",
-    "polls-will-appear": "The question will appear on the screen when it's published.",
+    "polls-will-appear": "Du vil snart se spørsmålet på skjermen.",
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
     "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To deactivate this polling event press “Close polling event” at the top.",
     "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this question event and they can vote on it.",
@@ -108,11 +107,11 @@
     "copied": "Copied!",
     "results-will-be-visible": "Thank you for participating in this poll! The results will be avaliable for the next few days on the homescreen.",
     "result-visibility": {
-      "public": "This is a public vote, your name and answer will be available for all participants of this polling event",
-      "non_public": "Your name and answer will be available for administrators of this polling event",
-      "anonymous": "This is an anonymous voting, nobody will see your name and answer"
+      "public": "Dette er en åpen votering. Ditt navn og din avgitte stemme vil være synlig for alle som deltar",
+      "non_public": "Dette er en lukket votering. Ditt navn og avgitte stemme vil kun vises for administrator",
+      "anonymous": "Dette er en anonym votering. Ditt navn og avgitte stemme vil ikke være synlig for noen"
     },
-    "not-you": "Not you? Please sign out",
+    "not-you": "Ikke deg? Vennligst, logg inn på nytt",
     "tooltips": {
       "poll-public": "Participants and administrators will see who voted for what",
       "poll-non-public": "Only administrators will see who voted for what",
@@ -139,10 +138,10 @@
     "group": "Voting group",
     "confirmation": "Confirmation",
     "answer-option": "Option",
-    "answer-confirmation": "Confirmation"
+    "answer-confirmation": "Bekreftelse"
   },
   "descriptions": {
-    "home": "This app gives you the possibility to participate in live vote events"
+    "home": "Siden der din stemme blir hørt"
   },
   "explanations": {
     "disagree": "No, I disagree with the question",
