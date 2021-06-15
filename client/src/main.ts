@@ -13,14 +13,13 @@ import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
 
-const messages = {
-    master: Object.assign({}, require('./localization/master.json')),
-    no: Object.assign({}, require('./localization/no_master.json'))
+const messages = {    
+    no: Object.assign({}, require('./localization/no_vote_master.json'))
 };
 
 const i18n = createI18n({
-    locale: 'master',
-    fallbackLocale: 'master',
+    locale: 'no',
+    fallbackLocale: 'no',
     messages
 })
 
