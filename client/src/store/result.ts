@@ -35,20 +35,16 @@ const result: Module<ResultState,RootState> = ({
             commit('UPDATE_ANSWERS',results)
         },
         patchedPoll({commit,state}, patchedPoll:Poll) {
-            console.log('Patched Poll came in:',patchedPoll)
             let updatedPollsArray = [] as Array<Poll>
-            if(!state.polls) {
-                updatedPollsArray.push(patchedPoll)
-                commit('UPDATE_POLLS',updatedPollsArray)
-            } else {
-                const matchedPolls = state.polls.filter((p:Poll) => p._id === patchedPoll._id)
-                if(matchedPolls) {
-                    updatedPollsArray = state.polls.map(previous => matchedPolls.find((matched:Poll) => matched._id === previous._id) || previous)
-                } else {
-                    updatedPollsArray.push(patchedPoll)
-                }
-                commit('UPDATE_POLLS',updatedPollsArray)
+            updatedPollsArray.push(patchedPoll)
+            if(state.polls) {
+                state.polls.forEach(poll => {
+                    if(poll._id !== patchedPoll._id) {
+                        updatedPollsArray.push(poll)
+                    }
+                });
             }
+            commit('UPDATE_POLLS',updatedPollsArray)
         },
         addedAnswer({commit,state}, addedAnswer:Answer) {
             if(state.answers) {

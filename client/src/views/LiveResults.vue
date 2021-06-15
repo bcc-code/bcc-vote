@@ -11,7 +11,8 @@
                 </div>
                 <ProgressBars class="mb-8" :sortedOptions="sortedOptions" :totalCount="answerCount" />
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
-                <div class="w-full">
+                <div v-if="resultsVisible" class="w-full">
+                    <Spinner inline v-if="answers.length === 0"/>
                     <transition-group name="list" tag="div" class="flex flex-wrap -mx-2">
                         <div v-for="answer in answers" :key="answer._id" class="w-1/3 p-2">
                             <div class="answer-box">
@@ -25,13 +26,14 @@
                         </div>
                     </transition-group>
                 </div>
+                <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
-import { Poll, PollingEventStatus } from '../domain'
+import { Poll, PollingEventStatus, PollResultVisibility } from '../domain'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -66,6 +68,13 @@ export default defineComponent({
                 bg: 'bg-gray-100',
                 text: 'text-blue-900'
             }
+        },
+        resultsVisible():boolean {
+            let visible = false
+            if(this.activePoll && this.activePoll.resultVisibility === PollResultVisibility['Public']) {
+                visible = true
+            }
+            return visible
         }
     },
     methods: {
