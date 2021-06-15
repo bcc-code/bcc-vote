@@ -37,9 +37,9 @@ export default {
         all: [ ],
         find: [],
         get: [ addChannel ],
-        create: [ validateAndFormat ],
-        update: [validateAndFormat, addLastChangedTime],
-        patch: [],
+        create: [ validateAndFormat, addLastChangedTime ],
+        update: [ validateAndFormat, addLastChangedTime ],
+        patch: [ addLastChangedTime ],
         remove: []
     },
 
