@@ -41,7 +41,6 @@ export default defineComponent({
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
-            totalCount: 0 as number,
         }
     },
     async created(){
@@ -66,6 +65,14 @@ export default defineComponent({
         }
     },
     computed: {
+        totalCount():number {
+            let sum = 0;
+            Object.keys(this.sortedOptions).forEach((opt: string)=> {
+                sum += this.sortedOptions[opt].count;
+            })
+
+            return sum;
+        },
         pollResultsAreVisible():boolean {
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
@@ -123,11 +130,9 @@ export default defineComponent({
             }
         },
         changeBars(data: PollResult){
-            this.totalCount = 0;
             for(const ans in data.answerCount){
                 if(data.answerCount.hasOwnProperty(ans)){
                     this.sortedOptions[ans].count = data.answerCount[ans];
-                    this.totalCount += data.answerCount[ans];
                 }
             }
         },
