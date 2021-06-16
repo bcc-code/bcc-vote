@@ -1,20 +1,23 @@
 import { createStore } from 'vuex'
+import createMultiTabState from 'vuex-multi-tab-state';
+import result from '../store/result'
 
-export interface State {
-  count: number
+export interface RootState {
 }
 
-export default createStore<State>({
-    state:{
-        count: 0,
+export const store: any = createStore<RootState>({
+    state: {
     },
     mutations: {
-        increment(state){
-            state.count++
-        }
     },
     actions: {
     },
     modules: {
-    }
+        result
+    },
+    plugins: [
+        createMultiTabState({
+            statesPaths: ['result']
+        })
+    ]
 })

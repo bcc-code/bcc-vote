@@ -18,9 +18,9 @@ const validateAndFormat = (context: HookContext) => {
 };
 
 const addLastChangedTime = (context: HookContext) => {
-  const { data } = context;
-  data.lastChanged = Date.now()
-  return context;
+    const { data } = context;
+    data.lastChanged = Date.now();
+    return context;
 };
 
 const addChannel = async (context: HookContext) => {
@@ -29,6 +29,7 @@ const addChannel = async (context: HookContext) => {
         const connection = context.params.connection;
         context.app.channel(channelName).join(connection);
     }
+    return context;
 };
 
 export default {
@@ -36,9 +37,9 @@ export default {
         all: [ ],
         find: [],
         get: [ addChannel ],
-        create: [ validateAndFormat ],
-        update: [validateAndFormat, addLastChangedTime],
-        patch: [],
+        create: [ validateAndFormat, addLastChangedTime ],
+        update: [ validateAndFormat, addLastChangedTime ],
+        patch: [ addLastChangedTime ],
         remove: []
     },
 

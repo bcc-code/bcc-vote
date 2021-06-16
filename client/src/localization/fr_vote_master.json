@@ -56,6 +56,7 @@
     "poll-queue": "Questions",
     "results": "Results",
     "show-results-live": "Show results live",
+    "count": "Count",
     "voters": "Voters",
     "votes": "Votes",
     "vote": "Vote",
@@ -118,7 +119,7 @@
       "poll-anonymous": "No one will see who voted for what",
       "publish-poll": "Participants will see the question, can vote and see the results",
       "close-poll": "Participant won't see the question or the results",
-      "edit": "Edit",
+      "edit": "Modifier",
       "delete": "Delete"
     }
   },
