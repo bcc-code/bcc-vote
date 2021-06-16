@@ -11,7 +11,6 @@
             <InfoBox v-else>{{$t('info.poll-is.'+poll.resultVisibility)}}</InfoBox>
             </div>
         </div>
-        
     </div>
 </template>
 <script lang="ts">
@@ -20,6 +19,7 @@ import VoterList from './results-voter-list.vue'
 
 import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain'
 import { defineComponent, PropType } from 'vue'
+// import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
     components: {
         ProgressBars,
@@ -37,7 +37,6 @@ export default defineComponent({
             loadedAllAnswers: false,
             loaded: false as boolean,
             allAnswers: [] as Array<Answer>,
-            liveAnswers: [] as Array<Answer>,
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
@@ -48,7 +47,10 @@ export default defineComponent({
 
         await this.init()
         
-        this.$client.service('answer').on('created', this.addAnswer)
+        
+        if(this.pollResultsAreVisible)
+            this.$client.service('answer').on('created', this.addAnswer)
+
         this.$client.service('poll-result').on('patched', this.changeBars)
 
         this.$client.io.on('reconnect', this.init)
@@ -65,12 +67,12 @@ export default defineComponent({
         }
     },
     computed: {
+        // ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
         totalCount():number {
             let sum = 0;
             Object.keys(this.sortedOptions).forEach((opt: string)=> {
                 sum += this.sortedOptions[opt].count;
             })
-
             return sum;
         },
         pollResultsAreVisible():boolean {
@@ -88,10 +90,7 @@ export default defineComponent({
                     return v.answerId == this.selectedOption
                 })
             }
-            if(this.isEventCreator)
-                return this.allAnswers;
-
-            return this.liveAnswers;
+            return this.allAnswers;
         }
     },
     methods: {
@@ -100,8 +99,9 @@ export default defineComponent({
             this.loadedAllAnswers = false
 
             let promises = []
+
             promises.push(this.loadBars(this.poll))
-            if(this.selectedOption || this.isEventCreator)
+            if(this.pollResultsAreVisible)
                 promises.push(this.loadAllAnswers(this.poll))
 
             await Promise.all(promises);
@@ -114,19 +114,16 @@ export default defineComponent({
         async loadAllAnswers(poll:Poll){
             const res = await this.$client.service('answer').find({
                 query: {
-                    _from: poll._id
+                    _from: poll._id,
                 }
             }).catch(this.$showError);
             this.loadedAllAnswers = true;
             this.allAnswers = res;
         },
         addAnswer(answer: Answer){
+            console.log('add');
             if(this.poll && answer._from === this.poll._id) {  
                 this.allAnswers.unshift(answer)
-                this.liveAnswers.unshift(answer);
-                setTimeout(() => {
-                    this.liveAnswers.pop();
-                }, this.disapearTime)
             }
         },
         changeBars(data: PollResult){

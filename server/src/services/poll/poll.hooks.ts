@@ -1,6 +1,6 @@
 import * as authentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
-import { PollActiveStatus } from '../../domain';
+import { PollActiveStatus, Option } from '../../domain';
 import { db } from '../../firestore';
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -57,12 +57,25 @@ const removeFromArango = (context: HookContext) => {
     });
 };
 
+const resetPollResults = (context: HookContext) => {
+    const pollRes = {
+        pollingEventId: context.result.pollingEventId,
+        answerCount: {} as {[answerId: number]: number}
+    };
+    context.result.answers.forEach((opt:Option) => {
+        pollRes.answerCount[opt.answerId] = 0;
+    });
+
+    return db.collection('poll-result').doc(context.result._key).set(pollRes);
+};
+
 const removeAllAnswers = async (context: HookContext) => {
     if(context.result.activeStatus !== PollActiveStatus['Live'])
         return;
     const promises = [];
     promises.push(removeFromFirestore(context.result._id));
     promises.push(removeFromArango(context));
+    promises.push(resetPollResults(context));
 
     await Promise.all(promises);
 
