@@ -52,7 +52,7 @@ const removeFromFirestore = async (id:string) => {
 const removeFromArango = (context: HookContext) => {
     return context.app.services.answer.remove(null, {
         query: {
-            _from: context.result._key
+            _from: context.result._id
         }
     });
 };
