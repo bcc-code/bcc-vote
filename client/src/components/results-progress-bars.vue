@@ -45,7 +45,7 @@ export default defineComponent({
         isEndRounded(option:SortedOption):boolean {
             return this.barWidthPercent(option) > 97
         },
-        clickOption(answerId: number):void {
+        clickOption(answerId: string):void {
             if(!this.visibleResults)
                 return
             if(this.modelValue === answerId.toString())
