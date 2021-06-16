@@ -82,14 +82,24 @@ export default defineComponent({
         async init() {
             this.loading = true
             const pollingEventKey = this.$route.params.id
-            await this.getPollingEvent(pollingEventKey)
-            await this.findPolls()
-            await this.findAnswers()
+            try {
+                await this.getPollingEvent(pollingEventKey)
+                await this.findPolls()
+                if(this.activePoll) {
+                    await this.findAnswers()
+                }
+            } catch(err) {
+                this.$showError(err)
+            }
             this.loading = false
         },
         async refreshAnswers() {
             this.loading = true
-            await this.findAnswers()
+            try {
+                await this.findAnswers()
+            } catch(err) {
+                this.$showError(err)
+            }
             this.loading = false
         }
     },
