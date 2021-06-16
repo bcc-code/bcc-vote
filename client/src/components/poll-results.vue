@@ -45,10 +45,11 @@ export default defineComponent({
         }
     },
     async created(){
-        await this.init()
-
+        
         this.$client.service('answer').off('created')
         this.$client.service('poll-result').off('patched')
+
+        await this.init()
 
         this.$client.service('answer').on('created', this.addAnswer)
         this.$client.service('poll-result').on('patched', this.changeBars)
