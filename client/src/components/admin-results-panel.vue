@@ -64,9 +64,7 @@ export default defineComponent({
             
         },
         fillAnswerData(){
-            console.log(this.workSheets)
             this.allAnswers.forEach((answer: Answer) => {
-                console.log(answer);
                 const ws = this.workSheets[answer._from]
                 this.fillDataRow(ws, answer)
             })
@@ -106,6 +104,7 @@ export default defineComponent({
             for(let i = 0; i < this.columnWidth.length; i++){
                 ws.column(i + 1).setWidth(this.columnWidth[i]);
             }
+            ws.cell(ws.lastUsedRow + 1).string("")
         },
         fillPollingEventInfo(ws: any, event:PollingEvent){
             const startRow = ws.lastUsedRow + 1;
