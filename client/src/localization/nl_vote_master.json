@@ -56,10 +56,10 @@
     "poll-queue": "Questions",
     "results": "Results",
     "show-results-live": "Show results live",
-    "count": "Count",
-    "voters": "Voters",
-    "votes": "Votes",
-    "vote": "Vote",
+    "count": "count",
+    "voters": "voters",
+    "votes": "votes",
+    "vote": "vote",
     "vote-confirmation": "Vote confirmation",
     "answers": "Alternatives",
     "option": "Option",
@@ -121,7 +121,8 @@
       "close-poll": "Participant won't see the question or the results",
       "edit": "Bewerk",
       "delete": "Delete"
-    }
+    },
+    "select-option": "Select an option to view who voted on it"
   },
   "fields": {
     "poll-title": "Question title",

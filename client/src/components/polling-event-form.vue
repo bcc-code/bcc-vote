@@ -29,11 +29,11 @@
 
         <div v-if="numberOfVoters" class="flex justify-between py-4 font-bold items-center">
             <div>
-            <h6>{{$t('info.number-of-participants')}}</h6>
-            <h3>{{numberOfVoters}} {{$t('labels.voters')}}</h3>
+                <h6>{{$t('info.number-of-participants')}}</h6>
+                <h3>{{numberOfVoters}} {{$t('labels.voters')}}</h3>
             </div>
             <div>
-            <div class="light-button text-lg cursor-pointer">{{$t('actions.show-all-participants')}}</div>
+                <div class="light-button text-lg cursor-pointer">{{$t('actions.show-all-participants')}}</div>
             </div>
         </div>
 
