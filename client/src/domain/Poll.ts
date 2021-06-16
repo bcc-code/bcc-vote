@@ -8,6 +8,7 @@ export interface Poll {
   answers: Option[],
   activeStatus: PollActiveStatus;
   resultVisibility: PollResultVisibility;
+  lastChanged: number;
 }
 
 export interface PollPrepare {
@@ -43,6 +44,7 @@ export interface Answer {
     answerId: string;
     pollingEventId: number;
     displayName: string;
+    lastChanged: number;
 }
 
 export interface PollResult {

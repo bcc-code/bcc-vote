@@ -33,17 +33,22 @@ export default defineComponent({
     },
     data(){
         return{
-            answerMap: {} as {[answerId: number]: { pollIndex: number, answer:Option}},
+            answerMap: {} as {[answerId: string]: string},
             workSheets: {} as {[pollId: string]: any},
             workBook: {} as any,
             allAnswers: [] as Answer[],
-            voterMap: {} as {[voterId: string]: any}
+            voterMap: {} as {[voterId: string]: any},
+            columnWidth: [10, 40, 5, 20, 30, 20, 20, 20, 30, 20],
         }
     },
     methods: {
         async generateReport():Promise<void>{
             const xl = require('excel4node')
-            this.workBook = new xl.Workbook()
+            this.workBook = new xl.Workbook({
+                defaultFont: {
+                },
+                dateFormat: 'yyyy-mm-dd hh:mm:ss'
+            })
 
             this.createSheets();
 
@@ -51,7 +56,7 @@ export default defineComponent({
             const votersList = await this.getVoters()
 
             this.getVotersMap(votersList.data)
-
+            this.getAnswerMap();
             this.fillAnswerData()
 
             const fileName = this.getReportTitle();
@@ -61,6 +66,7 @@ export default defineComponent({
         fillAnswerData(){
             console.log(this.workSheets)
             this.allAnswers.forEach((answer: Answer) => {
+                console.log(answer);
                 const ws = this.workSheets[answer._from]
                 this.fillDataRow(ws, answer)
             })
@@ -75,16 +81,39 @@ export default defineComponent({
             ws.cell(row, 5).string(cellPhone.formatted)
             ws.cell(row, 6).string(churchName)
             ws.cell(row, 7).string(activeRole)
+            ws.cell(row, 8).string(this.answerMap[ans.answerId])
+            ws.cell(row, 9).date(new Date(ans.lastChanged))
             // ws.cell(row, 8).number(ans.answerId)
         },
         createSheets(){
             this.savedPolls.forEach((poll:Poll) => {
                 const ws = this.workBook.addWorksheet(poll.title)
-                ws.cell(1, 1, 1, 9, true).string(poll.title)
-                ws.cell(2, 1, 3, 9, true).string(poll.description)
-                ws.column(2).setWidth(50)
                 this.workSheets[poll._id] = ws
             })
+            const firstSheet = this.workSheets[this.savedPolls[0]._id]
+            this.fillPollingEventInfo(firstSheet, this.pollingEvent)
+            
+            this.savedPolls.forEach((poll:Poll) => {
+                this.fillPollInfo(this.workSheets[poll._id], poll)
+            })
+        },
+        fillPollInfo(ws: any, poll: Poll){
+            const startRow = ws.lastUsedRow + 2
+            ws.cell(startRow, 1, startRow, 8, true).string(poll.title)
+            ws.cell(startRow, 9).date(new Date(poll.lastChanged))
+            if(poll.description)
+                ws.cell(startRow + 1, 1, startRow + 2, 9, true).string(poll.description)
+            for(let i = 0; i < this.columnWidth.length; i++){
+                ws.column(i + 1).setWidth(this.columnWidth[i]);
+            }
+        },
+        fillPollingEventInfo(ws: any, event:PollingEvent){
+            const startRow = ws.lastUsedRow + 1;
+            ws.cell(startRow, 1, startRow, 8, true).string(event.title)
+            ws.cell(startRow, 9).date(new Date(event.startDateTime));
+            if(event.description)
+                ws.cell(startRow + 1, 1, startRow + 2, 9, true).string(event.description)
+            
         },
         getAnswers(){
             return this.$client.service('answer').find({
@@ -111,6 +140,13 @@ export default defineComponent({
             votersList.forEach((voter: any) => {
                 this.voterMap[voter._id] = voter
             });
+        },
+        getAnswerMap(){
+            this.savedPolls.forEach((poll:Poll) => {
+                poll.answers.forEach((opt: Option) => {
+                    this.answerMap[opt.answerId] = opt.label;
+                })
+            })
         },
         getReportTitle():string{
             const pollDate = this.pollingEvent.startDateTime.toLocaleString().split('T')[0]
