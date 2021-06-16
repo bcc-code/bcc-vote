@@ -1,61 +1,80 @@
 <template>
-    <div class="h-full">
-        <div v-if="loaded">
-            <ProgressBars :sortedOptions="sortedAnswers" :totalCount="totalCount" :chosenOption="chosenOption"/>
-        </div>
-        <div class="py-5">
+    <div v-if="loaded" class="h-full">
+        <div v-if="pollResultsAreVisible" class="text-gray-700 text-xl pb-4">{{$t('info.select-option')}}</div>
+        <div v-if="loaded" class="pt-4">
+            <ProgressBars :sortedOptions="sortedOptions" :totalCount="totalCount" :chosenOption="chosenOption" v-model="selectedOption" :visibleResults="pollResultsAreVisible"/>
+            <div class="py-5">
             <div v-if="pollResultsAreVisible">
                 <h5 class="font-bold mb-3 text-gray-600">{{$t('labels.participants')}}</h5>
-                <transition-group name="list" tag="div">
-                    <div v-for="(answer,index) in answers" :key="answer._key">
-                        <div class="py-2 flex justify-between items-center border-gray-500"
-                            :class="index === 0 ? '' : 'border-t-half'">
-                            <div>
-                                <h4 class="font-bold">{{answer.displayName}}</h4>
-                            </div>
-                            <div
-                                :style="`background-color: ${sortedAnswers[answer.answerId].bgColor};`"
-                                :class="['px-6 py-0.5 mr-1 rounded-lg text-white']">
-                                <h5 class="font-bold">{{sortedAnswers[answer.answerId].label}}</h5>
-                            </div>
-                        </div>
-                    </div>
-                </transition-group>
-                <Spinner v-if="answers.length === 0" inline/>
+                <VoterList :voterList="voterList" :sortedOptions="sortedOptions"/>
             </div>
             <InfoBox v-else>{{$t('info.poll-is.'+poll.resultVisibility)}}</InfoBox>
+            </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue'
-import { Poll, PollResultVisibility, Answer, Option, SortedOptions } from '../domain'
+import VoterList from './results-voter-list.vue'
+
+import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain'
 import { defineComponent, PropType } from 'vue'
+// import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
     components: {
-        ProgressBars
+        ProgressBars,
+        VoterList
     },
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
-        chosenOption: {type: Number},
-        isEventCreator: {type: Boolean, default: false}
+        chosenOption: {type: String},
+        isEventCreator: {type: Boolean, default: false},
     },
     data() {
         return {
+            disapearTime: 5000,
+            selectedOption: "",
+            loadedAllAnswers: false,
             loaded: false as boolean,
-            answers: [] as Array<Answer>,
+            allAnswers: [] as Array<Answer>,
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
-            totalCount: 0 as number,
-            sortedAnswers: {} as SortedOptions
+            sortedOptions: {} as SortedOptions,
         }
     },
     async created(){
+        this.generateSortedOptions();
+
         await this.init()
-        this.$client.service('answer').on('created', this.addAnswer)
+        
+        
+        if(this.pollResultsAreVisible)
+            this.$client.service('answer').on('created', this.addAnswer)
+
+        this.$client.service('poll-result').on('patched', this.changeBars)
+
         this.$client.io.on('reconnect', this.init)
     },
+    unmounted(){
+        this.$client.service('answer').off('created')
+        this.$client.service('poll-result').off('patched')
+    },
+    watch: {
+        selectedOption(newVal){
+            if(newVal && !this.loadedAllAnswers){
+                this.loadAllAnswers(this.poll);
+            }
+        }
+    },
     computed: {
+        // ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
+        totalCount():number {
+            let sum = 0;
+            Object.keys(this.sortedOptions).forEach((opt: string)=> {
+                sum += this.sortedOptions[opt].count;
+            })
+            return sum;
+        },
         pollResultsAreVisible():boolean {
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
                 return true
@@ -65,19 +84,60 @@ export default defineComponent({
                 return true
             return false
         },
+        voterList():Array<Answer>{
+            if(this.selectedOption){
+                return this.allAnswers.filter((v:Answer)=>{
+                    return v.answerId == this.selectedOption
+                })
+            }
+            return this.allAnswers;
+        }
     },
     methods: {
-        async loadAnswers(poll:Poll){
-            const query = {
-                _from: poll._id
-            }
-            const answers = await this.$client.service('answer').find({query}).catch(this.$showError)
-            answers.forEach((a:Answer) => {this.addAnswer(a)})
+        async init(){
+            this.loaded = false
+            this.loadedAllAnswers = false
+
+            let promises = []
+
+            promises.push(this.loadBars(this.poll))
+            if(this.pollResultsAreVisible)
+                promises.push(this.loadAllAnswers(this.poll))
+
+            await Promise.all(promises);
+            this.loaded = true
         },
-        createSortedAnswer(poll:Poll){
+        async loadBars(poll:Poll){
+            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
+            this.changeBars(pollResults);
+        },
+        async loadAllAnswers(poll:Poll){
+            const res = await this.$client.service('answer').find({
+                query: {
+                    _from: poll._id,
+                }
+            }).catch(this.$showError);
+            this.loadedAllAnswers = true;
+            this.allAnswers = res;
+        },
+        addAnswer(answer: Answer){
+            console.log('add');
+            if(this.poll && answer._from === this.poll._id) {  
+                this.allAnswers.unshift(answer)
+            }
+        },
+        changeBars(data: PollResult){
+            for(const ans in data.answerCount){
+                if(data.answerCount.hasOwnProperty(ans)){
+                    this.sortedOptions[ans].count = data.answerCount[ans];
+                }
+            }
+        },
+        generateSortedOptions(){
+            this.sortedOptions = {} as SortedOptions
             let colorIndex = 0
-            poll.answers.forEach((option: Option) => {
-                this.sortedAnswers[option.answerId] = {
+            this.poll.answers.forEach((option: Option) => {
+                this.sortedOptions[option.answerId] = {
                     count: 0,
                     bgColor: this.answerColors[colorIndex],
                     ...option
@@ -86,29 +146,11 @@ export default defineComponent({
                 if(colorIndex >= this.answerColors.length)
                     colorIndex = 0
             })
-            if(poll.answers.length > 2) {
-                const lastAnswer = poll.answers[poll.answers.length - 1]
-                this.sortedAnswers[lastAnswer.answerId].bgColor = this.neutralColor
+            if(this.poll.answers.length > 2) {
+                const lastAnswer = this.poll.answers[this.poll.answers.length - 1]
+                this.sortedOptions[lastAnswer.answerId].bgColor = this.neutralColor
             }
-        },
-        addAnswer(answer: Answer){
-            if(this.poll && answer._from === this.poll._id) {  
-                this.answers.unshift(answer)
-                this.sortedAnswers[answer.answerId].count ++
-                this.totalCount ++
-            }
-        },
-        async init(){
-            this.loaded = false
-            this.answers =  []
-            if(this.poll){
-                this.sortedAnswers = {} as SortedOptions
-                this.createSortedAnswer(this.poll)
-                await this.loadAnswers(this.poll)
-                this.loaded = true
-            }
-            
-        },
+        }
     }
 
 })

@@ -43,9 +43,9 @@ describe('Form Validation', async () => {
                 answerId: 122131232,
                 pollingEventId: poll.pollingEventId
             };
+            await sleep(300);
             const result = await app.service('answer').create(answer,{ user}) as Answer;
             assert.equal(result.displayName,user.displayName);
-            assert.equal(result.churchName,'Terwolde');
         } catch (error) {
             assert.fail(error.message);
         }
@@ -61,8 +61,10 @@ describe('Form Validation', async () => {
                 answerId: 122131232,
                 pollingEventId: poll.pollingEventId
             };
+            await sleep(300);
             const answer2 = {...answer1, answerId: 222131232};
             await app.service('answer').create(answer1,{ user}) as Answer;
+            await sleep(300);
             await app.service('answer').create(answer2,{ user}) as Answer;
             assert.fail('Was able to answer the same poll twice.');
         } catch (error) {
@@ -80,10 +82,41 @@ describe('Form Validation', async () => {
                 answerId: 122131232,
                 pollingEventId: poll.pollingEventId
             };
+            await sleep(300);
             await app.service('answer').create(answer,{ user}) as Answer;
             assert.fail('Was able to answer an inactive poll.');
         } catch (error) {
             assert.isTrue(error.message.includes('Poll is not active'));
         }
     });
+    it('result -> get results for a poll', async () => {
+        try{
+            await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
+            await sleep(300);
+
+            let results = await app.service('poll-result').get(poll._key) as any;
+            console.log(results);
+            assert.equal(results.answerCount['1'], 0);
+            assert.equal(results.answerCount['2'], 0);
+            
+            const answer = {
+                _from: poll._id,
+                _to: user._id,
+                answerId: '1',
+                pollingEventId: poll.pollingEventId
+            };
+            await app.service('answer').create(answer, {user});
+
+            await sleep(300);
+
+            results = await app.service('poll-result').get(poll._key) as any;
+            assert.equal(results.answerCount['1'], 1);
+            assert.equal(results.answerCount['2'], 0);
+        }catch (error) {
+            assert.fail(error.message);
+        }
+    });
+    function sleep(ms:number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 });

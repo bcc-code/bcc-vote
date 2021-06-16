@@ -3,8 +3,9 @@ export type Answer = {
     _key: string;
     _from: string;
     _to: string;
-    answerId: number;
-    pollingEventId: number;
+    firestore?: boolean;
+    answerId: string;
+    pollingEventId: string;
     displayName: string;
     churchName: string;
 }

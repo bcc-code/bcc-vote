@@ -2,6 +2,7 @@ import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
 import { generateFreshContext }  from './setup-tests/test-set';
+import {PollActiveStatus} from '../src/domain';
 
 describe('channels', () => {
     let context:any;
@@ -66,16 +67,19 @@ describe('channels', () => {
         try {
             let res:any;
             context.app.service('answer').on('created', (ans:any)=>{
+                console.log('event', ans);
                 if(ans.pollingEventId === app.channels[0])
                     res = ans;
             });
-
+            await app.service('poll').patch('504310092', {activeStatus: PollActiveStatus['Live']}, {});
+            await sleep(300);
             const ans:any = await app.service('answer').create({
                 _from: 'poll/504310092',
                 _to: 'user/178509735',
                 answerId: '1',
                 pollingEventId: '504279890',
             }, context.params);
+            await sleep(300);
             // // Assert
             assert.equal(res._key, ans._key);
             assert.equal(res.answerId, '1');
@@ -113,7 +117,6 @@ describe('channels', () => {
             await app.service('poll').patch('504310091', {
                 activeStatus: 'not_started',
             }, context.params);
-
             // Assert
             assert.equal(res._key,'504310091');
             assert.equal(res.activeStatus,'not_started');
@@ -122,6 +125,7 @@ describe('channels', () => {
         }
     });
 
-
-
+    function sleep(ms:number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 });
