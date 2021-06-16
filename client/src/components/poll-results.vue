@@ -76,8 +76,11 @@ export default defineComponent({
             return false
         },
         voterList():Array<Answer>{
-            if(this.selectedOption)
-                return this.getOnlyOneOption(this.selectedOption)
+            if(this.selectedOption){
+                return this.allAnswers.filter((v:Answer)=>{
+                    return v.answerId == this.selectedOption
+                })
+            }
             if(this.isEventCreator)
                 return this.allAnswers;
 
@@ -86,7 +89,6 @@ export default defineComponent({
     },
     methods: {
         async init(){
-            console.log('doing init');
             this.loaded = false
             this.loadedAllAnswers = false
 
@@ -98,13 +100,7 @@ export default defineComponent({
             await Promise.all(promises);
             this.loaded = true
         },
-        getOnlyOneOption(answerId: string): Array<Answer>{
-            return this.allAnswers.filter((v:Answer)=>{
-                return v.answerId == answerId
-            })
-        },
         async loadBars(poll:Poll){
-            console.log('loading bars');
             const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
             this.changeBars(pollResults);
         },
@@ -130,14 +126,12 @@ export default defineComponent({
             this.totalCount = 0;
             for(const ans in data.answerCount){
                 if(data.answerCount.hasOwnProperty(ans)){
-                    console.log(ans);
                     this.sortedOptions[ans].count = data.answerCount[ans];
                     this.totalCount += data.answerCount[ans];
                 }
             }
         },
         generateSortedOptions(){
-            console.log('generate');
             this.sortedOptions = {} as SortedOptions
             let colorIndex = 0
             this.poll.answers.forEach((option: Option) => {
