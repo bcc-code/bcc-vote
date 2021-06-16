@@ -1,8 +1,9 @@
 import { HookContext } from "@feathersjs/feathers";
 import { Answer, PollActiveStatus } from "../../domain";
-import { db, FieldValue, FieldPath } from '../../firestore';
+import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
+    console.log('prevent double vote');
     const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
     
     const res = await query.get();
@@ -57,39 +58,15 @@ const addLastChangedTime = (context: HookContext) => {
     return context;
 };
 
-const removeFromFirestore = async (context: HookContext) => {
-    console.log(context.params.query);
-    const toRemove = db.collection('answer').where('_from', '==', context.params.query?._from);
-
-    const allAnswers = await toRemove.get();
-
-    let batch = db.batch();
-    let batchCount = 0;
-    allAnswers.forEach(async (ans:any) => {
-        batch.delete(ans.ref);
-        batchCount ++;
-
-        // we cannot have more than 500 deletes in one batch
-        if(batchCount >= 500){
-            await batch.commit();
-            batch = db.batch();
-            batchCount = 0;
-        }
-    });
-    await batch.commit();
-
-    return context;
-};
-
 export default {
     before: {
         all: [ ],
         find: [],
         get: [],
-        create: [preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime, incrementCounter],
+        create: [preventVoteOnInactivePoll, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
-        remove: [removeFromFirestore]
+        remove: []
     },
     after: {
         all: [],
