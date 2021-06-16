@@ -86,12 +86,13 @@ export default defineComponent({
             this.loaded = false
             this.loadedAllAnswers = false
 
+            this.generateSortedOptions();
+
             let promises = []
             promises.push(this.loadBars(this.poll))
             if(this.selectedOption || this.isEventCreator)
                 promises.push(this.loadAllAnswers(this.poll))
 
-            this.generateSortedOptions();
             await Promise.all(promises);
             this.loaded = true
         },
