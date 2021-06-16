@@ -113,7 +113,7 @@ export default defineComponent({
                 query: {
                     _from: poll._id
                 }
-            })
+            }).catch(this.$showError);
             this.loadedAllAnswers = true;
             this.allAnswers = res;
         },
