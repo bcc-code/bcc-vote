@@ -22,11 +22,6 @@ export default defineComponent({
     props: {
         voterList: {type: Array as PropType<Array<Answer>>, required: true},
         sortedOptions: {type: Object as PropType<SortedOptions>, required: true},
-    },
-    data(){
-        return {
-            selectedOption: undefined as undefined|number,
-        }
-    },
+    }
 })
 </script>
