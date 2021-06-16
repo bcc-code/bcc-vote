@@ -2,7 +2,7 @@ import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
 import { RoleName, UserDetails } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
-export const subjects = ['answer','polling-event','poll','participant','person','org', 'role', 'all', 'user'] as const;
+export const subjects = ['answer','polling-event','poll', 'poll-result','participant','person','org', 'role', 'user', 'all'] as const;
 export type AppAbilities = [
   typeof actions[number],
   typeof subjects[number] | ForcedSubject<Exclude<typeof subjects[number], 'all'>>
@@ -16,6 +16,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can('find', 'answer');
     can('find','poll');
     can('get', 'poll');
+    can('get', 'poll-result');
     can(['find','get'],'polling-event', {'participantFilter.org': user.churchID.toString()});
     can(['find','get'],'polling-event',{
         'participantFilter.org': 'all'as any,
@@ -26,6 +27,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}});
     cannot('find', 'polling-event', {'status': 'archived' as any});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
+    
 };
 
 
@@ -62,6 +64,8 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
+        can('find', 'user');
+        
         can('remove', 'answer');
         can('get', 'answer');
     },

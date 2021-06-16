@@ -77,12 +77,12 @@ export default defineComponent({
                     {
                         label: this.$t('labels.yes'),
                         explanation: this.$t('explanations.agree'),
-                        answerId: new Date().getTime(),
+                        answerId: (new Date().getTime()).toString(),
                     },
                     {
                         label: this.$t('labels.no'),
                         explanation: this.$t('explanations.disagree'),
-                        answerId: new Date().getTime() + 1,
+                        answerId: (new Date().getTime() + 1).toString(),
                     }
                 ]
             } as PollPrepare
@@ -97,7 +97,7 @@ export default defineComponent({
             this.pollData.answers.push({
                 label: "",
                 explanation: "",
-                answerId: new Date().getTime(),
+                answerId: new Date().getTime().toString(),
             })
         },
         removeOption(ind: number){

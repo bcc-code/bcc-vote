@@ -1,24 +1,27 @@
 import { HookContext } from "@feathersjs/feathers";
 import { Answer, PollActiveStatus } from "../../domain";
+import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
-    const query = {
-        _from: context.data._from,
-        _to: context.data._to,
-    };
-    const r = await context.app.service('answer').find({query});
-    if(r.length > 0)
+    console.log('prevent double vote');
+    const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
+    
+    const res = await query.get();
+    if(res._size > 0)
         throw Error('You cannot vote 2 times');
-
     return context;
 };
 
 const preventVoteOnInactivePoll = async (context:HookContext) => {
-    const pollKey = context.data._from.split('/')[1];
-    const poll = await context.app.service('poll').get(pollKey);
-    if(poll.activeStatus !== PollActiveStatus['Live']){
+    // const query = db.collection('poll').where('_id', '==', context.data._from);
+    const key = context.data._from.split('/')[1];
+    const res = await db.collection('poll').doc(key).get();
+    if(!res.exists)
+        throw Error('Poll does not exist');
+
+    if(res.data().activeStatus !== PollActiveStatus['Live'])
         throw Error('Poll is not active');
-    }
+
     return context;
 };
 
@@ -36,6 +39,19 @@ const addUserData = async (context:HookContext) => {
     return context;
 };
 
+const incrementCounter = async (context:HookContext) => {
+    const { data } = context;
+    const pollKey = data._from.split('/')[1];
+    const pollRef = db.collection('poll-result').doc(pollKey);
+
+    const countUpdate = {} as any;
+    countUpdate['answerCount.'+context.data.answerId] = FieldValue.increment(1);
+
+    await pollRef.update(countUpdate);
+
+    return context;
+};
+
 const addLastChangedTime = (context: HookContext) => {
     const { data } = context;
     data.lastChanged = Date.now();
@@ -47,7 +63,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [ preventMultipleVotes, preventVoteOnInactivePoll, addUserData, addLastChangedTime],
+        create: [preventVoteOnInactivePoll, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: []
