@@ -80,8 +80,8 @@ export default defineComponent({
         createSheets(){
             this.savedPolls.forEach((poll:Poll) => {
                 const ws = this.workBook.addWorksheet(poll.title)
-                ws.cell(1, 1, 1, 6, true).string(poll.title)
-                ws.cell(2, 1, 3, 6, true).string(poll.description)
+                ws.cell(1, 1, 1, 9, true).string(poll.title)
+                ws.cell(2, 1, 3, 9, true).string(poll.description)
                 ws.column(2).setWidth(50)
                 this.workSheets[poll._id] = ws
             })
