@@ -121,7 +121,8 @@
       "close-poll": "Participant won't see the question or the results",
       "edit": "Bearbeiten",
       "delete": "Delete"
-    }
+    },
+    "select-option": "Select an option to view who voted on it"
   },
   "fields": {
     "poll-title": "Question title",

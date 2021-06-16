@@ -102,8 +102,8 @@
     "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
     "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
     "poll-is": {
-      "non_public": "This question is not public and the participants are hidden for you",
-      "anonymous": "This question is anonymous and the participants are hidden for this question"
+      "non_public": "Dette er en lukket votering. Deltakere er derfor skjult for deg",
+      "anonymous": "Dette er en lukket votering. Deltakere er derfor skjult for deg"
     },
     "copied": "Copied!",
     "results-will-be-visible": "Thank you for participating in this poll! The results will be avaliable for the next few days on the homescreen.",
@@ -122,7 +122,7 @@
       "edit": "Redigere",
       "delete": "Delete"
     },
-    "select-option": "Select an option to view who voted on it"
+    "select-option": "Velg et alternativ for å se hvem som stemte på det"
   },
   "fields": {
     "poll-title": "Question title",
@@ -138,7 +138,7 @@
     "polling-event-title": "Polling event title",
     "optional": "Optional",
     "group": "Voting group",
-    "confirmation": "Confirmation",
+    "confirmation": "Bekreftelse",
     "answer-option": "Option",
     "answer-confirmation": "Bekreftelse"
   },
