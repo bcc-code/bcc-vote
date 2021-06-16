@@ -27,7 +27,7 @@ export default defineComponent({
     },
     props: {
         poll: {type: Object as PropType<Poll>, required: true},
-        chosenOption: {type: Number},
+        chosenOption: {type: String},
         isEventCreator: {type: Boolean, default: false},
     },
     data() {
@@ -45,16 +45,18 @@ export default defineComponent({
         }
     },
     async created(){
-        
-        this.$client.service('answer').off('created')
-        this.$client.service('poll-result').off('patched')
+        this.generateSortedOptions();
 
         await this.init()
-
+        
         this.$client.service('answer').on('created', this.addAnswer)
         this.$client.service('poll-result').on('patched', this.changeBars)
 
         this.$client.io.on('reconnect', this.init)
+    },
+    unmounted(){
+        this.$client.service('answer').off('created')
+        this.$client.service('poll-result').off('patched')
     },
     watch: {
         selectedOption(newVal){
@@ -84,10 +86,9 @@ export default defineComponent({
     },
     methods: {
         async init(){
+            console.log('doing init');
             this.loaded = false
             this.loadedAllAnswers = false
-
-            this.generateSortedOptions();
 
             let promises = []
             promises.push(this.loadBars(this.poll))
@@ -97,18 +98,13 @@ export default defineComponent({
             await Promise.all(promises);
             this.loaded = true
         },
-        barWidthPercent(opt: Option): number{
-            return this.sortedOptions[opt.answerId].count / this.totalCount * 100;
-        },
-        isEndRounded(opt: Option): boolean{
-            return this.barWidthPercent(opt) > 97;
-        },
         getOnlyOneOption(answerId: string): Array<Answer>{
             return this.allAnswers.filter((v:Answer)=>{
                 return v.answerId == answerId
             })
         },
         async loadBars(poll:Poll){
+            console.log('loading bars');
             const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
             this.changeBars(pollResults);
         },
@@ -134,12 +130,14 @@ export default defineComponent({
             this.totalCount = 0;
             for(const ans in data.answerCount){
                 if(data.answerCount.hasOwnProperty(ans)){
+                    console.log(ans);
                     this.sortedOptions[ans].count = data.answerCount[ans];
                     this.totalCount += data.answerCount[ans];
                 }
             }
         },
         generateSortedOptions(){
+            console.log('generate');
             this.sortedOptions = {} as SortedOptions
             let colorIndex = 0
             this.poll.answers.forEach((option: Option) => {

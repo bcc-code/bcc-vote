@@ -30,7 +30,7 @@ export default defineComponent({
     props: {
         sortedOptions: {type: Object as PropType<SortedOptions>, required: true},
         totalCount: {type: Number, required: true},
-        chosenOption: {type: Number},
+        chosenOption: {type: String},
         modelValue: {type: String, required: true},
         visibleResults: Boolean,
     },
