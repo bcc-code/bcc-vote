@@ -17,44 +17,28 @@
         <h3 class="cursor-pointer" :class="currentTab === 'polling-events' ? 'text-blue-900' : ''" @click="currentTab='polling-events'">
             {{$t('labels.polling-events')}}
         </h3>
-        <h3 v-if="$canAdministratePollingEvents" class="cursor-pointer" :class="currentTab === 'archived' ? 'text-blue-900' : ''"  @click="currentTab='archived'">
+        <h3 v-if="$canAdministratePollingEvents" class="cursor-pointer" :class="currentTab === 'archived' ? 'text-blue-900' : ''"  @click="openArchivedTab">
             {{$t('labels.archive')}}
         </h3>
     </div>
     <div class="max-w-screen-lg mx-auto px-4 pb-16">
-        <template v-if="currentTab === 'polling-events'">
-            <div v-if="pollingEvents['live'].length" class="event-grid mb-6">
-                <PollingEventCard class="w-full h-full" v-for="pollingEvent in pollingEvents['live']" :key="pollingEvent" :pollingEvent="pollingEvent"/>
-            </div>
-            <div v-if="pollingEvents['not_started'].length" class="event-grid mb-6">
-                <PollingEventCard class="w-full h-full" v-for="pollingEvent in pollingEvents['not_started']" :key="pollingEvent" :pollingEvent="pollingEvent"/>
-            </div>
-            <div v-if="pollingEvents['finished'].length" class="event-grid">
-                <PollingEventCard class="w-full h-full" v-for="pollingEvent in pollingEvents['finished']" :key="pollingEvent" :pollingEvent="pollingEvent"/>
-            </div>
-            <InfoBox v-if="noEvents" class="mb-4">
-                {{$t('info.no-polling-events')}}
-            </InfoBox>
-        </template>
-        <template v-else>
-            <div v-if="archivedEvents.length" class="event-grid">
-                <div v-for="pollingEvent in archivedEvents" :key="pollingEvent._id">
-                    <PollingEventCard class="w-full h-full" :pollingEvent="pollingEvent"/>
-                </div>
+        <Spinner v-if="loading" inline />
+        <div v-else>
+            <div v-if="tabPollingEvents.length" class="event-grid mb-6">
+                <PollingEventCard class="w-full h-full" v-for="pollingEvent in tabPollingEvents" :key="pollingEvent" :pollingEvent="pollingEvent"/>
             </div>
             <InfoBox v-else class="mb-4">
-                {{$t('info.no-archived-events')}}
+                {{currentTab !== 'archived' ? $t('info.no-polling-events') : $t('info.no-archived-events')}}
             </InfoBox>
-        </template>
+        </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import InfoBox from '../components/info-box.vue'
 import PollingEventCard from '../components/polling-event-card.vue'
-
-import {PollingEvent, PollingEventStatus} from '../domain'
-
+import {PollingEvent} from '../domain'
+import { mapState, mapActions } from 'vuex'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -69,32 +53,54 @@ export default defineComponent({
     },
     data () {
         return {
-            pollingEvents: {
+            loading: false,
+            loadedArchived: false,
+            currentTab: 'polling-events'
+        }
+    },
+    computed: {
+        ...mapState(['pollingEvents']),
+        sortedPollingEvents() {
+            let events = {
                 'not_started': [],
                 'live': [],
                 'finished': [],
-            } as {[status: string]:Array<PollingEvent>},
-            archivedEvents: [] as Array<PollingEvent>,
-            currentTab: 'polling-events',
-            noEvents: true,
+                'archived': []
+            } as any
+            this.pollingEvents.forEach((event: PollingEvent) => {
+                events[event.status].push(event)
+            })
+            return events
+        },
+        tabPollingEvents():Array<PollingEvent> {
+            const events = this.sortedPollingEvents
+            if(this.currentTab === 'archived') {
+                return [...events['archived']]
+            } else {
+                return [
+                    ...events['live'],
+                    ...events['not_started'],
+                    ...events['finished']
+                ]
+            }
         }
     },
     methods: {
+        ...mapActions(['findPollingEvents']),
+        async loadPollingEvents(archived = false) {
+            this.loading = true
+            await this.findPollingEvents(archived)
+            this.loading = false
+        },
+        openArchivedTab() {
+            this.currentTab = 'archived'
+            if(!this.loadedArchived) {
+                this.loadPollingEvents(true)
+                this.loadedArchived = true
+            }
+        },
         goToCreate() {
             this.$router.push({ path: '/create' })
-        },
-        async loadPollingEvents(){
-            const allEvents = await this.$client.service('polling-event').find()
-            allEvents.forEach((event: PollingEvent) => {
-                if(event.status === PollingEventStatus['Archived']){
-                    if(event.creatorId === this.$user.personID)
-                        this.archivedEvents.push(event);
-                }
-                else{
-                    this.noEvents = false;
-                    this.pollingEvents[event.status].push(event);
-                }
-            })
         }
     }
 })
