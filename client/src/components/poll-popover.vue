@@ -65,7 +65,6 @@ export default defineComponent({
                     _from: this.poll._id,
                     _to: this.$user._id,
                     answerId: option.answerId,
-                    pollId: this.poll._key,
                     pollingEventId: this.$route.params.id
                 }
                 this.$client.service('answer').create(participantAnswer)

@@ -40,7 +40,8 @@ const addUserData = async (context:HookContext) => {
 
 const incrementCounter = async (context:HookContext) => {
     const { data } = context;
-    const pollRef = db.collection('poll-result').doc(data.pollId);
+    const pollKey = data._from.split('/')[1];
+    const pollRef = db.collection('poll-result').doc(pollKey);
 
     const countUpdate = {} as any;
     countUpdate['answerCount.'+context.data.answerId] = FieldValue.increment(1);
