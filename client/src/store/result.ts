@@ -29,6 +29,13 @@ const result: Module<ResultState,RootState> = ({
             const results = await store.$client.service('polling-event').get(pollingEventKey)
             commit('UPDATE_POLLING_EVENT',results)
         },
+        async findPolls({ commit, state }) {
+            const query = {
+                pollingEventId: state.pollingEvent?._key
+            }
+            const polls = await store.$client.service('poll').find({query})
+            commit('UPDATE_POLLS',polls)
+        },
         async findAnswers({ commit, getters }) {
             const activePoll = getters.activePoll
             const query = {

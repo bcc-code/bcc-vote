@@ -37,14 +37,11 @@ export default defineComponent({
         }
     },
     async created(){
-        this.loading = true
-        const pollingEventKey = this.$route.params.id
-        await this.getPollingEvent(pollingEventKey)
-        this.loading = false
+        await this.init()
         this.$client.service('answer').on('created', this.ADD_ANSWER)
         this.$client.service('poll').on('patched', this.patchedPoll)
         this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT)
-        this.$client.io.on('reconnect', this.loadResults)
+        this.$client.io.on('reconnect', this.init)
     },
     computed: {
         ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
@@ -81,8 +78,16 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations('result',['ADD_ANSWER','UPDATE_POLL_RESULT']),
-        ...mapActions('result',['getPollingEvent','findAnswers','patchedPoll']),
-        async loadResults() {
+        ...mapActions('result',['getPollingEvent','findPolls','findAnswers','patchedPoll']),
+        async init() {
+            this.loading = true
+            const pollingEventKey = this.$route.params.id
+            await this.getPollingEvent(pollingEventKey)
+            await this.findPolls()
+            await this.findAnswers()
+            this.loading = false
+        },
+        async refreshAnswers() {
             this.loading = true
             await this.findAnswers()
             this.loading = false
@@ -91,7 +96,7 @@ export default defineComponent({
     watch: {
         activePoll(newPoll:Poll, oldPoll:Poll) {
             if(newPoll && (!oldPoll || newPoll._id !== oldPoll._id)) {
-                this.loadResults()
+                this.refreshAnswers()
             }
         }
     }
