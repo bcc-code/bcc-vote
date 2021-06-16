@@ -31,7 +31,7 @@
 import PollVote from './poll-vote.vue'
 import PollResults from './poll-results.vue'
 import VoteConfirm from './confirm-popover.vue'
-import { Poll, Answer, SortedOptions, Option } from '../domain/Poll'
+import { Poll, Answer } from '../domain/Poll'
 import { defineComponent, PropType } from 'vue'
 export default defineComponent({
     components: {
