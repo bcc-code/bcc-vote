@@ -1,5 +1,32 @@
-export enum ActiveStatusCodes {
-  Inactive = 0,
-  Active = 1,
-  Closed = 2,
+export interface PollingEvent {
+  _id: string;
+  _key: string;
+  title: string;
+  description: string;
+  type: PollingEventType;
+  status:PollingEventStatus;
+  startDateTime: Date;
+  creatorId: number;
+  firestore?: boolean;
+  participantFilter: ParticipantFilters;
+}
+
+export interface ParticipantFilters {
+  org: string
+  role: string;
+  minAge: number;
+  maxAge: number;
+}
+
+export enum PollingEventType {
+  'Live Event' = 'live_event',
+  'Survey' = 'survey'
+}
+
+
+export enum PollingEventStatus {
+  'Live' = 'live',
+  'Not Started' = 'not_started',
+  'Finished' = 'finished',
+  'Archived' = 'archived',
 }

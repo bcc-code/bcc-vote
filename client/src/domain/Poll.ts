@@ -21,17 +21,17 @@ export interface PollPrepare {
 export interface Option {
   label: string,
   explanation: string,
-  answerId: number,
+  answerId: string,
 }
 
 export interface SortedOptions {
-    [answerId: number]: SortedOption
+    [answerId: string]: SortedOption
 }
 
 export interface SortedOption {
     label: string,
     explanation: string,
-    answerId: number,
+    answerId: string,
     count:number, 
     bgColor: string
 }
@@ -40,10 +40,15 @@ export interface Answer {
     _key: string;
     _from: string;
     _to: string;
-    answerId: number;
+    answerId: string;
     pollingEventId: number;
     displayName: string;
-  }
+}
+
+export interface PollResult {
+    pollingEventId: number;
+    answerCount: {[answerId: string]: number}
+}
 
 export enum PollActiveStatus {
   'Not Started' = 'not_started',

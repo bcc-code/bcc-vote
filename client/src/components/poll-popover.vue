@@ -1,17 +1,17 @@
 <template>
     <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
         <div class="h-full w-full p-4 md:p-6">
-            <InfoBox v-if="!hasSavedAnswer" class="mb-4" @closed="infoBoxClosed = true">
+            <InfoBox v-if="!hasSavedAnswer" class="mb-4">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
             </InfoBox>
-            <div :class="infoBoxClosed ? 'pt-4 pb-8' : 'pb-5'"> 
+            <div> 
                 <h4 class="font-bold" >{{poll.title}}</h4>
                 <p v-if="poll.description" class="mt-2">{{poll.description}}</p>
             </div>
-            <div v-if="!hasSavedAnswer" class="h-full mb-20">
+            <div v-if="!hasSavedAnswer" class="h-full mb-20 mt-5">
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
             </div>
-            <div v-else class="mb-5">
+            <div v-else class="mb-5 mt-2">
                 <PollResults :chosenOption="chosenOption.answerId" :poll="poll" :key="poll._key"/>
             </div>
         </div>
@@ -44,10 +44,9 @@ export default defineComponent({
     },
     data() {
         return {
-            infoBoxClosed: false as boolean,
             showConfirm: false as boolean,
             chosenOption: {} as Answer,
-            hasSavedAnswer: false as boolean
+            hasSavedAnswer: false as boolean,
         }
     },
     methods: {
