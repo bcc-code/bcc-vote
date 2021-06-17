@@ -64,7 +64,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'org');
         can('find', 'role');
         can('find', 'answer');
-        can('find', 'user');
+        can('find', 'user', {'churchID': userChurchID});
         
         can('remove', 'answer');
         can('get', 'answer');
