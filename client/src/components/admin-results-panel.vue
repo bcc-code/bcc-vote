@@ -47,7 +47,9 @@ export default defineComponent({
             this.loadingReport = true
             const allAnswers = await this.getAnswers()
             const allVoters = await this.getVoters(allAnswers)
-            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters)
+            const allResults = await this.getResults()
+
+            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters, allResults)
             
             this.loadingReport = false
             const title = this.getReportTitle()
@@ -83,6 +85,13 @@ export default defineComponent({
             }
             await Promise.all(promises)
             return result
+        },
+        getResults(){
+            return this.$client.service('poll-result').find({
+                query: {
+                    pollingEventId: this.pollingEvent._key
+                }
+            })
         },
         getReportTitle():string{
             const pollDate = this.pollingEvent.startDateTime.toLocaleString().split('T')[0]

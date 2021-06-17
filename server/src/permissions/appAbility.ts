@@ -48,6 +48,8 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'answer');
         cannot('find', 'answer', {'visibility': 'anonymous' as any});
         can('find', 'user');
+        
+        can('find', 'poll-result');
 
         can(['find','get'],'polling-event', {'participantFilter.role': { $in: superAdminRoles } as any});
     },
@@ -68,6 +70,8 @@ const rolePermissions: Record<string, DefinePermissions> = {
         cannot('find', 'answer', {'visibility': 'anonymous' as any});
         can('find', 'user', {'churchID': userChurchID});
         
+        can('find', 'poll-result');
+
         can('remove', 'answer');
         can('get', 'answer');
     },
