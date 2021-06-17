@@ -10,5 +10,4 @@ export type Answer = {
     answerId: string;
     pollingEventId: string;
     displayName: string;
-    churchName: string;
 }

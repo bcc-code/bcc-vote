@@ -13,7 +13,7 @@ type DefinePermissions = (user: UserDetails, builder: AbilityBuilder<AppAbility>
 
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
     can('create','answer', { _to: user._id });
-    can('find', 'answer', {'visibility': 'public' as any});
+    can('find', 'answer', {'visibility': PollResultVisibility["Public"] as any});
     can('find','poll');
     can('get', 'poll');
     can('get', 'poll-result');
@@ -45,7 +45,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer', {'visibility': 'non_public' as any});
+        can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user');
         
         can('find', 'poll-result');
@@ -65,7 +65,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer', {'visibility': 'non_public' as any});
+        can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user', {'churchID': userChurchID});
         
         can('find', 'poll-result');
