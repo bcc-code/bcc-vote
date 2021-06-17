@@ -1,10 +1,11 @@
 import { Module } from 'vuex'
-import { Poll, PollingEvent, PollActiveStatus, Answer, SortedOptions, Option } from '../domain'
+import { Poll, PollingEvent, PollActiveStatus, Answer, SortedOptions, Option, PollResult } from '../domain'
 import { store, RootState } from '../store/index'
 
 export interface ResultState {
   pollingEvent?: PollingEvent | null,
   polls?: Array<Poll>,
+  pollResult?: PollResult | null,
   answers?: Array<Answer>
 }
 
@@ -13,11 +14,13 @@ const result: Module<ResultState,RootState> = ({
     state: ():ResultState => ({
         pollingEvent: null,
         polls: [],
+        pollResult: null,
         answers: []
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
         'UPDATE_POLLS': (state:ResultState, value:Array<Poll>) => (state.polls = value),
+        'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value))
     },
@@ -25,6 +28,13 @@ const result: Module<ResultState,RootState> = ({
         async getPollingEvent({ commit },pollingEventKey:string) {
             const results = await store.$client.service('polling-event').get(pollingEventKey)
             commit('UPDATE_POLLING_EVENT',results)
+        },
+        async findPolls({ commit, state }) {
+            const query = {
+                pollingEventId: state.pollingEvent?._key
+            }
+            const polls = await store.$client.service('poll').find({query})
+            commit('UPDATE_POLLS',polls)
         },
         async findAnswers({ commit, getters }) {
             const activePoll = getters.activePoll
@@ -72,9 +82,9 @@ const result: Module<ResultState,RootState> = ({
             let sortedOptions = {} as SortedOptions
             const activePoll = getters.activePoll
             activePoll.answers.forEach((option: Option) => {
-                const answers = state.answers?.filter((ans:Answer) => ans.answerId == option.answerId)
+                const answerCount = state.pollResult ? state.pollResult.answerCount[option.answerId] : 0
                 sortedOptions[option.answerId] = {
-                    count: answers ? answers.length : 0,
+                    count: answerCount,
                     bgColor: colors[colorIndex],
                     ...option
                 }
