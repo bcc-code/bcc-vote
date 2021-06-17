@@ -45,8 +45,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer');
-        cannot('find', 'answer', {'visibility': 'anonymous' as any});
+        can('find', 'answer', {'visibility': 'non_public' as any});
         can('find', 'user');
         
         can('find', 'poll-result');
@@ -66,8 +65,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer');
-        cannot('find', 'answer', {'visibility': 'anonymous' as any});
+        can('find', 'answer', {'visibility': 'non_public' as any});
         can('find', 'user', {'churchID': userChurchID});
         
         can('find', 'poll-result');

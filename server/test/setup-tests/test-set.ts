@@ -71,6 +71,7 @@ function pollingEventsTestSet(){
     const pollingEventSvc = app.service('polling-event') as any;
     const userSvc = app.service('user') as any ;
     const pollSvc = app.service('poll') as any ;
+    const answerSvc = app.service('answer') as any ;
 
     const testData = {
         scopedToLocalChurchSameAsLoggedInUser: async () => { return await  pollingEventSvc.get('504279890');},
@@ -81,6 +82,15 @@ function pollingEventsTestSet(){
         user: async () => { return await userSvc.get('178509735',{});},
         basePoll: async () => {
             return await pollSvc.get('504310091');
+        },
+        anonymousAnswer: async () => {
+            return await answerSvc.get('113343');
+        },
+        nonpublicAnswer: async () => {
+            return await answerSvc.get('113280');
+        },
+        publicAnswer: async () => {
+            return await answerSvc.get('113226');
         }
     };
 
@@ -127,19 +137,19 @@ function newEntitiesFunc(){
 }
 
 async function getFeahtersToken() {
-  const testingVariables = app.get('testingSet')
+    const testingVariables = app.get('testingSet');
 
-  const token = await app.service('authentication').createAccessToken({
-    sub: testingVariables.userId
-  });
-  return token
+    const token = await app.service('authentication').createAccessToken({
+        sub: testingVariables.userId
+    });
+    return token;
 }
 
 export {
-  generateFreshContext,
-  getAranoDBConfigFromFeathers,
-  pollingEventsTestSet,
-  newEntitiesFunc,
-  getFeahtersToken
+    generateFreshContext,
+    getAranoDBConfigFromFeathers,
+    pollingEventsTestSet,
+    newEntitiesFunc,
+    getFeahtersToken
 };
 
