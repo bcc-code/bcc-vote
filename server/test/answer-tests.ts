@@ -116,7 +116,7 @@ describe('Form Validation', async () => {
             assert.fail(error.message);
         }
     });
-    it.only('result -> reset results for a poll', async () => {
+    it('result -> reset results for a poll', async () => {
         try{
             await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
             await sleep(300);
