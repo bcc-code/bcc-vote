@@ -12,15 +12,18 @@ const preventMultipleVotes= async (context: HookContext) => {
     return context;
 };
 
-const preventVoteOnInactivePoll = async (context:HookContext) => {
+const preventVoteOnInactivePollAndAddVisibility = async (context:HookContext) => {
     // const query = db.collection('poll').where('_id', '==', context.data._from);
     const key = context.data._from.split('/')[1];
     const res = await db.collection('poll').doc(key).get();
+    const poll = res.data();
     if(!res.exists)
         throw Error('Poll does not exist');
 
-    if(res.data().activeStatus !== PollActiveStatus['Live'])
+    if(poll.activeStatus !== PollActiveStatus['Live'])
         throw Error('Poll is not active');
+    
+    context.data.visibility = poll.resultVisibility;
 
     return context;
 };
@@ -63,7 +66,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
+        create: [preventVoteOnInactivePollAndAddVisibility, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: []

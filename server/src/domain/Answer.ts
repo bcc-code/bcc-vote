@@ -8,4 +8,5 @@ export type Answer = {
     pollingEventId: string;
     displayName: string;
     churchName: string;
+    visibility: string;
 }
