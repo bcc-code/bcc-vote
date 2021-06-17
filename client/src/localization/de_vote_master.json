@@ -142,9 +142,6 @@
     "answer-option": "Option",
     "answer-confirmation": "Confirmation"
   },
-  "descriptions": {
-    "home": "This app gives you the possibility to participate in live vote events"
-  },
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"
