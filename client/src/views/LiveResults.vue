@@ -41,7 +41,7 @@ export default defineComponent({
         
         this.$client.service('poll').on('patched', this.patchedPoll)
         this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT)
-        if(this.activePoll.resultVisibility === PollResultVisibility['Public'])
+        if(this.resultsVisible)
             this.$client.service('answer').on('created', this.ADD_ANSWER)
     
         this.$client.io.on('reconnect', this.init)
