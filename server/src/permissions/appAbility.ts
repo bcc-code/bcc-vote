@@ -75,8 +75,9 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('remove', 'answer');
         can('get', 'answer');
     },
-    // Member(user, { can, cannot }) {
-    // }
+    Member(user, { can, cannot }) {
+        
+    }
 };
 
 const superAdminRoles = ['Developer','CentralAdministrator','SentralInformasjonsmedarbeider'];
