@@ -2,12 +2,13 @@
     <div class="form-section padding-md">
         <div class="flex justify-between font-bold mb-8">
             <h3>{{$t('labels.event-results')}}</h3>
-            <div class="flex text-blue-900 items-center cursor-pointer" @click="getReport()"> 
+            <div class="flex text-blue-900 items-center cursor-pointer" @click="getReport()" :class="{'opacity-50': loadingReport}"> 
                 <ClipboardListIcon class="h-6 w-6"/>
                 <h5 class="py-1">{{$t('actions.get-report')}}</h5>
             </div>
         </div>
-        <div class="grid grid-flow-row grid-cols-2 gap-6">
+        <Spinner v-if="loadingReport"/>
+        <div class="grid grid-flow-row grid-cols-2 gap-6" :class="{'opacity-50': loadingReport}">
             <PollResultTile v-for="poll in savedPolls" :key="poll._key" :poll="poll"/>
         </div>
   </div>
@@ -16,6 +17,7 @@
 
 import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon'
 import PollResultTile from '../components/poll-result-tile.vue'
+import Spinner from '../components/spinner.vue'
 
 import { generateReport } from '../functions/generateReport'
 
@@ -26,19 +28,30 @@ export default defineComponent({
     components: {
         ClipboardListIcon,
         PollResultTile,
+        Spinner
     },
     props: {
         pollingEvent: {type: Object as PropType<PollingEvent>, required: true},
         savedPolls: {type: Array as PropType<Poll[]>, required: true}
     },
+    data(){
+        return {
+            usersPerBatch: 50,
+            loadingReport: false
+        }
+    },
     methods: {
         async getReport():Promise<void>{
-            const allAnswers = await this.getAnswers();
-            const allVoters = await this.getVoters(allAnswers);
-
-            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters.data);
-            const title = this.getReportTitle();
-            this.downloadReport(excelFile, title);
+            if(this.loadingReport)
+                return;
+            this.loadingReport = true
+            const allAnswers = await this.getAnswers()
+            const allVoters = await this.getVoters(allAnswers)
+            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters)
+            
+            this.loadingReport = false
+            const title = this.getReportTitle()
+            this.downloadReport(excelFile, title)
         },
         getAnswers(){
             return this.$client.service('answer').find({
@@ -47,19 +60,29 @@ export default defineComponent({
                 }
             })
         },
-        getVoters(allAnswers: Answer[]){
+        async getVoters(allAnswers: Answer[]){
             const allVoterSet = new Set();
             allAnswers.forEach((ans: Answer) => {
                 allVoterSet.add(ans._to);
             })
-            return this.$client.service('user').find({
-                query: {
-                    $limit: allVoterSet.size,
-                    _id: {
-                        $in: [...allVoterSet]
+            const voterArray = [...allVoterSet]
+            let promises = []
+            let result = [] as any[]
+            while(voterArray.length > 0){
+                const voterSubset = voterArray.splice(0, this.usersPerBatch)
+                promises.push(this.$client.service('user').find({
+                    query: {
+                        $limit: voterSubset.length,
+                        _id: {
+                            $in: voterSubset
+                        }
                     }
-                }
-            })
+                }).then((r:any) => {
+                    result = result.concat(r.data)
+                }).catch(this.$showError))
+            }
+            await Promise.all(promises)
+            return result
         },
         getReportTitle():string{
             const pollDate = this.pollingEvent.startDateTime.toLocaleString().split('T')[0]
