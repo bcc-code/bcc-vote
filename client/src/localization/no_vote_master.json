@@ -85,7 +85,10 @@
     "bcc-vote": "BCC Vote",
     "thank-you": "Takk for din deltakelse!",
     "logged-as": "Du stemmer nå som",
-    "sure-republish": "Are you sure that you want to republish this question?"
+    "sure-republish": "Are you sure that you want to republish this question?",
+    "church": "Church",
+    "age": "Age",
+    "role": "Roles"
   },
   "info": {
     "no-polling-events": "Det er ikke noe avstemninger tilgjengelig",

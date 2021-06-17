@@ -85,7 +85,10 @@
     "bcc-vote": "BCC Vote",
     "thank-you": "Thank you for participating!",
     "logged-as": "You are now voting as",
-    "sure-republish": "Are you sure that you want to republish this question?"
+    "sure-republish": "Are you sure that you want to republish this question?",
+    "church": "Church",
+    "age": "Age",
+    "role": "Roles"
   },
   "info": {
     "no-polling-events": "There are no polling events currently available",

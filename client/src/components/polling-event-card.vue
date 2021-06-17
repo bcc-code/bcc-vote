@@ -11,27 +11,10 @@
                         <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
                     </div>
                 </div>
-                <p class="text-gray-700 text-limit-2">{{pollingEvent.description}}</p>
+                <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
+                
                 <div v-if="pollingEvent.readableFilter">
-                    <span class="text-gray-700">
-                        {{$t('labels.church')}}:
-                    </span>
-                    <span>
-                        {{pollingEvent.readableFilter.org}}
-                    </span>
-                    <span class="text-gray-700">
-                        {{$t('labels.age')}}:
-                    </span>
-                    <span>
-                        {{pollingEvent.readableFilter.minAge}}
-                    </span>
-                    <span class="text-gray-700">
-                        {{$t('labels.role')}}:
-                    </span>
-                    <span>
-                        {{pollingEvent.readableFilter.role}}
-                    </span>
-                <!-- {{pollingEvent.readableFilter}} -->
+                    <FilterInfo :filter="pollingEvent.readableFilter"/>
                 </div>
             </div>
             <div class="flex justify-center mb-3 gap-5">
@@ -58,12 +41,14 @@
 
 <script lang="ts">
 import ConfirmPopover from './confirm-popover.vue'
+import FilterInfo from './event-filter-info.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
     components: {
-        ConfirmPopover
+        ConfirmPopover,
+        FilterInfo
     },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
