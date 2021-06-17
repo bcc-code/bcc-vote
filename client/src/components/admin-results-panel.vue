@@ -17,8 +17,6 @@
 import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon'
 import PollResultTile from '../components/poll-result-tile.vue'
 
-// import { Workbook } from 'excel4node/source/index.js'
-
 import { defineComponent, PropType } from 'vue'
 import { Poll, PollingEvent, Answer, Option } from '../domain'
 
@@ -81,7 +79,6 @@ export default defineComponent({
             ws.cell(row, 7).string(activeRole)
             ws.cell(row, 8).string(this.answerMap[ans.answerId])
             ws.cell(row, 9).date(new Date(ans.lastChanged))
-            // ws.cell(row, 8).number(ans.answerId)
         },
         createSheets(){
             this.savedPolls.forEach((poll:Poll) => {
