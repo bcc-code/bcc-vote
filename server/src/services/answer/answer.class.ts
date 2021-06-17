@@ -43,8 +43,6 @@ export class Answer extends DbService<Data> {
         return answerArray;
     }
     async get (id: Id, params?: Params): Promise<Data> {
-        console.log('getting answer');
-        console.log(id);
         const answerRef = db.collection('answer').doc(id);
         
         const result = await answerRef.get();
