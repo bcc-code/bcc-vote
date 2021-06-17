@@ -22,7 +22,7 @@ export const routes: Array<RouteRecordRaw> = [
     {
         name: 'Polling event lobby',
         path: '/polling-event/lobby/:id',
-        component: () => require('../views/ParticipantLobby.vue'),
+        component: () => require('../views/Lobby.vue'),
         meta: {
             bgColor: "bg-blue-900"
         }

@@ -3,10 +3,7 @@
     <div class="flex justify-center items-end w-full background-home h-64 sm:h-128">
         <div class="banner-text flex items-center">
             <div class="max-w-md text-center text-blue-900">
-                <h1 class="font-bold mb-3">{{$t('titles.home')}}</h1>
-                <p class="hidden sm:block mb-8 pb-3">
-                    {{$t('descriptions.home')}}
-                </p>
+                <h1 class="font-bold mb-3 md:mb-10">{{$t('titles.home')}}</h1>
                 <button v-if="$canAdministratePollingEvents" @click="goToCreate" class="primary-button md-button mt-2 md:mb-8">
                     <h4>{{$t('actions.create-polling-event')}}</h4>
                 </button>
