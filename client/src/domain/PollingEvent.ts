@@ -8,16 +8,7 @@ export interface PollingEvent {
     startDateTime: Date;
     creatorId: number;
     participantFilter: ParticipantFilters;
-}
-
-export interface PollingEventPrepare {
-    title: string;
-    description: string;
-    type: PollingEventType;
-    status:PollingEventStatus;
-    startDateTime: Date;
-    creatorId: number;
-    participantFilter: ParticipantFilters;
+    readableFilter: ParticipantFilters;
 }
 
 export interface ParticipantFilters {

@@ -51,7 +51,7 @@ import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 
-import { PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
+import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain'
 
 interface RoleName {
     name: string,
@@ -95,17 +95,20 @@ export default defineComponent({
                     role: 'all',
                     minAge: NaN,
                     maxAge: NaN,
-                }
+                } as ParticipantFilters,
+                readableFilter: {} as ParticipantFilters,
             } as PollingEvent,
         }
     },
-    created(){
+    async created(){
         if(this.pollingEvent){
             this.eventData = JSON.parse(JSON.stringify(this.pollingEvent))
             this.eventData.startDateTime = new Date(this.eventData.startDateTime)
         }   
-        this.loadOrgs()
-        this.loadRoles()
+        await this.loadOrgs()
+        await this.loadRoles()
+        console.log(this.allRoles)
+        console.log(this.allChurches)
     },
     computed: {
         votingAdminRole():any {
@@ -161,7 +164,22 @@ export default defineComponent({
             })
             this.allRoles.unshift({name: "All roles", val: 'all'})
         },
+        fillReadableFilter(){
+            const role = this.allRoles.find((r:SelectObject) => {
+                return r.val === this.eventData.participantFilter.role
+            })
+            const org = this.allChurches.find((r:SelectObject) => {
+                return r.val === this.eventData.participantFilter.org
+            })
+            if(!role || !org)
+                return;
+            this.eventData.readableFilter.role = role.name
+            this.eventData.readableFilter.org = org.name
+            this.eventData.readableFilter.minAge = this.eventData.participantFilter.minAge;
+            this.eventData.readableFilter.maxAge = this.eventData.participantFilter.maxAge;
+        },
         sendPollingEvent(){
+            this.fillReadableFilter();
             const data = this.eventData
             data.creatorId = this.$user.personID
             if(data.startDateTime.getTime() === 0)

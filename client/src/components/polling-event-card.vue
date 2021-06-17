@@ -12,6 +12,27 @@
                     </div>
                 </div>
                 <p class="text-gray-700 text-limit-2">{{pollingEvent.description}}</p>
+                <div v-if="pollingEvent.readableFilter">
+                    <span class="text-gray-700">
+                        {{$t('labels.church')}}:
+                    </span>
+                    <span>
+                        {{pollingEvent.readableFilter.org}}
+                    </span>
+                    <span class="text-gray-700">
+                        {{$t('labels.age')}}:
+                    </span>
+                    <span>
+                        {{pollingEvent.readableFilter.minAge}}
+                    </span>
+                    <span class="text-gray-700">
+                        {{$t('labels.role')}}:
+                    </span>
+                    <span>
+                        {{pollingEvent.readableFilter.role}}
+                    </span>
+                <!-- {{pollingEvent.readableFilter}} -->
+                </div>
             </div>
             <div class="flex justify-center mb-3 gap-5">
                 <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full mt-10" @click="goToAdmin()">
