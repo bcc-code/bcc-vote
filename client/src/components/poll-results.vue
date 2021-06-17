@@ -121,12 +121,13 @@ export default defineComponent({
             this.allAnswers = res;
         },
         addAnswer(answer: Answer){
-            console.log('add');
             if(this.poll && answer._from === this.poll._id) {  
                 this.allAnswers.unshift(answer)
             }
         },
         changeBars(data: PollResult){
+            if(data.pollId !== this.poll._key)
+                return
             for(const ans in data.answerCount){
                 if(data.answerCount.hasOwnProperty(ans)){
                     this.sortedOptions[ans].count = data.answerCount[ans];

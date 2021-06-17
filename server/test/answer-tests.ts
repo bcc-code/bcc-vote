@@ -116,6 +116,38 @@ describe('Form Validation', async () => {
             assert.fail(error.message);
         }
     });
+    it.only('result -> reset results for a poll', async () => {
+        try{
+            await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
+            await sleep(300);
+
+            let results = await app.service('poll-result').get(poll._key) as any;
+            assert.equal(results.answerCount['1'], 0);
+            assert.equal(results.answerCount['2'], 0);
+            
+            const answer = {
+                _from: poll._id,
+                _to: user._id,
+                answerId: '1',
+                pollingEventId: poll.pollingEventId
+            };
+            await app.service('answer').create(answer, {user});
+
+            await sleep(300);
+
+            results = await app.service('poll-result').get(poll._key) as any;
+            assert.equal(results.answerCount['1'], 1);
+            assert.equal(results.answerCount['2'], 0);
+
+            await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
+            await sleep(300);
+            results = await app.service('poll-result').get(poll._key) as any;
+            assert.equal(results.answerCount['1'], 0);
+            assert.equal(results.answerCount['2'], 0);
+        }catch (error) {
+            assert.fail(error.message);
+        }
+    });
     function sleep(ms:number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }

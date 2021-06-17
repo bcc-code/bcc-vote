@@ -110,6 +110,18 @@ describe('permissions - app ability', async () => {
       { action:"update", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
       { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
       { action:"remove", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
+
+      { action:"find", subject:"answer", entity:"publicAnswer", activeRole:"Developer", expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", activeRole:"Developer", expected: true},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", activeRole:"Developer", expected: false},
+
+      { action:"find", subject:"answer", entity:"publicAnswer", activeRole:"VotingAdmin", expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", activeRole:"VotingAdmin", expected: true},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", activeRole:"VotingAdmin", expected: false},
+      
+      { action:"find", subject:"answer", entity:"publicAnswer", activeRole:"Member", expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", activeRole:"Member", expected: false},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", activeRole:"Member", expected: false},
   ];
 
   useCases.forEach((useCase) => {

@@ -42,4 +42,10 @@ export class Answer extends DbService<Data> {
         });
         return answerArray;
     }
+    async get (id: Id, params?: Params): Promise<Data> {
+        const answerRef = db.collection('answer').doc(id);
+        
+        const result = await answerRef.get();
+        return result.data();
+    }
 }

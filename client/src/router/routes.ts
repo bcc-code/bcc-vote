@@ -41,11 +41,6 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        name: 'Polling event report',
-        path: '/polling-event/report/:id',
-        component: () => require('../views/Report.vue')
-    },
-    {
         name: 'Poll result',
         path: '/poll/result/:id',
         component: () => require('../views/AdminPollResult.vue'),

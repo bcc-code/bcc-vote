@@ -9,7 +9,7 @@
                 </div>
                 <template v-if="arePollsLoaded">
                     <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
-                    <ResultsPanel v-else :savedPolls="savedPolls" :pollingEventId="pollingEvent._key"/>
+                    <ResultsPanel v-else :savedPolls="savedPolls" :pollingEvent="pollingEvent"/>
                 </template>
             </div>
         </div>
