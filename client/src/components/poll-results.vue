@@ -126,6 +126,8 @@ export default defineComponent({
             }
         },
         changeBars(data: PollResult){
+            if(data.pollId !== this.poll._key)
+                return
             for(const ans in data.answerCount){
                 if(data.answerCount.hasOwnProperty(ans)){
                     this.sortedOptions[ans].count = data.answerCount[ans];

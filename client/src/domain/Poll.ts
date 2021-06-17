@@ -41,6 +41,7 @@ export interface Answer {
     _key: string;
     _from: string;
     _to: string;
+    visibility: PollResultVisibility;
     answerId: string;
     pollingEventId: number;
     displayName: string;
@@ -48,7 +49,8 @@ export interface Answer {
 }
 
 export interface PollResult {
-    pollingEventId: number;
+    pollingEventId: string;
+    pollId: string;
     answerCount: {[answerId: string]: number}
 }
 
