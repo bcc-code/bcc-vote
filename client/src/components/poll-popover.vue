@@ -63,6 +63,7 @@ export default defineComponent({
                 const participantAnswer = {
                     _from: this.poll._id,
                     _to: this.$user._id,
+                    visibility: this.poll.resultVisibility,
                     answerId: option.answerId,
                     pollingEventId: this.$route.params.id
                 }

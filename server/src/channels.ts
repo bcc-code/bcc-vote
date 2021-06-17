@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { Application } from './declarations';
-import { PollingEvent, Answer, Poll} from './domain';
+import { PollingEvent, Answer, Poll, PollResultVisibility} from './domain';
 import { db } from './firestore';
 
 export default function(app: Application): void {
@@ -23,7 +23,8 @@ export default function(app: Application): void {
             data.firestore = true;
             await db.collection('answer').doc(data._key).set(data);
         }else{
-            return app.channel(data.pollingEventId);
+            if(data.visibility !== PollResultVisibility['Anonymous'])
+                return app.channel(data.pollingEventId);
         }
     });
 
