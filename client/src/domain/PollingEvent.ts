@@ -8,7 +8,7 @@ export interface PollingEvent {
     startDateTime: Date;
     creatorId: number;
     participantFilter: ParticipantFilters;
-    readableFilter: ParticipantFilters;
+    participantLabels: ParticipantFilters;
 }
 
 export interface ParticipantFilters {

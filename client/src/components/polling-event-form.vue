@@ -94,7 +94,7 @@ export default defineComponent({
                     minAge: undefined,
                     maxAge: undefined,
                 } as ParticipantFilters,
-                readableFilter: {} as ParticipantFilters,
+                participantLabels: {} as ParticipantFilters,
             } as PollingEvent,
         }
     },
@@ -160,7 +160,7 @@ export default defineComponent({
             })
             this.allRoles.unshift({name: "All roles", val: 'all'})
         },
-        fillReadableFilter(){
+        fillparticipantLabels(){
             const role = this.allRoles.find((r:SelectObject) => {
                 return r.val === this.eventData.participantFilter.role
             })
@@ -169,13 +169,13 @@ export default defineComponent({
             })
             if(!role || !org)
                 return;
-            this.eventData.readableFilter.role = role.name
-            this.eventData.readableFilter.org = org.name
-            this.eventData.readableFilter.minAge = this.eventData.participantFilter.minAge;
-            this.eventData.readableFilter.maxAge = this.eventData.participantFilter.maxAge;
+            this.eventData.participantLabels.role = role.name
+            this.eventData.participantLabels.org = org.name
+            this.eventData.participantLabels.minAge = this.eventData.participantFilter.minAge;
+            this.eventData.participantLabels.maxAge = this.eventData.participantFilter.maxAge;
         },
         sendPollingEvent(){
-            this.fillReadableFilter();
+            this.fillparticipantLabels();
             const data = this.eventData
             data.creatorId = this.$user.personID
             if(data.startDateTime.getTime() === 0)

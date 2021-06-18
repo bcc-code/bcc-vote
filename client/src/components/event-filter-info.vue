@@ -1,13 +1,15 @@
 <template>
-    <div>
-        <span class="text-gray-700">
-            {{$t('labels.church')}}:
-        </span>
-        <span>
-            {{filter.org}}
-        </span>
-        <template v-if="filter.minAge || filter.maxAge">
-            <span class="text-gray-700 ml-2">
+    <div class="flex flex-wrap gap-x-2">
+        <div>
+            <span class="text-gray-700">
+                {{$t('labels.church')}}:
+            </span>
+            <span>
+                {{filter.org}}
+            </span>
+        </div>
+        <div v-if="filter.minAge || filter.maxAge">
+            <span class="text-gray-700">
                 {{$t('labels.age')}}:
             </span>
             <span v-if="!filter.maxAge">O</span>
@@ -19,13 +21,15 @@
             <span>
                 {{filter.maxAge}}
             </span>
-        </template>
-        <span class="text-gray-700 ml-2">
-            {{$t('labels.role')}}:
-        </span>
-        <span>
-            {{filter.role}}
-        </span>
+        </div>
+        <div>
+            <span class="text-gray-700">
+                {{$t('labels.role')}}:
+            </span>
+            <span>
+                {{filter.role}}
+            </span>
+        </div>
     </div>
 </template>
 
