@@ -7,7 +7,7 @@ export interface ResultState {
   polls: Array<Poll>,
   pollResult: PollResult,
   answers: Array<Answer>,
-  votersLoadedFromFind: Array<string>
+  answerIdsFromFind: Array<string>
 }
 
 const result: Module<ResultState,RootState> = ({
@@ -17,7 +17,7 @@ const result: Module<ResultState,RootState> = ({
         polls: [],
         pollResult: {} as PollResult,
         answers: [],
-        votersLoadedFromFind: []
+        answerIdsFromFind: []
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
@@ -25,7 +25,7 @@ const result: Module<ResultState,RootState> = ({
         'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value)),
-        'UPDATE_VOTERS_FROM_FIND': (state:ResultState, value:string[]) => (state.votersLoadedFromFind = value),
+        'UPDATE_VOTERS_FROM_FIND': (state:ResultState, value:string[]) => (state.answerIdsFromFind = value),
     },
     actions: {
         async getPollingEvent({ commit },pollingEventKey:string) {
@@ -45,7 +45,7 @@ const result: Module<ResultState,RootState> = ({
                 _from: activePoll._id
             }
             const results = await store.$client.service('answer').find({query})
-            const onlyIds = results.map((ans: Answer) => ans._to);
+            const onlyIds = results.map((ans: Answer) => ans._key);
             commit('UPDATE_ANSWERS',results)
             commit('UPDATE_VOTERS_FROM_FIND',onlyIds)
         },
@@ -67,7 +67,7 @@ const result: Module<ResultState,RootState> = ({
             commit('UPDATE_POLLS',updatedPollsArray)
         },
         addedAnswer({commit,state}, addedAnswer:Answer) {
-            if(state.votersLoadedFromFind.indexOf(addedAnswer._to) >= 0)
+            if(state.answerIdsFromFind.indexOf(addedAnswer._key) >= 0)
                 return;
             commit('ADD_ANSWER',addedAnswer)
         }
