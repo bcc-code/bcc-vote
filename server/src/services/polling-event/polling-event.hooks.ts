@@ -25,6 +25,9 @@ const addLastChangedTime = (context: HookContext) => {
 
 const addChannel = async (context: HookContext) => {
     if(context.id && context.params.connection){
+        context.app.channel(context.app.channels).leave((connection: any) => {
+            return connection.user._id === context.params.user?._id
+        });
         const channelName = context.id.toString();
         const connection = context.params.connection;
         context.app.channel(channelName).join(connection);

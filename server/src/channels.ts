@@ -3,6 +3,8 @@ import { Application } from './declarations';
 import { PollingEvent, Answer, Poll} from './domain';
 import { db } from './firestore';
 
+const adminRoles = ['Developer','CentralAdministrator','SentralInformasjonsmedarbeider','VotingAdmin'];
+
 export default function(app: Application): void {
     if(typeof app.channel !== 'function') {
         return;
@@ -17,12 +19,11 @@ export default function(app: Application): void {
         }
     });
 
-    app.services.answer.publish('created',async (data:Answer) => {
-
+    app.services.answer.publish('created',async (data:Answer, context:any) => {
         if(!data.firestore){
             data.firestore = true;
             await db.collection('answer').doc(data._key).set(data);
-        }else{
+        }else if(data.visibility=='public' || context.params.user?.activeRole && adminRoles.includes(context.params.user?.activeRole)){
             return app.channel(data.pollingEventId);
         }
     });
