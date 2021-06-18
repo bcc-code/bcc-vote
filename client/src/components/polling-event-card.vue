@@ -13,7 +13,7 @@
                 </div>
                 <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
                 
-                <FilterInfo  v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
+                <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
                 
             </div>
             <div class="flex justify-center mb-3 gap-5">
