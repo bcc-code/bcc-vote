@@ -3,7 +3,6 @@ import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
-    console.log('prevent double vote');
     const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
     
     const res = await query.get();
@@ -13,13 +12,10 @@ const preventMultipleVotes= async (context: HookContext) => {
 };
 
 const preventVoteOnInactivePoll = async (context:HookContext) => {
-    // const query = db.collection('poll').where('_id', '==', context.data._from);
     const key = context.data._from.split('/')[1];
-    const res = await db.collection('poll').doc(key).get();
-    if(!res.exists)
-        throw Error('Poll does not exist');
+    const res = await context.app.service('poll').get(key);
 
-    if(res.data().activeStatus !== PollActiveStatus['Live'])
+    if(res.activeStatus !== PollActiveStatus['Live'])
         throw Error('Poll is not active');
 
     return context;
