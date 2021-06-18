@@ -6,7 +6,8 @@ export interface ResultState {
   pollingEvent: PollingEvent | null,
   polls: Array<Poll>,
   pollResult: PollResult,
-  answers: Array<Answer>
+  answers: Array<Answer>,
+  votersLoadedFromFind: Array<string>
 }
 
 const result: Module<ResultState,RootState> = ({
@@ -15,14 +16,16 @@ const result: Module<ResultState,RootState> = ({
         pollingEvent: null,
         polls: [],
         pollResult: {} as PollResult,
-        answers: []
+        answers: [],
+        votersLoadedFromFind: []
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
         'UPDATE_POLLS': (state:ResultState, value:Array<Poll>) => (state.polls = value),
         'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
-        'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value))
+        'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value)),
+        'UPDATE_VOTERS_FROM_FIND': (state:ResultState, value:string[]) => (state.votersLoadedFromFind = value),
     },
     actions: {
         async getPollingEvent({ commit },pollingEventKey:string) {
@@ -42,7 +45,9 @@ const result: Module<ResultState,RootState> = ({
                 _from: activePoll._id
             }
             const results = await store.$client.service('answer').find({query})
+            const onlyIds = results.map((ans: Answer) => ans._to);
             commit('UPDATE_ANSWERS',results)
+            commit('UPDATE_VOTERS_FROM_FIND',onlyIds)
         },
         async getPollResult({ commit, getters }) {
             const activePoll = getters.activePoll
@@ -62,12 +67,8 @@ const result: Module<ResultState,RootState> = ({
             commit('UPDATE_POLLS',updatedPollsArray)
         },
         addedAnswer({commit,state}, addedAnswer:Answer) {
-            if(state.answers) {
-                const existingAnswer = state.answers.filter(a => a._id == addedAnswer._id)
-                if(existingAnswer.length) {
-                    return
-                }
-            }
+            if(state.votersLoadedFromFind.indexOf(addedAnswer._to) >= 0)
+                return;
             commit('ADD_ANSWER',addedAnswer)
         }
     },

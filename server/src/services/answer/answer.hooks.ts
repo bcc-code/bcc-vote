@@ -3,10 +3,13 @@ import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
-    const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
-    
-    const res = await query.get();
-    if(res._size > 0)
+    const vote = await context.app.service('answer').find({
+        query: {
+            _from: context.data._from,
+            _to: context.data._to,
+        }
+    });
+    if(vote.length > 0)
         throw Error('You cannot vote 2 times');
     return context;
 };
@@ -59,7 +62,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
+        create: [preventVoteOnInactivePoll, preventMultipleVotes, addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: []
