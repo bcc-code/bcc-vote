@@ -13,9 +13,8 @@
                 </div>
                 <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
                 
-                <div v-if="pollingEvent.readableFilter">
-                    <FilterInfo :filter="pollingEvent.readableFilter"/>
-                </div>
+                <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
+                
             </div>
             <div class="flex justify-center mb-3 gap-5">
                 <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full mt-10" @click="goToAdmin()">
