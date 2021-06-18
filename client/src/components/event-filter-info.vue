@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap gap-x-2">
+    <div class="flex flex-wrap gap-x-2 text-xl">
         <div>
             <span class="text-gray-700">
                 {{$t('labels.church')}}:
