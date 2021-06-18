@@ -13,7 +13,9 @@
                     </button>
                 </div>
             </div>
-            <p class="text-gray-700">{{pollingEvent.description}}</p>
+            <p v-if="pollingEvent.description" class="text-gray-700 mb-2">{{pollingEvent.description}}</p>
+
+            <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
             <div class="w-full flex flex-col gap-4 md:flex-row md:gap-10 justify-center mt-8 ">
                 <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button px-15" @click="archivePollingEvent">
                     {{$t('actions.archive-polling-event')}}
@@ -51,6 +53,7 @@ import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import LinkIcon from 'heroicons-vue3/outline/LinkIcon'
 import CopyText from './copy-text.vue'
 import ConfirmPopover from './confirm-popover.vue'
+import FilterInfo from './event-filter-info.vue'
 
 import { PollingEvent, PollingEventStatus} from '../domain'
 
@@ -62,7 +65,8 @@ export default defineComponent({
         LinkIcon,
         CopyText,
         PollingEventForm,
-        ConfirmPopover
+        ConfirmPopover,
+        FilterInfo
     },
     props: {
         pollingEvent: {type: Object as PropType<PollingEvent>, required: true}

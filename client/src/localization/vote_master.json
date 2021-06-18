@@ -87,7 +87,10 @@
     "logged-as": "You are now voting as",
     "sure-republish": "Are you sure that you want to republish this question?",
     "sure-close": "Are you sure that you want to close this question?",
-    "sure-close-event": "Are you sure that you want to close this event?"
+    "sure-close-event": "Are you sure that you want to close this event?",
+    "church": "Church",
+    "age": "Age",
+    "role": "Roles"
   },
   "info": {
     "no-polling-events": "There are no polling events currently available",

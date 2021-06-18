@@ -40,7 +40,7 @@ import XIcon from 'heroicons-vue3/solid/XIcon'
 
 import { defineComponent,PropType } from 'vue'
 
-type ModelType = number|string|boolean|Array<string>|Date|null
+type ModelType = number|string|boolean|Array<string>|Date|undefined
 
 export default defineComponent({
     components: {
@@ -52,7 +52,7 @@ export default defineComponent({
     },
     props: {
         // the v-model value (see vue 3 documentation)
-        modelValue: {type: [Number, String, Boolean, Array, Date] as PropType<ModelType>, required: true},
+        modelValue: {type: [Number, String, Boolean, Array, Date] as PropType<ModelType>},
 
         // General props 
         translation: { type: String, required: true },
