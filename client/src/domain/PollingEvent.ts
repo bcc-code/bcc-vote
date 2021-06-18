@@ -14,8 +14,8 @@ export interface PollingEvent {
 export interface ParticipantFilters {
     org: string
     role: string;
-    minAge: number;
-    maxAge: number;
+    minAge?: number;
+    maxAge?: number;
 }
 
 export enum PollingEventType {

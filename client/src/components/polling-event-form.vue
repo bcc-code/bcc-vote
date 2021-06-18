@@ -93,8 +93,8 @@ export default defineComponent({
                 participantFilter: {
                     org: 'all',
                     role: 'all',
-                    minAge: NaN,
-                    maxAge: NaN,
+                    minAge: undefined,
+                    maxAge: undefined,
                 } as ParticipantFilters,
                 readableFilter: {} as ParticipantFilters,
             } as PollingEvent,
@@ -107,8 +107,6 @@ export default defineComponent({
         }   
         await this.loadOrgs()
         await this.loadRoles()
-        console.log(this.allRoles)
-        console.log(this.allChurches)
     },
     computed: {
         votingAdminRole():any {

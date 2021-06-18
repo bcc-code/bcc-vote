@@ -85,9 +85,9 @@ export default defineComponent({
                 return false
             const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
             const filter = this.pollingEvent.participantFilter;
-            if(this.$user.age >= filter.maxAge)
+            if(filter.maxAge && this.$user.age >= filter.maxAge)
                 return false;
-            if(this.$user.age < filter.minAge)
+            if(filter.minAge && this.$user.age < filter.minAge)
                 return false;
             if(filter.org !== 'all' && this.$user.churchID != filter.org)
                 return false;
