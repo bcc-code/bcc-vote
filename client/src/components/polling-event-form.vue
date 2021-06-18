@@ -57,12 +57,10 @@ interface RoleName {
     name: string,
     enumName: string,
 }
-
 interface Org {
     name: string,
     churchID: number
 }
-
 interface SelectObject {
     name: string,
     val: string|number
