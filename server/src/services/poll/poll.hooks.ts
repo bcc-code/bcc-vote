@@ -97,7 +97,7 @@ export default {
     after: {
         all: [],
         find: [],
-        get: [],
+        get: [ addChannel ],
         create: [],
         update: [],
         patch: [ removeAllAnswers ],
