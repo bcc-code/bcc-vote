@@ -25,7 +25,7 @@ const result: Module<ResultState,RootState> = ({
         'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value)),
-        'UPDATE_VOTERS_FROM_FIND': (state:ResultState, value:string[]) => (state.answerIdsFromFind = value),
+        'UPDATE_ANSWERS_FROM_FIND': (state:ResultState, value:string[]) => (state.answerIdsFromFind = value),
     },
     actions: {
         async getPollingEvent({ commit },pollingEventKey:string) {
@@ -47,7 +47,7 @@ const result: Module<ResultState,RootState> = ({
             const results = await store.$client.service('answer').find({query})
             const onlyIds = results.map((ans: Answer) => ans._key);
             commit('UPDATE_ANSWERS',results)
-            commit('UPDATE_VOTERS_FROM_FIND',onlyIds)
+            commit('UPDATE_ANSWERS_FROM_FIND',onlyIds)
         },
         async getPollResult({ commit, getters }) {
             const activePoll = getters.activePoll
