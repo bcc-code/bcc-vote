@@ -1,8 +1,8 @@
 import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
-import { RoleName, UserDetails, PollResultVisibility } from '../domain';
+import { PollResultVisibility, RoleName, UserDetails } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
-export const subjects = ['answer','polling-event','poll', 'poll-result','participant','person','org', 'role', 'all'] as const;
+export const subjects = ['answer','polling-event','poll', 'poll-result','participant','person','org', 'role', 'user', 'all'] as const;
 export type AppAbilities = [
   typeof actions[number],
   typeof subjects[number] | ForcedSubject<Exclude<typeof subjects[number], 'all'>>
@@ -46,7 +46,10 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer', { visibility: PollResultVisibility['Non Public'] as any});
+        can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
+        can('find', 'user');
+        
+        can('find', 'poll-result');
 
         can(['find','get'],'polling-event', {'participantFilter.role': { $in: superAdminRoles } as any});
     },
@@ -63,11 +66,16 @@ const rolePermissions: Record<string, DefinePermissions> = {
 
         can('find', 'org');
         can('find', 'role');
-        can('find', 'answer', { visibility: PollResultVisibility['Non Public'] as any});
+        can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
+        can('find', 'user', {'churchID': userChurchID});
+        
+        can('find', 'poll-result');
+
         can('remove', 'answer');
         can('get', 'answer');
     },
     Member(user, { can, cannot }) {
+        
     }
 };
 

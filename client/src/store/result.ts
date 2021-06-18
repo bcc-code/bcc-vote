@@ -3,10 +3,10 @@ import { Poll, PollingEvent, PollActiveStatus, Answer, SortedOptions, Option, Po
 import { store, RootState } from '../store/index'
 
 export interface ResultState {
-  pollingEvent?: PollingEvent | null,
-  polls?: Array<Poll>,
-  pollResult?: PollResult | null,
-  answers?: Array<Answer>
+  pollingEvent: PollingEvent | null,
+  polls: Array<Poll>,
+  pollResult: PollResult,
+  answers: Array<Answer>
 }
 
 const result: Module<ResultState,RootState> = ({
@@ -14,7 +14,7 @@ const result: Module<ResultState,RootState> = ({
     state: ():ResultState => ({
         pollingEvent: null,
         polls: [],
-        pollResult: null,
+        pollResult: {} as PollResult,
         answers: []
     }),
     mutations: {
@@ -43,6 +43,11 @@ const result: Module<ResultState,RootState> = ({
             }
             const results = await store.$client.service('answer').find({query})
             commit('UPDATE_ANSWERS',results)
+        },
+        async getPollResult({ commit, getters }) {
+            const activePoll = getters.activePoll
+            const results = await store.$client.service('poll-result').get(activePoll._key)
+            commit('UPDATE_POLL_RESULT',results)
         },
         patchedPoll({commit,state}, patchedPoll:Poll) {
             let updatedPollsArray = [] as Array<Poll>
@@ -83,6 +88,7 @@ const result: Module<ResultState,RootState> = ({
             const activePoll = getters.activePoll
             activePoll.answers.forEach((option: Option) => {
                 const answerCount = state.pollResult ? state.pollResult.answerCount[option.answerId] : 0
+                
                 sortedOptions[option.answerId] = {
                     count: answerCount,
                     bgColor: colors[colorIndex],
@@ -97,10 +103,14 @@ const result: Module<ResultState,RootState> = ({
             return sortedOptions
         },
         answerCount: (state:ResultState):number => {
-            if(state.answers) {
-                return state.answers.length
+            if(!state.pollResult){
+                return 0
             }
-            return 0
+            let count = 0;
+            Object.keys(state.pollResult.answerCount).forEach((key:string) => {
+                count += state.pollResult.answerCount[key];
+            })
+            return count;
         }
     }
 })

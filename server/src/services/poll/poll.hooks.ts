@@ -60,6 +60,7 @@ const removeFromArango = (context: HookContext) => {
 const resetPollResults = (context: HookContext) => {
     const pollRes = {
         pollingEventId: context.result.pollingEventId,
+        pollId: context.result._key,
         answerCount: {} as {[answerId: number]: number}
     };
     context.result.answers.forEach((opt:Option) => {

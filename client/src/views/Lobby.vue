@@ -1,10 +1,9 @@
 <template>
     <section>
         <div class="max-w-screen-md mx-auto px-4 md:px-6">
-            <div class="flex flex-col justify-center" :style="`height: 15vh`">
+            <div class="flex flex-col justify-center" :style="`height: 10vh`">
                 <div class="text-white">
                     <h3 class="font-bold">{{pollingEvent.title}}</h3>
-                    <label>{{'Live poll'}} - {{new Date(pollingEvent.startDateTime).toLocaleDateString()}}</label>
                 </div>
             </div>
             <div v-if="!currentPoll" class="w-full">

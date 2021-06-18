@@ -1,5 +1,6 @@
 import { NotImplemented } from '@feathersjs/errors';
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
+import { QuerySnapshot } from "@google-cloud/firestore";
 import { Application } from '../../declarations';
 import { db } from '../../firestore';
 
@@ -7,6 +8,11 @@ interface Data {}
 
 interface ServiceOptions {}
 
+const isPrimitive = (val: any): boolean => {
+    if(val === Object(val))
+        return false;
+    return true;
+};
 export class PollResult implements ServiceMethods<Data> {
     app: Application;
     options: ServiceOptions;
@@ -17,8 +23,26 @@ export class PollResult implements ServiceMethods<Data> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-        throw new NotImplemented();
+    async find (params: Params): Promise<Data[] | Paginated<Data>> {
+        const query = params.query;
+        console.log('looking for');
+        if(!query)
+            return [];
+        let resultRef = db.collection('poll-result');
+        Object.keys(query).forEach((atr: string) => {
+            if(isPrimitive(query[atr]))
+                resultRef = resultRef.where(atr, '==', query[atr]);
+            else
+                throw new NotImplemented('That query is not yet implemented');
+        });
+        const resultArray = [] as Array<PollResult>;
+        const querySnapshot = await resultRef.get() as QuerySnapshot;
+
+        querySnapshot.forEach((doc: any) => {
+            const data = doc.data() as PollResult;
+            resultArray.push(data);
+        });
+        return resultArray;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

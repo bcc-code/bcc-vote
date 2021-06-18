@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { Application } from './declarations';
-import { PollingEvent, Answer, Poll} from './domain';
+import { PollingEvent, Answer, Poll, PollResultVisibility} from './domain';
 import { db } from './firestore';
 
 const adminRoles = ['Developer','CentralAdministrator','SentralInformasjonsmedarbeider','VotingAdmin'];
@@ -23,7 +23,7 @@ export default function(app: Application): void {
         if(!data.firestore){
             data.firestore = true;
             await db.collection('answer').doc(data._key).set(data);
-        }else if(data.visibility=='public' || context.params.user?.activeRole && adminRoles.includes(context.params.user?.activeRole)){
+        }else if(data.visibility==PollResultVisibility['Public'] || data.visibility !== PollResultVisibility['Anonymous'] && context.params.user?.activeRole && adminRoles.includes(context.params.user?.activeRole)){
             return app.channel(data.pollingEventId);
         }
     });

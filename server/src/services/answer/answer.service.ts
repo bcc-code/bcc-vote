@@ -13,12 +13,12 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application): void {
-  const Model = createModel(app);
+    const Model = createModel(app);
 
-  // Initialize our service with any options it requires
-  app.use('/answer', new Answer(Model, app));
+    // Initialize our service with any options it requires
+    app.use('/answer', new Answer(Model, app));
 
-  // Get our initialized service so that we can register hooks
-  const service = app.service('answer');
-  service.hooks(hooks);
+    // Get our initialized service so that we can register hooks
+    const service = app.service('answer');
+    service.hooks(hooks);
 }

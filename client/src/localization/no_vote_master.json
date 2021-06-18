@@ -142,9 +142,6 @@
     "answer-option": "Option",
     "answer-confirmation": "Bekreftelse"
   },
-  "descriptions": {
-    "home": "Siden der din stemme blir hørt"
-  },
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"

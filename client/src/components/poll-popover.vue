@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(85vh - 48px);`">
+    <div class="h-full w-full bg-white rounded-t-lg relative" :style="`min-height: calc(90vh - 48px);`">
         <div class="h-full w-full p-4 md:p-6">
             <InfoBox v-if="!hasSavedAnswer" class="mb-4">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
@@ -63,6 +63,7 @@ export default defineComponent({
                 const participantAnswer = {
                     _from: this.poll._id,
                     _to: this.$user._id,
+                    visibility: this.poll.resultVisibility,
                     answerId: option.answerId,
                     pollingEventId: this.$route.params.id
                 }
