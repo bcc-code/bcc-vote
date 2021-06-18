@@ -11,7 +11,11 @@
                         <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
                     </div>
                 </div>
-                <p class="text-gray-700 text-limit-2">{{pollingEvent.description}}</p>
+                <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
+                
+                <div v-if="pollingEvent.readableFilter">
+                    <FilterInfo :filter="pollingEvent.readableFilter"/>
+                </div>
             </div>
             <div class="flex justify-center mb-3 gap-5">
                 <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full mt-10" @click="goToAdmin()">
@@ -37,12 +41,14 @@
 
 <script lang="ts">
 import ConfirmPopover from './confirm-popover.vue'
+import FilterInfo from './event-filter-info.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
     components: {
-        ConfirmPopover
+        ConfirmPopover,
+        FilterInfo
     },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
@@ -79,9 +85,9 @@ export default defineComponent({
                 return false
             const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
             const filter = this.pollingEvent.participantFilter;
-            if(this.$user.age >= filter.maxAge)
+            if(filter.maxAge && this.$user.age >= filter.maxAge)
                 return false;
-            if(this.$user.age < filter.minAge)
+            if(filter.minAge && this.$user.age < filter.minAge)
                 return false;
             if(filter.org !== 'all' && this.$user.churchID != filter.org)
                 return false;
