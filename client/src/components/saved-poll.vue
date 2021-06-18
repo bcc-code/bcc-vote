@@ -22,11 +22,11 @@
 
             <div v-if="isEventLive" class='flex justify-end'>
                 <ToolTip v-if="isNotStarted" :translation="$t('info.tooltips.publish-poll')" align="right">
-                <button class="md-button rounded-full font-bold bg-blue-900 text-white" @click="$emit('changeStatus')">
-                    {{$t('actions.publish-poll')}}
-                </button>
+                    <button class="md-button rounded-full font-bold bg-blue-900 text-white" @click="$emit('changeStatus')">
+                        {{$t('actions.publish-poll')}}
+                    </button>
                 </ToolTip>
-                <button v-if="isLive" class="md-button rounded-full font-bold bg-red-500 text-white" @click="changeConfirmation = 'close'">
+                <button v-else-if="isLive" class="md-button rounded-full font-bold bg-red-500 text-white" @click="changeConfirmation = 'close'">
                     {{$t('actions.close-poll')}}
                 </button>
                 <button v-else class="md-button rounded-full font-bold text-gray-800 border-2 border-gray-800" @click="changeConfirmation = 'republish'">
