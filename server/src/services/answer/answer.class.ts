@@ -21,31 +21,4 @@ export class Answer extends DbService<Data> {
         super(options);
         this.app = app;
     }
-
-    async find (params: Params): Promise<Data[] | Paginated<Data>> {
-        const query = params.query;
-        if(!query)
-            return [];
-        let answersRef = db.collection('answer');
-        Object.keys(query).forEach((atr: string) => {
-            if(isPrimitive(query[atr]))
-                answersRef = answersRef.where(atr, '==', query[atr]);
-            else
-                throw new NotImplemented('That query is not yet implemented');
-        });
-        const answerArray = [] as Array<Answer>;
-        const querySnapshot = await answersRef.get() as QuerySnapshot;
-
-        querySnapshot.forEach((doc) => {
-            const data = doc.data() as Answer;
-            answerArray.push(data);
-        });
-        return answerArray;
-    }
-    async get (id: Id, params?: Params): Promise<Data> {
-        const answerRef = db.collection('answer').doc(id);
-        
-        const result = await answerRef.get();
-        return result.data();
-    }
 }
