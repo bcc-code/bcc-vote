@@ -22,26 +22,24 @@
 
             <div v-if="isEventLive" class='flex justify-end'>
                 <ToolTip v-if="isNotStarted" :translation="$t('info.tooltips.publish-poll')" align="right">
-                <button class="md-button rounded-full font-bold bg-blue-900 text-white" @click="$emit('changeStatus')">
-                    {{$t('actions.publish-poll')}}
-                </button>
+                    <button class="md-button rounded-full font-bold bg-blue-900 text-white" @click="$emit('changeStatus')">
+                        {{$t('actions.publish-poll')}}
+                    </button>
                 </ToolTip>
-                <ToolTip v-else-if="isLive" :translation="$t('info.tooltips.close-poll')" align="right">
-                <button  class="md-button rounded-full font-bold bg-red-500 text-white" @click="$emit('changeStatus')">
+                <button v-else-if="isLive" class="md-button rounded-full font-bold bg-red-500 text-white" @click="changeConfirmation = 'close'">
                     {{$t('actions.close-poll')}}
                 </button>
-                </ToolTip>
-                <button v-else class="md-button rounded-full font-bold text-gray-800 border-2 border-gray-800" @click="republishConfirm = true">
+                <button v-else class="md-button rounded-full font-bold text-gray-800 border-2 border-gray-800" @click="changeConfirmation = 'republish'">
                     {{$t('actions.republish-poll')}}
                 </button>
             </div>
         </div>
         <PollForm v-else :eventId="$route.params.id" :poll="poll" :pollIndex="pollIndex" @close="stopEditing" @delete="deletePoll"/>
         <transition name="fade">
-            <ConfirmPopover v-if="republishConfirm" @resign="republishConfirm = false" @cancel="republishConfirm = false" @confirm="republishPoll" cancelTranslation="discard" confirmTranslation="yes-continue">
-                    <h3 class="font-bold mb-6 text-center">{{$t('labels.sure-republish')}}
+            <ConfirmPopover v-if="changeConfirmation" @resign="changeConfirmation = ''" @cancel="changeConfirmation = ''" @confirm="confirmPollChange" cancelTranslation="cancel" confirmTranslation="yes-continue">
+                    <h3 class="font-bold mb-6 text-center">{{$t(`labels.sure-${changeConfirmation}`)}}
                     </h3>
-                    <p class="text-gray-700 mb-4 text-center">{{$t('info.republish-poll')}}</p>
+                    <p class="text-gray-700 mb-4 text-center">{{$t(`info.${changeConfirmation}-poll`)}}</p>
             </ConfirmPopover>
         </transition>
     </div>
@@ -75,7 +73,7 @@ export default defineComponent({
     },
     data(){
         return{
-            republishConfirm: false
+            changeConfirmation: ''
         }
     },
     computed: {
@@ -104,14 +102,8 @@ export default defineComponent({
                 this.$emit('stopEdit')
             }
         },
-        changeStatus(){
-            if(this.poll.activeStatus === PollActiveStatus['Finished'])
-                this.republishConfirm = true;
-            else
-                this.$emit('changeStatus')
-        },
-        republishPoll(){
-            this.republishConfirm = false;
+        confirmPollChange(){
+            this.changeConfirmation = '';
             this.$emit('changeStatus')
         }
     },
