@@ -76,7 +76,6 @@ const result: Module<ResultState,RootState> = ({
         sortedOptions: (state:ResultState):SortedOptions => {
             const activePoll = state.activePoll
             const pollResult = state.pollResult
-            console.log(pollResult)
             if(!activePoll|| !pollResult)
                 return {} as SortedOptions
             let colorIndex = 0
