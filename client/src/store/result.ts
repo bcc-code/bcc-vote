@@ -103,7 +103,6 @@ const result: Module<ResultState,RootState> = ({
             return sortedOptions
         },
         answerCount: (state:ResultState):number => {
-            console.log('calc')
             let count = 0;
             Object.keys(state.pollResult.answerCount).forEach((key:string) => {
                 count += state.pollResult.answerCount[key];

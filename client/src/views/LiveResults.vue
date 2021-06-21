@@ -88,8 +88,7 @@ export default defineComponent({
                 await this.getPollingEvent(pollingEventKey)
                 await this.findPolls()
                 if(this.activePoll) {
-                    await this.getPollResult()
-                    await this.findAnswers()
+                    await this.refreshAnswers();
                 }
             } catch(err) {
                 this.$showError(err)
