@@ -10,6 +10,7 @@ export interface ResultState {
   answerIdsFromFind: Array<string>
 }
 
+
 const result: Module<ResultState,RootState> = ({
     namespaced: true,
     state: ():ResultState => ({
@@ -18,7 +19,7 @@ const result: Module<ResultState,RootState> = ({
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
-        'UPDTAE_ACTIVE_POLL': (state: ResultState, value:Poll) => {state.activePoll = value},
+        'UPDATE_ACTIVE_POLL': (state: ResultState, value:Poll) => {state.activePoll = value},
         'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value)),
@@ -31,41 +32,39 @@ const result: Module<ResultState,RootState> = ({
         },
         async getActivePoll({ commit, state }) {
             if(!state.pollingEvent)
-                throw Error('Polling event is not loaded')
+                return
             const query = {
                 pollingEventId: state.pollingEvent?._key,
                 activeStatus: PollActiveStatus['Live']
             }
             const activePoll = await store.$client.service('poll').find({query})
             if(activePoll.length > 0)
-                commit('UPDTAE_ACTIVE_POLL', activePoll[0])
+                commit('UPDATE_ACTIVE_POLL', activePoll[0])
         },
-        async findAnswers({ commit, getters }) {
-            const activePoll = getters.activePoll
+        async findAnswers({ commit, state }) {
+            if(!state.activePoll)
+                return
             const query = {
-                _from: activePoll._id
+                _from: state.activePoll._id
             }
             const results = await store.$client.service('answer').find({query})
             const onlyIds = results.map((ans: Answer) => ans._key);
             commit('UPDATE_ANSWERS',results)
             commit('UPDATE_ANSWERS_FROM_FIND',onlyIds)
         },
-        async getPollResult({ commit, getters }) {
-            // const activePoll = getters.activePoll
-            // const results = await store.$client.service('poll-result').get(activePoll._key)
-            // commit('UPDATE_POLL_RESULT',results)
+        async getPollResult({ commit, state }) {
+            if(!state.activePoll)
+                return
+            const results = await store.$client.service('poll-result').get(state.activePoll._key)
+            commit('UPDATE_POLL_RESULT',results)
         },
         patchedPoll({commit,state}, patchedPoll:Poll) {
-            let updatedPollsArray = [] as Array<Poll>
-            updatedPollsArray.push(patchedPoll)
-            if(state.polls) {
-                state.polls.forEach(poll => {
-                    if(poll._id !== patchedPoll._id) {
-                        updatedPollsArray.push(poll)
-                    }
-                });
-            }
-            commit('UPDATE_POLLS',updatedPollsArray)
+            if(!state.pollingEvent || patchedPoll.pollingEventId !== state.pollingEvent._key)
+                return;
+            if(patchedPoll.activeStatus === PollActiveStatus['Live'])
+                commit('UPDATE_ACTIVE_POLL',patchedPoll)
+            else
+                commit('UPDATE_ACTIVE_POLL', undefined)
         },
         addedAnswer({commit,state}, addedAnswer:Answer) {
             if(state.answerIdsFromFind.indexOf(addedAnswer._key) >= 0)
@@ -74,29 +73,26 @@ const result: Module<ResultState,RootState> = ({
         }
     },
     getters: {
-        activePoll: (state:ResultState) => {
-            if(state.polls && state.polls.length) {
-                const activePolls = state.polls.filter(poll => poll.activeStatus === PollActiveStatus['Live'])
-                if(activePolls) {
-                    return activePolls[0]
-                }
-            }
-            return null
-        },
-        sortedOptions: (state:ResultState, getters: any):SortedOptions => {
+        sortedOptions: (state:ResultState):SortedOptions => {
+            const activePoll = state.activePoll
+            const pollResult = state.pollResult
+            console.log(pollResult)
+            if(!activePoll|| !pollResult)
+                return {} as SortedOptions
             let colorIndex = 0
             const colors = ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3']
             let sortedOptions = {} as SortedOptions
-            const activePoll = getters.activePoll
+            
             activePoll.answers.forEach((option: Option) => {
-                const answerCount = state.pollResult ? state.pollResult.answerCount[option.answerId] : 0
-                
+                const answerCount = pollResult.answerCount[option.answerId]
                 sortedOptions[option.answerId] = {
                     count: answerCount,
                     bgColor: colors[colorIndex],
                     ...option
                 }
                 colorIndex++
+                if(colorIndex >= colors.length)
+                    colorIndex = 0;
             })
             if(activePoll.answers.length > 2) {
                 const lastAnswer = activePoll.answers[activePoll.answers.length - 1]
@@ -105,11 +101,12 @@ const result: Module<ResultState,RootState> = ({
             return sortedOptions
         },
         answerCount: (state:ResultState):number => {
-            if(!state.pollResult.answerCount)
+            const results = state.pollResult;
+            if(!results)
                 return 0;
             let count = 0;
-            Object.keys(state.pollResult.answerCount).forEach((key:string) => {
-                count += state.pollResult.answerCount[key];
+            Object.keys(results.answerCount).forEach((key:string) => {
+                count += results.answerCount[key];
             })
             return count;
         }
