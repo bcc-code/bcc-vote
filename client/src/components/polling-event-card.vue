@@ -2,26 +2,27 @@
     <div>
         <div class="p-4 h-full flex flex-col justify-between border-2 border-gray-200 rounded-lg shadow-base">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                <div class="flex items-start justify-between mb-2">
                     <div>
-                        <label>{{formattedDate}}</label>
+                        <label class="text-gray-700">{{formattedDate}}</label>
                         <h3 class="font-bold">{{pollingEvent.title}}</h3>
                     </div>
-                    <div :class="['px-2 py-0.5 mr-1 rounded-lg border-2 flex-shrink-0',statusColors[pollingEvent.status]]">
-                        <h4 class="font-bold">{{$t(`labels.polling-event-status.${pollingEvent.status}`)}}</h4>
-                    </div>
+                    <EventStatus :status="pollingEvent.status" />
                 </div>
                 <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
                 
                 <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
-                
+                <div v-if="$user.personID === pollingEvent.creatorId" class="flex gap-2 text-blue-700 cursor-pointer py-4 mt-2" @click="goToAdmin">
+                    <h5 class="font-bold">
+                        {{(isEventLive || isEventNotStarted) ? $t(`actions.admin-this-event`):$t('actions.view-this-event')}}
+                    </h5>
+                    <ArrowRightIcon class="h-5"/>
+                </div>
             </div>
-            <div class="flex justify-center mb-3 gap-5">
-                <button v-if="$user.personID === pollingEvent.creatorId" class="md-button text-blue-900 bg-gray-500 font-bold rounded-full mt-10" @click="goToAdmin()">
-                    {{$t(`actions.admin-this-event`)}}
-                </button>
-                <button v-if="canParticipate" class="md-button rounded-full text-white bg-blue-900 font-bold mt-10" @click="showConfirm = true">
-                        {{$t(`actions.join-this-event`)}}
+            <div class="flex flex-col">
+                
+                <button v-if="canParticipate" class="align-center md-button mx-auto rounded-full text-white bg-blue-900 font-bold my-3" @click="showConfirm = true">
+                    {{$t(`actions.join-this-event`)}}
                 </button>
             </div>
         </div>
@@ -41,25 +42,25 @@
 <script lang="ts">
 import ConfirmPopover from './confirm-popover.vue'
 import FilterInfo from './event-filter-info.vue'
+import EventStatus from './polling-event-status.vue'
+
+import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon'
+
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
 export default defineComponent({
     components: {
         ConfirmPopover,
-        FilterInfo
+        FilterInfo,
+        EventStatus,
+        ArrowRightIcon
     },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
     },
     data () {
         return {
-            statusColors: {
-                'live':'text-red-600 bg-red-200 border-red-600 px-6',
-                'not_started':'text-blue-500 bg-blue-200 border-blue-500',
-                'finished':'text-green-400 bg-green-200 border-green-400',
-                'archived': 'text-gray-700 bg-gray-500 border-gray-700'
-            },
             showConfirm: false,
         }
     },
@@ -71,11 +72,7 @@ export default defineComponent({
             return this.pollingEvent.status === PollingEventStatus['Live'];
         },
         formattedDate():string {
-            let date = ''
-            if(this.pollingEvent && this.pollingEvent.startDateTime) {
-                date = moment(this.pollingEvent.startDateTime).format("DD.MM.YYYY")
-            }
-            return date
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:MM")
         },
         canParticipate():boolean{
             if(this.pollingEvent.status === PollingEventStatus['Finished'])

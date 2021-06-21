@@ -2,7 +2,8 @@
     <div :class="backgroundColor">
         <div class="max-w-5xl mx-auto">
             <div class="w-full h-full px-4 py-8">
-                <PollingEventPanel :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
+                <PollingEventPanel v-if="isEventLoaded" :pollingEvent="pollingEvent" @reloadPollingEvent="loadPollingEvent"/>
+                <Spinner v-else inline/>
                 <div class="flex py-8 gap-6 font-bold justify-center" :class="inactiveTabColor">
                     <h3 v-if="!isEventFinished && !isEventArchived" class="cursor-pointer" :class="currentTab === 'polls' ? activeTabColor : ''" @click="currentTab='polls'">{{$t('labels.polls')}}</h3>
                     <h3 class="cursor-pointer" :class="currentTab === 'results' ? activeTabColor : ''"  @click="currentTab='results'">{{$t('labels.results')}}</h3>
@@ -11,6 +12,7 @@
                     <PollsPanel v-if="currentTab === 'polls'" :savedPolls="savedPolls" :isEventLive="isEventLive" @reloadPolls="loadSavedPolls"/>
                     <ResultsPanel v-else :savedPolls="savedPolls" :pollingEvent="pollingEvent"/>
                 </template>
+                <Spinner v-else inline/>
             </div>
         </div>
     </div>
@@ -22,15 +24,18 @@ import ResultsPanel from '../components/admin-results-panel.vue'
 import { Poll } from '../domain'
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent } from 'vue'
+import Spinner from '../components/spinner.vue'
 export default defineComponent({
     components: {
         PollsPanel,
         ResultsPanel,
         PollingEventPanel,
+        Spinner,
     },
     data() {
         return {
             arePollsLoaded: false as boolean,
+            isEventLoaded: false as boolean,
             currentTab: 'polls' as string,
             pollingEvent: {} as PollingEvent,
             savedPolls: [] as Poll[],
@@ -64,6 +69,7 @@ export default defineComponent({
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
                 .catch(this.$showError)
+            this.isEventLoaded = true
             if(this.isEventFinished || this.isEventArchived)
                 this.currentTab = 'results';
         },
