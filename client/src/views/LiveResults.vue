@@ -98,11 +98,10 @@ export default defineComponent({
         },
         async refreshAnswers() {
             this.loading = true
-            try {
-                await this.findAnswers()
-            } catch(err) {
-                this.$showError(err)
-            }
+            const promises = []
+            promises.push(this.findAnswers())
+            promises.push(this.getPollResult())
+            await Promise.all(promises).catch(err => {this.$showError(err)})
             this.loading = false
         }
     },
