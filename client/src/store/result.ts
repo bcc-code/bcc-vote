@@ -3,9 +3,9 @@ import { Poll, PollingEvent, PollActiveStatus, Answer, SortedOptions, Option, Po
 import { store, RootState } from '../store/index'
 
 export interface ResultState {
-  pollingEvent: PollingEvent | null,
-  polls: Array<Poll>,
-  pollResult: PollResult,
+  pollingEvent?: PollingEvent,
+  activePoll?: Poll,
+  pollResult?: PollResult,
   answers: Array<Answer>,
   answerIdsFromFind: Array<string>
 }
@@ -13,15 +13,12 @@ export interface ResultState {
 const result: Module<ResultState,RootState> = ({
     namespaced: true,
     state: ():ResultState => ({
-        pollingEvent: null,
-        polls: [],
-        pollResult: {} as PollResult,
         answers: [],
         answerIdsFromFind: []
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
-        'UPDATE_POLLS': (state:ResultState, value:Array<Poll>) => (state.polls = value),
+        'UPDTAE_ACTIVE_POLL': (state: ResultState, value:Poll) => {state.activePoll = value},
         'UPDATE_POLL_RESULT': (state:ResultState, value:PollResult) => (state.pollResult = value),
         'UPDATE_ANSWERS': (state:ResultState, value:Array<Answer>) => (state.answers = value),
         'ADD_ANSWER': (state:ResultState, value:Answer) => (state.answers?.unshift(value)),
@@ -32,12 +29,16 @@ const result: Module<ResultState,RootState> = ({
             const results = await store.$client.service('polling-event').get(pollingEventKey)
             commit('UPDATE_POLLING_EVENT',results)
         },
-        async findPolls({ commit, state }) {
+        async getActivePoll({ commit, state }) {
+            if(!state.pollingEvent)
+                throw Error('Polling event is not loaded')
             const query = {
-                pollingEventId: state.pollingEvent?._key
+                pollingEventId: state.pollingEvent?._key,
+                activeStatus: PollActiveStatus['Live']
             }
-            const polls = await store.$client.service('poll').find({query})
-            commit('UPDATE_POLLS',polls)
+            const activePoll = await store.$client.service('poll').find({query})
+            if(activePoll.length > 0)
+                commit('UPDTAE_ACTIVE_POLL', activePoll[0])
         },
         async findAnswers({ commit, getters }) {
             const activePoll = getters.activePoll
@@ -50,9 +51,9 @@ const result: Module<ResultState,RootState> = ({
             commit('UPDATE_ANSWERS_FROM_FIND',onlyIds)
         },
         async getPollResult({ commit, getters }) {
-            const activePoll = getters.activePoll
-            const results = await store.$client.service('poll-result').get(activePoll._key)
-            commit('UPDATE_POLL_RESULT',results)
+            // const activePoll = getters.activePoll
+            // const results = await store.$client.service('poll-result').get(activePoll._key)
+            // commit('UPDATE_POLL_RESULT',results)
         },
         patchedPoll({commit,state}, patchedPoll:Poll) {
             let updatedPollsArray = [] as Array<Poll>
@@ -104,6 +105,8 @@ const result: Module<ResultState,RootState> = ({
             return sortedOptions
         },
         answerCount: (state:ResultState):number => {
+            if(!state.pollResult.answerCount)
+                return 0;
             let count = 0;
             Object.keys(state.pollResult.answerCount).forEach((key:string) => {
                 count += state.pollResult.answerCount[key];
