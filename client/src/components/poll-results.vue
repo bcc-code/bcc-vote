@@ -37,6 +37,7 @@ export default defineComponent({
             loadedAllAnswers: false,
             loaded: false as boolean,
             allAnswers: [] as Array<Answer>,
+            answerIdsFromFind: [] as Array<String>,
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
@@ -115,15 +116,25 @@ export default defineComponent({
             const res = await this.$client.service('answer').find({
                 query: {
                     _from: poll._id,
+                    $sort: {
+                        lastChanged: -1
+                    }
                 }
             }).catch(this.$showError);
             this.loadedAllAnswers = true;
             this.allAnswers = res;
+            this.answerIdsFromFind = res.map((ans: Answer) => ans._key)
+        },
+        isVoterAlreadyCounted(key: string){
+            return this.answerIdsFromFind.indexOf(key) >= 0
         },
         addAnswer(answer: Answer){
-            if(this.poll && answer._from === this.poll._id) {  
-                this.allAnswers.unshift(answer)
-            }
+            if(answer._from !== this.poll._id)
+                return;
+            if(this.isVoterAlreadyCounted(answer._key))
+                return;
+
+            this.allAnswers.unshift(answer)
         },
         changeBars(data: PollResult){
             if(data.pollId !== this.poll._key)

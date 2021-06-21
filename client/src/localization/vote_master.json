@@ -86,6 +86,8 @@
     "thank-you": "Thank you for participating!",
     "logged-as": "You are now voting as",
     "sure-republish": "Are you sure that you want to republish this question?",
+    "sure-close": "Are you sure that you want to close this question?",
+    "sure-close-event": "Are you sure that you want to close this event?",
     "church": "Church",
     "age": "Age",
     "role": "Roles"
@@ -102,8 +104,9 @@
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
     "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To deactivate this polling event press “Close polling event” at the top.",
     "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this question event and they can vote on it.",
-    "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
-    "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
+    "republish-poll": "By pressing “republish” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
+    "close-poll": "By pressing “close” the question participants are no longer able to vote on the question and the results will no longer be available.",
+    "close-event": "By pressing “close” the event will no longer be open.",
     "poll-is": {
       "non_public": "This question is not public and the participants are hidden for you",
       "anonymous": "This question is anonymous and the participants are hidden for this question"

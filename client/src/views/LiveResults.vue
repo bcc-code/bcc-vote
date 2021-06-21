@@ -41,7 +41,7 @@ export default defineComponent({
         
         this.$client.service('poll').on('patched', this.patchedPoll)
         this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT)
-        this.$client.service('answer').on('created', this.ADD_ANSWER)
+        this.$client.service('answer').on('created', this.addedAnswer)
     
         this.$client.io.on('reconnect', this.init)
     },
@@ -79,8 +79,8 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapMutations('result',['ADD_ANSWER','UPDATE_POLL_RESULT']),
-        ...mapActions('result',['getPollingEvent', 'getPollResult', 'findPolls','findAnswers','patchedPoll']),
+        ...mapMutations('result',['UPDATE_POLL_RESULT']),
+        ...mapActions('result',['getPollingEvent', 'getPollResult', 'findPolls','findAnswers','patchedPoll', 'addedAnswer']),
         async init() {
             this.loading = true
             const pollingEventKey = this.$route.params.id

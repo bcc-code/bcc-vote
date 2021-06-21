@@ -3,23 +3,22 @@ import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
-    console.log('prevent double vote');
-    const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
-    
-    const res = await query.get();
-    if(res._size > 0)
+    const vote = await context.app.service('answer').find({
+        query: {
+            _from: context.data._from,
+            _to: context.data._to,
+        }
+    });
+    if(vote.length > 0)
         throw Error('You cannot vote 2 times');
     return context;
 };
 
 const preventVoteOnInactivePoll = async (context:HookContext) => {
-    // const query = db.collection('poll').where('_id', '==', context.data._from);
     const key = context.data._from.split('/')[1];
-    const res = await db.collection('poll').doc(key).get();
-    if(!res.exists)
-        throw Error('Poll does not exist');
+    const res = await context.app.service('poll').get(key);
 
-    if(res.data().activeStatus !== PollActiveStatus['Live'])
+    if(res.activeStatus !== PollActiveStatus['Live'])
         throw Error('Poll is not active');
 
     return context;
@@ -63,7 +62,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, preventMultipleVotes,  addUserData, addLastChangedTime, incrementCounter],
+        create: [preventVoteOnInactivePoll, preventMultipleVotes, addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: []
