@@ -1,5 +1,5 @@
 "project_id": "260842"                     #open project settings and go to API section 
-"api_token": "ba14916d60835a35156f122c8341ca187b2a71b424a41a1fd77f6327543d4c732fa8f426540314ed"          #open profile settings and go to API & SSO > New Token > create Token
+"api_token_env": CROWDIN_API_TOKEN      #open profile settings and go to API & SSO > New Token > create Token
 "base_path": "/client/src/localization"
 "preserve_hierarchy": false
 
