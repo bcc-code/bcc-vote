@@ -13,7 +13,9 @@
                     </button>
                 </div>
             </div>
-            <p class="text-gray-700">{{pollingEvent.description}}</p>
+            <p v-if="pollingEvent.description" class="text-gray-700 mb-2">{{pollingEvent.description}}</p>
+
+            <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
             <div class="w-full flex flex-col gap-4 md:flex-row md:gap-10 justify-center mt-8 ">
                 <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button px-15" @click="archivePollingEvent">
                     {{$t('actions.archive-polling-event')}}
@@ -21,7 +23,7 @@
                 <button v-if="isEventNotStarted" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
                     {{$t('actions.start-polling-event')}}
                 </button>
-                <button v-else-if="isEventLive" class="bg-red-500 text-white activation-button px-10" @click="closePollingEvent">
+                <button v-else-if="isEventLive" class="bg-red-500 text-white activation-button px-10" @click="closeConfirmation = true">
                     {{$t('actions.close-polling-event')}}
                 </button>
                 <button v-else-if="isEventFinished" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
@@ -31,6 +33,13 @@
                     {{$t('actions.unarchive-polling-event')}}
                 </button>
             </div>
+            <transition name="fade">
+            <ConfirmPopover v-if="closeConfirmation" @resign="closeConfirmation = false" @cancel="closeConfirmation = false" @confirm="closePollingEvent" cancelTranslation="cancel" confirmTranslation="yes-continue">
+                <h3 class="font-bold mb-6 text-center">{{$t(`labels.sure-close-event`)}}
+                </h3>
+                <p class="text-gray-700 mb-4 text-center">{{$t(`info.close-event`)}}</p>
+            </ConfirmPopover>
+        </transition>
         </template>
         <template v-else>
             <PollingEventForm :pollingEvent="pollingEvent" @close="edit = false" @finish="updateEvent"/>
@@ -43,6 +52,8 @@
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import LinkIcon from 'heroicons-vue3/outline/LinkIcon'
 import CopyText from './copy-text.vue'
+import ConfirmPopover from './confirm-popover.vue'
+import FilterInfo from './event-filter-info.vue'
 
 import { PollingEvent, PollingEventStatus} from '../domain'
 
@@ -54,6 +65,8 @@ export default defineComponent({
         LinkIcon,
         CopyText,
         PollingEventForm,
+        ConfirmPopover,
+        FilterInfo
     },
     props: {
         pollingEvent: {type: Object as PropType<PollingEvent>, required: true}
@@ -61,6 +74,7 @@ export default defineComponent({
     data() {
         return {
             edit: false,
+            closeConfirmation: false
         }
     },
     computed: {
@@ -92,6 +106,7 @@ export default defineComponent({
             }).catch(this.$showError)
         },
         closePollingEvent() {
+            this.closeConfirmation = false
             this.$client.service('polling-event').patch(this.$route.params.id, {
               status: PollingEventStatus['Finished']
             }).then(() => {

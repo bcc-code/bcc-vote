@@ -58,8 +58,8 @@
     "show-results-live": "Show results live",
     "count": "totalt",
     "voters": "voters",
-    "votes": "stemmer",
-    "vote": "stemme",
+    "votes": "Stemmer",
+    "vote": "Stemme",
     "vote-confirmation": "Bekreftelse",
     "answers": "Alternatives",
     "option": "Option",
@@ -85,7 +85,12 @@
     "bcc-vote": "BCC Vote",
     "thank-you": "Takk for din deltakelse!",
     "logged-as": "Du stemmer nå som",
-    "sure-republish": "Are you sure that you want to republish this question?"
+    "sure-republish": "Are you sure that you want to republish this question?",
+    "sure-close": "Are you sure that you want to close this question?",
+    "sure-close-event": "Are you sure that you want to close this event?",
+    "church": "Church",
+    "age": "Age",
+    "role": "Roles"
   },
   "info": {
     "no-polling-events": "Det er ikke noe avstemninger tilgjengelig",
@@ -99,11 +104,12 @@
     "polls-will-be-invisible": "The questions won’t be visible untill the poll will start.",
     "polls-activation-explaination": "In question queue you can see the list of all the questions that have been added to the event. In order to make a question live to the users - press “Publish”. To deactivate this polling event press “Close polling event” at the top.",
     "publish-poll": "By pressing “Publish this question” you’ll make it visible for all the users in this question event and they can vote on it.",
-    "republish-poll": "By pressing “Republish this question” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
-    "close-poll": "By pressing “Close this question” you’ll close this question for all voters, they won’t have possibility to vote any longer.",
+    "republish-poll": "By pressing “republish” the previous results of this question will be deleted and this question will appear for the voters to vote again.",
+    "close-poll": "By pressing “close” the question participants are no longer able to vote on the question and the results will no longer be available.",
+    "close-event": "By pressing “close” the event will no longer be open.",
     "poll-is": {
       "non_public": "Dette er en lukket votering. Deltakere er derfor skjult for deg",
-      "anonymous": "Dette er en lukket votering. Deltakere er derfor skjult for deg"
+      "anonymous": "Dette er en anonym votering. Deltakere er derfor skjult for deg"
     },
     "copied": "Copied!",
     "results-will-be-visible": "Thank you for participating in this poll! The results will be avaliable for the next few days on the homescreen.",

@@ -51,18 +51,16 @@ import InfoBox from '../components/info-box.vue'
 import FormField from '../components/form-field.vue'
 import XIcon from 'heroicons-vue3/outline/XIcon'
 
-import { PollingEvent, PollingEventType, PollingEventStatus } from '../domain'
+import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain'
 
 interface RoleName {
     name: string,
     enumName: string,
 }
-
 interface Org {
     name: string,
     churchID: number
 }
-
 interface SelectObject {
     name: string,
     val: string|number
@@ -93,19 +91,20 @@ export default defineComponent({
                 participantFilter: {
                     org: 'all',
                     role: 'all',
-                    minAge: NaN,
-                    maxAge: NaN,
-                }
+                    minAge: undefined,
+                    maxAge: undefined,
+                } as ParticipantFilters,
+                participantLabels: {} as ParticipantFilters,
             } as PollingEvent,
         }
     },
-    created(){
+    async created(){
         if(this.pollingEvent){
             this.eventData = JSON.parse(JSON.stringify(this.pollingEvent))
             this.eventData.startDateTime = new Date(this.eventData.startDateTime)
         }   
-        this.loadOrgs()
-        this.loadRoles()
+        await this.loadOrgs()
+        await this.loadRoles()
     },
     computed: {
         votingAdminRole():any {
@@ -161,7 +160,22 @@ export default defineComponent({
             })
             this.allRoles.unshift({name: "All roles", val: 'all'})
         },
+        fillparticipantLabels(){
+            const role = this.allRoles.find((r:SelectObject) => {
+                return r.val === this.eventData.participantFilter.role
+            })
+            const org = this.allChurches.find((r:SelectObject) => {
+                return r.val === this.eventData.participantFilter.org
+            })
+            if(!role || !org)
+                return;
+            this.eventData.participantLabels.role = role.name
+            this.eventData.participantLabels.org = org.name
+            this.eventData.participantLabels.minAge = this.eventData.participantFilter.minAge;
+            this.eventData.participantLabels.maxAge = this.eventData.participantFilter.maxAge;
+        },
         sendPollingEvent(){
+            this.fillparticipantLabels();
             const data = this.eventData
             data.creatorId = this.$user.personID
             if(data.startDateTime.getTime() === 0)

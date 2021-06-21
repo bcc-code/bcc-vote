@@ -3,20 +3,19 @@ import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
 const preventMultipleVotes= async (context: HookContext) => {
-    console.log('prevent double vote');
-    const query = db.collection('answer').where('_to', '==', context.data._to).where('_from', '==', context.data._from);
-    
-    const res = await query.get();
-    if(res._size > 0)
+    const vote = await context.app.service('answer').find({
+        query: {
+            _from: context.data._from,
+            _to: context.data._to,
+        }
+    });
+    if(vote.length > 0)
         throw Error('You cannot vote 2 times');
     return context;
 };
 
-const preventVoteOnInactivePoll = async (context:HookContext, res:any) => {
-    if(!res.exists)
-        throw Error('Poll does not exist');
-
-    if(res.data().activeStatus !== PollActiveStatus['Live'])
+const preventVoteOnInactivePoll = async (context:HookContext, poll:any) => {
+    if(poll.activeStatus !== PollActiveStatus['Live'])
         throw Error('Poll is not active');
 
     return context;
@@ -29,10 +28,10 @@ const addVisibility = async (context:HookContext, poll:any) => {
 
 const checkPollData = async (context:HookContext) => {
     const key = context.data._from.split('/')[1];
-    const res = await db.collection('poll').doc(key).get();
-    const poll = res.data();
+    const poll = await context.app.service('poll').get(key);
+    console.log(poll);
 
-    context = await preventVoteOnInactivePoll(context,res);
+    context = await preventVoteOnInactivePoll(context,poll);
     context = await addVisibility(context,poll);
     
     return context;
@@ -76,7 +75,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, checkPollData, preventMultipleVotes, addVisibility, addUserData, addLastChangedTime, incrementCounter],
+        create: [checkPollData, preventMultipleVotes, addUserData, addLastChangedTime, incrementCounter],
         update: [],
         patch: [],
         remove: []
