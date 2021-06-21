@@ -18,7 +18,8 @@ module.exports = {
         '2xl': ['17px', '24px'], //h4
         '3xl': ['20px', '28px'], //h3
         '4xl': ['24px', '32px'], //h2
-        '5xl': ['28px', '36px'], //h1
+        '4.5xl': ['28px', '36px'],
+        '5xl': ['36px', '44px'], //h1
       },
       borderRadius: {
         'xl': '1.5rem'

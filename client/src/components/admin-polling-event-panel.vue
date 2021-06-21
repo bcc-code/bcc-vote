@@ -4,7 +4,7 @@
             <label class="text-gray-700">{{formattedDate}}</label>
             <div class="flex justify-between items-center mb-1">
                 <div class="flex gap-5 items-center">
-                    <h1 class="font-bold">{{pollingEvent.title}}</h1>
+                    <div class="font-bold text-4.5xl">{{pollingEvent.title}}</div>
                     <EventStatus :status="pollingEvent.status"/>
                 </div>
                 <div class="flex items-center gap-3">
