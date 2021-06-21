@@ -37,7 +37,7 @@ export default defineComponent({
             loadedAllAnswers: false,
             loaded: false as boolean,
             allAnswers: [] as Array<Answer>,
-            votersLoadedFromFind: [] as Array<String>,
+            answerIdsFromFind: [] as Array<String>,
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
@@ -123,15 +123,15 @@ export default defineComponent({
             }).catch(this.$showError);
             this.loadedAllAnswers = true;
             this.allAnswers = res;
-            this.votersLoadedFromFind = res.map((ans: Answer) => ans._to)
+            this.answerIdsFromFind = res.map((ans: Answer) => ans._key)
         },
-        isVoterAlreadyCounted(id: string){
-            return this.votersLoadedFromFind.indexOf(id) >= 0
+        isVoterAlreadyCounted(key: string){
+            return this.answerIdsFromFind.indexOf(key) >= 0
         },
         addAnswer(answer: Answer){
             if(answer._from !== this.poll._id)
                 return;
-            if(this.isVoterAlreadyCounted(answer._to))
+            if(this.isVoterAlreadyCounted(answer._key))
                 return;
 
             this.allAnswers.unshift(answer)
