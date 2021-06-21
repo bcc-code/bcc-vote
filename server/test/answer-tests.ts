@@ -51,6 +51,24 @@ describe('Form Validation', async () => {
         }
     });
 
+    it('answer -> Create with custom key', async () => {
+        try {
+            //Activate poll
+            await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
+            const answer = {
+                _from: poll._id,
+                _to: user._id,
+                answerId: 122131232,
+                pollingEventId: poll.pollingEventId
+            };
+            await sleep(300);
+            const result = await app.service('answer').create(answer,{ user}) as Answer;
+            assert.equal(result._key,poll._key+'-'+user._key);
+        } catch (error) {
+            assert.fail(error.message);
+        }
+    });
+
     it('answer -> Unable to answer twice', async () => {
         try {
             //Activate poll
