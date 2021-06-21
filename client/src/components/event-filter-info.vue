@@ -1,34 +1,34 @@
 <template>
-    <div class="flex flex-wrap gap-x-2 text-xl">
+    <div class="flex flex-wrap gap-x-2">
         <div>
-            <span class="text-gray-700">
+            <label class="text-gray-700">
                 {{$t('labels.church')}}:
-            </span>
-            <span>
+            </label>
+            <label>
                 {{filter.org}}
-            </span>
+            </label>
         </div>
         <div v-if="filter.minAge || filter.maxAge">
-            <span class="text-gray-700">
+            <label class="text-gray-700">
                 {{$t('labels.age')}}:
-            </span>
-            <span v-if="!filter.maxAge">O</span>
-            <span>
+            </label>
+            <label v-if="!filter.maxAge">O</label>
+            <label>
                 {{filter.minAge}}
-            </span>
-            <span v-if="filter.minAge && filter.maxAge">-</span>
-            <span v-if="!filter.minAge">U</span>
-            <span>
+            </label>
+            <label v-if="filter.minAge && filter.maxAge">-</label>
+            <label v-if="!filter.minAge">U</label>
+            <label>
                 {{filter.maxAge}}
-            </span>
+            </label>
         </div>
         <div>
-            <span class="text-gray-700">
+            <label class="text-gray-700">
                 {{$t('labels.role')}}:
-            </span>
-            <span>
+            </label>
+            <label>
                 {{filter.role}}
-            </span>
+            </label>
         </div>
     </div>
 </template>
