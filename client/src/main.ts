@@ -27,7 +27,7 @@ const app = createApp(App)
 
 app.component('Spinner', Spinner)
 app.component('InfoBox', InfoBox)
-app.use(Toast,{duration:2000, positionX: 'right',positionY:'bottom', disableClick: true})
+app.use(Toast,{duration:2000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
@@ -35,7 +35,13 @@ app.use(store)
 app.mixin({
     methods: {
         $showError(error: Error) {
-            this.$toast(error,{ class: 'error' })
+            const settings = {
+                class: 'error'
+            } as any
+            if(window.screen.width < 640){
+                settings.positionY = 'top'
+            }
+            this.$toast(error, settings)
         }
     },
     computed: {
