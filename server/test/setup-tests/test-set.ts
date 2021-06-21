@@ -84,13 +84,13 @@ function pollingEventsTestSet(){
             return await pollSvc.get('504310091');
         },
         anonymousAnswer: async () => {
-            return await answerSvc.get('113343');
+            return await answerSvc.get('39639');
         },
         nonpublicAnswer: async () => {
-            return await answerSvc.get('113280');
+            return await answerSvc.get('39610');
         },
         publicAnswer: async () => {
-            return await answerSvc.get('113226');
+            return await answerSvc.get('39571');
         }
     };
 
