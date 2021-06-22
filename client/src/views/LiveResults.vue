@@ -46,8 +46,8 @@ export default defineComponent({
         this.$client.io.on('reconnect', this.init)
     },
     computed: {
-        ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
-        ...mapState('result', ['pollingEvent','polls','answers']),
+        ...mapGetters('result',['sortedOptions','answerCount']),
+        ...mapState('result', ['pollingEvent','polls','answers', 'activePoll']),
         isEventLive(): boolean {
             return this.pollingEvent && this.pollingEvent.status === PollingEventStatus['Live']
         },
@@ -80,16 +80,15 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations('result',['UPDATE_POLL_RESULT']),
-        ...mapActions('result',['getPollingEvent', 'getPollResult', 'findPolls','findAnswers','patchedPoll', 'addedAnswer']),
+        ...mapActions('result',['getPollingEvent', 'getPollResult', 'getActivePoll','findAnswers','patchedPoll', 'addedAnswer']),
         async init() {
             this.loading = true
             const pollingEventKey = this.$route.params.id
             try {
                 await this.getPollingEvent(pollingEventKey)
-                await this.findPolls()
+                await this.getActivePoll()
                 if(this.activePoll) {
-                    await this.getPollResult()
-                    await this.findAnswers()
+                    await this.refreshAnswers();
                 }
             } catch(err) {
                 this.$showError(err)
@@ -98,11 +97,10 @@ export default defineComponent({
         },
         async refreshAnswers() {
             this.loading = true
-            try {
-                await this.findAnswers()
-            } catch(err) {
-                this.$showError(err)
-            }
+            const promises = []
+            promises.push(this.findAnswers())
+            promises.push(this.getPollResult())
+            await Promise.all(promises).catch(err => {this.$showError(err)})
             this.loading = false
         }
     },
