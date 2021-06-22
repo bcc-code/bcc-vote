@@ -193,7 +193,13 @@ const purgeErrors = async (context: HookContext) => {
 }
 
 const logErrors = async (context: HookContext) => {
-    console.error(context.error.name ,'from app.hooks.ts:', context.error.message,'during', context.method, context.path);
+    const errorEntry = {
+        severity: 'ERROR',
+        message: [context.error.name ,'from app.hooks.ts:', context.error.message,'during', context.method, context.path].concat(),
+        component: [context.method,'-',context.path].concat()
+    };
+    console.log(JSON.stringify(errorEntry));
+    console.log(context.error.name ,'from app.hooks.ts:', context.error.message,'during', context.method, context.path);
 }
 
 export default {
