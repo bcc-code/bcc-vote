@@ -2,19 +2,7 @@ import { HookContext } from "@feathersjs/feathers";
 import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
-const preventMultipleVotes= async (context: HookContext) => {
-    const vote = await context.app.service('answer').find({
-        query: {
-            _from: context.data._from,
-            _to: context.data._to,
-        }
-    });
-    if(vote.length > 0)
-        throw Error('You cannot vote 2 times');
-    return context;
-};
-
-const preventVoteOnInactivePoll = async (context:HookContext) => {
+const preventVoteOnInactivePoll = async (context:HookContext):Promise<HookContext> => {
     const key = context.data._from.split('/')[1];
     const res = await context.app.service('poll').get(key);
 
@@ -24,7 +12,7 @@ const preventVoteOnInactivePoll = async (context:HookContext) => {
     return context;
 };
 
-const addUserData = async (context:HookContext) => {
+const addUserData = (context:HookContext):HookContext => {
     const { user } = context.params;
     if(!user) {
         throw Error('User is undefined');
@@ -38,31 +26,45 @@ const addUserData = async (context:HookContext) => {
     return context;
 };
 
-const incrementCounter = async (context:HookContext) => {
-    const { data } = context;
-    const pollKey = data._from.split('/')[1];
+const addCustomKey = async (context:HookContext):Promise<HookContext> => {
+    const pollKey = context.data._from.split('/')[1];
+    context.data._key = pollKey+'-'+context.params?.user?._key;
+
+    return context;
+};
+
+const incrementCounter = async (context:HookContext):Promise<HookContext> => {
+    const { result } = context;
+    const pollKey = result._from.split('/')[1];
     const pollRef = db.collection('poll-result').doc(pollKey);
 
     const countUpdate = {} as any;
-    countUpdate['answerCount.'+context.data.answerId] = FieldValue.increment(1);
+    countUpdate['answerCount.'+result.answerId] = FieldValue.increment(1);
 
     await pollRef.update(countUpdate);
 
     return context;
 };
 
-const addLastChangedTime = (context: HookContext) => {
+const addLastChangedTime = (context: HookContext):HookContext => {
     const { data } = context;
     data.lastChanged = Date.now();
     return context;
 };
+
+const handleMultipleVotesError = (context: HookContext):HookContext => {
+    if(context.error.code === 409)
+        throw Error('You cannot vote 2 times');
+    return context;
+};
+
 
 export default {
     before: {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, preventMultipleVotes, addUserData, addLastChangedTime, incrementCounter],
+        create: [preventVoteOnInactivePoll, addUserData, addCustomKey, addLastChangedTime],
         update: [],
         patch: [],
         remove: []
@@ -71,7 +73,7 @@ export default {
         all: [],
         find: [],
         get: [],
-        create: [],
+        create: [incrementCounter],
         update: [],
         patch: [],
         remove: []
@@ -80,7 +82,7 @@ export default {
         all: [],
         find: [],
         get: [],
-        create: [],
+        create: [handleMultipleVotesError],
         update: [],
         patch: [],
         remove: []
