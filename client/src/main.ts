@@ -38,7 +38,7 @@ app.mixin({
             const settings = {
                 class: 'error'
             } as any
-            if(window.screen.width < 640){
+            if(window.innerWidth < 640){
                 settings.positionY = 'top'
             }
             this.$toast(error, settings)
