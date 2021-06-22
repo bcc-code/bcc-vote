@@ -6,7 +6,7 @@ export default async function(message?:string):Promise<any> {
     const isLocal = process.env.VOTE_API_BASE_URL === 'https://localhost:4040';
 
     const projectId = 'bcc-vote';
-    const logName = 'cloudbuild';
+    const logName = 'stdout';
     const logging = new Logging({projectId});
 
     // Selects the log to write to
@@ -18,7 +18,9 @@ export default async function(message?:string):Promise<any> {
   
     // The metadata associated with the entry
     const metadata = {
-        resource: {type: 'global'},
+        resource: {
+            type: 'cloud_run_revision'
+        },
         severity: 'ERROR',
     };
   
