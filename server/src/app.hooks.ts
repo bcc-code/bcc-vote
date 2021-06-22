@@ -192,38 +192,39 @@ const purgeErrors = async (context: HookContext) => {
     }
 }
 
-const logErrors = async (context: HookContext) => {
+const logErrors = (context: HookContext):void => {
+    console.log(context.error);
     console.error(context.error.name ,'from app.hooks.ts:', context.error.message,'during', context.method, context.path);
-}
+};
 
 export default {
-  before: {
-    all: [startAuthenticationAtTheStartOfRequest],
-    find: [],
-    get: [],
-    create: [checkAbilityWithFullFieldAccess],
-    update: [checkAbilityWithFullFieldAccess],
-    patch: [checkPatchBody, checkPatchAbility],
-    remove: [checkRemoveAbility]
-  },
+    before: {
+        all: [startAuthenticationAtTheStartOfRequest],
+        find: [],
+        get: [],
+        create: [checkAbilityWithFullFieldAccess],
+        update: [checkAbilityWithFullFieldAccess],
+        patch: [checkPatchBody, checkPatchAbility],
+        remove: [checkRemoveAbility]
+    },
 
-  after: {
-    all: [endAuthenticationAtEndOfRequest],
-    find: [checkFindAbility],
-    get: [checkGetAbility],
-    create: [],
-    update: [],
-    patch: [checkGetAbility],
-    remove: []
-  },
+    after: {
+        all: [endAuthenticationAtEndOfRequest],
+        find: [checkFindAbility],
+        get: [checkGetAbility],
+        create: [],
+        update: [],
+        patch: [checkGetAbility],
+        remove: []
+    },
 
-  error: {
-    all: [purgeErrors, logErrors],
-    find: [],
-    get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
-  }
+    error: {
+        all: [purgeErrors, logErrors],
+        find: [],
+        get: [],
+        create: [],
+        update: [],
+        patch: [],
+        remove: []
+    }
 };

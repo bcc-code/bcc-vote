@@ -8,7 +8,7 @@ import app from '../src/app';
 
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string): string => url.format({
-    hostname: app.get('host') || 'localhost',
+    hostname: app.get('host') || '127.0.0.1',
     protocol: 'http',
     port,
     pathname

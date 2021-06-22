@@ -59,7 +59,7 @@ app.mixin({
 })
 
 const client = feathers()
-const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`,{
+const socket = io(window.location.hostname === '127.0.0.1' ? 'http://127.0.0.1:4040' : `${location.origin}`,{
     transports:["websocket", "polling"]
 })
 
