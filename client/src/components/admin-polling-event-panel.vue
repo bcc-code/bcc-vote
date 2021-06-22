@@ -1,8 +1,12 @@
 <template>
     <div class="form-section padding-md">
         <template v-if="!edit">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="font-bold">{{pollingEvent.title}}</h2>
+            <label class="text-gray-700">{{formattedDate}}</label>
+            <div class="flex justify-between items-center mb-1">
+                <div class="flex gap-5 items-center">
+                    <div class="font-bold text-4.5xl">{{pollingEvent.title}}</div>
+                    <EventStatus :status="pollingEvent.status"/>
+                </div>
                 <div class="flex items-center gap-3">
                     <CopyText :toCopy="eventUrl">
                         <LinkIcon @click="getLink" class="text-blue-900 cursor-pointer h-6 w-6 p-0.5"/>
@@ -13,26 +17,33 @@
                     </button>
                 </div>
             </div>
-            <p v-if="pollingEvent.description" class="text-gray-700 mb-2">{{pollingEvent.description}}</p>
+            <p v-if="pollingEvent.description" class="mb-2">{{pollingEvent.description}}</p>
 
             <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
-            <div class="w-full flex flex-col gap-4 md:flex-row md:gap-10 justify-center mt-8 ">
-                <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button px-15" @click="archivePollingEvent">
+            <div class="w-full flex flex-col gap-4 md:flex-row md:gap-10 justify-center mt-8">
+                <button v-if="isEventNotStarted || isEventFinished" class=" bg-gray-200 text-blue-900 activation-button" @click="archivePollingEvent">
                     {{$t('actions.archive-polling-event')}}
                 </button>
-                <button v-if="isEventNotStarted" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
+                <button v-if="isEventNotStarted" class="bg-green-500 text-white activation-button" @click="startPollingEvent">
                     {{$t('actions.start-polling-event')}}
                 </button>
-                <button v-else-if="isEventLive" class="bg-red-500 text-white activation-button px-10" @click="closePollingEvent">
+                <button v-else-if="isEventLive" class="bg-red-500 text-white activation-button px-10" @click="closeConfirmation = true">
                     {{$t('actions.close-polling-event')}}
                 </button>
-                <button v-else-if="isEventFinished" class="bg-green-500 text-white activation-button px-10" @click="startPollingEvent">
+                <button v-else-if="isEventFinished" class="bg-green-500 text-white activation-button" @click="startPollingEvent">
                     {{$t('actions.restart-polling-event')}}
                 </button>
-                <button v-else class="bg-green-500 text-white activation-button px-10" @click="closePollingEvent">
+                <button v-else class="bg-green-500 text-white activation-button" @click="closePollingEvent">
                     {{$t('actions.unarchive-polling-event')}}
                 </button>
             </div>
+            <transition name="fade">
+            <ConfirmPopover v-if="closeConfirmation" @resign="closeConfirmation = false" @cancel="closeConfirmation = false" @confirm="closePollingEvent" cancelTranslation="cancel" confirmTranslation="yes-continue">
+                <h3 class="font-bold mb-6 text-center">{{$t(`labels.sure-close-event`)}}
+                </h3>
+                <p class="text-gray-700 mb-4 text-center">{{$t(`info.close-event`)}}</p>
+            </ConfirmPopover>
+        </transition>
         </template>
         <template v-else>
             <PollingEventForm :pollingEvent="pollingEvent" @close="edit = false" @finish="updateEvent"/>
@@ -45,9 +56,12 @@
 import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
 import LinkIcon from 'heroicons-vue3/outline/LinkIcon'
 import CopyText from './copy-text.vue'
+import ConfirmPopover from './confirm-popover.vue'
 import FilterInfo from './event-filter-info.vue'
+import EventStatus from './polling-event-status.vue'
 
 import { PollingEvent, PollingEventStatus} from '../domain'
+import moment from 'moment'
 
 import { defineComponent, PropType } from 'vue'
 import PollingEventForm from './polling-event-form.vue'
@@ -57,7 +71,9 @@ export default defineComponent({
         LinkIcon,
         CopyText,
         PollingEventForm,
-        FilterInfo
+        FilterInfo,
+        EventStatus,
+        ConfirmPopover
     },
     props: {
         pollingEvent: {type: Object as PropType<PollingEvent>, required: true}
@@ -65,9 +81,13 @@ export default defineComponent({
     data() {
         return {
             edit: false,
+            closeConfirmation: false
         }
     },
     computed: {
+        formattedDate():string {
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:MM")
+        },
         eventUrl():string{
             return location.origin + '/polling-event/lobby/' + this.pollingEvent._key
         },
@@ -96,6 +116,7 @@ export default defineComponent({
             }).catch(this.$showError)
         },
         closePollingEvent() {
+            this.closeConfirmation = false
             this.$client.service('polling-event').patch(this.$route.params.id, {
               status: PollingEventStatus['Finished']
             }).then(() => {
@@ -131,7 +152,8 @@ export default defineComponent({
         @apply font-bold;
         @apply text-lg;
         @apply rounded-full;
-        @apply py-3
+        @apply py-3;
+        @apply px-5;
     }
 
 </style>
