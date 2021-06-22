@@ -6,7 +6,7 @@ export interface ResultState {
   pollingEvent?: PollingEvent,
   activePoll?: Poll,
   pollResult?: PollResult,
-  answers: Array<Answer>,
+  answers?: Array<Answer>,
   answerIdsFromFind?: Set<string>
 }
 
@@ -14,7 +14,11 @@ export interface ResultState {
 const result: Module<ResultState,RootState> = ({
     namespaced: true,
     state: ():ResultState => ({
-        answers: [],
+        pollingEvent: undefined,
+        activePoll: undefined,
+        pollResult: undefined,
+        answers: undefined,
+        answerIdsFromFind: undefined
     }),
     mutations: {
         'UPDATE_POLLING_EVENT': (state:ResultState, value:PollingEvent) => (state.pollingEvent = value),
@@ -39,6 +43,8 @@ const result: Module<ResultState,RootState> = ({
             const activePoll = await store.$client.service('poll').find({query})
             if(activePoll.length > 0)
                 commit('UPDATE_ACTIVE_POLL', activePoll[0])
+            else
+                commit('UPDATE_ACTIVE_POLL', undefined)
         },
         async findAnswers({ commit, state }) {
             if(!state.activePoll)
@@ -60,9 +66,9 @@ const result: Module<ResultState,RootState> = ({
         patchedPoll({commit,state}, patchedPoll:Poll) {
             if(!state.pollingEvent || patchedPoll.pollingEventId !== state.pollingEvent._key)
                 return;
-            if(patchedPoll.activeStatus === PollActiveStatus['Live'])
+            if(!state.activePoll && patchedPoll.activeStatus === PollActiveStatus['Live'])
                 commit('UPDATE_ACTIVE_POLL',patchedPoll)
-            else
+            else if(state.activePoll && patchedPoll._id === state.activePoll._id && patchedPoll.activeStatus === PollActiveStatus['Finished'])
                 commit('UPDATE_ACTIVE_POLL', undefined)
         },
         addedAnswer({commit,state}, addedAnswer:Answer) {
