@@ -6,7 +6,7 @@ export default async function(message?:string):Promise<any> {
     const isLocal = process.env.VOTE_API_BASE_URL === 'https://localhost:4040';
 
     const projectId = 'bcc-vote';
-    const logName = 'test-log';
+    const logName = 'cloudbuild';
     const logging = new Logging({projectId});
 
     // Selects the log to write to
