@@ -1,14 +1,32 @@
-import { createLogger, format, transports } from 'winston';
+import { Logging } from '@google-cloud/logging';
+  
+export default async function(message?:string):Promise<any> {
+    // Creates a client
 
-const logger = createLogger({
-  level: 'info',
-  format: format.combine(
-    format.splat(),
-    format.simple()
-  ),
-  transports: [
-    new transports.Console()
-  ],
-});
+    const isLocal = process.env.VOTE_API_BASE_URL === 'https://localhost:4040';
 
-export default logger;
+    const projectId = 'bcc-vote';
+    const logName = 'test-log';
+    const logging = new Logging({projectId});
+
+    // Selects the log to write to
+    const log = logging.log(logName);
+  
+    // return log;
+    // The data to write to the log
+    const text = message ? message : 'Testing logging, this is a fake Error';
+  
+    // The metadata associated with the entry
+    const metadata = {
+        resource: {type: 'global'},
+        severity: 'ERROR',
+    };
+  
+    const entry = log.entry(metadata, text);
+  
+    if(!isLocal) {
+        await log.write(entry);
+    } else {
+        console.log(`Logged: ${text}`);
+    }
+}
