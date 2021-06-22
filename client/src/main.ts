@@ -35,7 +35,13 @@ app.use(store)
 app.mixin({
     methods: {
         $showError(error: Error) {
-            this.$toast(error,{ class: 'error' })
+            const settings = {
+                class: 'error'
+            } as any
+            if(window.innerWidth < 640){
+                settings.positionY = 'top'
+            }
+            this.$toast(error, settings)
         }
     },
     computed: {
