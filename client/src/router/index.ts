@@ -45,7 +45,7 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
             router.$user.activeRole = user.activeRole
             next()
         } catch(error) {
-            const authEndpoint = window.location.hostname === '127.0.0.1' ? 'http://127.0.0.1:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
+            const authEndpoint = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
             const requiresAuth = error.message === "No accessToken found in storage" || error.message.includes('jwt')
             if(requiresAuth) {
                 location.href = authEndpoint
