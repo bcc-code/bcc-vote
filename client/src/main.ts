@@ -34,7 +34,7 @@ app.use(router)
 app.use(store)
 
 app.use(vueGtag, {
-    config: {id: 'G-JVZ2V5683K'}
+    config: {id: 'G-4KNVYNZ55W'}
 })
 
 app.mixin({
@@ -82,6 +82,7 @@ const user = {
 router.$client = client
 store.$client = client
 router.$user = user
+router.$gtag = app.config.globalProperties.$gtag;
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
 
