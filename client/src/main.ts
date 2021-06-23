@@ -33,9 +33,17 @@ app.use(i18n)
 app.use(router)
 app.use(store)
 
-app.use(vueGtag, {
-    config: {id: 'G-4KNVYNZ55W'}
-})
+if(window.location.hostname === 'vote.bcc.no'){
+    app.use(vueGtag, {
+        config: {id: 'G-6V21WXD03F'}
+    })
+}
+else{
+    app.use(vueGtag, {
+        config: {id: 'G-4KNVYNZ55W'}
+    })
+}
+
 
 app.mixin({
     methods: {
