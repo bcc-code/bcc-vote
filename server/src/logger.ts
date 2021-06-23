@@ -1,7 +1,9 @@
 import { format, createLogger, transports } from 'winston';
 import { LoggingWinston, Options } from '@google-cloud/logging-winston';
 
-const isLocalEnvironment = process.env.VOTE_API_BASE_URL && process.env.VOTE_API_BASE_URL.includes('localhost');
+const isLocalEnvironment = process.env.VOTE_API_BASE_URL?.includes('localhost');
+console.log('isLocalEnvironment:',isLocalEnvironment)
+
 const serviceName = isLocalEnvironment ? 'vote-local' : process.env.K_SERVICE;
 const logOptions = {
     resource: { 
@@ -12,9 +14,6 @@ const logOptions = {
     }
 } as Options;
 const loggingWinston = new LoggingWinston(logOptions);
-
-
-console.log('isLocalEnvironment:',isLocalEnvironment)
 
 const logger = createLogger({
     level: 'error',
