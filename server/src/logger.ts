@@ -13,16 +13,19 @@ const logOptions = {
 } as Options;
 const loggingWinston = new LoggingWinston(logOptions);
 
+
+console.log('isLocalEnvironment:',isLocalEnvironment)
+
 const logger = createLogger({
     level: 'error',
     format: format.combine(
         format.splat(),
         format.simple()
     ),
-    transports: [
-        new transports.Console(),
-        loggingWinston,
-    ],
+    transports: isLocalEnvironment === false ? [
+        loggingWinston, 
+        new transports.Console()
+    ] : [new transports.Console()]
 });
 
 logger.error('Initialized winston!');
