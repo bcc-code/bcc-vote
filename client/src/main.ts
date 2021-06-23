@@ -34,7 +34,7 @@ app.use(router)
 app.use(store)
 
 app.use(vueGtag, {
-    config: {id: 'G-0C22L15DHS'}
+    config: {id: 'G-4KNVYNZ55W'}
 })
 
 app.mixin({
