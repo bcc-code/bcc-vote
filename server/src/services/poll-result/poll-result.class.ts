@@ -25,7 +25,6 @@ export class PollResult implements ServiceMethods<Data> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async find (params: Params): Promise<Data[] | Paginated<Data>> {
         const query = params.query;
-        console.log('looking for');
         if(!query)
             return [];
         let resultRef = db.collection('poll-result');
