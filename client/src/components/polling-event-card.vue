@@ -28,12 +28,6 @@
         </div>
         <transition name="fade">
             <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToLobby()" cancelTranslation="logout" confirmTranslation="ok-continue">
-                <!-- <div class="text-center">
-                    <h2 class="font-bold mb-6">{{$t('labels.logged-as')}}
-                        <span class="text-blue-900 block md:inline-block">{{$user.displayName}}</span>
-                    </h2>
-                    <p class="text-gray-700">{{$t('info.not-you')}}</p>
-                </div> -->
                 <template v-slot:header>
                     {{$t('labels.logged-as')}}
                     <span class="text-blue-900 block md:inline-block">{{$user.displayName}}</span>
