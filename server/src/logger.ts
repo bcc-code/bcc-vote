@@ -1,10 +1,18 @@
 import { format, createLogger, transports } from 'winston';
-import { LoggingWinston } from '@google-cloud/logging-winston';
+import { LoggingWinston, Options } from '@google-cloud/logging-winston';
 
-const loggingWinston = new LoggingWinston();
+const isLocalEnvironment = process.env.VOTE_API_BASE_URL && process.env.VOTE_API_BASE_URL.includes('localhost');
+const serviceName = isLocalEnvironment ? 'vote-local' : process.env.K_SERVICE;
+const logOptions = {
+    resource: { 
+        type: 'global',
+        labels: {
+            service_name: serviceName,
+        }
+    }
+} as Options;
+const loggingWinston = new LoggingWinston(logOptions);
 
-// Create a Winston logger that streams to Stackdriver Logging
-// Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
 const logger = createLogger({
     level: 'error',
     format: format.combine(

@@ -1,8 +1,12 @@
 import * as authentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
-const { authenticate } = authentication.hooks;
+import logger from '../../logger';
 // Don't remove this comment. It's needed to format import lines nicely.
 
+const log = (context: HookContext) => {
+    logger.error('Finding polling events');
+    return context;
+};
 
 
 const validateAndFormat = (context: HookContext) => {
@@ -35,7 +39,7 @@ const addChannel = async (context: HookContext) => {
 export default {
     before: {
         all: [ ],
-        find: [],
+        find: [log],
         get: [ addChannel ],
         create: [ validateAndFormat, addLastChangedTime ],
         update: [ validateAndFormat, addLastChangedTime ],
