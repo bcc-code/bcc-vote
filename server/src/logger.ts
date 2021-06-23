@@ -3,21 +3,26 @@ import { LoggingWinston, Options } from '@google-cloud/logging-winston';
 
 const isLocalEnvironment = process.env.VOTE_HOSTNAME?.includes('localhost');
 console.log('isLocalEnvironment:',isLocalEnvironment);
+console.log('Service:',process.env.K_SERVICE);
 
-const serviceName = isLocalEnvironment ? 'vote-local' : process.env.K_SERVICE;
-const logOptions = {
-    resource: { 
-        type: 'global',
-        labels: {
-            service_name: serviceName,
-        }
+const serviceName = isLocalEnvironment ? 'localhost' : process.env.K_SERVICE;
+
+const loggingWinston = new LoggingWinston({
+    logName: `${serviceName}-logs`,
+    serviceContext: {
+        service: serviceName
     }
-} as Options;
-const loggingWinston = new LoggingWinston(logOptions);
+});
+
+const addMetaData = format((info:any) => {
+    info.appName = "My Program";
+    return info;
+});
 
 const logger = createLogger({
     level: 'error',
     format: format.combine(
+        addMetaData(),
         format.splat(),
         format.simple()
     ),

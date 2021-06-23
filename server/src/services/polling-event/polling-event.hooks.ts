@@ -5,6 +5,7 @@ import logger from '../../logger';
 
 const log = (context: HookContext) => {
     logger.error('Finding polling events');
+    logger.info('Finding polling events');
     return context;
 };
 
