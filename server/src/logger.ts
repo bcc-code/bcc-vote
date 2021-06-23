@@ -30,6 +30,4 @@ const logger = createLogger({
     ] : [new transports.Console()]
 });
 
-logger.error('Initialized winston!');
-
 export default logger;
