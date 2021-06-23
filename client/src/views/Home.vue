@@ -47,6 +47,7 @@ export default defineComponent({
     },
     created(){
         this.loadPollingEvents()
+        this.$gtag.event('hello world')
     },
     data () {
         return {

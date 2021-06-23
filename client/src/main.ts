@@ -12,6 +12,7 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
+import vueGtag from 'vue-gtag'
 
 const messages = {    
     no: Object.assign({}, require('./localization/no_vote_master.json'))
@@ -31,6 +32,10 @@ app.use(Toast,{duration:2000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
+
+app.use(vueGtag, {
+    config: {id: 'G-0C22L15DHS'}
+})
 
 app.mixin({
     methods: {
