@@ -39,9 +39,8 @@
             </div>
             <transition name="fade">
             <ConfirmPopover v-if="closeConfirmation" @resign="closeConfirmation = false" @cancel="closeConfirmation = false" @confirm="closePollingEvent" cancelTranslation="cancel" confirmTranslation="yes-continue">
-                <h3 class="font-bold mb-6 text-center">{{$t(`labels.sure-close-event`)}}
-                </h3>
-                <p class="text-gray-700 mb-4 text-center">{{$t(`info.close-event`)}}</p>
+                <template v-slot:header>{{$t('labels.sure-close-event')}}</template>
+                <template v-slot:description>{{$t('info.close-event')}}</template>
             </ConfirmPopover>
         </transition>
         </template>
