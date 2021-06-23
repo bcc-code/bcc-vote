@@ -1,5 +1,6 @@
 import { Database } from "arangojs";
 import type { PersistentIndex } from 'arangojs/indexes';
+import logger from '../../src/logger';
 
 
 const up = async (db: Database): Promise<boolean> => {
@@ -59,7 +60,7 @@ const up = async (db: Database): Promise<boolean> => {
 
         return true;
     } catch (error) {
-        console.log('There was an error with running migration 002: ', error);
+        logger.error('There was an error with running migration 002: ', error);
         return true;
     }
 
@@ -70,7 +71,7 @@ const down = async (db: Database) => {
 
         return true;
     } catch (error) {
-        console.log('There was an error with downgrading migration 002: ', error);
+        logger.error('There was an error with downgrading migration 002: ', error);
         return false;
     }
 

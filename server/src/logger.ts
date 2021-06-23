@@ -1,10 +1,7 @@
 import { format, createLogger, transports } from 'winston';
-import { LoggingWinston, Options } from '@google-cloud/logging-winston';
+import { LoggingWinston } from '@google-cloud/logging-winston';
 
 const isLocalEnvironment = process.env.VOTE_HOSTNAME?.includes('localhost');
-console.log('isLocalEnvironment:',isLocalEnvironment);
-console.log('Service:',process.env.K_SERVICE);
-
 const serviceName = isLocalEnvironment ? 'localhost' : process.env.K_SERVICE;
 
 const loggingWinston = new LoggingWinston({
