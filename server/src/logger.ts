@@ -14,15 +14,16 @@ const loggingWinston = new LoggingWinston({
     }
 });
 
-const addMetaData = format((info:any) => {
-    info.appName = "My Program";
-    return info;
-});
-
 const logger = createLogger({
-    level: 'error',
+    defaultMeta: {
+        resource: {
+            labels: {
+                configuration_name: serviceName,
+                service_name: serviceName
+            }
+        }
+    },
     format: format.combine(
-        addMetaData(),
         format.splat(),
         format.simple()
     ),
