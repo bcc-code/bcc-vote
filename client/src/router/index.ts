@@ -28,7 +28,7 @@ function logout() {
 
 router.beforeEach(async(to: any, from: any, next: Function) => {
     router.$client.io.removeListener('reconnect')
-    router.$gtag.event(`visit ${to.name}`)
+    router.$gtag.event('page_view', {'page_title': to.name})
     if(to.meta.unprotected){
         next()
     } else if(to.meta.logout){
