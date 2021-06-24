@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
-import { captureException, captureMessage} from '@sentry/browser'
+import { captureException } from '@sentry/browser'
 
 const router: any = createRouter({
     history: createWebHistory(process.env.BASE_URL),
