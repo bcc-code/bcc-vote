@@ -8,18 +8,18 @@ const loggingWinston = new LoggingWinston({
     logName: `${serviceName}-logs`,
     serviceContext: {
         service: serviceName
-    }
+    },
+    resource: {
+        type: 'cloud_run_revision',
+        labels: {
+            project_id: 'bcc-vote',
+            service_name: serviceName,
+            configuration_name: serviceName
+        } as any
+    },
 });
 
 const logger = createLogger({
-    defaultMeta: {
-        resource: {
-            labels: {
-                configuration_name: serviceName,
-                service_name: serviceName
-            }
-        }
-    },
     format: format.combine(
         format.splat(),
         format.simple()

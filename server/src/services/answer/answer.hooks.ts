@@ -55,7 +55,7 @@ const addLastChangedTime = (context: HookContext):HookContext => {
 
 const handleMultipleVotesError = (context: HookContext):HookContext => {
     if(context.error.code === 409) {
-        logger.error('User tried to vote twice');
+        logger.info('User tried to vote twice');
         throw new Error('You cannot vote 2 times');
     }
     return context;

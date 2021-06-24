@@ -195,7 +195,7 @@ const purgeErrors = async (context: HookContext) => {
 
 const logErrors = (context: HookContext) => {
     const message = [context.error.name, 'from app.hooks.ts:', context.error.message, 'during', context.method, context.path].join(' ');
-    logger.error(message);
+    logger.info(message);
 };
 
 export default {
