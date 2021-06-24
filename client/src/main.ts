@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
-import { captureException, init, setTag } from '@sentry/browser'
+import { captureException, captureMessage, init, setTag } from '@sentry/browser'
 import vueGtag from 'vue-gtag'
 
 const messages = {    
@@ -51,7 +51,11 @@ app.mixin({
             const personID = app.config.globalProperties.$user?.personID
             if(personID)
                 setTag('personID', personID)
-            captureException(error)
+            if(error.message.includes('Validation Error') || error.message === 'You cannot vote 2 times')
+                captureMessage(error.message);
+            else
+                captureException(error)
+
             const settings = {
                 class: 'error'
             } as any
@@ -91,11 +95,6 @@ const user = {
     roles: null,
     activeRole: ''
 }
-
-app.config.errorHandler = (error, _, info) => {
-    setTag('info', info);
-    captureException(error);
-};
 
 init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 
