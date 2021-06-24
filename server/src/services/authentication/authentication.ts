@@ -8,7 +8,8 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import pick from 'lodash/pick';
-import { getRolesForPerson } from './authentication-helpers'
+import { getRolesForPerson } from './authentication-helpers';
+import logger from '../../logger';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -24,7 +25,7 @@ class Auth0Strategy extends OAuthStrategy {
         let member:any = {};
         try {
             member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
-            console.log(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
+            logger.info(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
             member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
 
             const { roles, activeRole} = getRolesForPerson(member);
@@ -44,14 +45,14 @@ class Auth0Strategy extends OAuthStrategy {
                 await this.app?.service('user').update(member._key,member);
             }
         } catch (error) {
-            console.error(error.message);
-            console.log(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api, please check if the members api is available and configured correctly`);
-            console.log(`AUTHENTICATE METHOD: Trying to retrieve member with personID:${personID} from local database`);
+            logger.error(error.message);
+            logger.info(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api, please check if the members api is available and configured correctly`);
+            logger.info(`AUTHENTICATE METHOD: Trying to retrieve member with personID:${personID} from local database`);
             member = (await this.app?.service('user').find({ query:{ personID: personID}})).data[0];
             if(member == undefined){
                 throw new Error(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api and local database, its is therefore not possible to log the user in`);
             }
-            console.log(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
+            logger.info(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
         }
         return {
             authentication: { strategy: this.name ? this.name : 'unknown' },

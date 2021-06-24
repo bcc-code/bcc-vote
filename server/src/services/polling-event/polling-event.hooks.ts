@@ -1,9 +1,4 @@
-import * as authentication from '@feathersjs/authentication';
 import { HookContext } from "@feathersjs/feathers";
-const { authenticate } = authentication.hooks;
-// Don't remove this comment. It's needed to format import lines nicely.
-
-
 
 const validateAndFormat = (context: HookContext) => {
     const { data } = context;

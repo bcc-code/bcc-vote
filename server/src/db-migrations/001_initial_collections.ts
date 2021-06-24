@@ -2,6 +2,7 @@ import { Database } from "arangojs";
 import type { DocumentCollection, EdgeCollection } from "arangojs/collection";
 import type { PersistentIndex } from 'arangojs/indexes'
 import type { ArangoSearchView, ArangoSearchViewPropertiesOptions, ArangoSearchViewLink } from "arangojs/view";
+import logger from '../../src/logger';
 
 const up = async (db: Database): Promise<Boolean> => {
   try {
@@ -19,7 +20,7 @@ const up = async (db: Database): Promise<Boolean> => {
 
     return true
   } catch (error) {
-    console.log('There was an error with running migration 001: ', error)
+    logger.error('There was an error with running migration 001: ', error)
     return true;
   }
 
@@ -31,7 +32,7 @@ const down = async (db: Database) => {
 
     return true
   } catch (error) {
-    console.log('There was an error with downgrading migration 001: ', error)
+    logger.error('There was an error with downgrading migration 001: ', error)
     return false;
   }
 

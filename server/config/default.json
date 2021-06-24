@@ -17,7 +17,9 @@
         "scope": ["openid"],
         "key": "VOTE_AUTH0_CLIENT_KEY",
         "secret": "VOTE_AUTH0_CLIENT_SECRET",
-        "subdomain": "VOTE_AUTH0_SUBDOMAIN"
+        "subdomain": "VOTE_AUTH0_SUBDOMAIN",
+        "authorize_url": "https://login.bcc.no/authorize",
+        "access_url": "https://login.bcc.no/oauth/token"
       }
     },
     "entity": "user",
@@ -25,24 +27,17 @@
     "secret": "FEATHERS_JWT_HS256_SECRET",
     "authStrategies": [
       "jwt",
-      "local",
       "auth0"
     ],
     "jwtOptions": {
       "header": {
         "typ": "access"
       },
-      "audience": "https://login.bcc.no",
       "issuer": "feathers",
       "algorithm": "HS256",
       "expiresIn": "1d"
-    },
-    "local": {
-      "usernameField": "email",
-      "passwordField": "password"
     }
   },
-  "nedb": "../data",
   "arangodDB": {
     "username": "VOTE_ARANGODB_USERNAME",
     "password": "VOTE_ARANGODB_PASSWORD",

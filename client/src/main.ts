@@ -12,7 +12,8 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
-import { captureException, init, setTag } from '@sentry/browser';
+import { captureException, init, setTag } from '@sentry/browser'
+import vueGtag from 'vue-gtag'
 
 const messages = {    
     no: Object.assign({}, require('./localization/no_vote_master.json'))
@@ -32,6 +33,17 @@ app.use(Toast,{duration:2000, positionX: 'right',positionY:'bottom'})
 app.use(i18n)
 app.use(router)
 app.use(store)
+
+if(window.location.hostname === 'vote.bcc.no'){
+    app.use(vueGtag, {
+        config: {id: 'G-6V21WXD03F'}
+    })
+}
+
+// to test the analytics locally uncomment code below
+// app.use(vueGtag, {
+//     config: {id: 'G-4KNVYNZ55W'}
+// })
 
 app.mixin({
     methods: {
@@ -90,8 +102,19 @@ init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/58
 router.$client = client
 store.$client = client
 router.$user = user
+router.$gtag = app.config.globalProperties.$gtag;
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
+
+if(app.config.globalProperties.$gtag){
+    client.hooks({
+        before: {
+            all: [(context:any) => {
+                app.config.globalProperties.$gtag.event(context.method+' '+context.path)
+            }]
+        }
+    })
+}
 
 document.title = 'BCC Vote'
 app.mount("#app")

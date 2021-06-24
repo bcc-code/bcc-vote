@@ -1,11 +1,7 @@
 <template>
     <section>
         <div class="max-w-screen-md mx-auto px-4 md:px-6">
-            <div class="flex flex-col justify-center" :style="`height: 10vh`">
-                <div class="text-white">
-                    <h3 class="font-bold">{{pollingEvent.title}}</h3>
-                </div>
-            </div>
+            <h3 class="font-bold text-white py-6">{{pollingEvent.title}}</h3>
             <div v-if="!currentPoll" class="w-full">
                 <InfoBox>{{$t('info.polls-will-appear')}}</InfoBox>
                 <Spinner />

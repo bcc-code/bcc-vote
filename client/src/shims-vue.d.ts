@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     $user: any,
     $client: any,
     $showError: Function,
-    $canAdministratePollingEvents: boolean
+    $canAdministratePollingEvents: boolean,
+    $gtag: any
   }
 }

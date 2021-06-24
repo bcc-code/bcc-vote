@@ -67,7 +67,6 @@ describe('channels', () => {
         try {
             let res:any;
             context.app.service('answer').on('created', (ans:any)=>{
-                console.log('event', ans);
                 if(ans.pollingEventId === app.channels[0])
                     res = ans;
             });
