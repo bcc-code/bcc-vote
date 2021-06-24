@@ -12,11 +12,7 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
-<<<<<<< Updated upstream
-=======
-import vueGtag from 'vue-gtag'
 import { captureException, init, setTag } from '@sentry/browser';
->>>>>>> Stashed changes
 
 const messages = {    
     no: Object.assign({}, require('./localization/no_vote_master.json'))
