@@ -27,9 +27,6 @@ describe('permissions - app ability', async () => {
             const user = await testSet.user();
             const ability = defineAbilityFor(user,activeRole);
             const entity = await (testSet[entityName])() as any;
-
-            console.log('Role',activeRole)
-            console.log('Entity',entity)
             let result = false;
             switch (action) {
             case "create":

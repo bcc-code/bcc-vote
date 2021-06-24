@@ -11,16 +11,16 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/create',
-        name: 'Create a Polling event',
+        name: 'Create Event',
         component: () => require('../views/PollingEventCreate.vue')
     }, 
     {
-        name: 'Administrate the Live polling event',
+        name: 'Administrate Event',
         path: '/polling-event/admin/:id',
         component: () => require('../views/AdminEvent.vue'),
     },
     {
-        name: 'Polling event lobby',
+        name: 'Event Lobby',
         path: '/polling-event/lobby/:id',
         component: () => require('../views/Lobby.vue'),
         meta: {
@@ -28,12 +28,12 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        name: 'Polling event live results',
+        name: 'Event live results',
         path: '/polling-event/live-results/:id',
         component: () => require('../views/LiveResults.vue')
     },
     {
-        name: 'Thank you for participating',
+        name: 'Thank you page',
         path: '/thank-you/:title',
         component: () => require('../views/ThankYou.vue'),
         meta: {
@@ -49,7 +49,7 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        name: 'logout',
+        name: 'Logout',
         path: "/logout",
         component: {},
         meta: {
@@ -58,7 +58,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/error-:message',
-        name: 'error',
+        name: 'Error page',
         component: () => require('../views/Error.vue'),
         meta: {
             unprotected: true 

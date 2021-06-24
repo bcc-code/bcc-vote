@@ -1,4 +1,5 @@
 import { HookContext } from "@feathersjs/feathers";
+import logger from '../../logger';
 import { Answer, PollActiveStatus } from "../../domain";
 import { db, FieldValue } from '../../firestore';
 
@@ -53,8 +54,10 @@ const addLastChangedTime = (context: HookContext):HookContext => {
 };
 
 const handleMultipleVotesError = (context: HookContext):HookContext => {
-    if(context.error.code === 409)
-        throw Error('You cannot vote 2 times');
+    if(context.error.code === 409) {
+        logger.info('User tried to vote twice');
+        throw new Error('You cannot vote 2 times');
+    }
     return context;
 };
 

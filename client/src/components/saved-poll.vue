@@ -37,9 +37,8 @@
         <PollForm v-else :eventId="$route.params.id" :poll="poll" :pollIndex="pollIndex" @close="stopEditing" @delete="deletePoll"/>
         <transition name="fade">
             <ConfirmPopover v-if="changeConfirmation" @resign="changeConfirmation = ''" @cancel="changeConfirmation = ''" @confirm="confirmPollChange" cancelTranslation="cancel" confirmTranslation="yes-continue">
-                    <h3 class="font-bold mb-6 text-center">{{$t(`labels.sure-${changeConfirmation}`)}}
-                    </h3>
-                    <p class="text-gray-700 mb-4 text-center">{{$t(`info.${changeConfirmation}-poll`)}}</p>
+                    <template v-slot:header>{{$t(`labels.sure-${changeConfirmation}`)}}</template>
+                    <template v-slot:description>{{$t(`info.${changeConfirmation}-poll`)}}</template>
             </ConfirmPopover>
         </transition>
     </div>
