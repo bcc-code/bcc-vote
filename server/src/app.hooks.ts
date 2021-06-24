@@ -1,3 +1,4 @@
+import logger from './logger';
 import { HookContext } from "@feathersjs/feathers";
 import { defineAbilityFor,  } from './permissions/appAbility'
 import {authenticateExternal } from './services/authentication/customAuthentication'
@@ -192,9 +193,10 @@ const purgeErrors = async (context: HookContext) => {
     }
 }
 
-const logErrors = async (context: HookContext) => {
-    console.error(context.error.name ,'from app.hooks.ts:', context.error.message,'during', context.method, context.path);
-}
+const logErrors = (context: HookContext) => {
+    const message = [context.error.name, 'from app.hooks.ts:', context.error.message, 'during', context.method, context.path].join(' ');
+    logger.info(message);
+};
 
 export default {
   before: {

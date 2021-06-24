@@ -113,7 +113,6 @@ describe('Form Validation', async () => {
             await sleep(300);
 
             let results = await app.service('poll-result').get(poll._key) as any;
-            console.log(results);
             assert.equal(results.answerCount['1'], 0);
             assert.equal(results.answerCount['2'], 0);
             
