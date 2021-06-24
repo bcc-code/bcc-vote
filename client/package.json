@@ -14,6 +14,7 @@
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
     "@popperjs/core": "^2.9.2",
+    "@sentry/browser": "^6.7.2",
     "autoprefixer": "^9.0.0",
     "core-js": "^3.6.5",
     "excel4node": "^1.7.2",

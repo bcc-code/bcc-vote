@@ -12,6 +12,11 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
+<<<<<<< Updated upstream
+=======
+import vueGtag from 'vue-gtag'
+import { captureException, init, setTag } from '@sentry/browser';
+>>>>>>> Stashed changes
 
 const messages = {    
     no: Object.assign({}, require('./localization/no_vote_master.json'))
@@ -35,6 +40,10 @@ app.use(store)
 app.mixin({
     methods: {
         $showError(error: Error) {
+            const personID = app.config.globalProperties.$user?.personID
+            if(personID)
+                setTag('personID', personID)
+            captureException(error)
             const settings = {
                 class: 'error'
             } as any
@@ -42,6 +51,7 @@ app.mixin({
                 settings.positionY = 'top'
             }
             this.$toast(error, settings)
+
         }
     },
     computed: {
@@ -73,6 +83,13 @@ const user = {
     roles: null,
     activeRole: ''
 }
+
+app.config.errorHandler = (error, _, info) => {
+    setTag('info', info);
+    captureException(error);
+};
+
+init({dsn: 'https://dbf27d5d8fb240fca38d556b88643510@o878549.ingest.sentry.io/5830437'})
 
 router.$client = client
 store.$client = client
