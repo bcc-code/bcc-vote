@@ -85,7 +85,7 @@ app.config.errorHandler = (error, _, info) => {
     captureException(error);
 };
 
-init({dsn: 'https://dbf27d5d8fb240fca38d556b88643510@o878549.ingest.sentry.io/5830437'})
+init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 
 router.$client = client
 store.$client = client
