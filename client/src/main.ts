@@ -63,7 +63,6 @@ app.mixin({
                 settings.positionY = 'top'
             }
             this.$toast(error, settings)
-
         }
     },
     computed: {
