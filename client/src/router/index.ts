@@ -47,8 +47,6 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
             router.$user.personID = user.personID
             router.$user.roles = user.roles
             router.$user.activeRole = user.activeRole
-            
-            throw Error('something went wrong')
             next()
             
         } catch(error) {
