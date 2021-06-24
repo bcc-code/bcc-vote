@@ -39,7 +39,7 @@ if(window.location.hostname === 'vote.bcc.no'){
     })
 }
 
-// to use test the analytics locally uncomment code below
+// to test the analytics locally uncomment code below
 // app.use(vueGtag, {
 //     config: {id: 'G-4KNVYNZ55W'}
 // })
