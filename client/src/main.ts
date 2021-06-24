@@ -38,12 +38,11 @@ if(window.location.hostname === 'vote.bcc.no'){
         config: {id: 'G-6V21WXD03F'}
     })
 }
-else{
-    app.use(vueGtag, {
-        config: {id: 'G-4KNVYNZ55W'}
-    })
-}
 
+// to use test the analytics locally uncomment code below
+// app.use(vueGtag, {
+//     config: {id: 'G-4KNVYNZ55W'}
+// })
 
 app.mixin({
     methods: {
@@ -93,6 +92,16 @@ router.$user = user
 router.$gtag = app.config.globalProperties.$gtag;
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
+
+if(app.config.globalProperties.$gtag){
+    client.hooks({
+        before: {
+            all: [(context:any) => {
+                app.config.globalProperties.$gtag.event(context.method+' '+context.path)
+            }]
+        }
+    })
+}
 
 document.title = 'BCC Vote'
 app.mount("#app")
