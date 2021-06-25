@@ -112,7 +112,7 @@ export default defineComponent({
               status: PollingEventStatus['Live']
             }).then(() => {
                this.$emit('reloadPollingEvent')
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
         },
         closePollingEvent() {
             this.closeConfirmation = false
@@ -120,14 +120,14 @@ export default defineComponent({
               status: PollingEventStatus['Finished']
             }).then(() => {
                 this.$emit('reloadPollingEvent')
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
         },
         archivePollingEvent(){
             this.$client.service('polling-event').patch(this.$route.params.id, {
               status: PollingEventStatus['Archived']
             }).then(() => {
                 this.$emit('reloadPollingEvent')
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
         },
         getLink(){
             const url = location.origin + '/polling-event/lobby/' + this.pollingEvent._key;

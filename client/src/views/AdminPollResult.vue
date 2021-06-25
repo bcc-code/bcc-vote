@@ -32,7 +32,7 @@ export default defineComponent({
             await this.$client.service('poll').get(this.$route.params.id)
                 .then((res: Poll) => {
                     this.poll = res
-                }).catch(this.$showError)
+                }).catch(this.$handleError)
             this.loaded = true
         }
     }

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
-import { captureException } from '@sentry/browser'
+import { logToSentry } from '../functions/helpers'
 
 const router: any = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -47,6 +47,7 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
             router.$user.personID = user.personID
             router.$user.roles = user.roles
             router.$user.activeRole = user.activeRole
+            throw Error('aa')
             next()
             
         } catch(error) {
@@ -55,7 +56,7 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
             if(requiresAuth) {
                 location.href = authEndpoint
             } else {
-                captureException(error)
+                logToSentry(error)
                 next({ path: "/error-"+error.message})
             }
         }

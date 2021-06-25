@@ -12,7 +12,8 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
-import { captureException, captureMessage, init, setTag } from '@sentry/browser'
+import { init } from '@sentry/browser'
+import { logToSentry } from './functions/helpers'
 import vueGtag from 'vue-gtag'
 
 const messages = {    
@@ -36,25 +37,18 @@ app.use(store)
 
 if(window.location.hostname === 'vote.bcc.no'){
     app.use(vueGtag, {
+        // for testing locally or in dev use G-4KNVYNZ55W
         config: {id: 'G-6V21WXD03F'}
     })
+    
 }
 
-// to test the analytics locally uncomment code below
-// app.use(vueGtag, {
-//     config: {id: 'G-4KNVYNZ55W'}
-// })
+init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 
 app.mixin({
     methods: {
-        $showError(error: Error) {
-            const personID = app.config.globalProperties.$user?.personID
-            if(personID)
-                setTag('personID', personID)
-            if(error.message.includes('Validation Error') || error.message === 'You cannot vote 2 times')
-                captureMessage(error.message);
-            else
-                captureException(error)
+        $handleError(error: Error) {
+            logToSentry(error, this.$user.activerole)
 
             const settings = {
                 class: 'error'
@@ -94,8 +88,6 @@ const user = {
     roles: null,
     activeRole: ''
 }
-
-init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 
 router.$client = client
 store.$client = client

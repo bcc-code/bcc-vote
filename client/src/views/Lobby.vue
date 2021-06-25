@@ -44,7 +44,7 @@ export default defineComponent({
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event')
             .get(this.$route.params.id)
-            .catch(this.$showError) as PollingEvent
+            .catch(this.$handleError) as PollingEvent
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
                 this.goToThankYouPage(this.pollingEvent);
         },
@@ -54,7 +54,7 @@ export default defineComponent({
                     pollingEventId: this.$route.params.id,
                     activeStatus: PollActiveStatus['Live']
                 }
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
             if(res.length > 0)
                 this.currentPoll = res[0]
         },

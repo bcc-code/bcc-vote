@@ -68,7 +68,7 @@ export default defineComponent({
     methods: {
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
-                .catch(this.$showError)
+                .catch(this.$handleError)
             this.isEventLoaded = true
             if(this.isEventFinished || this.isEventArchived)
                 this.currentTab = 'results';
@@ -81,7 +81,7 @@ export default defineComponent({
                         createdAt: 1,
                     }
                 }
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
             this.arePollsLoaded = true;
         },
     } 

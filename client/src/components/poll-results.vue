@@ -109,7 +109,7 @@ export default defineComponent({
             this.loaded = true
         },
         async loadBars(poll:Poll){
-            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$showError)
+            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$handleError)
             this.changeBars(pollResults);
         },
         async loadAllAnswers(poll:Poll){
@@ -120,7 +120,7 @@ export default defineComponent({
                         lastChanged: -1
                     }
                 }
-            }).catch(this.$showError);
+            }).catch(this.$handleError);
             this.loadedAllAnswers = true;
             this.allAnswers = res;
             this.answerIdsFromFind = new Set(res.map((ans: Answer) => ans._key))

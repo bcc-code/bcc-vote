@@ -91,7 +91,7 @@ export default defineComponent({
                     await this.refreshAnswers();
                 }
             } catch(err) {
-                this.$showError(err)
+                this.$handleError(err)
             }
             this.loading = false
         },
@@ -100,7 +100,7 @@ export default defineComponent({
             const promises = []
             promises.push(this.findAnswers())
             promises.push(this.getPollResult())
-            await Promise.all(promises).catch(err => {this.$showError(err)})
+            await Promise.all(promises).catch(err => {this.$handleError(err)})
             this.loading = false
         }
     },

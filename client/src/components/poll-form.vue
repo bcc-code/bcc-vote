@@ -108,13 +108,13 @@ export default defineComponent({
                 this.$client.service('poll').update(this.poll._key, this.pollData)
                     .then(() => {
                         this.$emit('close')
-                    }).catch(this.$showError)
+                    }).catch(this.$handleError)
             }
             else{
                 this.$client.service('poll').create(this.pollData)
                     .then(() => {
                         this.$emit('close')
-                    }).catch(this.$showError)
+                    }).catch(this.$handleError)
             } 
         }
     },
