@@ -10,8 +10,7 @@
                 <div class="flex justify-between mb-5">
                     <StarIcon v-for="i in maxRating" :key="i" class="w-12" @click="rating = i" :style="getColor(i)"/>
                 </div>
-                <!-- <FormField type="string" translation="any-trouble"/> -->
-                <textarea style="resize:none;" v-model="textVal" :rows="textRows"></textarea>
+                <FormField type="textarea" translation="any-trouble" v-model="textVal"/>
             </div>
             <div class="w-full grid grid-cols-2 gap-5 max-w-md mx-auto">
                 <button class="w-full rounded-full p-4 bg-gray-200" @click="showFeedback = false">
@@ -47,7 +46,7 @@ export default defineComponent({
             showFeedback: true,
             maxRating: 5,
             textRows: 4,
-            rating: undefined,
+            rating: 0,
             textVal: "random text",
         }
     },
@@ -71,7 +70,7 @@ export default defineComponent({
 .dialog-size {
     @apply w-full;
     @apply h-full;
-    margin-top:50vh;
+    margin-top:30vh;
 }
 
 @media screen and (min-width: 768px) {

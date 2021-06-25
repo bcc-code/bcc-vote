@@ -26,7 +26,7 @@
         <!-- You should give it the unix timestamp -->
         <DateField v-else-if="type == 'date'"  v-model="model" :placeholder="placeholder" class="box-field"/>
 
-        <textarea v-else-if="type == 'textarea'" v-model="model" :placeholder="placeholder"></textarea>
+        <TextareaField v-else-if="type == 'textarea'" v-model="model" :placeholder="placeholder" class="box-field" />
 
         <XIcon v-if="removable" class="absolute text-gray-800 w-10 h-10 p-3 bottom-0 right-0 cursor-pointer" @click="$emit('remove')"/>
     </section>
@@ -36,6 +36,7 @@ import DateField from './input-date-field.vue'
 import SelectField from './input-select-field.vue'
 import CheckboxField from './input-checkbox-field.vue'
 import RadioField from './input-radio-field.vue'
+import TextareaField from './input-textarea-field.vue'
 import XIcon from 'heroicons-vue3/solid/XIcon'
 
 import { defineComponent,PropType } from 'vue'
@@ -48,6 +49,7 @@ export default defineComponent({
         SelectField,
         CheckboxField,
         RadioField,
+        TextareaField,
         XIcon,
     },
     props: {
