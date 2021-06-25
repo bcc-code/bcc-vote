@@ -63,13 +63,13 @@ export default defineComponent({
             if(ind > -1){
                 await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
                     activeStatus: PollActiveStatus['Finished']
-                }).catch(this.$showError)
+                }).catch(this.$handleError)
             }
                 
             if(poll){
                 await this.$client.service('poll').patch(poll._key, {
                     activeStatus: PollActiveStatus['Live']
-                }).catch(this.$showError)
+                }).catch(this.$handleError)
             }
                 
         },

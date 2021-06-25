@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
+import { logToSentry } from '../functions/helpers'
 
 const router: any = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -47,13 +48,15 @@ router.beforeEach(async(to: any, from: any, next: Function) => {
             router.$user.roles = user.roles
             router.$user.activeRole = user.activeRole
             next()
+            
         } catch(error) {
             const authEndpoint = window.location.hostname === 'localhost' ? 'http://localhost:4040/oauth/auth0' : `${location.origin}/oauth/auth0/`
             const requiresAuth = error.message === "No accessToken found in storage" || error.message.includes('jwt')
             if(requiresAuth) {
                 location.href = authEndpoint
             } else {
-                next({ name: "error", params: { message: error.message}})
+                logToSentry(error)
+                next({ path: "/error-"+error.message})
             }
         }
     }

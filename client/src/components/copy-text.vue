@@ -28,7 +28,7 @@ export default defineComponent({
                     this.showToolTip = false;
                 }, 1000)
             }, () => {
-                this.$showError('Unable to copy');
+                this.$handleError('Unable to copy');
             })
         }
     }

@@ -12,6 +12,8 @@ import io from 'socket.io-client'
 import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
+import { init } from '@sentry/browser'
+import { logToSentry } from './functions/helpers'
 import vueGtag from 'vue-gtag'
 
 const messages = {    
@@ -35,18 +37,18 @@ app.use(store)
 
 if(window.location.hostname === 'vote.bcc.no'){
     app.use(vueGtag, {
+        // for testing locally or in dev use G-4KNVYNZ55W
         config: {id: 'G-6V21WXD03F'}
     })
+    init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 }
 
-// to test the analytics locally uncomment code below
-// app.use(vueGtag, {
-//     config: {id: 'G-4KNVYNZ55W'}
-// })
 
 app.mixin({
     methods: {
-        $showError(error: Error) {
+        $handleError(error: Error) {
+            logToSentry(error, this.$user.activeRole)
+
             const settings = {
                 class: 'error'
             } as any

@@ -129,7 +129,7 @@ export default defineComponent({
             if(this.votingAdminRole) {
                 query._id = { $in: this.votingAdminRole.org}
             }
-            const res = await this.$client.service('org').find({query}).catch(this.$showError)
+            const res = await this.$client.service('org').find({query}).catch(this.$handleError)
             
             if(!this.votingAdminRole) {
                 res.unshift({name: "All churches", churchID: 'all'})
@@ -151,7 +151,7 @@ export default defineComponent({
               
                     $select: ['name', 'enumName'],
                 }
-            }).catch(this.$showError)
+            }).catch(this.$handleError)
             this.allRoles = res.map((c: RoleName) => {
                 return {
                     name: c.name,
@@ -184,12 +184,12 @@ export default defineComponent({
                 this.$client.service('polling-event').update(data._key, data)
                     .then(() => {
                         this.$emit('finish')
-                    }).catch(this.$showError)
+                    }).catch(this.$handleError)
             else
                 this.$client.service('polling-event').create(data)
                     .then((res: PollingEvent) => {
                         this.$emit('finish', res._key)
-                    }).catch(this.$showError)
+                    }).catch(this.$handleError)
         },
     },
     emits: ['close', 'finish']

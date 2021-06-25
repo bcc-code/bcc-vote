@@ -74,7 +74,7 @@ export default defineComponent({
                             this.chosenOption = {} as Answer;
                             this.hasSavedAnswer = true
                         }
-                        this.$showError(err)
+                        this.$handleError(err)
                     })
             }
         }

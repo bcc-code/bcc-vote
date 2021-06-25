@@ -81,7 +81,7 @@ export default defineComponent({
                     }
                 }).then((r:any) => {
                     result = result.concat(r.data)
-                }).catch(this.$showError))
+                }).catch(this.$handleError))
             }
             await Promise.all(promises)
             return result

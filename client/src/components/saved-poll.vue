@@ -97,7 +97,7 @@ export default defineComponent({
         },
         async deletePoll(){
             if(!this.inactiveMode){
-                await this.$client.service('poll').remove(this.poll?._key).catch(this.$showError)
+                await this.$client.service('poll').remove(this.poll?._key).catch(this.$handleError)
                 this.$emit('stopEdit')
             }
         },

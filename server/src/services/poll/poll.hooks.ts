@@ -1,4 +1,4 @@
-import * as authentication from '@feathersjs/authentication';
+import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
 import { PollActiveStatus, Option } from '../../domain';
 import { db } from '../../firestore';
@@ -10,7 +10,7 @@ const validateAndFormat = async (context: HookContext):Promise<HookContext> => {
     return context;
 };
 
-const addChannel = async (context: HookContext):Promise<HookContext> => {
+const addChannel = (context: HookContext):HookContext => {
     if(context.result.pollingEventId && context.params.connection)
         context.app.channel(context.result.pollingEventId.toString()).join(context.params.connection);
     return context;
@@ -22,7 +22,7 @@ const addTime = async (context: HookContext):Promise<HookContext> => {
     return context;
 };
 
-const addLastChangedTime = (context: HookContext) => {
+const addLastChangedTime = (context: HookContext):HookContext => {
     const { data } = context;
     data.lastChanged = Date.now();
     return context;

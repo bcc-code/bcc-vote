@@ -1,3 +1,4 @@
+import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
 
 const validateAndFormat = (context: HookContext) => {
@@ -18,7 +19,7 @@ const addLastChangedTime = (context: HookContext) => {
     return context;
 };
 
-const addChannel = async (context: HookContext) => {
+const addChannel = (context: HookContext):HookContext => {
     if(context.id && context.params.connection){
         const channelName = context.id.toString();
         const connection = context.params.connection;
@@ -26,6 +27,7 @@ const addChannel = async (context: HookContext) => {
     }
     return context;
 };
+
 
 export default {
     before: {
