@@ -41,9 +41,9 @@ if(window.location.hostname === 'vote.bcc.no'){
         config: {id: 'G-6V21WXD03F'}
     })
     
+    init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 }
 
-init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 
 app.mixin({
     methods: {
