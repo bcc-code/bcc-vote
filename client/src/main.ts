@@ -40,7 +40,6 @@ if(window.location.hostname === 'vote.bcc.no'){
         // for testing locally or in dev use G-4KNVYNZ55W
         config: {id: 'G-6V21WXD03F'}
     })
-    
     init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 }
 
