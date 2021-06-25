@@ -48,8 +48,7 @@ init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/58
 app.mixin({
     methods: {
         $handleError(error: Error) {
-            console.log(this.$user)
-            logToSentry(error, this.$user.activerole)
+            logToSentry(error, this.$user.activeRole)
 
             const settings = {
                 class: 'error'
