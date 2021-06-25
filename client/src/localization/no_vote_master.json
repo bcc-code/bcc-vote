@@ -39,7 +39,9 @@
     "customer-support": "Customer support",
     "go-to-login": "Tilbake til pålogging",
     "ok-continue": "Ok, fortsett",
-    "yes-continue": "Ja, fortsett"
+    "yes-continue": "Ja, fortsett",
+    "submit": "Submit",
+    "skip": "Skip"
   },
   "labels": {
     "yes": "Ja",
@@ -91,7 +93,9 @@
     "sure-close-event": "Are you sure that you want to close this event?",
     "church": "Church",
     "age": "Age",
-    "role": "Roles"
+    "role": "Roles",
+    "feedback-vote": "Feedback for “BCC Vote”",
+    "rate-experience": "Rate your overall experience"
   },
   "info": {
     "no-polling-events": "Det er ikke noe avstemninger tilgjengelig",
@@ -147,7 +151,8 @@
     "group": "Voting group",
     "confirmation": "Bekreftelse",
     "answer-option": "Option",
-    "answer-confirmation": "Bekreftelse"
+    "answer-confirmation": "Bekreftelse",
+    "any-trouble": "Did you experience any trouble?"
   },
   "explanations": {
     "disagree": "No, I disagree with the question",

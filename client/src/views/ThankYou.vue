@@ -13,5 +13,17 @@
                 </router-link>
             </div>
         </div>
+        <FeedbackPopover/>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import FeedbackPopover from '../components/feedback-popover.vue'
+
+export default defineComponent({
+    components: {
+        FeedbackPopover    
+    }
+})
+</script>

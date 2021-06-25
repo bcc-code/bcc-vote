@@ -39,7 +39,9 @@
     "customer-support": "Customer support",
     "go-to-login": "Go to login page",
     "ok-continue": "Okay, continue",
-    "yes-continue": "Yes, continue"
+    "yes-continue": "Yes, continue",
+    "submit": "Submit",
+    "skip": "Skip"
   },
   "labels": {
     "yes": "Yes",
