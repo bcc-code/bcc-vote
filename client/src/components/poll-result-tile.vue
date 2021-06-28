@@ -33,6 +33,9 @@ export default defineComponent({
         this.updateVotes(results);
         this.$client.service('poll-result').on('patched', this.updateVotes)
     },
+    unmounted(){
+        this.$client.service('poll-result').off('patched')
+    },
     methods: {
         updateVotes(data: any){
             if(data.pollId !== this.poll._key)

@@ -131,7 +131,8 @@
       "edit": "Edit",
       "delete": "Delete"
     },
-    "select-option": "Select an option to view who voted on it"
+    "select-option": "Select an option to view who voted on it",
+    "thank-for-feedback": "Thank you for your feedback"
   },
   "fields": {
     "poll-title": "Question title",

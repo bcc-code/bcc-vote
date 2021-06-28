@@ -33,8 +33,8 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => require('../views/LiveResults.vue')
     },
     {
-        name: 'Thank you page',
-        path: '/thank-you/:title',
+        name: 'Thank you',
+        path: '/thank-you',
         component: () => require('../views/ThankYou.vue'),
         meta: {
             bgColor: "bg-blue-900"
@@ -42,7 +42,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
     {
         name: 'Poll result',
-        path: '/poll/result/:id',
+        path: '/poll/result/',
         component: () => require('../views/AdminPollResult.vue'),
         meta: {
             bgColor: "bg-blue-900"

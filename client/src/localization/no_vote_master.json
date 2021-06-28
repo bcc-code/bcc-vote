@@ -133,7 +133,8 @@
       "edit": "Redigere",
       "delete": "Delete"
     },
-    "select-option": "Velg et alternativ for å se hvem som stemte på det"
+    "select-option": "Velg et alternativ for å se hvem som stemte på det",
+    "thank-for-feedback": "Thank you for your feedback"
   },
   "fields": {
     "poll-title": "Question title",
