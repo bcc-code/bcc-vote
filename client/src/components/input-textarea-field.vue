@@ -18,9 +18,6 @@ export default defineComponent({
         }
     },
     computed: {
-        textHeight():void{
-            
-        },
         model: {
             get():string{
                 // timeout is so that the height change happens after the text is rendered
