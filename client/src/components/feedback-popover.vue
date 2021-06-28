@@ -6,11 +6,13 @@
                     <h3>{{$t('labels.feedback-vote')}}</h3>
                     <XIcon class="w-6 h-6 p-1 cursor-pointer" @click="showFeedback = false"/>
                 </div>
+                <div class="mx-auto" style="max-width:386px">
                 <h5 class="mb-2">{{$t('labels.rate-experience')}}</h5>
                 <div class="flex justify-between mb-5">
                     <StarIcon v-for="i in maxRating" :key="i" class="w-12" @click="rating = i" :style="getColor(i)"/>
                 </div>
-                <FormField type="textarea" translation="any-trouble" v-model="textVal"/>
+                <FormField type="textarea" translation="any-trouble" v-model="textVal" baseHeight="100px" enableNewLine/>
+                </div>
             </div>
             <div class="w-full grid grid-cols-2 gap-5 max-w-md mx-auto">
                 <button class="w-full rounded-full p-4 bg-gray-200" @click="showFeedback = false">
@@ -53,6 +55,9 @@ export default defineComponent({
     methods: {
         sendFeedback(){
             console.log('sending feedback')
+            console.log(this.textVal);
+            
+            console.log(this.rating);
         },
         getColor(i: number):string {
             if(i <= this.rating)
