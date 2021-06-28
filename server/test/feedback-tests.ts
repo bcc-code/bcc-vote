@@ -9,7 +9,7 @@ describe('polling-event', async () => {
     before(async ()=>{
         testSet = pollingEventsTestSet();
     });
-    it.only('Create feedback', async () => {
+    it('Create feedback', async () => {
         try{
             const data = testSet.feedbackData();
             await app.service('feedback').create(data);
