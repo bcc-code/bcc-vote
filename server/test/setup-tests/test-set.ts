@@ -91,7 +91,15 @@ function pollingEventsTestSet(){
         },
         publicAnswer: async () => {
             return await answerSvc.get('39571');
-        }
+        },
+        feedbackData: () => {
+            return {
+                pollingEventId: '1347647654',
+                personID: 41412,
+                message: '',
+                rating: 5,
+            };
+        },
     };
 
     return testData;

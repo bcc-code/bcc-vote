@@ -53,8 +53,7 @@ export class Feedback implements ServiceMethods<Data> {
         const promises = [] as Array<Promise<any>>;
 
         promises.push(updateRating(data.rating, data.pollingEventId));
-        
-        if(data.message){
+        if(data.message && process.env.NODE_ENV === 'production'){
             const toSend = {
                 pollingEventId: data.pollingEventId,
                 personID: data.personID,
