@@ -1,6 +1,5 @@
 <template>
     <textarea v-model="model" ref="textArea" @change="setHeight" @keydown.enter.prevent="clickEnter()">
-        abcde
     </textarea>
 </template>
 
