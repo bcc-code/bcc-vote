@@ -10,8 +10,6 @@
                     <EventStatus :status="pollingEvent.status" />
                 </div>
                 <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
-                
-                
             </div>
             <div class="flex flex-col gap-6 items-center mb-3 mt-7">
                 <button  v-if="isCreator" class="md-button font-bold rounded-full text-white bg-blue-900" @click="goToAdmin">
