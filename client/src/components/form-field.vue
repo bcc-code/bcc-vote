@@ -26,7 +26,7 @@
         <!-- You should give it the unix timestamp -->
         <DateField v-else-if="type == 'date'"  v-model="model" :placeholder="placeholder" class="box-field"/>
 
-        <TextareaField v-else-if="type == 'textarea'" v-model="model" :placeholder="placeholder" class="box-field" />
+        <TextareaField v-else-if="type == 'textarea'" v-model="model" :placeholder="placeholder" class="box-field" :baseHeight="baseHeight" :enableNewLine="enableNewLine"/>
 
         <XIcon v-if="removable" class="absolute text-gray-800 w-10 h-10 p-3 bottom-0 right-0 cursor-pointer" @click="$emit('remove')"/>
     </section>
@@ -59,7 +59,7 @@ export default defineComponent({
         // General props 
         translation: { type: String, required: true },
         required: { type: Boolean, default: false },
-        type: { type: String, default: 'string' },
+        type: { type: String, default: 'textarea' },
         optional: {type: Boolean, default: false},
         removable: { type: Boolean, requiered: false},
         placeholder: { type: String, required: false},
@@ -68,6 +68,10 @@ export default defineComponent({
 
         // For select
         options: { type: Array, required: false },
+
+        // For textarea
+        baseHeight: { type: String, default: '0'},
+        enableNewLine: {type: Boolean, default: false},
 
         // If you specify the value the the checkbox will act as a radio button
         value: {type: String, required: false}
