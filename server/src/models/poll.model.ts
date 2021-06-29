@@ -1,4 +1,4 @@
-import { IOptions, AUTH_TYPES } from "@bcc-its/feathers-arangodb";
+import { IOptions, AUTH_TYPES } from "@bcc-code/feathers-arangodb";
 import { Application } from "../declarations";
 
 export default function (app: Application) {
