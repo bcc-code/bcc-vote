@@ -48,7 +48,7 @@ export default defineComponent({
             this.$router.go(-1)
         },
         logout(){
-            this.$router.push({name:'logout'})
+            this.$router.push({name:'Logout'})
         }
     }
 })

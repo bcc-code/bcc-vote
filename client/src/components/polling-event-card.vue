@@ -10,18 +10,12 @@
                     <EventStatus :status="pollingEvent.status" />
                 </div>
                 <p v-if="pollingEvent.description" class="text-gray-700 text-limit-2 mb-2">{{pollingEvent.description}}</p>
-                
-                <FilterInfo v-if="pollingEvent.participantLabels" :filter="pollingEvent.participantLabels"/>
-                <div v-if="$user.personID === pollingEvent.creatorId" class="flex gap-2 text-blue-700 cursor-pointer py-4 mt-2" @click="goToAdmin">
-                    <h5 class="font-bold">
-                        {{(isEventLive || isEventNotStarted) ? $t(`actions.admin-this-event`):$t('actions.view-this-event')}}
-                    </h5>
-                    <ArrowRightIcon class="h-5"/>
-                </div>
             </div>
-            <div class="flex flex-col">
-                
-                <button v-if="canParticipate" class="align-center md-button mx-auto rounded-full text-white bg-blue-900 font-bold my-3" @click="showConfirm = true">
+            <div class="flex flex-col gap-6 items-center mb-3 mt-7">
+                <button  v-if="isCreator" class="md-button font-bold rounded-full text-white bg-blue-900" @click="goToAdmin">
+                    {{$t(`actions.admin-this-event`)}}
+                </button>
+                <button v-if="canParticipate" class="font-bold rounded-full" :class="isCreator ? 'text-blue-900':'md-button text-white bg-blue-900'" @click="showConfirm = true">
                     {{$t(`actions.join-this-event`)}}
                 </button>
             </div>
@@ -45,8 +39,6 @@ import ConfirmPopover from './confirm-popover.vue'
 import FilterInfo from './event-filter-info.vue'
 import EventStatus from './polling-event-status.vue'
 
-import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon'
-
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
@@ -54,8 +46,7 @@ export default defineComponent({
     components: {
         ConfirmPopover,
         FilterInfo,
-        EventStatus,
-        ArrowRightIcon
+        EventStatus
     },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
@@ -91,6 +82,9 @@ export default defineComponent({
             if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
                 return false
             return true
+        },
+        isCreator():boolean{
+            return this.$user.personID === this.pollingEvent.creatorId
         }
     },
     methods: {
@@ -98,7 +92,7 @@ export default defineComponent({
             this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`)
         },
         goToLogout(){
-            this.$router.push({name:'logout'})
+            this.$router.push({name:'Logout'})
         },
         goToAdmin() {
             this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`)
