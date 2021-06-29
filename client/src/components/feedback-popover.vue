@@ -66,9 +66,9 @@ export default defineComponent({
                 message: this.textVal,
                 rating: this.rating
             }
-            await this.$client.service('feedback').create(feedbackData).catch(() => {
+            await this.$client.service('feedback').create(feedbackData).catch((err:Error) => {
                 this.submitted = false
-                this.$handleError()
+                this.$handleError(err)
             });
             
             this.$showSuccess(this.$t('info.thank-for-feedback'))
