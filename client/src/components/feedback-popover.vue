@@ -11,7 +11,7 @@
                 <div class="flex justify-between mb-5">
                     <StarIcon v-for="i in maxRating" :key="i" class="w-12" @click="rating = i" :style="getColor(i)"/>
                 </div>
-                <FormField class="mb-9" type="textarea" translation="any-trouble" v-model="textVal" baseHeight="100px" enableNewLine/>
+                <FormField class="mb-9" type="textarea" translation="any-trouble" v-model="textVal" baseHeight="100px" :placeholder="$t('placeholders.type-here')" enableNewLine/>
                 <div class="w-full grid grid-cols-2 gap-5">
                     <button class="w-full rounded-full p-4 bg-gray-200" @click="showFeedback = false">
                         <h5 class="font-bold text-blue-900">{{$t('actions.skip')}}</h5>

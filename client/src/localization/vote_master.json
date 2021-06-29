@@ -155,5 +155,8 @@
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"
+  },
+  "placeholders": {
+    "type-here": "Type here..."
   }
 }

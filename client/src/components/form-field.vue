@@ -61,7 +61,7 @@ export default defineComponent({
         required: { type: Boolean, default: false },
         type: { type: String, default: 'textarea' },
         optional: {type: Boolean, default: false},
-        removable: { type: Boolean, requiered: false},
+        removable: { type: Boolean, required: false},
         placeholder: { type: String, required: false},
 
         additionalText: { type: [String, Number], required: false},
