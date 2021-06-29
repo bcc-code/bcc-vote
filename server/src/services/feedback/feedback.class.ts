@@ -18,10 +18,9 @@ const updateRating = async(rating: number, eventId: string):Promise<void> => {
     if(!possibleRatings.includes(rating))
         return;
         
-    const eventRef = db.collection('polling-event').doc(eventId); 
+    const eventRef = db.collection('feedback').doc(eventId); 
     const countUpdate = {} as any;
-    const fieldPath = 'feedback.'+rating.toString();
-    countUpdate[fieldPath] = FieldValue.increment(1);
+    countUpdate[rating] = FieldValue.increment(1);
     await eventRef.update(countUpdate);
 };
 
