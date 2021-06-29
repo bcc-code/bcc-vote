@@ -59,12 +59,15 @@ export default defineComponent({
             if(this.submitted)
                 return;
             this.submitted = true
-            await this.$client.service('feedback').create({
+
+            const feedbackData = {
                 pollingEventId: this.pollingEventId,
                 personID: this.$user.personID,
                 message: this.textVal,
                 rating: this.rating
-            }).catch(() => {
+            }
+            console.log(feedbackData);
+            await this.$client.service('feedback').create(feedbackData).catch(() => {
                 this.submitted = false
                 this.$handleError()
             });

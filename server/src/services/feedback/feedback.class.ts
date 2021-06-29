@@ -50,17 +50,21 @@ export class Feedback implements ServiceMethods<Data> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async create (data: Data, params?: Params): Promise<Data> {
         const promises = [] as Array<Promise<any>>;
+        console.log('creating');
+        console.log(data.message);
+        console.log(process.env.NODE_ENV);
 
-        promises.push(updateRating(data.rating, data.pollingEventId));
-        if(data.message && process.env.NODE_ENV === 'production'){
+        if(data.message){
             const toSend = {
                 pollingEventId: data.pollingEventId,
                 personID: data.personID,
                 message: data.message
             };
-            promises.push(axios.post('', toSend));
+            console.log('sending: ', toSend);
+            // promises.push(axios.post('', toSend));
         }
-
+        
+        promises.push(updateRating(data.rating, data.pollingEventId));
         await Promise.all(promises);
 
         return data;
