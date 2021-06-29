@@ -39,8 +39,6 @@ import ConfirmPopover from './confirm-popover.vue'
 import FilterInfo from './event-filter-info.vue'
 import EventStatus from './polling-event-status.vue'
 
-import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon'
-
 import { PollingEvent, PollingEventStatus } from '../domain'
 import { defineComponent, PropType } from 'vue'
 import moment from 'moment'
@@ -48,8 +46,7 @@ export default defineComponent({
     components: {
         ConfirmPopover,
         FilterInfo,
-        EventStatus,
-        ArrowRightIcon
+        EventStatus
     },
     props: {
         pollingEvent: { type: Object as PropType<PollingEvent>, required: true }
