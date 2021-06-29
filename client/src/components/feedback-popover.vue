@@ -70,6 +70,7 @@ export default defineComponent({
                 this.submitted = false
                 this.$handleError(err)
             });
+            console.log('some changes');
             
             this.$showSuccess(this.$t('info.thank-for-feedback'))
             this.showFeedback = false
