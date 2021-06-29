@@ -33,8 +33,8 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => require('../views/LiveResults.vue')
     },
     {
-        name: 'Thank you page',
-        path: '/thank-you/:title',
+        name: 'Thank you',
+        path: '/thank-you',
         component: () => require('../views/ThankYou.vue'),
         meta: {
             bgColor: "bg-blue-900"

@@ -39,7 +39,9 @@
     "customer-support": "Customer support",
     "go-to-login": "Go to login page",
     "ok-continue": "Okay, continue",
-    "yes-continue": "Yes, continue"
+    "yes-continue": "Yes, continue",
+    "submit": "Submit",
+    "skip": "Skip"
   },
   "labels": {
     "yes": "Yes",
@@ -129,7 +131,8 @@
       "edit": "Edit",
       "delete": "Delete"
     },
-    "select-option": "Select an option to view who voted on it"
+    "select-option": "Select an option to view who voted on it",
+    "thank-for-feedback": "Thank you for your feedback"
   },
   "fields": {
     "poll-title": "Question title",
@@ -152,5 +155,8 @@
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"
+  },
+  "placeholders": {
+    "type-here": "Type here..."
   }
 }

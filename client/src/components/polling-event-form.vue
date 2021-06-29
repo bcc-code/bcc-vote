@@ -6,9 +6,9 @@
         <InfoBox class="mb-8">
             {{$t('info.define-group')}}
         </InfoBox>
-        <FormField v-model="eventData.title" translation="polling-event-title" type="string"/>
+        <FormField v-model="eventData.title" translation="polling-event-title"/>
 
-        <FormField v-model="eventData.description" translation="poll-description" type="string" optional/>
+        <FormField v-model="eventData.description" translation="poll-description" optional/>
 
         <FormField v-model="eventData.startDateTime" translation="poll-date" type="date" optional/>
 

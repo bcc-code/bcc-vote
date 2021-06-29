@@ -1,4 +1,4 @@
-import { DbService, IOptions, } from "@bcc-its/feathers-arangodb";
+import { DbService, IOptions, } from "@bcc-code/feathers-arangodb";
 import { Application } from '../../declarations';
 // import { NotImplemented } from '@feathersjs/errors';
 

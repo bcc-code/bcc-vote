@@ -6,14 +6,14 @@
         </h3>
         <XIcon class="w-8 h-8 p-2 cursor-pointer" @click="$emit('close')"/>
         </div>
-        <FormField v-model="pollData.title" translation = "poll-title" type="string"/>
-        <FormField v-model="pollData.description" translation = "poll-description" type="string" optional/>
+        <FormField v-model="pollData.title" translation = "poll-title"/>
+        <FormField v-model="pollData.description" translation = "poll-description" optional/>
         <h3 class="font-bold">{{$t('labels.answers')}}</h3>
         <p class="mb-7 text-gray-800">{{$t('info.answer-explanations')}}</p>
         <FormField v-model="pollData.confirmAnswer" class="mb-8" translation="confirmation" type="checkbox"/>
         <div v-for="(answer, index) in pollData.answers" :key="index"  class="flex gap-10">
-            <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index + 1" type="string" :removable="index > 1" @remove="removeOption(index)"/>
-            <FormField v-if="pollData.confirmAnswer" v-model="pollData.answers[index].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${index + 1})`" type="string" :removable="index > 1" @remove="removeOption(index)"/>
+            <FormField v-model="pollData.answers[index].label" translation="answer-option" :additionalText="index + 1" :removable="index > 1" @remove="removeOption(index)"/>
+            <FormField v-if="pollData.confirmAnswer" v-model="pollData.answers[index].explanation" translation="answer-confirmation" :additionalText="`(${$t('labels.option')} ${index + 1})`" :removable="index > 1" @remove="removeOption(index)"/>
         </div>
         <AddButton class="mb-8" translation="add-option" @click="addOption"/>
         <h3 class="font-bold mb-1">{{$t('labels.result-visibility')}}</h3>

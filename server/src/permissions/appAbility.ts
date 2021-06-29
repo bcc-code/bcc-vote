@@ -2,7 +2,7 @@ import { Ability, ForcedSubject, AbilityBuilder } from '@casl/ability';
 import { PollResultVisibility, RoleName, UserDetails } from '../domain';
 
 export const actions = ['manage','patch','update','find','get','remove','create'] as const;
-export const subjects = ['answer','polling-event','poll', 'poll-result','participant','person','org', 'role', 'user', 'all'] as const;
+export const subjects = ['answer','polling-event','poll', 'poll-result', 'feedback','participant','person','org', 'role', 'user', 'all'] as const;
 export type AppAbilities = [
   typeof actions[number],
   typeof subjects[number] | ForcedSubject<Exclude<typeof subjects[number], 'all'>>
@@ -17,6 +17,7 @@ const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<Ap
     can('find','poll');
     can('get', 'poll');
     can('get', 'poll-result');
+    can('create', 'feedback');
     can(['find','get'],'polling-event', {'participantFilter.org': user.churchID.toString()});
     can(['find','get'],'polling-event',{
         'participantFilter.org': 'all'as any,
