@@ -66,7 +66,6 @@ export default defineComponent({
                 message: this.textVal,
                 rating: this.rating
             }
-            console.log(feedbackData);
             await this.$client.service('feedback').create(feedbackData).catch(() => {
                 this.submitted = false
                 this.$handleError()
