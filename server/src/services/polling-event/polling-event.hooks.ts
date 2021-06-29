@@ -1,5 +1,6 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
+import { db } from '../../firestore';
 
 const validateAndFormat = (context: HookContext) => {
     const { data } = context;
@@ -28,6 +29,22 @@ const addChannel = (context: HookContext):HookContext => {
     return context;
 };
 
+const addFeedbackDocument = async (context: HookContext):Promise<HookContext> => {
+    const feedbackRef = db.collection('feedback').doc(context.result._key);
+
+    const feedbackObj = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+    };
+
+    await feedbackRef.set(feedbackObj);
+
+    return context;
+};
+
 
 export default {
     before: {
@@ -44,7 +61,7 @@ export default {
         all: [],
         find: [],
         get: [],
-        create: [],
+        create: [addFeedbackDocument],
         update: [],
         patch: [],
         remove: []

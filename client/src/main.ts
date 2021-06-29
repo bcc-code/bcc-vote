@@ -56,6 +56,15 @@ app.mixin({
                 settings.positionY = 'top'
             }
             this.$toast(error, settings)
+        },
+        $showSuccess(message: string):void {
+            const settings = {
+                class: 'success'
+            } as any
+            if(window.innerWidth < 640){
+                settings.positionY = 'top'
+            }
+            this.$toast(message, settings)
         }
     },
     computed: {

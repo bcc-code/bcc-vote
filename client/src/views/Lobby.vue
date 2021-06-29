@@ -27,14 +27,16 @@ export default defineComponent({
             currentPoll: undefined as (undefined | Poll),
         }
     },
-    async created() {
+    created() {
         this.init()
         
         this.$client.service('poll').on('patched', this.getPoll)
-
         this.$client.service('polling-event').on('patched', this.patchEvent);
-
         this.$client.io.on('reconnect', this.init)
+    },
+    unmounted(){
+        this.$client.service('poll').off('patched')
+        this.$client.service('polling-event').off('patched');
     },
     methods: {
         init() {
@@ -71,7 +73,10 @@ export default defineComponent({
                 this.goToThankYouPage(data);
         },
         goToThankYouPage(data: PollingEvent){
-            this.$router.push('/thank-you/'+data.title)
+            this.$router.push({name: 'Thank you', params: {
+                id: data._key,
+                title: data.title
+            }})
         }
     }
 })

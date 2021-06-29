@@ -13,5 +13,23 @@
                 </router-link>
             </div>
         </div>
+        <transition name="fade">
+            <FeedbackPopover :pollingEventId="$route.params.id"/>
+        </transition>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import FeedbackPopover from '../components/feedback-popover.vue'
+
+export default defineComponent({
+    components: {
+        FeedbackPopover    
+    },
+    created(){
+        if(!(this.$route.params.id || this.$route.params.title))
+            this.$router.push('/')
+    }
+})
+</script>
