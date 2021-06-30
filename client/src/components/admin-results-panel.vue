@@ -40,13 +40,6 @@ export default defineComponent({
             loadingReport: false
         }
     },
-    computed: {
-        startedPolls():Array<Poll>{
-            return this.savedPolls.filter((p: Poll) => {
-                return p.activeStatus !== PollActiveStatus['Not Started'];
-            })
-        }
-    },
     methods: {
         async getReport():Promise<void>{
             if(this.loadingReport)
