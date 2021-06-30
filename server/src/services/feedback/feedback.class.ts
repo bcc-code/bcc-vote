@@ -51,6 +51,7 @@ export class Feedback implements ServiceMethods<Data> {
     async create (data: Data, params?: Params): Promise<Data> {
         const promises = [] as Array<Promise<any>>;
 
+        promises.push(updateRating(data.rating, data.pollingEventId));
         if(data.message && process.env.NODE_ENV === 'production'){
             const toSend = {
                 pollingEventId: data.pollingEventId,
@@ -60,7 +61,6 @@ export class Feedback implements ServiceMethods<Data> {
             promises.push(axios.post('', toSend));
         }
         
-        promises.push(updateRating(data.rating, data.pollingEventId));
         await Promise.all(promises);
 
         return data;
