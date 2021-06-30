@@ -64,14 +64,13 @@ export default defineComponent({
                 personID: this.$user.personID,
                 message: this.textVal,
                 rating: this.rating
+            }).then(() => {
+                this.$showSuccess(this.$t('info.thank-for-feedback'))
+                this.showFeedback = false
             }).catch((err: Error) => {
                 this.submitted = false
                 this.$handleError(err)
             });
-            
-            this.$showSuccess(this.$t('info.thank-for-feedback'))
-            this.showFeedback = false
-
         },
         getColor(i: number):string {
             if(i <= this.rating)
