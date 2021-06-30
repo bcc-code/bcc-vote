@@ -13,6 +13,12 @@ export default defineComponent({
     props: {
         mobileHeight: {type: String, default: "50vh"}
     },
+    mounted() {
+        document.documentElement.style.overflow = 'hidden'
+    },
+    unmounted() {
+        document.documentElement.style.overflow = 'auto'
+    },
     emits: ['close']
 })
 </script>
