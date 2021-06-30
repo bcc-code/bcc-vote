@@ -1,6 +1,6 @@
 <template>
     <div class="h-screen w-full fixed top-0 left-0 z-50 bg-dark" @click="$emit('close')">
-        <div class="dialog-size bg-white pt-6 pb-20 px-4 md:px-10 md:py-8 relative" :style="`--heightPercent: ${mobileHeight}`" @click.stop>
+        <div class="dialog-size bg-white pt-6 pb-20 px-4 md:px-10 md:py-8 relative" :style="`--heightVar: ${mobileHeight}`" @click.stop>
             <slot></slot>
         </div>
     </div>
@@ -31,8 +31,8 @@ export default defineComponent({
 .dialog-size {
     @apply w-full;
     @apply rounded-t-lg;
-    height: var(--heightPercent);
-    margin-top: calc(100vh - var(--heightPercent));
+    height: var(--heightVar);
+    margin-top: calc(100vh - var(--heightVar));
     overflow: auto;
 }
 
