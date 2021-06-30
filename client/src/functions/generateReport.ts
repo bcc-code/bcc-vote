@@ -28,6 +28,7 @@ const fillAnswerData = (allAnswers: Answer[], workSheets:any, voterMap:any, answ
     })
 }
 const fillDataRow = (ws: any, ans: Answer, voterMap: any, answerMap:any) => {
+    console.log(voterMap[ans._to])
     const {personID, displayName, age, email, churchName, cellPhone, activeRole} = voterMap[ans._to]
     const row = ws.lastUsedRow + 1
     ws.cell(row, 1).number(personID)
@@ -55,6 +56,7 @@ const createSheets = (savedPolls: Poll[], workBook: any, pollingEvent: PollingEv
     return workSheets
 }
 const fillPollInfo = (ws: any, poll: Poll, resultMap: any) => {
+    console.log('filling info', poll);
     const startRow = ws.lastUsedRow + 2
     ws.cell(startRow, 1, startRow, 8, true).string(poll.title)
     ws.cell(startRow, 9).date(new Date(poll.lastChanged))

@@ -22,7 +22,7 @@ import Spinner from '../components/spinner.vue'
 import { generateReport } from '../functions/generateReport'
 
 import { defineComponent, PropType } from 'vue'
-import { Poll, PollingEvent, Answer } from '../domain'
+import { Poll, PollingEvent, Answer, PollActiveStatus } from '../domain'
 
 export default defineComponent({
     components: {
@@ -40,6 +40,13 @@ export default defineComponent({
             loadingReport: false
         }
     },
+    computed: {
+        startedPolls():Array<Poll>{
+            return this.savedPolls.filter((p: Poll) => {
+                return p.activeStatus !== PollActiveStatus['Not Started'];
+            })
+        }
+    },
     methods: {
         async getReport():Promise<void>{
             if(this.loadingReport)
@@ -49,7 +56,7 @@ export default defineComponent({
             const allVoters = await this.getVoters(allAnswers)
             const allResults = await this.getResults()
 
-            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters, allResults)
+            const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
             
             this.loadingReport = false
             const title = this.getReportTitle()
