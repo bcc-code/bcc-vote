@@ -2,7 +2,7 @@
     <div class="form-section padding-md">
         <div class="flex justify-between font-bold mb-8">
             <h3>{{$t('labels.event-results')}}</h3>
-            <div class="flex text-blue-900 items-center cursor-pointer" @click="getReport()" :class="{'opacity-50': loadingReport}"> 
+            <div v-if="savedPolls.length" class="flex text-blue-900 items-center cursor-pointer" @click="getReport()" :class="{'opacity-50': loadingReport}"> 
                 <ClipboardListIcon class="h-6 w-6"/>
                 <h5 class="py-1">{{$t('actions.get-report')}}</h5>
             </div>
@@ -56,7 +56,7 @@ export default defineComponent({
             const allVoters = await this.getVoters(allAnswers)
             const allResults = await this.getResults()
 
-            const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
+            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters, allResults)
             
             this.loadingReport = false
             const title = this.getReportTitle()

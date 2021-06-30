@@ -56,7 +56,6 @@ const createSheets = (savedPolls: Poll[], workBook: any, pollingEvent: PollingEv
     return workSheets
 }
 const fillPollInfo = (ws: any, poll: Poll, resultMap: any) => {
-    console.log('filling info', poll);
     const startRow = ws.lastUsedRow + 2
     ws.cell(startRow, 1, startRow, 8, true).string(poll.title)
     ws.cell(startRow, 9).date(new Date(poll.lastChanged))

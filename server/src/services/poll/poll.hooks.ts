@@ -57,7 +57,7 @@ const removeFromArango = (context: HookContext) => {
     });
 };
 
-const resetPollResults = (context: HookContext) => {
+const resetPollResults = async(context: HookContext):Promise<HookContext> => {
     const pollRes = {
         pollingEventId: context.result.pollingEventId,
         pollId: context.result._key,
@@ -66,13 +66,14 @@ const resetPollResults = (context: HookContext) => {
     context.result.answers.forEach((opt:Option) => {
         pollRes.answerCount[opt.answerId] = 0;
     });
-
-    return db.collection('poll-result').doc(context.result._key).set(pollRes);
+    await db.collection('poll-result').doc(context.result._key).set(pollRes);
+    
+    return context;
 };
 
-const removeAllAnswers = async (context: HookContext) => {
+const removeAllAnswers = async (context: HookContext):Promise<HookContext> => {
     if(context.result.activeStatus !== PollActiveStatus['Live'])
-        return;
+        return context;
     const promises = [];
     promises.push(removeFromFirestore(context.result._id));
     promises.push(removeFromArango(context));
@@ -98,7 +99,7 @@ export default {
         all: [],
         find: [],
         get: [ addChannel ],
-        create: [],
+        create: [ resetPollResults ],
         update: [],
         patch: [ removeAllAnswers ],
         remove: []
