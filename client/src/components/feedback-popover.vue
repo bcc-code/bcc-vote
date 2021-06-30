@@ -55,7 +55,7 @@ export default defineComponent({
         }
     },
     methods: {
-        async sendFeedback(){
+        sendFeedback(){
             if(this.submitted)
                 return;
             this.submitted = true
@@ -66,13 +66,14 @@ export default defineComponent({
                 message: this.textVal,
                 rating: this.rating
             }
-            await this.$client.service('feedback').create(feedbackData).catch((err:Error) => {
+            this.$client.service('feedback').create(feedbackData).then((res: any) => {
+                this.$showSuccess(this.$t('info.thank-for-feedback'))
+                this.showFeedback = false
+            }).catch((err:Error) => {
                 this.submitted = false
                 this.$handleError(err)
             });
             
-            this.$showSuccess(this.$t('info.thank-for-feedback'))
-            this.showFeedback = false
 
         },
         getColor(i: number):string {
