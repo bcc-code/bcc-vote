@@ -8,12 +8,12 @@ export function getRolesForPerson(existingPerson:any): { roles: Array<Role>, act
 
     const roles = existingPerson.related.roles;
 
-    let rolesFormattet: Array<Role> = [];
+    const rolesFormattet: Array<Role> = [];
     for (const i of roles) {
         const item:Role = {
             name: i.name,
             enumName: i.enumName,
-            org: [i.personRole.org],
+            org: i.personRole.org ? [i.personRole.org] : [i.personRole.org_id],
             scope: i.personRole.scope,
             securityLevel: i.securityLevel,
         };
