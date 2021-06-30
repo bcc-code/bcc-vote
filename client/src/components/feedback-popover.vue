@@ -66,7 +66,7 @@ export default defineComponent({
                 message: this.textVal,
                 rating: this.rating
             }
-            this.$client.service('feedback').create(feedbackData).then((res: any) => {
+            this.$client.service('feedback').create(feedbackData).then(() => {
                 this.$showSuccess(this.$t('info.thank-for-feedback'))
                 this.showFeedback = false
             }).catch((err:Error) => {
@@ -74,7 +74,6 @@ export default defineComponent({
                 this.$handleError(err)
             });
             
-
         },
         getColor(i: number):string {
             if(i <= this.rating)
