@@ -1,12 +1,29 @@
-export type UserDetails = {[key: string]: any} & {
-    activeRole?:RoleName,
+export type User = {[key: string]: any} & {
+    _id: string;
+    _key: string;
+    personID: number;
+    churchName: string;
+    churchID: number;
+    activeRole:RoleName;
+    administrator: boolean;
+    email: string;
+    roles: Array<UserRole>;
+    displayName: string;
+    age: number;
+    cellPhone?: any;
+}
+
+export type UserRole = Role & {
+    organisationID: Array<number>;
+    org_id: Array<string>;
+    scope: string;
 }
 
 export type Role = {
-    name: string;
+    _id?: string;
     enumName: RoleName;
-    org: Array<string>;
-    scope: string;
+    name: string;
+    roleID?: number;
     securityLevel: number;
 }
 

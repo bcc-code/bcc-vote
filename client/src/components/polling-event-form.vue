@@ -127,7 +127,7 @@ export default defineComponent({
                 }
             } as any
             if(this.votingAdminRole) {
-                query._id = { $in: this.votingAdminRole.org}
+                query.churchID = { $in: this.votingAdminRole.organisationID}
             }
             const res = await this.$client.service('org').find({query}).catch(this.$handleError)
             

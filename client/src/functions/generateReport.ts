@@ -28,15 +28,20 @@ const fillAnswerData = (allAnswers: Answer[], workSheets:any, voterMap:any, answ
     })
 }
 const fillDataRow = (ws: any, ans: Answer, voterMap: any, answerMap:any) => {
-    const {personID, displayName, age, email, churchName, cellPhone, activeRole} = voterMap[ans._to]
     const row = ws.lastUsedRow + 1
-    ws.cell(row, 1).number(personID)
-    ws.cell(row, 2).string(displayName)
-    ws.cell(row, 3).number(age)
-    ws.cell(row, 4).string(email)
-    ws.cell(row, 5).string(cellPhone.formatted)
-    ws.cell(row, 6).string(churchName)
-    ws.cell(row, 7).string(activeRole)
+    try {
+        const {personID, displayName, age, email, churchName, cellPhone, activeRole} = voterMap[ans._to]
+        ws.cell(row, 1).number(personID)
+        ws.cell(row, 2).string(displayName)
+        ws.cell(row, 3).number(age)
+        ws.cell(row, 4).string(email)
+        ws.cell(row, 5).string(cellPhone.formatted)
+        ws.cell(row, 6).string(churchName)
+        ws.cell(row, 7).string(activeRole)
+    } catch (error) {
+        ws.cell(row, 2, row, 7, true).string("Couldn't get information about this person: (user id: "+ans._to+") please contact support")
+    }
+    
     ws.cell(row, 8).string(answerMap[ans.answerId])
     ws.cell(row, 9).date(new Date(ans.lastChanged))
 }
