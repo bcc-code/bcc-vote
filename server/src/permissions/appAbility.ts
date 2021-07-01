@@ -14,7 +14,7 @@ type DefinePermissions = (user: User, builder: AbilityBuilder<AppAbility>) => vo
 const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbility>) => {
     can('create','answer', { _to: user._id } as any);
     can('find', 'answer', {'visibility': PollResultVisibility["Public"] as any});
-    can('get', 'answer', {'_to': user._id});
+    can('get', 'answer', {_to: user._id} as any);
     can('find','poll');
     can('get', 'poll');
     can('get', 'poll-result');
