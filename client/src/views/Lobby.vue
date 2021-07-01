@@ -41,22 +41,22 @@ export default defineComponent({
     },
     methods: {
         init():void {
-            this.loadPollingEvent();
-            this.loadCurrentPoll();
+            this.loadPollingEvent()
+            this.loadCurrentPoll()
         },
         reconnect(){
             
-            console.log('reconnect');
-            this.init();
+            console.log('reconnect')
+            this.init()
         },
         disconnect(){
-            console.log('disconnect');
-            this.init();
+            console.log('disconnect')
+            this.init()
         },
         async loadPollingEvent():Promise<void>{
             this.pollingEvent = await this.$client.service('polling-event')
-            .get(this.$route.params.id)
-            .catch(this.$handleError) as PollingEvent
+                .get(this.$route.params.id)
+                .catch(this.$handleError) as PollingEvent
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
                 this.goToThankYouPage(this.pollingEvent)
         },
@@ -67,27 +67,27 @@ export default defineComponent({
                     activeStatus: PollActiveStatus['Live']
                 }
             }).catch(this.$handleError)
-            this.currentAnswer = undefined;
+            this.currentAnswer = undefined
             if(res.length > 0){
-                this.currentAnswer = await this.loadCurrentAnswer(res[0]._key);
+                this.currentAnswer = await this.loadCurrentAnswer(res[0]._key)
                 this.currentPoll = res[0]
             }
         },
         async loadCurrentAnswer(pollId: string):Promise<undefined|Answer>{
             const res = await this.$client.service('answer').get(pollId + '-' + this.$user._key)
-            .catch((err:Error) => {
-                if(err.name !== 'NotFound')
-                    this.$handleError(err);
-            })
+                .catch((err:Error) => {
+                    if(err.name !== 'NotFound')
+                        this.$handleError(err)
+                })
 
-            return res;
+            return res
         },
         getPoll(data: Poll):void{
-            console.log('getting poll');
+            console.log('getting poll')
             if(data.pollingEventId !== this.$route.params.id)
                 return
 
-            this.currentAnswer = undefined;
+            this.currentAnswer = undefined
             if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
@@ -95,7 +95,7 @@ export default defineComponent({
         },
         patchEvent(data: PollingEvent):void{
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(data);
+                this.goToThankYouPage(data)
         },
         goToThankYouPage(data: PollingEvent):void{
             this.$router.push({name: 'Thank you', params: {
