@@ -103,6 +103,8 @@ describe('permissions - app ability', async () => {
       { action:"create", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
       { action:"patch", subject:"polling-event", activeRole:"VotingAdmin", entity:'eventForAllOrgs', expected: false },
       { action:"remove", subject:"polling-event", activeRole:"VotingAdmin", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"find", subject:"org", activeRole:"VotingAdmin", entity:'organisationUserIsAdminFor', expected: true },
+      { action:"find", subject:"org", activeRole:"VotingAdmin", entity:'organisationUserIsNotAdminFor', expected: false },
 
       { action:"update", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
       { action:"patch", subject:"poll", entity:'basePoll', activeRole:"Developer", expected: true },
@@ -125,7 +127,7 @@ describe('permissions - app ability', async () => {
 
   useCases.forEach((useCase) => {
 
-      it(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
+      it.only(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
           useCase.action,
           useCase.subject,
           useCase.expected,
