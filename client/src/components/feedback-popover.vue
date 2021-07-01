@@ -9,7 +9,7 @@
             <div class="mx-auto" style="max-width:386px">
                 <h5 class="mb-2">{{$t('labels.rate-experience')}}</h5>
                 <div class="flex justify-between mb-5">
-                    <StarIcon v-for="i in maxRating" :key="i" class="w-12" @click="rating = i" :style="getColor(i)"/>
+                    <StarIcon v-for="i in maxRating" :key="i" class="w-12 h-12" @click="rating = i" :style="getColor(i)"/>
                 </div>
                 <FormField class="mb-9" type="textarea" translation="any-trouble" v-model="textVal" baseHeight="100px" :placeholder="$t('placeholders.type-here')" enableNewLine/>
                 <div class="w-full grid grid-cols-2 gap-5">
@@ -69,11 +69,10 @@ export default defineComponent({
             this.$client.service('feedback').create(feedbackData).then(() => {
                 this.$showSuccess(this.$t('info.thank-for-feedback'))
                 this.showFeedback = false
-            }).catch((err:Error) => {
+            }).catch((err: Error) => {
                 this.submitted = false
                 this.$handleError(err)
             });
-            
         },
         getColor(i: number):string {
             if(i <= this.rating)
