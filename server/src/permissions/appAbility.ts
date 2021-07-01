@@ -14,6 +14,7 @@ type DefinePermissions = (user: UserDetails, builder: AbilityBuilder<AppAbility>
 const globalPermissions = (user: UserDetails, { can, cannot }: AbilityBuilder<AppAbility>) => {
     can('create','answer', { _to: user._id });
     can('find', 'answer', {'visibility': PollResultVisibility["Public"] as any});
+    can('get', 'answer', {'_to': user._id});
     can('find','poll');
     can('get', 'poll');
     can('get', 'poll-result');
