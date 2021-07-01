@@ -60,7 +60,7 @@ export class Feedback implements ServiceMethods<Data> {
             };
             promises.push(axios.post('', toSend));
         }
-
+        
         await Promise.all(promises);
 
         return data;

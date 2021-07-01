@@ -72,6 +72,7 @@ function pollingEventsTestSet(){
     const userSvc = app.service('user') as any ;
     const pollSvc = app.service('poll') as any ;
     const answerSvc = app.service('answer') as any ;
+    const orgSvc = app.service('org') as any ;
 
     const testData = {
         scopedToLocalChurchSameAsLoggedInUser: async () => { return await  pollingEventSvc.get('504279890');},
@@ -79,6 +80,8 @@ function pollingEventsTestSet(){
         scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978');},
         scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598');},
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
+        organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
+        organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('178376431');},
         user: async () => { return await userSvc.get('178509735',{});},
         basePoll: async () => {
             return await pollSvc.get('504310091');

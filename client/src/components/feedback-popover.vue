@@ -55,16 +55,18 @@ export default defineComponent({
         }
     },
     methods: {
-        async sendFeedback(){
+        sendFeedback(){
             if(this.submitted)
                 return;
             this.submitted = true
-            await this.$client.service('feedback').create({
+
+            const feedbackData = {
                 pollingEventId: this.pollingEventId,
                 personID: this.$user.personID,
                 message: this.textVal,
                 rating: this.rating
-            }).then(() => {
+            }
+            this.$client.service('feedback').create(feedbackData).then(() => {
                 this.$showSuccess(this.$t('info.thank-for-feedback'))
                 this.showFeedback = false
             }).catch((err: Error) => {
