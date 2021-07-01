@@ -44,15 +44,6 @@ export default defineComponent({
             this.loadPollingEvent()
             this.loadCurrentPoll()
         },
-        reconnect(){
-            
-            console.log('reconnect')
-            this.init()
-        },
-        disconnect(){
-            console.log('disconnect')
-            this.init()
-        },
         async loadPollingEvent():Promise<void>{
             this.pollingEvent = await this.$client.service('polling-event')
                 .get(this.$route.params.id)
