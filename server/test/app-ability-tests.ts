@@ -127,7 +127,7 @@ describe('permissions - app ability', async () => {
 
   useCases.forEach((useCase) => {
 
-      it.only(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
+      it(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
           useCase.action,
           useCase.subject,
           useCase.expected,
