@@ -53,12 +53,14 @@ export default defineComponent({
             const allAnswers = await this.getAnswers()
             const allVoters = await this.getVoters(allAnswers)
             const allResults = await this.getResults()
-
-            const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
-            
+            try{ 
+                const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
+                const title = this.getReportTitle()
+                this.downloadReport(excelFile, title)
+            } catch(err){
+                this.$handleError(err)
+            }
             this.loadingReport = false
-            const title = this.getReportTitle()
-            this.downloadReport(excelFile, title)
         },
         getAnswers(){
             return this.$client.service('answer').find({
