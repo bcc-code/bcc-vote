@@ -99,7 +99,7 @@ export default {
         all: [],
         find: [],
         get: [ addChannel ],
-        create: [ resetPollResults ],
+        create: [],
         update: [],
         patch: [ removeAllAnswers ],
         remove: []
