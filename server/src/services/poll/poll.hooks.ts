@@ -66,8 +66,8 @@ const resetPollResults = async(context: HookContext):Promise<HookContext> => {
     context.result.answers.forEach((opt:Option) => {
         pollRes.answerCount[opt.answerId] = 0;
     });
-    await db.collection('poll-result').doc(context.result._key).set(pollRes);
     
+    await db.collection('poll-result').doc(context.result._key).set(pollRes);
     return context;
 };
 
