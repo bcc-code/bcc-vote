@@ -60,9 +60,9 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('remove', 'poll');
         can('patch', 'poll');
 
-        can('patch', 'polling-event', { 'participantFilter.org': { $in: votingAdminFor}} as any);
-        can('update', 'polling-event', { 'participantFilter.org': { $in: votingAdminFor}} as any);
-        can('create','polling-event', { 'participantFilter.org': { $in: votingAdminFor}} as any);
+        can('patch', 'polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
+        can('update', 'polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
+        can('create','polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
 
         can('find', 'org', { churchID: { $in: votingAdminFor}} as any);
         can('find', 'org', { organisationID: { $in: votingAdminFor}} as any);
