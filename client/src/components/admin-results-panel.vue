@@ -2,14 +2,14 @@
     <div class="form-section padding-md">
         <div class="flex justify-between font-bold mb-8">
             <h3>{{$t('labels.event-results')}}</h3>
-            <div class="flex text-blue-900 items-center cursor-pointer" @click="getReport()" :class="{'opacity-50': loadingReport}"> 
+            <div v-if="startedPolls.length" class="flex text-blue-900 items-center cursor-pointer" @click="getReport()" :class="{'opacity-50': loadingReport}"> 
                 <ClipboardListIcon class="h-6 w-6"/>
                 <h5 class="py-1">{{$t('actions.get-report')}}</h5>
             </div>
         </div>
         <Spinner v-if="loadingReport"/>
         <div class="grid grid-flow-row grid-cols-2 gap-6" :class="{'opacity-50': loadingReport}">
-            <PollResultTile v-for="poll in savedPolls" :key="poll._key" :poll="poll"/>
+            <PollResultTile v-for="poll in startedPolls" :key="poll._key" :poll="poll"/>
         </div>
   </div>
 </template>
@@ -22,7 +22,7 @@ import Spinner from '../components/spinner.vue'
 import { generateReport } from '../functions/generateReport'
 
 import { defineComponent, PropType } from 'vue'
-import { Poll, PollingEvent, Answer } from '../domain'
+import { Poll, PollingEvent, Answer, PollActiveStatus } from '../domain'
 
 export default defineComponent({
     components: {
@@ -40,6 +40,11 @@ export default defineComponent({
             loadingReport: false
         }
     },
+    computed: {
+        startedPolls():Array<Poll>{
+            return this.savedPolls.filter((poll:Poll) => {return poll.activeStatus !== PollActiveStatus['Not Started']})
+        }
+    },
     methods: {
         async getReport():Promise<void>{
             if(this.loadingReport)
@@ -48,12 +53,14 @@ export default defineComponent({
             const allAnswers = await this.getAnswers()
             const allVoters = await this.getVoters(allAnswers)
             const allResults = await this.getResults()
-
-            const excelFile = generateReport(this.pollingEvent, this.savedPolls, allAnswers, allVoters, allResults)
-            
+            try{ 
+                const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
+                const title = this.getReportTitle()
+                this.downloadReport(excelFile, title)
+            } catch(err){
+                this.$handleError(err)
+            }
             this.loadingReport = false
-            const title = this.getReportTitle()
-            this.downloadReport(excelFile, title)
         },
         getAnswers(){
             return this.$client.service('answer').find({
