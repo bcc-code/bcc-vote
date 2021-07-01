@@ -8,7 +8,7 @@ import { expressOauth, OAuthStrategy, OAuthProfile } from '@feathersjs/authentic
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import pick from 'lodash/pick';
-import { getRolesForPerson } from './authentication-helpers';
+import { getActiveRole } from './authentication-helpers';
 import logger from '../../logger';
 declare module '../../declarations' {
   interface ServiceTypes {
@@ -26,13 +26,11 @@ class Auth0Strategy extends OAuthStrategy {
         try {
             member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
             logger.info(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
-            member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','roles', 'administrator']);
-
-            const { roles, activeRole} = getRolesForPerson(member);
+            member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','related.roles', 'administrator']);
 
             member._id = `user/${member._key}`;
-            member.roles = roles;
-            member.activeRole = activeRole;
+            member.roles = member.related.roles;
+            member.activeRole = getActiveRole(member.related.roles);
             member.churchName = member.church.org.name;
             delete member.church;
             delete member.related;
