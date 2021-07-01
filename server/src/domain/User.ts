@@ -1,4 +1,4 @@
-export type User = {
+export type User = {[key: string]: any} & {
     _id: string;
     _key: string;
     personID: number;

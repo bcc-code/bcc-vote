@@ -4,6 +4,7 @@ import { defineAbilityFor,  } from './permissions/appAbility';
 import {authenticateExternal } from './services/authentication/customAuthentication';
 import { ForbiddenError, subject } from '@casl/ability';
 import { BadRequest } from '@feathersjs/errors';
+import { User } from './domain';
 
 
 // Application hooks that run for every service
@@ -51,7 +52,7 @@ const checkAbilityWithFullFieldAccess = (context: HookContext):HookContext => {
     }
 
     if(context.params.user){
-        const ability = defineAbilityFor(context.params.user);
+        const ability = defineAbilityFor(context.params.user as User);
 
         const requestedAction = context.method;
         const requestedSubject = context.path;
@@ -78,7 +79,7 @@ const checkRemoveAbility = (context: HookContext):HookContext => {
     }
 
     if(context.params.user){
-        const ability = defineAbilityFor(context.params.user);
+        const ability = defineAbilityFor(context.params.user as User);
 
         const requestedAction = context.method;
         const requestedSubject:any = context.path;
@@ -103,7 +104,7 @@ const checkFindAbility = (context: HookContext):HookContext => {
 
     if(context.params.user){
 
-        const ability = defineAbilityFor(context.params.user);
+        const ability = defineAbilityFor(context.params.user as User);
 
         const requestedAction = context.method;
         const requestedSubject:any = context.path;
@@ -141,7 +142,7 @@ const checkGetAbility = (context: HookContext):HookContext => {
     }
 
     if(context.params.user){
-        const ability = defineAbilityFor(context.params.user);
+        const ability = defineAbilityFor(context.params.user as User);
 
         const action = 'get';
         const requestedSubject:any = context.path;
@@ -163,7 +164,7 @@ const checkPatchAbility = async (context: HookContext):Promise<HookContext> => {
     }
 
     if(context.params.user){
-        const ability = defineAbilityFor(context.params.user);
+        const ability = defineAbilityFor(context.params.user as User);
 
         const entity = await context.app.service(context.path).get(context.id,{});
         entity.requestedChanges = context.data;
