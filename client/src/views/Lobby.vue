@@ -77,7 +77,6 @@ export default defineComponent({
             return res
         },
         getPoll(data: Poll):void{
-            console.log('getting poll')
             if(data.pollingEventId !== this.$route.params.id)
                 return
 
