@@ -57,10 +57,13 @@ export default defineComponent({
                     activeStatus: PollActiveStatus['Live']
                 }
             }).catch(this.$handleError)
+            
+            this.$showSuccess('loading poll '+JSON.stringify(res));
             if(res.length > 0)
                 this.currentPoll = res[0]
         },
         getPoll(data: Poll){
+            this.$showSuccess('getting poll '+JSON.stringify(data));
             if(data.pollingEventId !== this.$route.params.id)
                 return
             if(data.activeStatus === PollActiveStatus['Live'])
