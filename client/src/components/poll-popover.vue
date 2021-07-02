@@ -1,7 +1,6 @@
 <template>
     <div class="h-full w-full bg-white rounded-t-lg relative" :style="'min-height: calc(100vh - 124px);'">
         <div class="h-full w-full p-4 md:p-6">
-            {{answer}}
             <InfoBox v-if="!answer" class="mb-4">
                 {{$t('info.result-visibility.'+poll.resultVisibility)}}
             </InfoBox>
