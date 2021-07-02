@@ -58,8 +58,11 @@ export default defineComponent({
                     activeStatus: PollActiveStatus['Live']
                 }
             }).catch(this.$handleError)
-            this.currentAnswer = undefined
-            if(res.length > 0){
+            if(res.length === 0){
+                this.currentPoll = undefined
+                this.currentAnswer = undefined
+            }
+            else{
                 this.currentAnswer = await this.loadCurrentAnswer(res[0]._key)
                 this.currentPoll = res[0]
             }
