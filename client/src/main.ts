@@ -43,7 +43,6 @@ if(window.location.hostname === 'vote.bcc.no'){
     init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
 }
 
-
 app.mixin({
     methods: {
         $handleError(error: Error) {
@@ -65,6 +64,25 @@ app.mixin({
                 settings.positionY = 'top'
             }
             this.$toast(message, settings)
+        },
+        $logout():void {
+            router.$client.logout()
+            localStorage.clear()
+            sessionStorage.clear()
+            var cookies = document.cookie.split(";")
+            for (var i = 0; i < cookies.length; i++) {   
+                var spcook = cookies[i].split("=")
+                spcook.forEach((cookiename) => {
+                    var d = new Date()
+                    d.setDate(d.getDate() - 1)
+                    var expires = ";expires="+d
+                    var name=cookiename
+                    var value=""
+                    document.cookie = name + "=" + value + expires + "; path=/acc/html"  
+                })
+            }
+            const url = `https://login.bcc.no/v2/logout?client_id=e9qdZ4dhMhhG9YbDPmo9hzI7Sp644ulH&returnTo=${location.origin}&federated`
+            location.href = url               
         }
     },
     computed: {

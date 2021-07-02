@@ -6,7 +6,7 @@
                 <div class="profile-dropdown dropdown-box">
                     <h6 class="text-gray-700">{{$t('labels.settings')}}</h6>
                     <h5 @click="openConnection = !openConnection">{{$t('labels.connection-status')}}</h5>
-                    <h5 @click="logout">{{$t('actions.logout')}}</h5>
+                    <h5 @click="$logout()">{{$t('actions.logout')}}</h5>
                 </div>
             </button>
             <div v-if="!showingFooter" class="pl-5">
@@ -46,9 +46,6 @@ export default defineComponent({
     methods: {
         navigateBack(){
             this.$router.go(-1)
-        },
-        logout(){
-            this.$router.push({name:'Logout'})
         }
     }
 })

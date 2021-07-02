@@ -49,14 +49,6 @@ export const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        name: 'Logout',
-        path: "/logout",
-        component: {},
-        meta: {
-            logout: true 
-        }
-    },
-    {
         path: '/error-:message',
         name: 'Error page',
         component: () => require('../views/Error.vue'),

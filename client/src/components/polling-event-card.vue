@@ -21,7 +21,7 @@
             </div>
         </div>
         <transition name="fade">
-            <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="goToLogout()" @confirm="goToLobby()" cancelTranslation="logout" confirmTranslation="ok-continue">
+            <ConfirmPopover v-if="showConfirm" @resign="showConfirm = false" @cancel="$logout()" @confirm="goToLobby()" cancelTranslation="logout" confirmTranslation="ok-continue">
                 <template v-slot:header>
                     {{$t('labels.logged-as')}}
                     <span class="text-blue-900 block md:inline-block">{{$user.displayName}}</span>
@@ -36,7 +36,6 @@
 
 <script lang="ts">
 import ConfirmPopover from './confirm-popover.vue'
-import FilterInfo from './event-filter-info.vue'
 import EventStatus from './polling-event-status.vue'
 
 import { PollingEvent, PollingEventStatus } from '../domain'
@@ -45,7 +44,6 @@ import moment from 'moment'
 export default defineComponent({
     components: {
         ConfirmPopover,
-        FilterInfo,
         EventStatus
     },
     props: {
@@ -58,10 +56,10 @@ export default defineComponent({
     },
     computed: {
         isEventNotStarted():boolean {
-            return this.pollingEvent.status === PollingEventStatus['Not Started'];
+            return this.pollingEvent.status === PollingEventStatus['Not Started']
         },
         isEventLive():boolean {
-            return this.pollingEvent.status === PollingEventStatus['Live'];
+            return this.pollingEvent.status === PollingEventStatus['Live']
         },
         formattedDate():string {
             return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:MM")
@@ -71,14 +69,14 @@ export default defineComponent({
                 return false
             if(this.pollingEvent.status === PollingEventStatus['Archived'])
                 return false
-            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
-            const filter = this.pollingEvent.participantFilter;
+            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName)
+            const filter = this.pollingEvent.participantFilter
             if(filter.maxAge && this.$user.age >= filter.maxAge)
-                return false;
+                return false
             if(filter.minAge && this.$user.age < filter.minAge)
-                return false;
-            if(filter.org !== 'all' && this.$user.churchID != filter.org)
-                return false;
+                return false
+            if(filter.org !== 'all' && this.$user.churchID !== filter.org)
+                return false
             if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
                 return false
             return true
@@ -90,9 +88,6 @@ export default defineComponent({
     methods: {
         goToLobby() {
             this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`)
-        },
-        goToLogout(){
-            this.$router.push({name:'Logout'})
         },
         goToAdmin() {
             this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`)
