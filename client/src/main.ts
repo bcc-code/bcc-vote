@@ -82,7 +82,6 @@ app.mixin({
                 })
             }
             const url = `https://login.bcc.no/v2/logout?client_id=e9qdZ4dhMhhG9YbDPmo9hzI7Sp644ulH&returnTo=${location.origin}&federated`
-            // const url = 'http://google.com'
             location.href = url               
         }
     },
