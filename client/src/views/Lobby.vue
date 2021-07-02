@@ -8,14 +8,14 @@
             </div>
         </div>
         <div class="md:max-w-screen-md md:mx-auto">
-            <PollPopOver v-if="currentPoll" :poll="currentPoll" :key="currentPoll"/>
+            <PollPopOver v-if="currentPoll" :poll="currentPoll" :answer="currentAnswer" :key="currentPoll" @answered="currentAnswer = $event"/>
         </div>
     </section>
 </template>
 <script lang="ts">
 import PollPopOver from '../components/poll-popover.vue'
 import { PollingEvent, PollingEventStatus } from '../domain'
-import { Poll, PollActiveStatus } from '../domain/Poll'
+import { Answer, Poll, PollActiveStatus } from '../domain/Poll'
 import { defineComponent } from 'vue'
 export default defineComponent({
     components: {
@@ -25,54 +25,72 @@ export default defineComponent({
         return {
             pollingEvent: {} as PollingEvent,
             currentPoll: undefined as (undefined | Poll),
+            currentAnswer: undefined as (undefined | Answer)
         }
     },
     created() {
         this.init()
         
         this.$client.service('poll').on('patched', this.getPoll)
-        this.$client.service('polling-event').on('patched', this.patchEvent);
+        this.$client.service('polling-event').on('patched', this.patchEvent)
         this.$client.io.on('reconnect', this.init)
     },
     unmounted(){
         this.$client.service('poll').off('patched')
-        this.$client.service('polling-event').off('patched');
+        this.$client.service('polling-event').off('patched')
     },
     methods: {
-        init() {
-            this.loadPollingEvent();
-            this.loadCurrentPoll();
+        init():void {
+            this.loadPollingEvent()
+            this.loadCurrentPoll()
         },
-        async loadPollingEvent(){
+        async loadPollingEvent():Promise<void>{
             this.pollingEvent = await this.$client.service('polling-event')
-            .get(this.$route.params.id)
-            .catch(this.$handleError) as PollingEvent
+                .get(this.$route.params.id)
+                .catch(this.$handleError) as PollingEvent
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(this.pollingEvent);
+                this.goToThankYouPage(this.pollingEvent)
         },
-        async loadCurrentPoll(){
+        async loadCurrentPoll():Promise<void>{
             const res = await this.$client.service('poll').find({
                 query: {
                     pollingEventId: this.$route.params.id,
                     activeStatus: PollActiveStatus['Live']
                 }
             }).catch(this.$handleError)
-            if(res.length > 0)
+            if(res.length === 0){
+                this.currentPoll = undefined
+                this.currentAnswer = undefined
+            }
+            else{
+                this.currentAnswer = await this.loadCurrentAnswer(res[0]._key)
                 this.currentPoll = res[0]
+            }
         },
-        getPoll(data: Poll){
+        async loadCurrentAnswer(pollId: string):Promise<undefined|Answer>{
+            const res = await this.$client.service('answer').get(pollId + '-' + this.$user._key)
+                .catch((err:Error) => {
+                    if(err.name !== 'NotFound')
+                        this.$handleError(err)
+                })
+
+            return res
+        },
+        getPoll(data: Poll):void{
             if(data.pollingEventId !== this.$route.params.id)
                 return
+
+            this.currentAnswer = undefined
             if(data.activeStatus === PollActiveStatus['Live'])
                 this.currentPoll = data
             else
                 this.currentPoll = undefined
         },
-        patchEvent(data: PollingEvent){
+        patchEvent(data: PollingEvent):void{
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(data);
+                this.goToThankYouPage(data)
         },
-        goToThankYouPage(data: PollingEvent){
+        goToThankYouPage(data: PollingEvent):void{
             this.$router.push({name: 'Thank you', params: {
                 id: data._key,
                 title: data.title

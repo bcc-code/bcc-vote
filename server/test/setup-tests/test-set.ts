@@ -83,18 +83,14 @@ function pollingEventsTestSet(){
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('178376431');},
         user: async () => { return await userSvc.get('178509735',{});},
-        basePoll: async () => {
-            return await pollSvc.get('504310091');
-        },
-        anonymousAnswer: async () => {
-            return await answerSvc.get('39639');
-        },
-        nonpublicAnswer: async () => {
-            return await answerSvc.get('39610');
-        },
-        publicAnswer: async () => {
-            return await answerSvc.get('39571');
-        },
+        basePoll: async () => {return await pollSvc.get('504310091');},
+        
+        anonymousAnswer: async () => {return await answerSvc.get('39639');},
+        nonpublicAnswer: async () => {return await answerSvc.get('39610');},
+        publicAnswer: async () => {return await answerSvc.get('39571');},
+        ownAnswer: async () => {return await answerSvc.get('39610');},
+        someoneElsesAnswer: async () => {return await answerSvc.get('39639');},
+
         feedbackData: () => {
             return {
                 pollingEventId: '1347647654',

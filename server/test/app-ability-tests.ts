@@ -122,7 +122,10 @@ describe('permissions - app ability', async () => {
       { action:"find", subject:"answer", entity:"nonpublicAnswer", activeRole:"Member", expected: false},
       { action:"find", subject:"answer", entity:"anonymousAnswer", activeRole:"Member", expected: false},
 
-      { action:"create", subject:"feedback", entity:"feedbackData", activeRole: "Member", expected: true}
+      { action:"create", subject:"feedback", entity:"feedbackData", activeRole: "Member", expected: true},
+
+      { action:"get", subject: "answer", entity: "ownAnswer", activeRole: "Member", expected: true},
+      { action:"get", subject: "answer", entity: "someoneElsesAnswer", activeRole: "Member", expected: false},
   ];
 
   useCases.forEach((useCase) => {
