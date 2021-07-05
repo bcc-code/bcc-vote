@@ -1,6 +1,6 @@
 export interface User {
     age?: number;
-    churchID?: number;
+    churchID?: string;
     personID?: number;
     authorityLevel?: number;
     roles?: Array<Role>

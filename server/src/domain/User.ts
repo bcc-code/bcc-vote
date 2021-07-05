@@ -3,7 +3,7 @@ export type User = {[key: string]: any} & {
     _key: string;
     personID: number;
     churchName: string;
-    churchID: number;
+    churchID: string;
     activeRole:RoleName;
     administrator: boolean;
     email: string;

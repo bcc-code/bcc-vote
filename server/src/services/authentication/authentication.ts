@@ -32,6 +32,7 @@ class Auth0Strategy extends OAuthStrategy {
             member.roles = member.related.roles;
             member.activeRole = getActiveRole(member.related.roles);
             member.churchName = member.church.org.name;
+            member.churchID = member.churchID.toString();
             delete member.church;
             delete member.related;
 
