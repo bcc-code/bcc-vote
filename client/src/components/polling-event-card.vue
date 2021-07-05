@@ -75,7 +75,7 @@ export default defineComponent({
                 return false
             if(filter.minAge && this.$user.age < filter.minAge)
                 return false
-            if(filter.org !== 'all' && this.$user.churchID !== filter.org)
+            if(filter.org !== 'all' && this.$user.churchID.toString() !== filter.org)
                 return false
             if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
                 return false
