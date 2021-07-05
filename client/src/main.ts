@@ -107,6 +107,11 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
 client.configure(socketio(socket))
 client.configure(auth())
 
+// client.service('poll').on('patched', () => {
+//     console.log('poll patched from main');
+// })
+console.log(socket)
+
 const user = {
     age: null,
     churchID: null,
