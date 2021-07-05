@@ -24,7 +24,7 @@ export default defineComponent({
         CheckIcon
     },
     props: {
-        options: Array as PropType<Array<Option>>
+        options: {type: Array as PropType<Array<Option>>, required: true}
     },
     data() {
         return {
