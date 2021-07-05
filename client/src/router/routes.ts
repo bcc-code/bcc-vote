@@ -4,7 +4,7 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Home',
-        component: async() => require('../views/Home.vue'),
+        component: async() => import('../views/Home.vue' as string),
         meta: {
             bgColor: "bg-white"
         }
@@ -12,17 +12,17 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/create',
         name: 'Create Event',
-        component: async() => require('../views/PollingEventCreate.vue')
+        component: async() => import('../views/PollingEventCreate.vue' as string)
     }, 
     {
         name: 'Administrate Event',
         path: '/polling-event/admin/:id',
-        component: async() => require('../views/AdminEvent.vue'),
+        component: async() => import('../views/AdminEvent.vue' as string),
     },
     {
         name: 'Event Lobby',
         path: '/polling-event/lobby/:id',
-        component: async() => require('../views/Lobby.vue'),
+        component: async() => import('../views/Lobby.vue' as string),
         meta: {
             bgColor: "bg-blue-900"
         }
@@ -30,12 +30,12 @@ export const routes: Array<RouteRecordRaw> = [
     {
         name: 'Event live results',
         path: '/polling-event/live-results/:id',
-        component: async() => require('../views/LiveResults.vue')
+        component: async() => import('../views/LiveResults.vue' as string)
     },
     {
         name: 'Thank you',
         path: '/thank-you',
-        component: async() => require('../views/ThankYou.vue'),
+        component: async() => import('../views/ThankYou.vue' as string),
         meta: {
             bgColor: "bg-blue-900"
         }
@@ -43,7 +43,7 @@ export const routes: Array<RouteRecordRaw> = [
     {
         name: 'Poll result',
         path: '/poll/result/:id',
-        component: async() => require('../views/AdminPollResult.vue'),
+        component: async() => import('../views/AdminPollResult.vue' as string),
         meta: {
             bgColor: "bg-blue-900"
         }
@@ -51,7 +51,7 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/error-:message',
         name: 'Error page',
-        component: async() => require('../views/Error.vue'),
+        component: async() => import('../views/Error.vue' as string),
         meta: {
             unprotected: true 
         }
