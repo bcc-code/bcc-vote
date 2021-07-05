@@ -8,7 +8,6 @@ const router: any = createRouter({
 })
 
 router.beforeEach(async(to: any, from: any, next: Function) => {
-    router.$client.io.removeListener('reconnect')
     if(router.$gtag)
         router.$gtag.event('page_view', {'page_title': to.name})
     if(to.meta.unprotected){

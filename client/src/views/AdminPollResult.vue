@@ -24,11 +24,14 @@ export default defineComponent({
     created(){
         this.loadPoll()
         
-        this.$client.io.on('reconnect', this.loadPoll);
+        this.$client.io.on('reconnect', this.loadPoll)
+    },
+    unmounted(){
+        this.$client.io.off('reconnect', this.loadPoll)
     },
     methods: {
         async loadPoll(){
-            this.loaded = false;
+            this.loaded = false
             await this.$client.service('poll').get(this.$route.params.id)
                 .then((res: Poll) => {
                     this.poll = res
