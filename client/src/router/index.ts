@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
-import { logToSentry } from '../functions/helpers'
+import { logToSentry } from '../functions/sentry'
 
 const router: any = createRouter({
     history: createWebHistory(process.env.BASE_URL),
