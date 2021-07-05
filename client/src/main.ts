@@ -135,7 +135,11 @@ client.hooks({
     },
     after: {
         all: [(context:any) => {
-            createBreadcrumb('Request', context.result, context.method+' '+context.path)
+            let data = context.result
+            if(context.path === 'authentication')
+                data = context.result.user
+                
+            createBreadcrumb('Request', data, context.method+' '+context.path)
         }]
     }
 })
