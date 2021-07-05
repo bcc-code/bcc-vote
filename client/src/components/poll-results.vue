@@ -57,8 +57,9 @@ export default defineComponent({
         this.$client.io.on('reconnect', this.init)
     },
     unmounted(){
-        this.$client.service('answer').off('created')
-        this.$client.service('poll-result').off('patched')
+        this.$client.service('answer').off('created', this.addAnswer)
+        this.$client.service('poll-result').off('patched', this.changeBars)
+        this.$client.io.off('reconnect', this.init)
     },
     watch: {
         selectedOption(newVal){

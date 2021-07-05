@@ -13,8 +13,9 @@ import { Role } from './domain/User'
 import { store } from './store'
 import router from './router'
 import { init } from '@sentry/browser'
-import { logToSentry } from './functions/helpers'
+import { logToSentry, logConnectionsToSentry, createBreadcrumb} from './functions/sentry'
 import vueGtag from 'vue-gtag'
+
 
 const messages = {    
     no: Object.assign({}, require('./localization/no_vote_master.json'))
@@ -40,8 +41,9 @@ if(window.location.hostname === 'vote.bcc.no'){
         // for testing locally or in dev use G-4KNVYNZ55W
         config: {id: 'G-6V21WXD03F'}
     })
+    
     init({dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770'})
-}
+}   
 
 app.mixin({
     methods: {
@@ -107,6 +109,8 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
 client.configure(socketio(socket))
 client.configure(auth())
 
+logConnectionsToSentry(client)
+
 const user = {
     age: null,
     churchID: null,
@@ -122,15 +126,23 @@ router.$gtag = app.config.globalProperties.$gtag;
 app.config.globalProperties.$client = client
 app.config.globalProperties.$user = user
 
-if(app.config.globalProperties.$gtag){
-    client.hooks({
-        before: {
-            all: [(context:any) => {
+client.hooks({
+    before: {
+        all: [(context:any) => {
+            if(app.config.globalProperties.$gtag)
                 app.config.globalProperties.$gtag.event(context.method+' '+context.path)
-            }]
-        }
-    })
-}
+        }]
+    },
+    after: {
+        all: [(context:any) => {
+            let data = context.result
+            if(context.path === 'authentication')
+                data = context.result.user
+                
+            createBreadcrumb('Request', data, context.method+' '+context.path)
+        }]
+    }
+})
 
 document.title = 'BCC Vote'
 app.mount("#app")

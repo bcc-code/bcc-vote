@@ -45,6 +45,13 @@ export default defineComponent({
     
         this.$client.io.on('reconnect', this.init)
     },
+    unmounted(){
+        this.$client.service('poll').off('patched', this.patchedPoll)
+        this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT)
+        this.$client.service('answer').off('created', this.addedAnswer)
+    
+        this.$client.io.off('reconnect', this.init)
+    },
     computed: {
         ...mapGetters('result',['sortedOptions','answerCount']),
         ...mapState('result', ['pollingEvent','polls','answers', 'activePoll']),

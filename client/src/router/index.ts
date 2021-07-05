@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
-import { logToSentry } from '../functions/helpers'
+import { logToSentry } from '../functions/sentry'
 
 const router: any = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -8,7 +8,6 @@ const router: any = createRouter({
 })
 
 router.beforeEach(async(to: any, from: any, next: Function) => {
-    router.$client.io.removeListener('reconnect')
     if(router.$gtag)
         router.$gtag.event('page_view', {'page_title': to.name})
     if(to.meta.unprotected){

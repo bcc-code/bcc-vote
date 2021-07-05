@@ -36,8 +36,9 @@ export default defineComponent({
         this.$client.io.on('reconnect', this.init)
     },
     unmounted(){
-        this.$client.service('poll').off('patched')
-        this.$client.service('polling-event').off('patched')
+        this.$client.service('poll').off('patched', this.getPoll)
+        this.$client.service('polling-event').off('patched', this.patchEvent)
+        this.$client.io.off('reconnect', this.init)
     },
     methods: {
         init():void {
