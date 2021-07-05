@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-5xl mx-auto" >
+    <div v-if="!noParams" class="max-w-5xl mx-auto">
         <div class="w-full h-full px-4 py-6">
             <div class="form-section text-center p-5">
                 <h4 class="font-bold text-blue-700 mb-3 mt-4">
@@ -28,8 +28,13 @@ export default defineComponent({
         FeedbackPopover    
     },
     created(){
-        if(!(this.$route.params.id || this.$route.params.title))
+        if(this.noParams)
             this.$router.push('/')
+    },
+    computed: {
+        noParams():boolean{
+            return !this.$route.params.id || !this.$route.params.title
+        }
     }
 })
 </script>

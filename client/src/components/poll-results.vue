@@ -44,7 +44,7 @@ export default defineComponent({
         }
     },
     async created(){
-        this.generateSortedOptions();
+        this.generateSortedOptions()
 
         await this.init()
         
@@ -63,18 +63,18 @@ export default defineComponent({
     watch: {
         selectedOption(newVal){
             if(newVal && !this.loadedAllAnswers){
-                this.loadAllAnswers(this.poll);
+                this.loadAllAnswers(this.poll)
             }
         }
     },
     computed: {
         // ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
         totalCount():number {
-            let sum = 0;
+            let sum = 0
             Object.keys(this.sortedOptions).forEach((opt: string)=> {
-                sum += this.sortedOptions[opt].count;
+                sum += this.sortedOptions[opt].count
             })
-            return sum;
+            return sum
         },
         pollResultsAreVisible():boolean {
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
@@ -88,10 +88,10 @@ export default defineComponent({
         voterList():Array<Answer>{
             if(this.selectedOption){
                 return this.allAnswers.filter((v:Answer)=>{
-                    return v.answerId == this.selectedOption
+                    return v.answerId === this.selectedOption
                 })
             }
-            return this.allAnswers;
+            return this.allAnswers
         }
     },
     methods: {
@@ -105,12 +105,12 @@ export default defineComponent({
             if(this.pollResultsAreVisible)
                 promises.push(this.loadAllAnswers(this.poll))
 
-            await Promise.all(promises);
+            await Promise.all(promises)
             this.loaded = true
         },
         async loadBars(poll:Poll){
             const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$handleError)
-            this.changeBars(pollResults);
+            this.changeBars(pollResults)
         },
         async loadAllAnswers(poll:Poll){
             const res = await this.$client.service('answer').find({
@@ -120,30 +120,28 @@ export default defineComponent({
                         lastChanged: -1
                     }
                 }
-            }).catch(this.$handleError);
-            this.loadedAllAnswers = true;
-            this.allAnswers = res;
+            }).catch(this.$handleError)
+            this.loadedAllAnswers = true
+            this.allAnswers = res
             this.answerIdsFromFind = new Set(res.map((ans: Answer) => ans._key))
         },
         isVoterAlreadyCounted(key: string){
-            return this.answerIdsFromFind.has(key);
+            return this.answerIdsFromFind.has(key)
         },
         addAnswer(answer: Answer){
             if(answer._from !== this.poll._id)
-                return;
+                return
             if(this.isVoterAlreadyCounted(answer._key))
-                return;
+                return
 
             this.allAnswers.unshift(answer)
         },
         changeBars(data: PollResult){
             if(data.pollId !== this.poll._key)
                 return
-            for(const ans in data.answerCount){
-                if(data.answerCount.hasOwnProperty(ans)){
-                    this.sortedOptions[ans].count = data.answerCount[ans];
-                }
-            }
+            Object.keys(this.sortedOptions).forEach((ans: string) =>{
+                this.sortedOptions[ans].count = data.answerCount[ans]
+            })
         },
         generateSortedOptions(){
             this.sortedOptions = {} as SortedOptions
