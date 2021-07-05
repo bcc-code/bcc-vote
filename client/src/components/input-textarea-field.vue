@@ -21,16 +21,12 @@ export default defineComponent({
         model: {
             get():string{
                 // timeout is so that the height change happens after the text is rendered
-                setTimeout(() => {
-                    const element = this.$refs.textArea as HTMLFormElement
-                    element.style.height = this.baseHeight
-                    element.style.height = (element.scrollHeight) +'px'
-                }, 0)
+                this.adjustHeight()
                 
                 return this.modelValue
             },
             set(newVal:string){
-                this.$emit('update:modelValue', newVal);
+                this.$emit('update:modelValue', newVal)
             }
         }
     },
@@ -38,6 +34,15 @@ export default defineComponent({
         clickEnter(){
             if(this.enableNewLine)
                 this.model += '\n'
+        },
+        adjustHeight(){
+            setTimeout(() => {
+                const element = this.$refs.textArea as HTMLFormElement
+                if(!element)
+                    return
+                element.style.height = this.baseHeight
+                element.style.height = (element.scrollHeight) +'px'
+            }, 0)
         }
     },
     emits: ['update:modelValue']
