@@ -1,6 +1,7 @@
 import logger from '../../logger';
 import { Application } from '../../declarations';
 import socketio from '@feathersjs/socketio-client';
+import { inspect } from 'util';
 const io = require('socket.io-client');
 
 import feathers from '@feathersjs/feathers';
@@ -29,7 +30,7 @@ export default function (app: Application): void {
     });
 
     socket.on("connect_error", (error: any) => {
-        logger.error(`[SOCKET_EVENT] [VOTING_APP] [ERROR] socket failed to reconnect to ${url} after an reconnection attempt with the following error: ${JSON.stringify(error)}`);
+        logger.error(`[SOCKET_EVENT] [VOTING_APP] [ERROR] socket failed to reconnect to ${url} after an reconnection attempt with the following error: ${inspect(error)}`);
     });
 
     const membersClient = feathers();
