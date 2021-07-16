@@ -14,8 +14,8 @@ export type User = {[key: string]: any} & {
 }
 
 export type UserRole = Role & {
-    organisationID: Array<number>;
-    org_id: Array<string>;
+    orgIDs: Array<number>;
+    org_ids: Array<string>;
     scope: string;
 }
 
