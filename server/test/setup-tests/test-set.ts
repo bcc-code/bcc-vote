@@ -1,5 +1,6 @@
 import app from '../../src/app';
 import { ArangoDBConfig } from '@bcc-code/arango-migrate';
+import { PollingEvent, RoleName } from '../../src/domain';
 
 function getAranoDBConfigFromFeathers():ArangoDBConfig {
     const arangoDBConfig = app.get("arangodDB");
@@ -79,6 +80,12 @@ function pollingEventsTestSet(){
         scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892');},
         scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978');},
         scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598');},
+        
+        scopedToCentralAdminEvent: async () => { 
+            const event = await pollingEventSvc.get('504327598') as PollingEvent;
+            event.participantFilter.role = 'CentralAdministrator';
+            return event;
+        },
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('178376431');},

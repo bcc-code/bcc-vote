@@ -75,11 +75,15 @@ describe('permissions - app ability', async () => {
       { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
       { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
       { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"find", subject:"polling-event", activeRole:"CentralAdministrator", entity:'scopedToCentralAdminEvent', expected: true },
+      { action:"find", subject:"polling-event", activeRole:"Member", entity:'scopedToCentralAdminEvent', expected: false },
 
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
       { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"get", subject:"polling-event", activeRole:"CentralAdministrator", entity:'scopedToCentralAdminEvent', expected: true },
+      { action:"get", subject:"polling-event", activeRole:"Member", entity:'scopedToCentralAdminEvent', expected: false },
       { action:"create", subject:"polling-event", activeRole:"Member", entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
 
       { action:"find", subject:"role", entity:'user', activeRole:"Member", expected: false },
@@ -130,7 +134,7 @@ describe('permissions - app ability', async () => {
 
   useCases.forEach((useCase) => {
 
-      it(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
+      it.only(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
           useCase.action,
           useCase.subject,
           useCase.expected,
