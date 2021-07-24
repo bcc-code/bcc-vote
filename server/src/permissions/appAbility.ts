@@ -94,7 +94,6 @@ export function defineAbilityFor(user:User, activeRole?:RoleName): AppAbility {
         abilityRole = 'SuperAdmin';
     }
     globalPermissions(user, builder);
-    console.log('abilityRole:',abilityRole)
     rolePermissions[abilityRole](user, builder);
 
     return builder.build();
