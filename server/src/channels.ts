@@ -45,7 +45,12 @@ export default function(app: Application): void {
 
     // Listen for answers from firestore
     const answer = db.collection('answer');
-    const answerObserver = answer.onSnapshot((docSnapshot:any) => {
+    let initAnswer = false;
+    answer.onSnapshot((docSnapshot:any) => {
+        if(initAnswer){
+            initAnswer = false;
+            return;
+        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'added') {
                 app.service('answer').emit('created',change.doc.data());
@@ -55,7 +60,12 @@ export default function(app: Application): void {
 
     // Listen for poll changes and re-emit the events
     const poll = db.collection('poll');
-    const pollObserver = poll.onSnapshot((docSnapshot:any) => {
+    let initPoll = false;
+    poll.onSnapshot((docSnapshot:any) => {
+        if(initPoll){
+            initPoll = false;
+            return;
+        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('poll').emit('patched',change.doc.data());
@@ -64,7 +74,12 @@ export default function(app: Application): void {
     });
 
     const pollResult = db.collection('poll-result');
-    const pollResultObserver = pollResult.onSnapshot((docSnapshot:any) => {
+    let initPollResult = false;
+    pollResult.onSnapshot((docSnapshot:any) => {
+        if(initPollResult){
+            initPollResult = false;
+            return;
+        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'modified') {
                 app.service('poll-result').emit('patched',change.doc.data());
@@ -73,7 +88,12 @@ export default function(app: Application): void {
     });
 
     const pollingEvent = db.collection('polling-event');
-    const pollingEventObserver = pollingEvent.onSnapshot((docSnapshot:any) => {
+    let initPollingEvent = true;
+    pollingEvent.onSnapshot((docSnapshot:any) => {
+        if(initPollingEvent){
+            initPollingEvent = false;
+            return;
+        }
         docSnapshot.docChanges().forEach((change:any) => {
             
             if (change.type === 'added' || change.type === 'modified') {
