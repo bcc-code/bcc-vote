@@ -75,15 +75,15 @@ describe('permissions - app ability', async () => {
       { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
       { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
       { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-      { action:"find", subject:"polling-event", hasRoles:["OrgRepresentative"], entity:'scopedToRepresentativesEvent', expected: true },
-      { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
 
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-      { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative"], entity:'scopedToRepresentativesEvent', expected: true },
-      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
       { action:"create", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
 
       { action:"find", subject:"role", entity:'user', hasRoles:["Member"], expected: false },
@@ -134,7 +134,7 @@ describe('permissions - app ability', async () => {
 
   useCases.forEach((useCase) => {
   
-      it(`Logged In User -> Attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
+      it(`Logged In User -> ${useCase.hasRoles[0]} attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
           useCase.action,
           useCase.subject,
           useCase.expected,

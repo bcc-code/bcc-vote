@@ -81,7 +81,7 @@ function pollingEventsTestSet(){
         scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892');},
         scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978');},
         scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598');},
-        scopedToRepresentativesEvent: async () => { return await pollingEventSvc.get('504327598');},
+        scopedToRepresentativesEvent: async () => { return await pollingEventSvc.get('504327599');},
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
 
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
