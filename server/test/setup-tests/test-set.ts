@@ -1,5 +1,7 @@
 import app from '../../src/app';
 import { ArangoDBConfig } from '@bcc-code/arango-migrate';
+import { RoleName, UserRole } from '../../src/domain';
+import { getActiveRole } from '../../src/services/authentication/authentication-helpers';
 
 function getAranoDBConfigFromFeathers():ArangoDBConfig {
     const arangoDBConfig = app.get("arangodDB");
@@ -79,10 +81,20 @@ function pollingEventsTestSet(){
         scopedToLocalChurchDifferentAsLoggedInUser: async () => { return await  pollingEventSvc.get('504306892');},
         scopedAgeOutsideOfLoggedInUserAge: async () => { return await  pollingEventSvc.get('504306978');},
         scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598');},
+        scopedToRepresentativesEvent: async () => { return await pollingEventSvc.get('504327599');},
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
+
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('178376431');},
-        user: async () => { return await userSvc.get('178509735',{});},
+        user: async (hasRoles?:Array<RoleName>) => { 
+            const user = await userSvc.get('178509735',{});
+            if(hasRoles) {
+                const userRoles = user.roles.filter((r:UserRole) => hasRoles.includes(r.enumName));
+                user.activeRole = getActiveRole(userRoles);
+                user.roles = userRoles;
+            }
+            return user;
+        },
         basePoll: async () => {return await pollSvc.get('504310091');},
         
         anonymousAnswer: async () => {return await answerSvc.get('39639');},

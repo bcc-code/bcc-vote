@@ -32,4 +32,5 @@ export type RoleName = 'CentralAdministrator'
     | 'Developer'
     | 'Member'
     | 'VotingAdmin'
+    | 'OrgRepresentative'
     | 'None';

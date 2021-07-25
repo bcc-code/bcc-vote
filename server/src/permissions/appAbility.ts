@@ -12,6 +12,7 @@ export class AppAbility extends Ability<AppAbilities>{}
 type DefinePermissions = (user: User, builder: AbilityBuilder<AppAbility>) => void;
 
 const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbility>) => {
+    const userRoleNames = user.roles.map((r:UserRole) => r.enumName);
     can('create','answer', { _to: user._id } as any);
     can('find', 'answer', {'visibility': PollResultVisibility["Public"] as any});
     can('get', 'answer', {_to: user._id} as any);
@@ -24,12 +25,11 @@ const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbilit
         'participantFilter.org': 'all'as any,
         'participantFilter.role': 'all'as any
     });
-    can(['find','get'],'polling-event', {'participantFilter.role': 'Member' as any});
+    can(['find','get'],'polling-event', {'participantFilter.role': { $in: userRoleNames } as any});
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}} as any);
     cannot('find', 'polling-event', {'status': 'archived' as any});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
-    
 };
 
 
