@@ -14,7 +14,7 @@ describe('Add-hock tests - db migrations', async () => {
             assert.isOk('The migraiton works');
         } catch (error) {
             assert.fail('Migration did not import successfully');
-        } 
+        }
     });
 
     it.skip('Downgrade latest migration', async () => {
@@ -27,15 +27,19 @@ describe('Add-hock tests - db migrations', async () => {
         }
     });
 
-    it.skip('Import test data', async () => {
+    it.only('Import test data', async () => {
+
+      const password = process.env.ARANGODB_TEST_DB_PASSWORD ? process.env.ARANGODB_TEST_DB_PASSWORD: "";
+      const username = process.env.ARANGODB_TEST_DB_USERNAME ? process.env.ARANGODB_TEST_DB_USERNAME: "";
+      const url = process.env.ARANGODB_TEST_DB_URL ? process.env.ARANGODB_TEST_DB_URL: "";
 
         try {
             const config:ArangoDBConfig = {
                 databaseName: "VOTE_TEST_TEMPLATE",
-                url: "http+ssl://fee1cf9d321a.arangodb.cloud:8529/",
+                url: url,
                 auth: {
-                    password: "root",
-                    username: "import_test_data"
+                    password: password,
+                    username: username
                 },
                 testDataPath:'.\\test\\setup-tests\\test_data'
             };
