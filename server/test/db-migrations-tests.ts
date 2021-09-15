@@ -29,9 +29,9 @@ describe('Add-hock tests - db migrations', async () => {
 
     it.only('Import test data', async () => {
 
-      const password = process.env.ARANGODB_TEST_DB_PASSWORD ? process.env.ARANGODB_TEST_DB_PASSWORD: "";
-      const username = process.env.ARANGODB_TEST_DB_USERNAME ? process.env.ARANGODB_TEST_DB_USERNAME: "";
-      const url = process.env.ARANGODB_TEST_DB_URL ? process.env.ARANGODB_TEST_DB_URL: "";
+      const password = process.env.ARANGODB_TEST_DB_PASSWORD ?? "";
+      const username = process.env.ARANGODB_TEST_DB_USERNAME ?? "";
+      const url = process.env.ARANGODB_TEST_DB_URL ?? "";
 
         try {
             const config:ArangoDBConfig = {
