@@ -1,1 +1,2 @@
 *.env filter=git-crypt diff=git-crypt
+server/bcc-vote-236166e6c406.json filter=git-crypt diff=git-crypt
