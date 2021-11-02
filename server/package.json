@@ -43,7 +43,7 @@
   "types": "lib/",
   "dependencies": {
     "@bcc-code/arango-migrate": "^0.9.18",
-    "@bcc-code/feathers-arangodb": "3.1.0",
+    "@bcc-code/feathers-arangodb": "3.3.1",
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
     "@feathersjs/authentication-oauth": "^4.5.11",
@@ -86,13 +86,13 @@
     "@types/serve-favicon": "^2.5.2",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "eslint": "^7.26.0",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0",
     "shx": "^0.3.3",
     "ts-mocha": "^8.0.0",
-    "ts-node-dev": "^1.1.6",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.2.4"
   }
 }
