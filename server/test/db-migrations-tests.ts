@@ -29,17 +29,18 @@ describe('Add-hock tests - db migrations', async () => {
 
     it.skip('Import test data', async () => {
 
-      const password = process.env.ARANGODB_TEST_DB_PASSWORD ?? "";
-      const username = process.env.ARANGODB_TEST_DB_USERNAME ?? "";
-      const url = process.env.ARANGODB_TEST_DB_URL ?? "";
+        const password = process.env.VOTE_ARANGODB_PASSWORD ?? "";
+        const username = process.env.VOTE_ARANGODB_USERNAME ?? "";
+        const url = process.env.VOTE_ARANGODB_URL ?? "";
+        const databaseName = process.env.VOTE_ARANGODB_DATABASE ?? "";
 
         try {
             const config:ArangoDBConfig = {
-                databaseName: "VOTE_TEST_TEMPLATE",
-                url: url,
+                databaseName,
+                url,
                 auth: {
-                    password: password,
-                    username: username
+                    password,
+                    username
                 },
                 testDataPath:'.\\test\\setup-tests\\test_data'
             };

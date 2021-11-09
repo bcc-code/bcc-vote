@@ -66,7 +66,7 @@ const up = async (db: Database): Promise<boolean> => {
 
 };
 
-const down = async (db: Database) => {
+const down = async (db: Database):Promise<boolean> => {
     try {
 
         return true;

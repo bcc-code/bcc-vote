@@ -45,7 +45,7 @@ export default function(app: Application): void {
 
     // Listen for answers from firestore
     const answer = db.collection('answer');
-    let initAnswer = false;
+    let initAnswer = true;
     answer.onSnapshot((docSnapshot:any) => {
         if(initAnswer){
             initAnswer = false;
@@ -60,7 +60,7 @@ export default function(app: Application): void {
 
     // Listen for poll changes and re-emit the events
     const poll = db.collection('poll');
-    let initPoll = false;
+    let initPoll = true;
     poll.onSnapshot((docSnapshot:any) => {
         if(initPoll){
             initPoll = false;
@@ -74,7 +74,7 @@ export default function(app: Application): void {
     });
 
     const pollResult = db.collection('poll-result');
-    let initPollResult = false;
+    let initPollResult = true;
     pollResult.onSnapshot((docSnapshot:any) => {
         if(initPollResult){
             initPollResult = false;
