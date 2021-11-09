@@ -84,8 +84,8 @@ function pollingEventsTestSet(){
         scopedToRepresentativesEvent: async () => { return await pollingEventSvc.get('504327599');},
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
 
-        organisationUserIsAdminFor: async () => { return await  orgSvc.get('178376299');},
-        organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('178376431');},
+        organisationUserIsAdminFor: async () => { return await  orgSvc.get('69');},
+        organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('431');},
         user: async (hasRoles?:Array<RoleName>) => { 
             const user = await userSvc.get('178509735',{});
             if(hasRoles) {

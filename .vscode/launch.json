@@ -9,7 +9,9 @@
             "request": "attach",
             "name": "Debug bcc-vote server - local",
             "cwd": "${workspaceFolder}/server",
+            "port": 9002,
             "restart": true
         },
+        
     ]
 }
