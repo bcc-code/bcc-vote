@@ -31,6 +31,7 @@
     "mocha-dev-in-cloud": "cross-env NODE_ENV=dev-in-cloud ts-mocha \"test/*.ts\" --recursive --exit --timeout 5000000",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "nodemon ./src/index.ts",
+    "debug": "nodemon --inspect=0.0.0.0:9002 ./src/index.ts",
     "build": "npm run compile",
     "start": "node lib/migrate.js && node lib/",
     "compile": "shx rm -rf lib/ && tsc"

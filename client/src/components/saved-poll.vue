@@ -13,7 +13,7 @@
                 </div>
             </div>
             <h3 class="font-bold mb-1">{{pollIndex + 1}}. {{poll.title}}</h3>
-            <p v-if="poll.description" class="text-gray-700">{{poll.description}}</p>
+            <p v-if="poll.description" class="text-gray-700 whitespace-pre-wrap">{{poll.description}}</p>
             <div class="text-gray-700 ml-2 mt-2">
                 <p v-for="option in poll.answers" :key="option">
                     &bull;<span class="ml-2">{{option.label}}</span>
