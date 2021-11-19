@@ -85,7 +85,7 @@ export default defineComponent({
     },
     computed: {
         formattedDate():string {
-            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:MM")
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm")
         },
         eventUrl():string{
             return location.origin + '/polling-event/lobby/' + this.pollingEvent._key

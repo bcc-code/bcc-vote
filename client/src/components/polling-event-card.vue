@@ -62,7 +62,7 @@ export default defineComponent({
             return this.pollingEvent.status === PollingEventStatus['Live']
         },
         formattedDate():string {
-            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:MM")
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm")
         },
         canParticipate():boolean{
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
