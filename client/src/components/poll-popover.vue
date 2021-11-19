@@ -6,7 +6,7 @@
             </InfoBox>
             <div> 
                 <h4 class="font-bold" >{{poll.title}}</h4>
-                <p v-if="poll.description" class="mt-2" style="white-space: pre-wrap;">{{poll.description}}</p>
+                <p v-if="poll.description" class="mt-2 whitespace-pre-wrap">{{poll.description}}</p>
             </div>
             <div v-if="!answer" class="h-full mb-20 mt-5">
                 <PollVote :options="poll.answers" @vote="checkConfirm"/>
