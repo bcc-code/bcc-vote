@@ -7,7 +7,7 @@
         <XIcon class="w-8 h-8 p-2 cursor-pointer" @click="$emit('close')"/>
         </div>
         <FormField v-model="pollData.title" translation = "poll-title"/>
-        <FormField v-model="pollData.description" translation = "poll-description" optional/>
+        <FormField v-model="pollData.description" translation = "poll-description" optional :enableNewLine="true"/>
         <h3 class="font-bold">{{$t('labels.answers')}}</h3>
         <p class="mb-7 text-gray-800">{{$t('info.answer-explanations')}}</p>
         <FormField v-model="pollData.confirmAnswer" class="mb-8" translation="confirmation" type="checkbox"/>
