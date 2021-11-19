@@ -2,7 +2,7 @@
     <div class="border-with-bar px-5 py-8">
         <div class="flex justify-between mb-6">
         <h3 class="font-bold">
-            {{poll ? pollIndex+'. '+poll.title : $t('labels.new-poll')}}
+            {{poll ? pollIndex+1 +'. '+poll.title : $t('labels.new-poll')}}
         </h3>
         <XIcon class="w-8 h-8 p-2 cursor-pointer" @click="$emit('close')"/>
         </div>
