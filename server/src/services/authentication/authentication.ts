@@ -19,6 +19,8 @@ declare module '../../declarations' {
 class Auth0Strategy extends OAuthStrategy {
     async authenticate(authentication: AuthenticationRequest, originalParams: Params) {
         logger.info(`AUTHENTICATE METHOD: Starting authentication flow`);
+        const startTime = new Date();
+
         const entity: string = this.configuration.entity;
         const { ...params } = originalParams;
         const profile = await this.getProfile(authentication,params);
@@ -56,6 +58,9 @@ class Auth0Strategy extends OAuthStrategy {
             }
             logger.info(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
         }
+
+        const durationMs = new Date().getTime() - startTime.getTime();
+        logger.info(`AUTHENTICATE METHOD: Authenticated in ${durationMs} ms`);
         return {
             authentication: { strategy: this.name ? this.name : 'unknown' },
             [entity]: member
