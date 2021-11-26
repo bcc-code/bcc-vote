@@ -10,6 +10,7 @@ import { Application } from '../../declarations';
 import pick from 'lodash/pick';
 import { getActiveRole } from './authentication-helpers';
 import logger from '../../logger';
+import promiseWithTimeout from '../../utils/promiseWithTimeout';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -17,6 +18,9 @@ declare module '../../declarations' {
 }
 class Auth0Strategy extends OAuthStrategy {
     async authenticate(authentication: AuthenticationRequest, originalParams: Params) {
+        logger.info(`AUTHENTICATE METHOD: Starting authentication flow`);
+        const startTime = new Date();
+
         const entity: string = this.configuration.entity;
         const { ...params } = originalParams;
         const profile = await this.getProfile(authentication,params);
@@ -24,7 +28,9 @@ class Auth0Strategy extends OAuthStrategy {
 
         let member:any = {};
         try {
-            member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
+            member = promiseWithTimeout(2000,
+                (await this.app?.service('person').find({ query:{ personID: personID}})).data[0]
+            );
             logger.info(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
             member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','related.roles', 'administrator']);
 
@@ -52,6 +58,9 @@ class Auth0Strategy extends OAuthStrategy {
             }
             logger.info(`AUTHENTICATE METHOD: Member with PersonID ${personID} succesfully retrieved from the local user store. Please note that this is backup behaviour, the expected behaviour was that to retrieve the member from the members api.`);
         }
+
+        const durationMs = new Date().getTime() - startTime.getTime();
+        logger.info(`AUTHENTICATE METHOD: Authenticated in ${durationMs} ms`);
         return {
             authentication: { strategy: this.name ? this.name : 'unknown' },
             [entity]: member
