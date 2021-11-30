@@ -28,9 +28,7 @@ class Auth0Strategy extends OAuthStrategy {
 
         let member:any = {};
         try {
-            member = promiseWithTimeout(2000,
-                (await this.app?.service('person').find({ query:{ personID: personID}})).data[0]
-            );
+            member = (await this.app?.service('person').find({ query:{ personID: personID}})).data[0];
             logger.info(`AUTHENTICATE METHOD: Member with PersonID ${member.personID} succesfully retrieved from the members api`);
             member = pick(member,['_id','_key','personID','churchID','related','email','cellPhone.formatted','church','displayName','age','related.roles', 'administrator']);
 

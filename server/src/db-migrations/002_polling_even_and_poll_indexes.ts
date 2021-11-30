@@ -1,6 +1,6 @@
 import { Database } from "arangojs";
 import type { PersistentIndex } from 'arangojs/indexes';
-import logger from '../../src/logger';
+import logger from '../logger';
 
 
 const up = async (db: Database): Promise<boolean> => {
