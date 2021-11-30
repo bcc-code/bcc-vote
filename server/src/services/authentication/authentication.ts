@@ -49,7 +49,7 @@ class Auth0Strategy extends OAuthStrategy {
                 await this.app?.service('user').update(member._key,member);
             }
         } catch (error) {
-            logger.error(error.message);
+            logger.error('Error during authentication', {caughtError: error, source: 'authentication.ts'});
             logger.info(`AUTHENTICATE METHOD: Failed to retrieve member with personID:${personID} from the members api, please check if the members api is available and configured correctly`);
             logger.info(`AUTHENTICATE METHOD: Trying to retrieve member with personID:${personID} from local database`);
             member = (await this.app?.service('user').find({ query:{ personID: personID}})).data[0];

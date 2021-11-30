@@ -1,13 +1,31 @@
-import { format, createLogger, transports } from 'winston';
+import winston, { format, createLogger, transports } from 'winston';
 import { LoggingWinston } from '@google-cloud/logging-winston';
 
 const isLocalEnvironment = process.env.VOTE_HOSTNAME?.includes('localhost');
 const serviceName = isLocalEnvironment ? 'localhost' : process.env.K_SERVICE;
+const loggingLevel = process.env.LOGGING_LEVEL ?? 'debug';
+const label = `VoteLogger-${serviceName}`;
+const errorLabel = label + '-errorHandler';
 
-const loggingWinston = new LoggingWinston({
+
+const consoleLogger = new transports.Console({
+    format: format.combine(
+        format.colorize({all: true}),
+        format.json(),
+        format.prettyPrint(),
+        format.splat(),
+        format.timestamp({
+            format: 'DD-MM-YYYY HH:mm:ss',
+        }),
+        format.printf(info => `${info.level}: ${[info.timestamp]}: ${info.message}`)
+    ),
+});
+
+const stackdriverLogger = new LoggingWinston({
     logName: `${serviceName}-logs`,
+    labels: {label},
     serviceContext: {
-        service: serviceName
+        service: serviceName,
     },
     resource: {
         type: 'cloud_run_revision',
@@ -19,15 +37,28 @@ const loggingWinston = new LoggingWinston({
     },
 });
 
-const logger = createLogger({
+const logger = winston.createLogger({
+    level: loggingLevel,
     format: format.combine(
+        format.json(),
+        format.prettyPrint(),
         format.splat(),
-        format.simple()
+        format.label({
+            label: label,
+            message: false,
+        })
     ),
-    transports: isLocalEnvironment === false ? [
-        loggingWinston, 
-        new transports.Console()
-    ] : [new transports.Console()]
+    transports: isLocalEnvironment ? [consoleLogger] : [stackdriverLogger],
+    exceptionHandlers: [
+        new LoggingWinston({
+            labels: {errorLabel},
+            serviceContext: {
+                service: serviceName,
+            },
+        }),
+    ],
+    handleExceptions: true,
+    exitOnError: false,
 });
 
 export default logger;
