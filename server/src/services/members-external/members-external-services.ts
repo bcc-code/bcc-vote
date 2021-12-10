@@ -15,6 +15,7 @@ export default function (app: Application): void {
 
     const socket = io(url, {
         transports:["websocket", "polling"],
+        rememberUpgrade: true,
         extraHeaders: {
             'x-access-token': membersConfig.apiKey
         }
