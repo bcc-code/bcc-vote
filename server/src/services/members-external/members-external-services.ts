@@ -16,7 +16,7 @@ export default function (app: Application): void {
     membersClient.configure(restClient.axios(axios, {
         timeout: 5000,
         headers: {
-            'x-api-key': membersConfig.apiKey,
+            'x-access-token': membersConfig.apiKey,
         },
         errorHandler: function (error: any) {
             logger.error(error);
