@@ -44,7 +44,7 @@ export default function (app: Application): void {
 
     const restClient = rest(url);
     const membersRestClient = feathers();
-    membersWebSocketClient.configure(restClient.axios(axios, {
+    membersRestClient.configure(restClient.axios(axios, {
         timeout: 5000,
         headers: {
             'x-access-token': membersConfig.apiKey,
@@ -57,6 +57,6 @@ export default function (app: Application): void {
         }
     }));
 
-    app.use('/person', membersWebSocketClient.service('person'));
+    app.use('/person', membersRestClient.service('person'));
 
 }
