@@ -7,9 +7,6 @@ import rest from '@feathersjs/rest-client';
 import axios from 'axios';
 const io = require('socket.io-client');
 
-
-
-
 export default function (app: Application): void {
 
     const membersConfig = app.get("members");
@@ -47,7 +44,7 @@ export default function (app: Application): void {
 
     const restClient = rest(url);
     const membersRestClient = feathers();
-    membersRestClient.configure(restClient.axios(axios, {
+    membersWebSocketClient.configure(restClient.axios(axios, {
         timeout: 5000,
         headers: {
             'x-access-token': membersConfig.apiKey,
@@ -60,6 +57,6 @@ export default function (app: Application): void {
         }
     }));
 
-    app.use('/person', membersRestClient.service('person'));
+    app.use('/person', membersWebSocketClient.service('person'));
 
 }
