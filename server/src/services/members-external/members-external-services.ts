@@ -19,7 +19,10 @@ export default function (app: Application): void {
             'x-access-token': membersConfig.apiKey,
         },
         errorHandler: function (error: any) {
-            logger.error(error);
+            logger.error("Error while fetching data from members api.", {
+                error: error,
+                membersApiUrl: url,
+            });
         }
     }));
 
