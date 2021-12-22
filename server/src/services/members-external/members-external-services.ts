@@ -2,6 +2,8 @@ import logger from '../../logger';
 import { Application } from '../../declarations';
 import socketio from '@feathersjs/socketio-client';
 import { inspect } from 'util';
+import rest from '@feathersjs/rest-client';
+import axios from 'axios';
 const io = require('socket.io-client');
 
 import feathers from '@feathersjs/feathers';
@@ -10,7 +12,7 @@ import feathers from '@feathersjs/feathers';
 export default function (app: Application): void {
 
     const membersConfig = app.get("members");
-    
+
     const url = membersConfig.url;
 
     const socket = io(url, {
