@@ -2,6 +2,8 @@ import logger from '../../logger';
 import { Application } from '../../declarations';
 import socketio from '@feathersjs/socketio-client';
 import { inspect } from 'util';
+import rest from '@feathersjs/rest-client';
+import axios from 'axios';
 const io = require('socket.io-client');
 
 import feathers from '@feathersjs/feathers';
@@ -10,7 +12,7 @@ import feathers from '@feathersjs/feathers';
 export default function (app: Application): void {
 
     const membersConfig = app.get("members");
-    
+
     const url = membersConfig.url;
 
     const socket = io(url, {
@@ -33,13 +35,29 @@ export default function (app: Application): void {
         logger.error(`[SOCKET_EVENT] [VOTING_APP] [ERROR] socket failed to reconnect to ${url} after an reconnection attempt with the following error: ${inspect(error)}`);
     });
 
-    const membersClient = feathers();
+    const membersWebSocketClient = feathers();
 
-    membersClient.configure(socketio(socket, {
-        timeout: 4000
+    membersWebSocketClient.configure(socketio(socket, {
+        timeout: 5000
     }));
 
-    app.use('/person', membersClient.service('person'));
-    app.use('/org', membersClient.service('org'));
-    app.use('/role', membersClient.service('role'));
+    app.use('/org', membersWebSocketClient.service('org'));
+    app.use('/role', membersWebSocketClient.service('role'));
+
+    const restClient = rest(url);
+    const membersRestClient = feathers();
+    membersRestClient.configure(restClient.axios(axios, {
+        timeout: 5000,
+        headers: {
+            'x-access-token': membersConfig.apiKey,
+        },
+        errorHandler: function (error: any) {
+            logger.error("Error while fetching data from members api.", {
+                error: error,
+                membersApiUrl: url,
+            });
+        }
+    }));
+
+    app.use('/person', membersRestClient.service('person'));
 }
