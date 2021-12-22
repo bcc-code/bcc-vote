@@ -38,7 +38,7 @@ export default function (app: Application): void {
     const membersWebSocketClient = feathers();
 
     membersWebSocketClient.configure(socketio(socket, {
-        timeout: 4000
+        timeout: 5000
     }));
 
     app.use('/org', membersWebSocketClient.service('org'));
