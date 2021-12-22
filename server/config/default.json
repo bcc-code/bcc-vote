@@ -18,8 +18,8 @@
         "key": "VOTE_AUTH0_CLIENT_KEY",
         "secret": "VOTE_AUTH0_CLIENT_SECRET",
         "subdomain": "VOTE_AUTH0_SUBDOMAIN",
-        "authorize_url": "https://login.bcc.no/authorize",
-        "access_url": "https://login.bcc.no/oauth/token"
+        "authorize_url": "VOTE_AUTH0_AUTHORIZE_URL",
+        "access_url": "VOTE_AUTH0_ACCESS_URL"
       }
     },
     "entity": "user",
