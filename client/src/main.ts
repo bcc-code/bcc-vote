@@ -1,3 +1,4 @@
+import appInsights from './appInsightsTelemetry';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import Toast from 'vue-dk-toast';
@@ -17,6 +18,7 @@ import { logToSentry, logConnectionsToSentry, createBreadcrumb } from './functio
 import vueGtag from 'vue-gtag';
 import determineConfigBasedOnEnvironment from './config';
 
+const startupTime = new Date().getTime();
 const messages = {
     no: Object.assign({}, require('./localization/no_vote_master.json')),
 };
@@ -155,3 +157,7 @@ client.hooks({
 
 document.title = 'BCC Vote';
 app.mount('#app');
+window.onload = async () => {
+    const startupDuration = new Date().getTime() - startupTime;
+    appInsights.trackMetric({name: 'appStarted', average: startupDuration});
+};
