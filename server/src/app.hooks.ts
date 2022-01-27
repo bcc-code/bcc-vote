@@ -5,7 +5,7 @@ import {authenticateExternal } from './services/authentication/customAuthenticat
 import { ForbiddenError, subject } from '@casl/ability';
 import { BadRequest } from '@feathersjs/errors';
 import { User } from './domain';
-import {initTracking, finalizeTracking, trackErrors} from '../src/utils/appInsightsWebSocket';
+import {initTracking, finalizeTracking, trackErrors} from './utils/appInsightsWebSocket';
 
 
 // Application hooks that run for every service
