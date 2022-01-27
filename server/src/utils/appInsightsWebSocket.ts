@@ -7,13 +7,15 @@ const initTracking = async (context: HookContext): Promise<HookContext> => {
     if (context.params.provider === 'socketio') {
         context.params.startTime = new Date().getTime();
     }
+
+    return context;
 };
 
 const finalizeTracking = async (context: HookContext): Promise<HookContext> => {
     if (context.params.provider === 'socketio') {
         const trackingData = {
             name: `${context.method} /${context.path}`,
-            url: process.env.BCC_MEMBERS_API_BASE_URL ?? 'undefined',
+            url: process.env.VOTE_API_BASE_URL ?? 'undefined',
             success: true,
             duration: context.params.startTime ? new Date().getTime() - context.params.startTime : 0,
             resultCode: '200',
@@ -29,7 +31,7 @@ const finalizeTracking = async (context: HookContext): Promise<HookContext> => {
     return context;
 };
 
-const trackErrors = async (context: HookContext) => {
+const trackErrors = async (context: HookContext): Promise<void> => {
     if (context.params.provider === 'socketio') {
         const telemetryData: ExceptionTelemetry = {
             exception: context.error,
@@ -40,4 +42,4 @@ const trackErrors = async (context: HookContext) => {
     }
 };
 
-export default {initTracking, finalizeTracking, trackErrors};
+export {initTracking, finalizeTracking, trackErrors};
