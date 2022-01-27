@@ -98,6 +98,7 @@ function pollingEventsTestSet(){
             return user;
         },
         basePoll: async () => {return await pollSvc.get('504310091');},
+        forbiddenPoll: async () => {return await pollSvc.get('504310097');},
 
         anonymousAnswer: async () => {return await answerSvc.get('39639');},
         nonpublicAnswer: async () => {return await answerSvc.get('39610');},
