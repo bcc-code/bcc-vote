@@ -20,11 +20,7 @@ const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbilit
     can('get', 'poll');
     can('get', 'poll-result');
     can('create', 'feedback');
-    //can(['find','get'],'polling-event', {'participantFilter.org': {$in: [user.churchID.toString(), 'all']}, 'participantFilter.role': { $in: [...userRoleNames, 'all'] }} as any);
-    can(['find','get'],'polling-event', {'participantFilter.org': user.churchID.toString(), 'participantFilter.role': { $in: userRoleNames }} as any);
-    can(['find','get'],'polling-event', {'participantFilter.org': 'all', 'participantFilter.role': { $in: userRoleNames }} as any);
-    can(['find','get'],'polling-event', {'participantFilter.org': user.churchID.toString(), 'participantFilter.role': 'all'} as any);
-    can(['find','get'],'polling-event', {'participantFilter.org': 'all'as any,'participantFilter.role': 'all'as any});
+    can(['find','get'],'polling-event', {'participantFilter.org': {$in: [user.churchID.toString(), 'all']}, 'participantFilter.role': { $in: [...userRoleNames, 'all'] }} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}} as any);
     cannot('find', 'polling-event', {'status': 'archived' as any});
