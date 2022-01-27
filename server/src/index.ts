@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import appInsights from './appInsightsTelemetry';
+import appInsights from './utils/appInsightsTelemetry';
 import app from './app';
 import logger from './logger';
 
