@@ -77,6 +77,8 @@ describe('permissions - app ability', async () => {
       { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
       { action:"find", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
       { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
 
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
@@ -84,6 +86,9 @@ describe('permissions - app ability', async () => {
       { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
       { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
       { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
+
       { action:"create", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
 
       { action:"find", subject:"role", entity:'user', hasRoles:["Member"], expected: false },
@@ -121,7 +126,7 @@ describe('permissions - app ability', async () => {
       { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["VotingAdmin"], expected: true},
       { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["VotingAdmin"], expected: true},
       { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["VotingAdmin"], expected: false},
-      
+
       { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["Member"], expected: true},
       { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["Member"], expected: false},
       { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["Member"], expected: false},
@@ -133,7 +138,7 @@ describe('permissions - app ability', async () => {
   ];
 
   useCases.forEach((useCase) => {
-  
+
       it(`Logged In User -> ${useCase.hasRoles[0]} attemps to ${useCase.action} ${useCase.subject} (${useCase.entity}), expected: ${useCase.expected}`, async () => { await runPermissionsTest(
           useCase.action,
           useCase.subject,
