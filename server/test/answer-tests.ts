@@ -111,19 +111,18 @@ describe('Form Validation', async () => {
     });
     it('answer -> Unable to give answer to an forbidden poll', async () => {
         try {
-            //Deactivate poll
             await app.service('poll').patch(forbiddenPoll._key,{ activeStatus: PollActiveStatus['Live']},{});
             const answer = {
-                _from: poll._id,
+                _from: forbiddenPoll._id,
                 _to: user._id,
                 answerId: 122131233,
-                pollingEventId: poll.pollingEventId
+                pollingEventId: forbiddenPoll.pollingEventId
             };
             await sleep(300);
             await app.service('answer').create(answer,{ user}) as Answer;
             assert.fail('Was able to answer forbidden poll.');
         } catch (error) {
-            assert.isTrue(error.message.includes('Poll is not active'));
+            assert.isTrue(error.message.includes('Not allowed to find the polling-event'));
         }
     });
     it('result -> get results for a poll', async () => {
