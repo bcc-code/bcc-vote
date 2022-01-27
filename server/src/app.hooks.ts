@@ -5,6 +5,7 @@ import {authenticateExternal } from './services/authentication/customAuthenticat
 import { ForbiddenError, subject } from '@casl/ability';
 import { BadRequest } from '@feathersjs/errors';
 import { User } from './domain';
+import {initTracking, finalizeTracking, trackErrors} from './utils/appInsightsWebSocket';
 
 
 // Application hooks that run for every service
@@ -128,7 +129,7 @@ const checkFindAbility = (context: HookContext):HookContext => {
         }else{
             context.result.data = allowedItems;
         }
-        
+
         return context;
     } else {
         throw Error('User has not been set in params.');
@@ -199,7 +200,7 @@ const logErrors = (context: HookContext):void => {
 
 export default {
     before: {
-        all: [startAuthenticationAtTheStartOfRequest],
+        all: [initTracking, startAuthenticationAtTheStartOfRequest],
         find: [],
         get: [],
         create: [checkAbilityWithFullFieldAccess],
@@ -209,7 +210,7 @@ export default {
     },
 
     after: {
-        all: [endAuthenticationAtEndOfRequest],
+        all: [endAuthenticationAtEndOfRequest, finalizeTracking],
         find: [checkFindAbility],
         get: [checkGetAbility],
         create: [],
@@ -219,7 +220,7 @@ export default {
     },
 
     error: {
-        all: [purgeErrors, logErrors],
+        all: [trackErrors,purgeErrors, logErrors],
         find: [],
         get: [],
         create: [],

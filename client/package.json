@@ -13,6 +13,7 @@
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio-client": "^4.5.11",
+    "@microsoft/applicationinsights-web": "^2.7.2",
     "@popperjs/core": "^2.9.2",
     "@sentry/browser": "^6.7.2",
     "autoprefixer": "^9.0.0",

@@ -4,24 +4,28 @@ const keys = {
         auth0Domain: 'bcc-sso-dev.eu.auth0.com',
         envName: 'local',
         isProduction: false,
+        appInsisghtKey: 'InstrumentationKey=0a4a41a7-266c-4bf7-8792-69c83de62255;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/',
     },
     dev: {
         auth0ClientId: 'hPK4PRnpFkY5MmUoJZa31sNldB0Mprei',
         auth0Domain: 'bcc-sso-dev.eu.auth0.com',
         envName: 'dev',
         isProduction: false,
+        appInsisghtKey: 'InstrumentationKey=0a4a41a7-266c-4bf7-8792-69c83de62255;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/',
     },
     beta: {
         auth0ClientId: 'gcCga8XX2HkIhR6KzTwkNgChybe47Dt0',
         auth0Domain: 'bcc-sso-sandbox.eu.auth0.com',
         envName: 'beta',
         isProduction: false,
+        appInsisghtKey: 'InstrumentationKey=89af16a8-32f0-4ec7-8792-8af53839df49;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/',
     },
     prod: {
         auth0ClientId: 'e9qdZ4dhMhhG9YbDPmo9hzI7Sp644ulH',
         auth0Domain: 'login.bcc.no',
         envName: 'prod',
         isProduction: true,
+        appInsisghtKey: 'InstrumentationKey=8fa4d4da-fb2f-41f0-9322-5446e9fa3cd2;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/',
     },
 };
 
