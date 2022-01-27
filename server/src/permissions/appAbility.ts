@@ -20,12 +20,7 @@ const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbilit
     can('get', 'poll');
     can('get', 'poll-result');
     can('create', 'feedback');
-    can(['find','get'],'polling-event', {'participantFilter.org': user.churchID.toString()} as any);
-    can(['find','get'],'polling-event', {
-        'participantFilter.org': 'all'as any,
-        'participantFilter.role': 'all'as any
-    });
-    can(['find','get'],'polling-event', {'participantFilter.role': { $in: userRoleNames } as any});
+    can(['find','get'],'polling-event', {'participantFilter.org': {$in: [user.churchID.toString(), 'all']}, 'participantFilter.role': { $in: [...userRoleNames, 'all'] }} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gte:user.age}} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}} as any);
     cannot('find', 'polling-event', {'status': 'archived' as any});
@@ -49,7 +44,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'role');
         can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user');
-        
+
         can('find', 'poll-result');
 
         can(['find','get'],'polling-event', {'participantFilter.role': { $in: superAdminRoles } as any});
@@ -70,14 +65,14 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('find', 'role');
         can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user', {'churchID': { $in: votingAdminFor}} as any);
-        
+
         can('find', 'poll-result');
 
         can('remove', 'answer');
         can('get', 'answer');
     },
     Member(user, { can, cannot }) {
-        
+
     }
 };
 

@@ -1,7 +1,9 @@
 import { HookContext } from "@feathersjs/feathers";
 import logger from '../../logger';
-import { Answer, PollActiveStatus } from "../../domain";
+import { Answer, PollActiveStatus, User } from "../../domain";
 import { db, FieldValue } from '../../firestore';
+import { defineAbilityFor } from "../../permissions/appAbility";
+import { ForbiddenError, subject } from "@casl/ability";
 
 const preventVoteOnInactivePoll = async (context:HookContext):Promise<HookContext> => {
     const key = context.data._from.split('/')[1];
@@ -11,6 +13,21 @@ const preventVoteOnInactivePoll = async (context:HookContext):Promise<HookContex
         throw Error('Poll is not active');
 
     return context;
+};
+
+const preventVoteOnForbiddenPoll = async (context:HookContext):Promise<HookContext> => {
+    if(!context.data.pollingEventId) {
+        throw Error('Polling event id is undefined');
+    }
+    const pollingEvent = await context.app.service('polling-event').get(context.data.pollingEventId);
+
+    if(pollingEvent){
+        const ability = defineAbilityFor(context.params.user as User);
+        ForbiddenError.from(ability).throwUnlessCan('find',subject('polling-event',pollingEvent));
+        return context;
+    } else {
+        throw Error('Could not get pollingEvent to check user permissions');
+    }
 };
 
 const addUserData = (context:HookContext):HookContext => {
@@ -67,7 +84,7 @@ export default {
         all: [ ],
         find: [],
         get: [],
-        create: [preventVoteOnInactivePoll, addUserData, addCustomKey, addLastChangedTime],
+        create: [preventVoteOnForbiddenPoll, preventVoteOnInactivePoll, addUserData, addCustomKey, addLastChangedTime],
         update: [],
         patch: [],
         remove: []

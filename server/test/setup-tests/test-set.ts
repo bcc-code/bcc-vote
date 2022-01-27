@@ -83,10 +83,12 @@ function pollingEventsTestSet(){
         scopedLoggedInUserIsCreatorOfEvent: async () => { return await  pollingEventSvc.get('504327598');},
         scopedToRepresentativesEvent: async () => { return await pollingEventSvc.get('504327599');},
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
+        eventForDifferentOrgButMatchingRole: async () => {return await pollingEventSvc.get('504327600');},
+        eventForDifferentRoleButMatchingOrg: async () => {return await pollingEventSvc.get('504327601');},
 
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('69');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('431');},
-        user: async (hasRoles?:Array<RoleName>) => { 
+        user: async (hasRoles?:Array<RoleName>) => {
             const user = await userSvc.get('178509735',{});
             if(hasRoles) {
                 const userRoles = user.roles.filter((r:UserRole) => hasRoles.includes(r.enumName));
@@ -96,7 +98,8 @@ function pollingEventsTestSet(){
             return user;
         },
         basePoll: async () => {return await pollSvc.get('504310091');},
-        
+        forbiddenPoll: async () => {return await pollSvc.get('504310098');},
+
         anonymousAnswer: async () => {return await answerSvc.get('39639');},
         nonpublicAnswer: async () => {return await answerSvc.get('39610');},
         publicAnswer: async () => {return await answerSvc.get('39571');},

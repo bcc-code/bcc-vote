@@ -1,2 +1,2 @@
-{"type":2300,"data":{"_key":"4231951","_id":"migration_status/4231951","_rev":"_dOOEMre---","current_version":1,"version":1,"direction":"up","timestamp":"2021-11-09T09:27:36.919Z"}}
-{"type":2300,"data":{"_key":"4231968","_id":"migration_status/4231968","_rev":"_dOOEMru---","current_version":2,"version":2,"direction":"up","timestamp":"2021-11-09T09:27:36.924Z"}}
+{"type":2300,"data":{"_key":"4231968","_id":"migration_status/4231968","_rev":"_dOOEMru---","current_version":2,"direction":"up","timestamp":"2021-11-09T09:27:36.924Z","version":2}}
+{"type":2300,"data":{"_key":"4231951","_id":"migration_status/4231951","_rev":"_dOOEMre---","current_version":1,"direction":"up","timestamp":"2021-11-09T09:27:36.919Z","version":1}}
