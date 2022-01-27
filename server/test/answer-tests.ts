@@ -8,6 +8,7 @@ import { importDB} from "@bcc-code/arango-migrate";
 describe('Form Validation', async () => {
     let testSet:any;
     let poll:any;
+    let forbiddenPoll: any;
     let user:any;
 
     beforeEach(async ()=>{
@@ -19,6 +20,7 @@ describe('Form Validation', async () => {
         testSet = pollingEventsTestSet();
 
         poll = await (testSet['basePoll'])() as any;
+        forbiddenPoll = await (testSet['forbiddenPoll'])() as any;
         user = await (testSet['user'])() as any;
         user.churchName = 'Terwolde';
     });
@@ -107,6 +109,23 @@ describe('Form Validation', async () => {
             assert.isTrue(error.message.includes('Poll is not active'));
         }
     });
+    it('answer -> Unable to give answer to an forbidden poll', async () => {
+        try {
+            //Deactivate poll
+            await app.service('poll').patch(forbiddenPoll._key,{ activeStatus: PollActiveStatus['Live']},{});
+            const answer = {
+                _from: poll._id,
+                _to: user._id,
+                answerId: 122131233,
+                pollingEventId: poll.pollingEventId
+            };
+            await sleep(300);
+            await app.service('answer').create(answer,{ user}) as Answer;
+            assert.fail('Was able to answer forbidden poll.');
+        } catch (error) {
+            assert.isTrue(error.message.includes('Poll is not active'));
+        }
+    });
     it('result -> get results for a poll', async () => {
         try{
             await app.service('poll').patch(poll._key,{ activeStatus: PollActiveStatus['Live']},{});
@@ -115,7 +134,7 @@ describe('Form Validation', async () => {
             let results = await app.service('poll-result').get(poll._key) as any;
             assert.equal(results.answerCount['1'], 0);
             assert.equal(results.answerCount['2'], 0);
-            
+
             const answer = {
                 _from: poll._id,
                 _to: user._id,
@@ -141,7 +160,7 @@ describe('Form Validation', async () => {
             let results = await app.service('poll-result').get(poll._key) as any;
             assert.equal(results.answerCount['1'], 0);
             assert.equal(results.answerCount['2'], 0);
-            
+
             const answer = {
                 _from: poll._id,
                 _to: user._id,
