@@ -1,4 +1,8 @@
 export interface User {
+    _id: string;
+    _key: string;
+    displayName: string;
+    activeRole: string;
     age?: number;
     churchID?: number;
     personID?: number;

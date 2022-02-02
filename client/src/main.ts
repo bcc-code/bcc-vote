@@ -74,18 +74,6 @@ app.mixin({
             router.$client.logout();
             localStorage.clear();
             sessionStorage.clear();
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var spcook = cookies[i].split('=');
-                spcook.forEach(cookiename => {
-                    var d = new Date();
-                    d.setDate(d.getDate() - 1);
-                    var expires = ';expires=' + d;
-                    var name = cookiename;
-                    var value = '';
-                    document.cookie = name + '=' + value + expires + '; path=/acc/html';
-                });
-            }
             const url = `https://${config.auth0Domain}/v2/logout?client_id=${config.auth0ClientId}&returnTo=${location.origin}&federated`;
             location.href = url;
         },
