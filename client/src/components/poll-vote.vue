@@ -16,9 +16,9 @@
     </div>
 </template>
 <script lang="ts">
-import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
-import { Option } from '../domain/Poll'
-import { defineComponent, PropType } from 'vue'
+import CheckIcon from 'heroicons-vue3/solid/CheckIcon';
+import { Option } from '../domain/Poll';
+import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     components: {
         CheckIcon
@@ -29,10 +29,10 @@ export default defineComponent({
     data() {
         return {
             selectedOption: null
-        }
+        };
     },
     emits: ['vote']
-})
+});
 </script>
 <style>
 .option-button {

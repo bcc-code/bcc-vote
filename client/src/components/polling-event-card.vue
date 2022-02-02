@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts">
-import ConfirmPopover from './confirm-popover.vue'
-import EventStatus from './polling-event-status.vue'
+import ConfirmPopover from './confirm-popover.vue';
+import EventStatus from './polling-event-status.vue';
 
-import { PollingEvent, PollingEventStatus } from '../domain'
-import { defineComponent, PropType } from 'vue'
-import moment from 'moment'
+import { PollingEvent, PollingEventStatus } from '../domain';
+import { defineComponent, PropType } from 'vue';
+import moment from 'moment';
 export default defineComponent({
     components: {
         ConfirmPopover,
@@ -52,48 +52,48 @@ export default defineComponent({
     data () {
         return {
             showConfirm: false,
-        }
+        };
     },
     computed: {
         isEventNotStarted():boolean {
-            return this.pollingEvent.status === PollingEventStatus['Not Started']
+            return this.pollingEvent.status === PollingEventStatus['Not Started'];
         },
         isEventLive():boolean {
-            return this.pollingEvent.status === PollingEventStatus['Live']
+            return this.pollingEvent.status === PollingEventStatus['Live'];
         },
         formattedDate():string {
-            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm")
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm");
         },
         canParticipate():boolean{
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
-                return false
+                return false;
             if(this.pollingEvent.status === PollingEventStatus['Archived'])
-                return false
-            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName)
-            const filter = this.pollingEvent.participantFilter
+                return false;
+            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
+            const filter = this.pollingEvent.participantFilter;
             if(filter.maxAge && this.$user.age >= filter.maxAge)
-                return false
+                return false;
             if(filter.minAge && this.$user.age < filter.minAge)
-                return false
+                return false;
             if(filter.org !== 'all' && this.$user.churchID.toString() !== filter.org)
-                return false
+                return false;
             if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
-                return false
-            return true
+                return false;
+            return true;
         },
         isCreator():boolean{
-            return this.$user.personID === this.pollingEvent.creatorId
+            return this.$user.personID === this.pollingEvent.creatorId;
         }
     },
     methods: {
         goToLobby() {
-            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`)
+            this.$router.push(`/polling-event/lobby/${this.pollingEvent._key}`);
         },
         goToAdmin() {
-            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`)
+            this.$router.push(`/polling-event/admin/${this.pollingEvent._key}`);
         }
     }
-})
+});
 </script>
 
 <style scoped>

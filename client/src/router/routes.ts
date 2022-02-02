@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router';
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -56,4 +56,4 @@ export const routes: Array<RouteRecordRaw> = [
             unprotected: true 
         }
     }
-]
+];

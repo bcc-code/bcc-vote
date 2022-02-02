@@ -14,11 +14,11 @@
     </div>
 </template>
 <script lang="ts">
-import ProgressBars from '../components/results-progress-bars.vue'
-import VoterList from './results-voter-list.vue'
+import ProgressBars from '../components/results-progress-bars.vue';
+import VoterList from './results-voter-list.vue';
 
-import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain'
-import { defineComponent, PropType } from 'vue'
+import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain';
+import { defineComponent, PropType } from 'vue';
 // import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
     components: {
@@ -41,77 +41,77 @@ export default defineComponent({
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
-        }
+        };
     },
     async created(){
-        this.generateSortedOptions()
+        this.generateSortedOptions();
 
-        await this.init()
+        await this.init();
         
         
         if(this.pollResultsAreVisible)
-            this.$client.service('answer').on('created', this.addAnswer)
+            this.$client.service('answer').on('created', this.addAnswer);
 
-        this.$client.service('poll-result').on('patched', this.changeBars)
+        this.$client.service('poll-result').on('patched', this.changeBars);
 
-        this.$client.io.on('reconnect', this.init)
+        this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('answer').off('created', this.addAnswer)
-        this.$client.service('poll-result').off('patched', this.changeBars)
-        this.$client.io.off('reconnect', this.init)
+        this.$client.service('answer').off('created', this.addAnswer);
+        this.$client.service('poll-result').off('patched', this.changeBars);
+        this.$client.io.off('reconnect', this.init);
     },
     watch: {
         selectedOption(newVal){
             if(newVal && !this.loadedAllAnswers){
-                this.loadAllAnswers(this.poll)
+                this.loadAllAnswers(this.poll);
             }
         }
     },
     computed: {
         // ...mapGetters('result',['activePoll','sortedOptions','answerCount']),
         totalCount():number {
-            let sum = 0
+            let sum = 0;
             Object.keys(this.sortedOptions).forEach((opt: string)=> {
-                sum += this.sortedOptions[opt].count
-            })
-            return sum
+                sum += this.sortedOptions[opt].count;
+            });
+            return sum;
         },
         pollResultsAreVisible():boolean {
             if(this.poll.resultVisibility === PollResultVisibility['Public'])
-                return true
+                return true;
             if(this.poll.resultVisibility === PollResultVisibility['Anonymous'])
-                return false
+                return false;
             if(this.isEventCreator)
-                return true
-            return false
+                return true;
+            return false;
         },
         voterList():Array<Answer>{
             if(this.selectedOption){
                 return this.allAnswers.filter((v:Answer)=>{
-                    return v.answerId === this.selectedOption
-                })
+                    return v.answerId === this.selectedOption;
+                });
             }
-            return this.allAnswers
+            return this.allAnswers;
         }
     },
     methods: {
         async init(){
-            this.loaded = false
-            this.loadedAllAnswers = false
+            this.loaded = false;
+            this.loadedAllAnswers = false;
 
-            let promises = []
+            let promises = [];
 
-            promises.push(this.loadBars(this.poll))
+            promises.push(this.loadBars(this.poll));
             if(this.pollResultsAreVisible)
-                promises.push(this.loadAllAnswers(this.poll))
+                promises.push(this.loadAllAnswers(this.poll));
 
-            await Promise.all(promises)
-            this.loaded = true
+            await Promise.all(promises);
+            this.loaded = true;
         },
         async loadBars(poll:Poll){
-            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$handleError)
-            this.changeBars(pollResults)
+            const pollResults = await this.$client.service('poll-result').get(poll._key).catch(this.$handleError);
+            this.changeBars(pollResults);
         },
         async loadAllAnswers(poll:Poll){
             const res = await this.$client.service('answer').find({
@@ -121,48 +121,48 @@ export default defineComponent({
                         lastChanged: -1
                     }
                 }
-            }).catch(this.$handleError)
-            this.loadedAllAnswers = true
-            this.allAnswers = res
-            this.answerIdsFromFind = new Set(res.map((ans: Answer) => ans._key))
+            }).catch(this.$handleError);
+            this.loadedAllAnswers = true;
+            this.allAnswers = res;
+            this.answerIdsFromFind = new Set(res.map((ans: Answer) => ans._key));
         },
         isVoterAlreadyCounted(key: string){
-            return this.answerIdsFromFind.has(key)
+            return this.answerIdsFromFind.has(key);
         },
         addAnswer(answer: Answer){
             if(answer._from !== this.poll._id)
-                return
+                return;
             if(this.isVoterAlreadyCounted(answer._key))
-                return
+                return;
 
-            this.allAnswers.unshift(answer)
+            this.allAnswers.unshift(answer);
         },
         changeBars(data: PollResult){
             if(data.pollId !== this.poll._key)
-                return
+                return;
             Object.keys(this.sortedOptions).forEach((ans: string) =>{
-                this.sortedOptions[ans].count = data.answerCount[ans]
-            })
+                this.sortedOptions[ans].count = data.answerCount[ans];
+            });
         },
         generateSortedOptions(){
-            this.sortedOptions = {} as SortedOptions
-            let colorIndex = 0
+            this.sortedOptions = {} as SortedOptions;
+            let colorIndex = 0;
             this.poll.answers.forEach((option: Option) => {
                 this.sortedOptions[option.answerId] = {
                     count: 0,
                     bgColor: this.answerColors[colorIndex],
                     ...option
-                }
-                colorIndex++
+                };
+                colorIndex++;
                 if(colorIndex >= this.answerColors.length)
-                    colorIndex = 0
-            })
+                    colorIndex = 0;
+            });
             if(this.poll.answers.length > 2) {
-                const lastAnswer = this.poll.answers[this.poll.answers.length - 1]
-                this.sortedOptions[lastAnswer.answerId].bgColor = this.neutralColor
+                const lastAnswer = this.poll.answers[this.poll.answers.length - 1];
+                this.sortedOptions[lastAnswer.answerId].bgColor = this.neutralColor;
             }
         }
     }
 
-})
+});
 </script>

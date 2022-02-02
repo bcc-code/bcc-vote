@@ -32,11 +32,11 @@
   </div>
 </template>
 <script lang="ts">
-import InfoBox from '../components/info-box.vue'
-import PollingEventCard from '../components/polling-event-card.vue'
-import {PollingEvent} from '../domain'
-import { mapState, mapActions } from 'vuex'
-import { defineComponent } from 'vue'
+import InfoBox from '../components/info-box.vue';
+import PollingEventCard from '../components/polling-event-card.vue';
+import {PollingEvent} from '../domain';
+import { mapState, mapActions } from 'vuex';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         InfoBox,
@@ -46,14 +46,14 @@ export default defineComponent({
         mobile: Boolean,
     },
     created(){
-        this.loadPollingEvents()
+        this.loadPollingEvents();
     },
     data () {
         return {
             loading: false,
             loadedArchived: false,
             currentTab: 'polling-events'
-        }
+        };
     },
     computed: {
         ...mapState(['pollingEvents']),
@@ -63,44 +63,44 @@ export default defineComponent({
                 'live': [],
                 'finished': [],
                 'archived': []
-            } as any
+            } as any;
             this.pollingEvents.forEach((event: PollingEvent) => {
-                events[event.status].push(event)
-            })
-            return events
+                events[event.status].push(event);
+            });
+            return events;
         },
         tabPollingEvents():Array<PollingEvent> {
-            const events = this.sortedPollingEvents
+            const events = this.sortedPollingEvents;
             if(this.currentTab === 'archived') {
-                return [...events['archived']]
+                return [...events['archived']];
             } else {
                 return [
                     ...events['live'],
                     ...events['not_started'],
                     ...events['finished']
-                ]
+                ];
             }
         }
     },
     methods: {
         ...mapActions(['findPollingEvents']),
         async loadPollingEvents(archived = false) {
-            this.loading = true
-            await this.findPollingEvents(archived)
-            this.loading = false
+            this.loading = true;
+            await this.findPollingEvents(archived);
+            this.loading = false;
         },
         openArchivedTab() {
-            this.currentTab = 'archived'
+            this.currentTab = 'archived';
             if(!this.loadedArchived) {
-                this.loadPollingEvents(true)
-                this.loadedArchived = true
+                this.loadPollingEvents(true);
+                this.loadedArchived = true;
             }
         },
         goToCreate() {
-            this.$router.push({ path: '/create' })
+            this.$router.push({ path: '/create' });
         }
     }
-})
+});
 </script>
 
 <style scoped>

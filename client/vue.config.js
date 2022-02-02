@@ -1,4 +1,4 @@
-const path = require("path")
+const path = require("path");
 
 module.exports = {
     devServer: {
@@ -10,12 +10,12 @@ module.exports = {
     publicPath: "/",
     outputDir: "../server/public",
     runtimeCompiler: true,    
-    lintOnSave: false,
+    lintOnSave: true,
     chainWebpack: config => {
         config.plugin("copy").tap(([options]) => {
-            options[0].ignore.push("**/config.json")
-            return [options]
-        })
+            options[0].ignore.push("**/config.json");
+            return [options];
+        });
     },
     configureWebpack: () => {
         if(process.env.NODE_ENV === 'production') {
@@ -26,8 +26,8 @@ module.exports = {
                     minimize: true,
                     usedExports: true
                 }
-            }
-            return settings
+            };
+            return settings;
         }
     }
-}
+};

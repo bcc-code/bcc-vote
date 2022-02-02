@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
@@ -12,13 +12,13 @@ export default defineComponent({
     computed: {
         styling():string{
             switch(this.status){
-                case 'not_started': return 'text-blue-500 bg-blue-200'
-                case 'live': return 'text-red-500 bg-red-200'
-                case 'finished': return 'text-green-400 bg-green-200'
-                case 'archived': return 'text-gray-700 bg-gray-500'
+                case 'not_started': return 'text-blue-500 bg-blue-200';
+                case 'live': return 'text-red-500 bg-red-200';
+                case 'finished': return 'text-green-400 bg-green-200';
+                case 'archived': return 'text-gray-700 bg-gray-500';
             }
-            return ''
+            return '';
         }
     }
-})
+});
 </script>

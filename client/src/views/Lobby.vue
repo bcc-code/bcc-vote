@@ -13,10 +13,10 @@
     </section>
 </template>
 <script lang="ts">
-import PollPopOver from '../components/poll-popover.vue'
-import { PollingEvent, PollingEventStatus } from '../domain'
-import { Answer, Poll, PollActiveStatus } from '../domain/Poll'
-import { defineComponent } from 'vue'
+import PollPopOver from '../components/poll-popover.vue';
+import { PollingEvent, PollingEventStatus } from '../domain';
+import { Answer, Poll, PollActiveStatus } from '../domain/Poll';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         PollPopOver,
@@ -26,31 +26,31 @@ export default defineComponent({
             pollingEvent: {} as PollingEvent,
             currentPoll: undefined as (undefined | Poll),
             currentAnswer: undefined as (undefined | Answer)
-        }
+        };
     },
     created() {
-        this.init()
+        this.init();
         
-        this.$client.service('poll').on('patched', this.getPoll)
-        this.$client.service('polling-event').on('patched', this.patchEvent)
-        this.$client.io.on('reconnect', this.init)
+        this.$client.service('poll').on('patched', this.getPoll);
+        this.$client.service('polling-event').on('patched', this.patchEvent);
+        this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.getPoll)
-        this.$client.service('polling-event').off('patched', this.patchEvent)
-        this.$client.io.off('reconnect', this.init)
+        this.$client.service('poll').off('patched', this.getPoll);
+        this.$client.service('polling-event').off('patched', this.patchEvent);
+        this.$client.io.off('reconnect', this.init);
     },
     methods: {
         init():void {
-            this.loadPollingEvent()
-            this.loadCurrentPoll()
+            this.loadPollingEvent();
+            this.loadCurrentPoll();
         },
         async loadPollingEvent():Promise<void>{
             this.pollingEvent = await this.$client.service('polling-event')
                 .get(this.$route.params.id)
-                .catch(this.$handleError) as PollingEvent
+                .catch(this.$handleError) as PollingEvent;
             if(this.pollingEvent.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(this.pollingEvent)
+                this.goToThankYouPage(this.pollingEvent);
         },
         async loadCurrentPoll():Promise<void>{
             const res = await this.$client.service('poll').find({
@@ -58,45 +58,45 @@ export default defineComponent({
                     pollingEventId: this.$route.params.id,
                     activeStatus: PollActiveStatus['Live']
                 }
-            }).catch(this.$handleError)
+            }).catch(this.$handleError);
             if(res.length === 0){
-                this.currentPoll = undefined
-                this.currentAnswer = undefined
+                this.currentPoll = undefined;
+                this.currentAnswer = undefined;
             }
             else{
-                this.currentAnswer = await this.loadCurrentAnswer(res[0]._key)
-                this.currentPoll = res[0]
+                this.currentAnswer = await this.loadCurrentAnswer(res[0]._key);
+                this.currentPoll = res[0];
             }
         },
         async loadCurrentAnswer(pollId: string):Promise<undefined|Answer>{
             const res = await this.$client.service('answer').get(pollId + '-' + this.$user._key)
                 .catch((err:Error) => {
                     if(err.name !== 'NotFound')
-                        this.$handleError(err)
-                })
+                        this.$handleError(err);
+                });
 
-            return res
+            return res;
         },
         getPoll(data: Poll):void{
             if(data.pollingEventId !== this.$route.params.id)
-                return
+                return;
 
-            this.currentAnswer = undefined
+            this.currentAnswer = undefined;
             if(data.activeStatus === PollActiveStatus['Live'])
-                this.currentPoll = data
+                this.currentPoll = data;
             else
-                this.currentPoll = undefined
+                this.currentPoll = undefined;
         },
         patchEvent(data: PollingEvent):void{
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(data)
+                this.goToThankYouPage(data);
         },
         goToThankYouPage(data: PollingEvent):void{
             this.$router.push({name: 'Thank you', params: {
                 id: data._key,
                 title: data.title
-            }})
+            }});
         }
     }
-})
+});
 </script>

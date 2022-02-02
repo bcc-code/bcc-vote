@@ -19,4 +19,4 @@ module.exports = {
         "semi": ["warn", "always"],
         "eqeqeq": ["warn", "smart"]
     }
-}
+};

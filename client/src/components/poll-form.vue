@@ -42,13 +42,13 @@
     </div>
 </template>
 <script lang="ts">
-import ToolTip from '../components/tooltip.vue'
-import FormField from '../components/form-field.vue'
-import XIcon from 'heroicons-vue3/outline/XIcon'
-import AddButton from '../components/add-button.vue'
-import TrashIcon from 'heroicons-vue3/outline/TrashIcon'
-import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/Poll'
-import { defineComponent } from 'vue'
+import ToolTip from '../components/tooltip.vue';
+import FormField from '../components/form-field.vue';
+import XIcon from 'heroicons-vue3/outline/XIcon';
+import AddButton from '../components/add-button.vue';
+import TrashIcon from 'heroicons-vue3/outline/TrashIcon';
+import { PollPrepare, PollActiveStatus, PollResultVisibility } from '../domain/Poll';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         ToolTip,
@@ -86,11 +86,11 @@ export default defineComponent({
                     }
                 ]
             } as PollPrepare
-        }
+        };
     },
     created(){
         if(this.poll)
-            this.pollData = JSON.parse(JSON.stringify(this.poll))
+            this.pollData = JSON.parse(JSON.stringify(this.poll));
     },
     methods: {
         addOption(){
@@ -98,26 +98,26 @@ export default defineComponent({
                 label: "",
                 explanation: "",
                 answerId: new Date().getTime().toString(),
-            })
+            });
         },
         removeOption(ind: number){
-            this.pollData.answers.splice(ind, 1)
+            this.pollData.answers.splice(ind, 1);
         },
         sendPoll(){
             if(this.poll?._key){
                 this.$client.service('poll').update(this.poll._key, this.pollData)
                     .then(() => {
-                        this.$emit('close')
-                    }).catch(this.$handleError)
+                        this.$emit('close');
+                    }).catch(this.$handleError);
             }
             else{
                 this.$client.service('poll').create(this.pollData)
                     .then(() => {
-                        this.$emit('close')
-                    }).catch(this.$handleError)
+                        this.$emit('close');
+                    }).catch(this.$handleError);
             } 
         }
     },
     emits: ['close']
-})
+});
 </script>

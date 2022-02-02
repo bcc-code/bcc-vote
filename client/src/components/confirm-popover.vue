@@ -20,9 +20,9 @@
     </PopoverBase>
 </template>
 <script lang="ts">
-import XIcon from 'heroicons-vue3/outline/XIcon'
-import PopoverBase from './popover-base.vue'
-import { defineComponent} from 'vue'
+import XIcon from 'heroicons-vue3/outline/XIcon';
+import PopoverBase from './popover-base.vue';
+import { defineComponent} from 'vue';
 export default defineComponent({
     components: {
         XIcon,
@@ -33,5 +33,5 @@ export default defineComponent({
         cancelTranslation: {type: String, default: 'cancel'}
     },
     emits: ['cancel','confirm', 'resign'],
-})
+});
 </script>

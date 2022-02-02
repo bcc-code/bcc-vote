@@ -20,11 +20,11 @@
     </div>
 </template>
 <script lang="ts">
-import ProgressBars from '../components/results-progress-bars.vue'
-import AdminVoterList from '../components/admin-voter-list.vue'
-import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain'
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { defineComponent } from 'vue'
+import ProgressBars from '../components/results-progress-bars.vue';
+import AdminVoterList from '../components/admin-voter-list.vue';
+import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         ProgressBars,
@@ -34,29 +34,29 @@ export default defineComponent({
         return {
             loading: false,
             selectedOption: "",
-        }
+        };
     },
     async created(){
-        await this.init()
+        await this.init();
         
-        this.$client.service('poll').on('patched', this.patchedPoll)
-        this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT)
-        this.$client.service('answer').on('created', this.addedAnswer)
+        this.$client.service('poll').on('patched', this.patchedPoll);
+        this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT);
+        this.$client.service('answer').on('created', this.addedAnswer);
     
-        this.$client.io.on('reconnect', this.init)
+        this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.patchedPoll)
-        this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT)
-        this.$client.service('answer').off('created', this.addedAnswer)
+        this.$client.service('poll').off('patched', this.patchedPoll);
+        this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT);
+        this.$client.service('answer').off('created', this.addedAnswer);
     
-        this.$client.io.off('reconnect', this.init)
+        this.$client.io.off('reconnect', this.init);
     },
     computed: {
         ...mapGetters('result',['sortedOptions','answerCount']),
         ...mapState('result', ['pollingEvent','polls','answers', 'activePoll']),
         isEventLive(): boolean {
-            return this.pollingEvent && this.pollingEvent.status === PollingEventStatus['Live']
+            return this.pollingEvent && this.pollingEvent.status === PollingEventStatus['Live'];
         },
         pageColors(): {bg:string, text:string} {
             return this.isEventLive ? {
@@ -65,23 +65,23 @@ export default defineComponent({
             } : {
                 bg: 'bg-gray-100',
                 text: 'text-blue-900'
-            }
+            };
         },
         resultsVisible():boolean {
-            let visible = false
+            let visible = false;
             if(this.activePoll && this.activePoll.resultVisibility === PollResultVisibility['Public']) {
-                visible = true
+                visible = true;
             }
-            return visible
+            return visible;
         },
         voterList():Array<Answer>{
             if(this.selectedOption){
                 return this.answers.filter((ans: Answer) => {
-                    return ans.answerId == this.selectedOption
-                })
+                    return ans.answerId == this.selectedOption;
+                });
             }
                 
-            return this.answers
+            return this.answers;
 
         }
     },
@@ -89,35 +89,35 @@ export default defineComponent({
         ...mapMutations('result',['UPDATE_POLL_RESULT']),
         ...mapActions('result',['getPollingEvent', 'getPollResult', 'getActivePoll','findAnswers','patchedPoll', 'addedAnswer']),
         async init() {
-            this.loading = true
-            const pollingEventKey = this.$route.params.id
+            this.loading = true;
+            const pollingEventKey = this.$route.params.id;
             try {
-                await this.getPollingEvent(pollingEventKey)
-                await this.getActivePoll()
+                await this.getPollingEvent(pollingEventKey);
+                await this.getActivePoll();
                 if(this.activePoll) {
                     await this.refreshAnswers();
                 }
             } catch(err) {
-                this.$handleError(err)
+                this.$handleError(err);
             }
-            this.loading = false
+            this.loading = false;
         },
         async refreshAnswers() {
-            this.loading = true
-            const promises = []
-            promises.push(this.findAnswers())
-            promises.push(this.getPollResult())
-            await Promise.all(promises).catch(err => {this.$handleError(err)})
-            this.loading = false
+            this.loading = true;
+            const promises = [];
+            promises.push(this.findAnswers());
+            promises.push(this.getPollResult());
+            await Promise.all(promises).catch(err => {this.$handleError(err);});
+            this.loading = false;
         }
     },
     watch: {
         activePoll(newPoll:Poll, oldPoll:Poll) {
             if(newPoll && (!oldPoll || newPoll._id !== oldPoll._id)) {
-                this.refreshAnswers()
+                this.refreshAnswers();
             }
         }
     }
-})
+});
 </script>
 

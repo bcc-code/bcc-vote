@@ -1,7 +1,7 @@
 import { PollingEvent, PollingEventStatus } from '@/domain/PollingEvent';
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 import createMultiTabState from 'vuex-multi-tab-state';
-import result from '../store/result'
+import result from '../store/result';
 
 export interface RootState {
     pollingEvents: Array<PollingEvent>
@@ -16,14 +16,14 @@ export const store: any = createStore<RootState>({
     },
     actions: {
         async findPollingEvents({commit},archived) {
-            let query = {
+            const query = {
                 
                 status: archived ? {} : {
                     $ne: PollingEventStatus.Archived
                 }
-            }
-            const unarchivedEvents = await store.$client.service('polling-event').find({ query})
-            commit('UPDATE_POLLING_EVENTS',unarchivedEvents)
+            };
+            const unarchivedEvents = await store.$client.service('polling-event').find({ query});
+            commit('UPDATE_POLLING_EVENTS',unarchivedEvents);
         }
     },
     modules: {
@@ -34,4 +34,4 @@ export const store: any = createStore<RootState>({
             statesPaths: ['result']
         })
     ]
-})
+});

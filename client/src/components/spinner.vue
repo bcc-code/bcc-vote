@@ -11,7 +11,7 @@ export default {
         color: { type: String, default: '#6297FF' },
         inline: { type: Boolean, default: false },
     }
-}
+};
 </script>
 <style scoped>
 .spinner-container {

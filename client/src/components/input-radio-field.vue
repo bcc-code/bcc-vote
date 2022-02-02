@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue'
+import { PropType, defineComponent } from 'vue';
 export default defineComponent({
     props: {
         value: { default: true },
@@ -18,21 +18,21 @@ export default defineComponent({
     computed: {
         model: {
             get(): (string | boolean) {
-                return this.modelValue
+                return this.modelValue;
             },
             set(val: (string | boolean)):void {
                 if(val)
-                    this.$emit('update:modelValue', this.value)
+                    this.$emit('update:modelValue', this.value);
                 else if(typeof this.value == "boolean")
-                    this.$emit('update:modelValue', !this.value)
+                    this.$emit('update:modelValue', !this.value);
             }
         },
         isSet():boolean {
-            return this.value === this.modelValue
+            return this.value === this.modelValue;
         }
     },
     emits: ['update:modelValue']
-})
+});
 </script>
 
 <style scoped>

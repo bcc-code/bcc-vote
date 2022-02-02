@@ -47,11 +47,11 @@
 </template>
 
 <script lang="ts">
-import InfoBox from '../components/info-box.vue'
-import FormField from '../components/form-field.vue'
-import XIcon from 'heroicons-vue3/outline/XIcon'
+import InfoBox from '../components/info-box.vue';
+import FormField from '../components/form-field.vue';
+import XIcon from 'heroicons-vue3/outline/XIcon';
 
-import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain'
+import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain';
 
 interface RoleName {
     name: string,
@@ -66,7 +66,7 @@ interface SelectObject {
     val: string|number
 }
 
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     components: {
         InfoBox,
@@ -96,23 +96,23 @@ export default defineComponent({
                 } as ParticipantFilters,
                 participantLabels: {} as ParticipantFilters,
             } as PollingEvent,
-        }
+        };
     },
     async created(){
         if(this.pollingEvent){
-            this.eventData = JSON.parse(JSON.stringify(this.pollingEvent))
-            this.eventData.startDateTime = new Date(this.eventData.startDateTime)
+            this.eventData = JSON.parse(JSON.stringify(this.pollingEvent));
+            this.eventData.startDateTime = new Date(this.eventData.startDateTime);
         }   
-        await this.loadOrgs()
-        await this.loadRoles()
+        await this.loadOrgs();
+        await this.loadRoles();
     },
     computed: {
         votingAdminRole():any {
             if(this.$user.activeRole === 'VotingAdmin') {
-                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0]
-                return role
+                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0];
+                return role;
             } else {
-                return false
+                return false;
             }
         }
     },
@@ -125,22 +125,22 @@ export default defineComponent({
                 $sort: {
                     name: 1
                 }
-            } as any
+            } as any;
             if(this.votingAdminRole) {
-                query.orgID = { $in: this.votingAdminRole.orgIDs}
+                query.orgID = { $in: this.votingAdminRole.orgIDs};
             }
-            const res = await this.$client.service('org').find({query}).catch(this.$handleError)
+            const res = await this.$client.service('org').find({query}).catch(this.$handleError);
             
             if(!this.votingAdminRole) {
-                res.unshift({name: "All churches", churchID: 'all'})
+                res.unshift({name: "All churches", churchID: 'all'});
             }
 
             this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
                     val: c.churchID.toString(),
-                }
-            })
+                };
+            });
         },
         async loadRoles(){
             const res = await this.$client.service('role').find({
@@ -151,47 +151,47 @@ export default defineComponent({
               
                     $select: ['name', 'enumName'],
                 }
-            }).catch(this.$handleError)
+            }).catch(this.$handleError);
             this.allRoles = res.map((c: RoleName) => {
                 return {
                     name: c.name,
                     val: c.enumName.toString(),
-                }
-            })
-            this.allRoles.unshift({name: "All roles", val: 'all'})
+                };
+            });
+            this.allRoles.unshift({name: "All roles", val: 'all'});
         },
         fillparticipantLabels(){
             const role = this.allRoles.find((r:SelectObject) => {
-                return r.val === this.eventData.participantFilter.role
-            })
+                return r.val === this.eventData.participantFilter.role;
+            });
             const org = this.allChurches.find((r:SelectObject) => {
-                return r.val === this.eventData.participantFilter.org
-            })
+                return r.val === this.eventData.participantFilter.org;
+            });
             if(!role || !org)
                 return;
-            this.eventData.participantLabels.role = role.name
-            this.eventData.participantLabels.org = org.name
+            this.eventData.participantLabels.role = role.name;
+            this.eventData.participantLabels.org = org.name;
             this.eventData.participantLabels.minAge = this.eventData.participantFilter.minAge;
             this.eventData.participantLabels.maxAge = this.eventData.participantFilter.maxAge;
         },
         sendPollingEvent(){
             this.fillparticipantLabels();
-            const data = this.eventData
-            data.creatorId = this.$user.personID
+            const data = this.eventData;
+            data.creatorId = this.$user.personID;
             if(data.startDateTime.getTime() === 0)
-                data.startDateTime = new Date()
+                data.startDateTime = new Date();
             if(this.pollingEvent)
                 this.$client.service('polling-event').update(data._key, data)
                     .then(() => {
-                        this.$emit('finish')
-                    }).catch(this.$handleError)
+                        this.$emit('finish');
+                    }).catch(this.$handleError);
             else
                 this.$client.service('polling-event').create(data)
                     .then((res: PollingEvent) => {
-                        this.$emit('finish', res._key)
-                    }).catch(this.$handleError)
+                        this.$emit('finish', res._key);
+                    }).catch(this.$handleError);
         },
     },
     emits: ['close', 'finish']
-})
+});
 </script>

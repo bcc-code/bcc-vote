@@ -45,15 +45,15 @@
 </template>
 <script lang="ts">
 
-import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
-import TrashIcon from 'heroicons-vue3/outline/TrashIcon'
+import PencilIcon from 'heroicons-vue3/outline/PencilIcon';
+import TrashIcon from 'heroicons-vue3/outline/TrashIcon';
 
-import PollForm from '../components/poll-form.vue'
-import ToolTip from './tooltip.vue'
-import ConfirmPopover from './confirm-popover.vue'
-import { Poll, PollActiveStatus } from '../domain/Poll'
+import PollForm from '../components/poll-form.vue';
+import ToolTip from './tooltip.vue';
+import ConfirmPopover from './confirm-popover.vue';
+import { Poll, PollActiveStatus } from '../domain/Poll';
 
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
     components: {
@@ -73,41 +73,41 @@ export default defineComponent({
     data(){
         return{
             changeConfirmation: ''
-        }
+        };
     },
     computed: {
         isNotStarted(): boolean{
-            return PollActiveStatus["Not Started"] === this.poll.activeStatus
+            return PollActiveStatus["Not Started"] === this.poll.activeStatus;
         },
         isLive(): boolean{
-            return PollActiveStatus["Live"] === this.poll.activeStatus
+            return PollActiveStatus["Live"] === this.poll.activeStatus;
         },
         isFinished(): boolean{
-            return PollActiveStatus["Finished"] === this.poll.activeStatus
+            return PollActiveStatus["Finished"] === this.poll.activeStatus;
         }
     },
     methods: {
         startEditing(){
             if(!this.inactiveMode){
-                this.$emit('edit')
+                this.$emit('edit');
             }
         },
         stopEditing(){
-            this.$emit('stopEdit')
+            this.$emit('stopEdit');
         },
         async deletePoll(){
             if(!this.inactiveMode){
-                await this.$client.service('poll').remove(this.poll?._key).catch(this.$handleError)
-                this.$emit('stopEdit')
+                await this.$client.service('poll').remove(this.poll?._key).catch(this.$handleError);
+                this.$emit('stopEdit');
             }
         },
         confirmPollChange(){
             this.changeConfirmation = '';
-            this.$emit('changeStatus')
+            this.$emit('changeStatus');
         }
     },
     emits: ['edit', 'stopEdit', 'changeStatus']
-})
+});
 </script>
 
 <style scoped>
