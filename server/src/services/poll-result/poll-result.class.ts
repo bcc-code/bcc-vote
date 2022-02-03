@@ -1,4 +1,4 @@
-import { NotImplemented } from '@feathersjs/errors';
+import { NotFound, NotImplemented } from '@feathersjs/errors';
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { QuerySnapshot } from "@google-cloud/firestore";
 import { Application } from '../../declarations';
@@ -27,7 +27,7 @@ export class PollResult implements ServiceMethods<Data> {
         const query = params.query;
         if(!query)
             return [];
-        let resultRef = db.collection('poll-result');
+        let resultRef = db.collection('poll-result') as FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
         Object.keys(query).forEach((atr: string) => {
             if(isPrimitive(query[atr]))
                 resultRef = resultRef.where(atr, '==', query[atr]);
@@ -46,10 +46,13 @@ export class PollResult implements ServiceMethods<Data> {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async get (id: Id, params?: Params): Promise<Data> {
-        const resultRef = db.collection('poll-result').doc(id);
+        const resultRef = db.collection('poll-result').doc(id.toString());
         
         const result = await resultRef.get();
-        return result.data();
+        const data = result.data();
+        if(!data) throw new NotFound('Poll result not found');
+
+        return data;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
