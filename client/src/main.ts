@@ -39,15 +39,10 @@ window.onload = async () => {
     let redirectUrl = '';
     const query = window.location.search;
     if (query.includes('code=') && query.includes('state=')) {
-        // Process the login state
-        console.log(query);
         const options = await auth0.handleRedirectCallback();
-        console.log(options)
         redirectUrl = options.appState.targetUrl;
-        // Use replaceState to redirect the user away and remove the querystring parameters
     }
     if (await auth0.isAuthenticated()) {
-        console.log()
         client.configure(auth({storage: window.sessionStorage}));
         const accessToken = await auth0.getTokenSilently();
         client.authentication.setAccessToken(accessToken);
@@ -61,9 +56,7 @@ window.onload = async () => {
     } else {
         const options: RedirectLoginOptions = {
             appState: {targetUrl: location.pathname + location.search},
-            //scope: 'members.mfa',
         };
-        console.log(options)
         await auth0.loginWithRedirect(options);
     }
 }
@@ -81,7 +74,6 @@ function registerVue(authResult: AuthenticationResult) {
     
     if (window.location.hostname === 'vote.bcc.no') {
         app.use(vueGtag, {
-            // for testing locally or in dev use G-4KNVYNZ55W
             config: { id: 'G-6V21WXD03F' },
         });
     
