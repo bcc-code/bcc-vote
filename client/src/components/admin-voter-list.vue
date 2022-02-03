@@ -18,15 +18,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { Answer, SortedOptions } from '../domain'
+import { defineComponent, PropType } from 'vue';
+import { Answer, SortedOptions } from '../domain';
 
 export default defineComponent({
     props: {
         voterList: {type: Array as PropType<Array<Answer>>, required: true},
         sortedOptions: {type: Object as PropType<SortedOptions>, required: true},
     }
-})
+});
 </script>
 <style scoped>
 .answer-box {

@@ -20,9 +20,9 @@
     </div>
 </template>
 <script lang="ts">
-import CheckIcon from 'heroicons-vue3/solid/CheckIcon'
-import { SortedOptions, SortedOption } from '../domain'
-import { defineComponent, PropType } from 'vue'
+import CheckIcon from 'heroicons-vue3/solid/CheckIcon';
+import { SortedOptions, SortedOption } from '../domain';
+import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     components: {
         CheckIcon
@@ -37,17 +37,17 @@ export default defineComponent({
     methods: {
         barWidthPercent(option:SortedOption):number {
             if(option.count) {
-                return option.count / this.totalCount * 100 
+                return option.count / this.totalCount * 100; 
             } else {
-                return 0
+                return 0;
             }
         },
         isEndRounded(option:SortedOption):boolean {
-            return this.barWidthPercent(option) > 97
+            return this.barWidthPercent(option) > 97;
         },
         clickOption(answerId: string):void {
             if(!this.visibleResults)
-                return
+                return;
             if(this.modelValue === answerId.toString())
                 this.$emit('update:modelValue', "");
             else
@@ -55,7 +55,7 @@ export default defineComponent({
         }
     },
     emits: ['update:modelValue']
-})
+});
 </script>
 <style scoped>
 .dark-ring{

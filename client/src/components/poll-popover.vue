@@ -26,11 +26,11 @@
     </div>
 </template>
 <script lang="ts">
-import PollVote from './poll-vote.vue'
-import PollResults from './poll-results.vue'
-import VoteConfirm from './confirm-popover.vue'
-import { Poll, Answer } from '../domain/Poll'
-import { defineComponent, PropType } from 'vue'
+import PollVote from './poll-vote.vue';
+import PollResults from './poll-results.vue';
+import VoteConfirm from './confirm-popover.vue';
+import { Poll, Answer } from '../domain/Poll';
+import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     components: {
         PollVote,
@@ -45,15 +45,15 @@ export default defineComponent({
         return {
             showConfirm: false as boolean,
             chosenOption: {} as Answer,
-        }
+        };
     },
     methods: {
         checkConfirm(option:Answer) {
-            this.chosenOption = option
+            this.chosenOption = option;
             if(this.poll && this.poll.confirmAnswer) { 
-                this.showConfirm = true
+                this.showConfirm = true;
             } else {
-                this.submitAnswer(option)
+                this.submitAnswer(option);
             }
         },
         async submitAnswer(option:Answer) {
@@ -64,14 +64,14 @@ export default defineComponent({
                     visibility: this.poll.resultVisibility,
                     answerId: option.answerId,
                     pollingEventId: this.$route.params.id
-                }
+                };
                 const sentAnswer = await this.$client.service('answer').create(participantAnswer)
-                    .catch(this.$handleError)
+                    .catch(this.$handleError);
                 
                 this.$emit('answered', sentAnswer);
             }
         }
     },
     emits: ['answered']
-})
+});
 </script>

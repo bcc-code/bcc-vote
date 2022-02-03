@@ -1,6 +1,5 @@
-import appInsights from './appInsightsTelemetry';
+
 import { createApp } from 'vue';
-import { createI18n } from 'vue-i18n';
 import Toast from 'vue-dk-toast';
 import Spinner from '@/components/spinner.vue';
 import InfoBox from '@/components/info-box.vue';
@@ -8,106 +7,22 @@ import './assets/style.css';
 import App from './App.vue';
 import feathers from '@feathersjs/feathers';
 import socketio from '@feathersjs/socketio-client';
-import auth from '@feathersjs/authentication-client';
 import io from 'socket.io-client';
-import { Role } from './domain/User';
 import { store } from './store';
 import router from './router';
-import { init } from '@sentry/browser';
-import { logToSentry, logConnectionsToSentry, createBreadcrumb } from './functions/sentry';
+import { init, User } from '@sentry/browser';
+import { logConnectionsToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
+import auth from '@feathersjs/authentication-client';
+import {AuthenticationResult} from '@feathersjs/authentication';
+import i18n from './i18n';
+import mixins from './mixins';
+import createAuth0Client, { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import determineConfigBasedOnEnvironment from './config';
+import hooks from './hooks'
 
-const startupTime = new Date().getTime();
-const messages = {
-    no: Object.assign({}, require('./localization/no_vote_master.json')),
-};
-
-const i18n = createI18n({
-    locale: 'no',
-    fallbackLocale: 'no',
-    messages,
-});
-
-const config = determineConfigBasedOnEnvironment();
 const app = createApp(App);
-
-app.component('Spinner', Spinner);
-app.component('InfoBox', InfoBox);
-app.use(Toast, { duration: 2000, positionX: 'right', positionY: 'bottom' });
-app.use(i18n);
-app.use(router);
-app.use(store);
-
-if (window.location.hostname === 'vote.bcc.no') {
-    app.use(vueGtag, {
-        // for testing locally or in dev use G-4KNVYNZ55W
-        config: { id: 'G-6V21WXD03F' },
-    });
-
-    init({ dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770' });
-}
-
-app.mixin({
-    methods: {
-        $handleError(error: Error) {
-            logToSentry(error, this.$user.activeRole);
-
-            const settings = {
-                class: 'error',
-            } as any;
-            if (window.innerWidth < 640) {
-                settings.positionY = 'top';
-            }
-            this.$toast(error, settings);
-        },
-        $showSuccess(message: string): void {
-            const settings = {
-                class: 'success',
-            } as any;
-            if (window.innerWidth < 640) {
-                settings.positionY = 'top';
-            }
-            this.$toast(message, settings);
-        },
-        $logout(): void {
-            router.$client.logout();
-            localStorage.clear();
-            sessionStorage.clear();
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var spcook = cookies[i].split('=');
-                spcook.forEach(cookiename => {
-                    var d = new Date();
-                    d.setDate(d.getDate() - 1);
-                    var expires = ';expires=' + d;
-                    var name = cookiename;
-                    var value = '';
-                    document.cookie = name + '=' + value + expires + '; path=/acc/html';
-                });
-            }
-            const url = `https://${config.auth0Domain}/v2/logout?client_id=${config.auth0ClientId}&returnTo=${location.origin}&federated`;
-            location.href = url;
-        },
-    },
-    computed: {
-        $canAdministratePollingEvents(): boolean {
-            if (this.$user.roles) {
-                const allowedRoles = [
-                    'Developer',
-                    'SentralInformasjonsmedarbeider',
-                    'CentralAdministrator',
-                    'VotingAdmin',
-                ];
-                const allowedUserRoles = this.$user.roles.filter((r: Role) => allowedRoles.includes(r.enumName));
-                if (allowedUserRoles.length) {
-                    return true;
-                }
-            }
-            return false;
-        },
-    },
-});
+const config = determineConfigBasedOnEnvironment();
 
 const client = feathers();
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`, {
@@ -115,49 +30,77 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
 });
 
 client.configure(socketio(socket));
-client.configure(auth());
-
 logConnectionsToSentry(client);
+client.hooks(hooks);
 
-const user = {
-    age: null,
-    churchID: null,
-    personID: null,
-    roles: null,
-    activeRole: '',
-};
-
-router.$client = client;
-store.$client = client;
-router.$user = user;
-router.$gtag = app.config.globalProperties.$gtag;
-app.config.globalProperties.$client = client;
-app.config.globalProperties.$user = user;
-
-client.hooks({
-    before: {
-        all: [
-            (context: any) => {
-                if (app.config.globalProperties.$gtag)
-                    app.config.globalProperties.$gtag.event(context.method + ' ' + context.path);
-            },
-        ],
-    },
-    after: {
-        all: [
-            (context: any) => {
-                let data = context.result;
-                if (context.path === 'authentication') data = context.result.user;
-
-                createBreadcrumb('Request', data, context.method + ' ' + context.path);
-            },
-        ],
-    },
-});
-
-document.title = 'BCC Vote';
-app.mount('#app');
 window.onload = async () => {
-    const startupDuration = new Date().getTime() - startupTime;
-    appInsights.trackMetric({name: 'appStarted', average: startupDuration});
-};
+    await setupAuth0(client);
+
+    const auth0 = (await client.get('auth0')) as Auth0Client;
+    let redirectUrl = '';
+    const query = window.location.search;
+    if (query.includes('code=') && query.includes('state=')) {
+        const options = await auth0.handleRedirectCallback();
+        redirectUrl = options.appState.targetUrl;
+    }
+    if (await auth0.isAuthenticated()) {
+        client.configure(auth({storage: window.sessionStorage}));
+        const accessToken = await auth0.getTokenSilently();
+        client.authentication.setAccessToken(accessToken);
+        const authResult = await client.reAuthenticate(true);
+        registerVue(authResult);
+
+        if (redirectUrl) {
+            const router = app.config.globalProperties.$router;
+            router.push(redirectUrl);
+        }
+    } else {
+        const options: RedirectLoginOptions = {
+            appState: {targetUrl: location.pathname + location.search},
+        };
+        await auth0.loginWithRedirect(options);
+    }
+}
+
+function registerVue(authResult: AuthenticationResult) {
+    const user = authResult.user as User;
+    app.component('Spinner', Spinner);
+    app.component('InfoBox', InfoBox);
+    app.use(Toast, { duration: 2000, positionX: 'right', positionY: 'bottom' });
+    app.use(i18n);
+    app.use(router);
+    app.use(store);
+
+    app.mixin(mixins);
+    
+    if (window.location.hostname === 'vote.bcc.no') {
+        app.use(vueGtag, {
+            config: { id: 'G-6V21WXD03F' },
+        });
+    
+        init({ dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770' });
+    }
+    
+    router.$client = client;
+    store.$client = client;
+    router.$user = authResult.user;
+    router.$gtag = app.config.globalProperties.$gtag;
+    app.config.globalProperties.$client = client;
+    app.config.globalProperties.$user = user;
+    
+    app.mount('#app');
+}
+
+async function setupAuth0(client: feathers.Application) {
+    const auth0 = await createAuth0Client({
+        domain: config.auth0Domain,
+        client_id: config.auth0ClientId,
+        redirect_uri: config.auth0RedirectUri,
+        cacheLocation: 'localstorage',
+        audience: config.audience
+    });
+    client.set('auth0', auth0);
+}
+
+export default app;
+

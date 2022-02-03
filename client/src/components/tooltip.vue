@@ -8,7 +8,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 export default defineComponent({
     props: {
         translation: { type: String, required: true},
@@ -18,16 +18,16 @@ export default defineComponent({
     data() {
         return {
             hovering: false
-        }
+        };
     },
     computed: {
         showToolTip() {
-            if(this.toggledTooltip === true) return true
-            if(this.hovering === true && this.toggledTooltip === undefined) return true
-            return false
+            if(this.toggledTooltip === true) return true;
+            if(this.hovering === true && this.toggledTooltip === undefined) return true;
+            return false;
         }
     }
-})
+});
 </script>
 <style scoped>
     .centered-tooltip{

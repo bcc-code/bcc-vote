@@ -52,18 +52,18 @@
 
 <script lang="ts">
 
-import PencilIcon from 'heroicons-vue3/outline/PencilIcon'
-import LinkIcon from 'heroicons-vue3/outline/LinkIcon'
-import CopyText from './copy-text.vue'
-import ConfirmPopover from './confirm-popover.vue'
-import FilterInfo from './event-filter-info.vue'
-import EventStatus from './polling-event-status.vue'
+import PencilIcon from 'heroicons-vue3/outline/PencilIcon';
+import LinkIcon from 'heroicons-vue3/outline/LinkIcon';
+import CopyText from './copy-text.vue';
+import ConfirmPopover from './confirm-popover.vue';
+import FilterInfo from './event-filter-info.vue';
+import EventStatus from './polling-event-status.vue';
 
-import { PollingEvent, PollingEventStatus} from '../domain'
-import moment from 'moment'
+import { PollingEvent, PollingEventStatus} from '../domain';
+import moment from 'moment';
 
-import { defineComponent, PropType } from 'vue'
-import PollingEventForm from './polling-event-form.vue'
+import { defineComponent, PropType } from 'vue';
+import PollingEventForm from './polling-event-form.vue';
 export default defineComponent({
     components: {
         PencilIcon,
@@ -81,26 +81,26 @@ export default defineComponent({
         return {
             edit: false,
             closeConfirmation: false
-        }
+        };
     },
     computed: {
         formattedDate():string {
-            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm")
+            return moment(this.pollingEvent.startDateTime).format("MMMM D, HH:mm");
         },
         eventUrl():string{
-            return location.origin + '/polling-event/lobby/' + this.pollingEvent._key
+            return location.origin + '/polling-event/lobby/' + this.pollingEvent._key;
         },
         isEventNotStarted():boolean{
-            return this.pollingEvent.status === PollingEventStatus['Not Started']
+            return this.pollingEvent.status === PollingEventStatus['Not Started'];
         },
         isEventLive():boolean{
-            return this.pollingEvent.status === PollingEventStatus['Live']
+            return this.pollingEvent.status === PollingEventStatus['Live'];
         },
         isEventFinished():boolean{
-            return this.pollingEvent.status === PollingEventStatus['Finished']
+            return this.pollingEvent.status === PollingEventStatus['Finished'];
         },
         isEventArchived():boolean{
-            return this.pollingEvent.status === PollingEventStatus['Archived']
+            return this.pollingEvent.status === PollingEventStatus['Archived'];
         },
     },
     methods: {
@@ -109,33 +109,33 @@ export default defineComponent({
         },
         startPollingEvent() {
             this.$client.service('polling-event').patch(this.$route.params.id, {
-              status: PollingEventStatus['Live']
+                status: PollingEventStatus['Live']
             }).then(() => {
-               this.$emit('reloadPollingEvent')
-            }).catch(this.$handleError)
+                this.$emit('reloadPollingEvent');
+            }).catch(this.$handleError);
         },
         closePollingEvent() {
-            this.closeConfirmation = false
+            this.closeConfirmation = false;
             this.$client.service('polling-event').patch(this.$route.params.id, {
-              status: PollingEventStatus['Finished']
+                status: PollingEventStatus['Finished']
             }).then(() => {
-                this.$emit('reloadPollingEvent')
-            }).catch(this.$handleError)
+                this.$emit('reloadPollingEvent');
+            }).catch(this.$handleError);
         },
         archivePollingEvent(){
             this.$client.service('polling-event').patch(this.$route.params.id, {
-              status: PollingEventStatus['Archived']
+                status: PollingEventStatus['Archived']
             }).then(() => {
-                this.$emit('reloadPollingEvent')
-            }).catch(this.$handleError)
+                this.$emit('reloadPollingEvent');
+            }).catch(this.$handleError);
         },
         getLink(){
             const url = location.origin + '/polling-event/lobby/' + this.pollingEvent._key;
-            navigator.clipboard.writeText(url)
+            navigator.clipboard.writeText(url);
         },
         openLiveResults() {
-            let routeData = this.$router.resolve({ path: `/polling-event/live-results/${this.pollingEvent._key}`})
-            window.open(routeData.href, '_blank')
+            let routeData = this.$router.resolve({ path: `/polling-event/live-results/${this.pollingEvent._key}`});
+            window.open(routeData.href, '_blank');
         },
         updateEvent() {
             this.edit = false;
@@ -143,7 +143,7 @@ export default defineComponent({
         }
     },
     emits: ['reloadPollingEvent']
-})
+});
 </script>
 
 <style scoped>

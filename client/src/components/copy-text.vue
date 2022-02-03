@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
-import ToolTip from '../components/tooltip.vue'
-import { defineComponent } from 'vue'
+import ToolTip from '../components/tooltip.vue';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         ToolTip
@@ -18,7 +18,7 @@ export default defineComponent({
     data() {
         return {
             showToolTip: false
-        }
+        };
     },
     methods: {
         copy(){
@@ -26,11 +26,11 @@ export default defineComponent({
                 this.showToolTip = true;
                 setTimeout(() => {
                     this.showToolTip = false;
-                }, 1000)
+                }, 1000);
             }, () => {
                 this.$handleError('Unable to copy');
-            })
+            });
         }
     }
-})
+});
 </script>

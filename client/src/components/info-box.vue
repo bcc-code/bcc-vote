@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import XIcon from 'heroicons-vue3/solid/XIcon'
+import XIcon from 'heroicons-vue3/solid/XIcon';
 export default {
     components: {
         XIcon,
@@ -18,16 +18,16 @@ export default {
     data() {
         return {
             show: true
-        }
+        };
     },
     methods: {
         close() {
-            this.show = false
-            this.$emit('closed')
+            this.show = false;
+            this.$emit('closed');
         }
     },
     emits: ['closed']
-}
+};
 </script>
 <style scoped>
 .border-blue {

@@ -23,8 +23,8 @@
     </div>
 </template>
 <script lang="ts">
-import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon'
-import { defineComponent } from 'vue'
+import ArrowLeft from 'heroicons-vue3/outline/ArrowNarrowLeftIcon';
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         ArrowLeft
@@ -36,19 +36,19 @@ export default defineComponent({
         return {
             openConnection: false as boolean,
             refreshCount: 0 as number
-        }
+        };
     },
     computed: {
         dots():string{
-            return '.'.repeat(this.refreshCount % 4)
+            return '.'.repeat(this.refreshCount % 4);
         }
     },
     methods: {
         navigateBack(){
-            this.$router.go(-1)
+            this.$router.go(-1);
         }
     }
-})
+});
 </script>
 <style>
 .profile-icon {

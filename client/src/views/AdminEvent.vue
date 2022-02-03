@@ -18,13 +18,13 @@
     </div>
 </template>
 <script lang="ts">
-import PollingEventPanel from '../components/admin-polling-event-panel.vue'
-import PollsPanel from '../components/admin-polls-panel.vue'
-import ResultsPanel from '../components/admin-results-panel.vue'
-import { Poll } from '../domain'
-import { PollingEvent, PollingEventStatus } from '../domain'
-import { defineComponent } from 'vue'
-import Spinner from '../components/spinner.vue'
+import PollingEventPanel from '../components/admin-polling-event-panel.vue';
+import PollsPanel from '../components/admin-polls-panel.vue';
+import ResultsPanel from '../components/admin-results-panel.vue';
+import { Poll } from '../domain';
+import { PollingEvent, PollingEventStatus } from '../domain';
+import { defineComponent } from 'vue';
+import Spinner from '../components/spinner.vue';
 export default defineComponent({
     components: {
         PollsPanel,
@@ -39,37 +39,37 @@ export default defineComponent({
             currentTab: 'polls' as string,
             pollingEvent: {} as PollingEvent,
             savedPolls: [] as Poll[],
-        }
+        };
     },
     created(){
-        this.loadPollingEvent()
-        this.loadSavedPolls()
+        this.loadPollingEvent();
+        this.loadSavedPolls();
     },
     computed: {
-        isEventLive():Boolean{
-            return this.pollingEvent.status === PollingEventStatus['Live']
+        isEventLive():boolean{
+            return this.pollingEvent.status === PollingEventStatus['Live'];
         },
-        isEventFinished():Boolean{
-            return this.pollingEvent.status === PollingEventStatus['Finished']
+        isEventFinished():boolean{
+            return this.pollingEvent.status === PollingEventStatus['Finished'];
         },
-        isEventArchived():Boolean{
-            return this.pollingEvent.status === PollingEventStatus['Archived']
+        isEventArchived():boolean{
+            return this.pollingEvent.status === PollingEventStatus['Archived'];
         },
-        backgroundColor(): String{
-            return this.isEventLive? 'bg-blue-900': 'bg-gray-100'
+        backgroundColor(): string{
+            return this.isEventLive? 'bg-blue-900': 'bg-gray-100';
         },
-        activeTabColor():String{
-            return this.isEventLive? 'text-white': 'text-blue-900'
+        activeTabColor():string{
+            return this.isEventLive? 'text-white': 'text-blue-900';
         },
-        inactiveTabColor():String{
-            return this.isEventLive? 'text-gray-600': 'text-gray-700'
+        inactiveTabColor():string{
+            return this.isEventLive? 'text-gray-600': 'text-gray-700';
         },
     },
     methods: {
         async loadPollingEvent(){
             this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id)
-                .catch(this.$handleError)
-            this.isEventLoaded = true
+                .catch(this.$handleError);
+            this.isEventLoaded = true;
             if(this.isEventFinished || this.isEventArchived)
                 this.currentTab = 'results';
         },
@@ -81,9 +81,9 @@ export default defineComponent({
                         createdAt: 1,
                     }
                 }
-            }).catch(this.$handleError)
+            }).catch(this.$handleError);
             this.arePollsLoaded = true;
         },
     } 
-})
+});
 </script>

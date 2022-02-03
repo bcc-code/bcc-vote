@@ -32,14 +32,14 @@
     </section>
 </template>
 <script lang="ts">
-import DateField from './input-date-field.vue'
-import SelectField from './input-select-field.vue'
-import CheckboxField from './input-checkbox-field.vue'
-import RadioField from './input-radio-field.vue'
-import TextareaField from './input-textarea-field.vue'
-import XIcon from 'heroicons-vue3/solid/XIcon'
+import DateField from './input-date-field.vue';
+import SelectField from './input-select-field.vue';
+import CheckboxField from './input-checkbox-field.vue';
+import RadioField from './input-radio-field.vue';
+import TextareaField from './input-textarea-field.vue';
+import XIcon from 'heroicons-vue3/solid/XIcon';
 
-import { defineComponent,PropType } from 'vue'
+import { defineComponent,PropType } from 'vue';
 
 type ModelType = number|string|boolean|Array<string>|Date|undefined
 
@@ -79,16 +79,16 @@ export default defineComponent({
     computed: {
         model: {
             get():ModelType {
-                return this.modelValue
+                return this.modelValue;
             },
             set (val:ModelType) {
                 if(this.type === 'number' && typeof val === 'string')
-                    val = parseInt(val)
-                this.$emit('update:modelValue', val)
+                    val = parseInt(val);
+                this.$emit('update:modelValue', val);
             }
         }
     }
-})
+});
 </script>
 <style scoped>
 .box-field {

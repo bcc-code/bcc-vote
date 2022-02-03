@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
@@ -15,38 +15,38 @@ export default defineComponent({
     data(){
         return{
             paddingAndBorderVertical: 19.2
-        }
+        };
     },
     computed: {
         model: {
             get():string{
                 // timeout is so that the height change happens after the text is rendered
-                this.adjustHeight()
+                this.adjustHeight();
                 
-                return this.modelValue
+                return this.modelValue;
             },
             set(newVal:string){
-                this.$emit('update:modelValue', newVal)
+                this.$emit('update:modelValue', newVal);
             }
         }
     },
     methods: {
         clickEnter(){
             if(this.enableNewLine)
-                this.model += '\n'
+                this.model += '\n';
         },
         adjustHeight(){
             setTimeout(() => {
-                const element = this.$refs.textArea as HTMLFormElement
+                const element = this.$refs.textArea as HTMLFormElement;
                 if(!element)
-                    return
-                element.style.height = this.baseHeight
-                element.style.height = (element.scrollHeight) +'px'
-            }, 0)
+                    return;
+                element.style.height = this.baseHeight;
+                element.style.height = (element.scrollHeight) +'px';
+            }, 0);
         }
     },
     emits: ['update:modelValue']
-})
+});
 </script>
 
 

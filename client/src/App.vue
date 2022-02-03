@@ -13,9 +13,9 @@
 
 <script lang="ts">
 
-import Footer from "./components/layout-footer.vue"
-import Header from "./components/layout-header.vue"
-import { defineComponent } from 'vue'
+import Footer from "./components/layout-footer.vue";
+import Header from "./components/layout-header.vue";
+import { defineComponent } from 'vue';
 export default defineComponent({
     components: {
         Footer,
@@ -23,25 +23,25 @@ export default defineComponent({
     },
     computed: {
         showFooter():boolean{
-            return this.$route.path === "/" || this.$route.path.includes('/error')
+            return this.$route.path === "/" || this.$route.path.includes('/error');
         },
         layoutHeight():number {
-            let header = 48
-            let footer = 0
+            let header = 48;
+            let footer = 0;
             if(this.showFooter) {
-                footer = 208
+                footer = 208;
             }
-            return header + footer
+            return header + footer;
         },
         backgroundClass():string {
-            let bgClass = 'bg-gray-100'
+            let bgClass = 'bg-gray-100';
             if(this.$route.meta && this.$route.meta.bgColor) {
-                bgClass = this.$route.meta.bgColor as string
+                bgClass = this.$route.meta.bgColor as string;
             }
-            return bgClass
+            return bgClass;
         }
     }  
-})
+});
 </script>
 <style scoped>
 .app-container {

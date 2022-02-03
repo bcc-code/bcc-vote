@@ -7,7 +7,7 @@
 
 <script>
 
-import PlusIcon from 'heroicons-vue3/outline/PlusIcon'
+import PlusIcon from 'heroicons-vue3/outline/PlusIcon';
 export default {
     components: {
         PlusIcon,
@@ -15,5 +15,5 @@ export default {
     props: {
         translation: String
     },
-}
+};
 </script>

@@ -15,14 +15,14 @@
 </template>
 <script lang="ts">
 
-import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon'
-import PollResultTile from '../components/poll-result-tile.vue'
-import Spinner from '../components/spinner.vue'
+import ClipboardListIcon from 'heroicons-vue3/outline/ClipboardListIcon';
+import PollResultTile from '../components/poll-result-tile.vue';
+import Spinner from '../components/spinner.vue';
 
-import { generateReport } from '../functions/generateReport'
+import { generateReport } from '../functions/generateReport';
 
-import { defineComponent, PropType } from 'vue'
-import { Poll, PollingEvent, Answer, PollActiveStatus } from '../domain'
+import { defineComponent, PropType } from 'vue';
+import { Poll, PollingEvent, Answer, PollActiveStatus } from '../domain';
 
 export default defineComponent({
     components: {
@@ -38,47 +38,47 @@ export default defineComponent({
         return {
             usersPerBatch: 50,
             loadingReport: false
-        }
+        };
     },
     computed: {
         startedPolls():Array<Poll>{
-            return this.savedPolls.filter((poll:Poll) => {return poll.activeStatus !== PollActiveStatus['Not Started']})
+            return this.savedPolls.filter((poll:Poll) => {return poll.activeStatus !== PollActiveStatus['Not Started'];});
         }
     },
     methods: {
         async getReport():Promise<void>{
             if(this.loadingReport)
                 return;
-            this.loadingReport = true
-            const allAnswers = await this.getAnswers()
-            const allVoters = await this.getVoters(allAnswers)
-            const allResults = await this.getResults()
+            this.loadingReport = true;
+            const allAnswers = await this.getAnswers();
+            const allVoters = await this.getVoters(allAnswers);
+            const allResults = await this.getResults();
             try{ 
-                const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults)
-                const title = this.getReportTitle()
-                this.downloadReport(excelFile, title)
+                const excelFile = generateReport(this.pollingEvent, this.startedPolls, allAnswers, allVoters, allResults);
+                const title = this.getReportTitle();
+                this.downloadReport(excelFile, title);
             } catch(err){
-                this.$handleError(err)
+                this.$handleError(err);
             }
-            this.loadingReport = false
+            this.loadingReport = false;
         },
         getAnswers(){
             return this.$client.service('answer').find({
                 query: {
                     pollingEventId: this.pollingEvent._key
                 }
-            })
+            });
         },
         async getVoters(allAnswers: Answer[]){
             const allVoterSet = new Set();
             allAnswers.forEach((ans: Answer) => {
                 allVoterSet.add(ans._to);
-            })
-            const voterArray = [...allVoterSet]
-            let promises = []
-            let result = [] as any[]
+            });
+            const voterArray = [...allVoterSet];
+            let promises = [];
+            let result = [] as any[];
             while(voterArray.length > 0){
-                const voterSubset = voterArray.splice(0, this.usersPerBatch)
+                const voterSubset = voterArray.splice(0, this.usersPerBatch);
                 promises.push(this.$client.service('user').find({
                     query: {
                         $limit: voterSubset.length,
@@ -87,36 +87,36 @@ export default defineComponent({
                         }
                     }
                 }).then((r:any) => {
-                    result = result.concat(r.data)
-                }).catch(this.$handleError))
+                    result = result.concat(r.data);
+                }).catch(this.$handleError));
             }
-            await Promise.all(promises)
-            return result
+            await Promise.all(promises);
+            return result;
         },
         getResults(){
             return this.$client.service('poll-result').find({
                 query: {
                     pollingEventId: this.pollingEvent._key
                 }
-            })
+            });
         },
         getReportTitle():string{
-            const pollDate = this.pollingEvent.startDateTime.toLocaleString().split('T')[0]
+            const pollDate = this.pollingEvent.startDateTime.toLocaleString().split('T')[0];
             const timeStamp = new Date().getTime();
-            const fileName = `${this.pollingEvent.title} ${pollDate} ${timeStamp}`
-            return fileName
+            const fileName = `${this.pollingEvent.title} ${pollDate} ${timeStamp}`;
+            return fileName;
         },
         downloadReport(wb:any, name:string):void{
             wb.writeToBuffer().then((buffer:any) => {
-                const blob = new Blob([buffer], {type: 'application/xlsx'})
-                const link = document.createElement('a')
-                link.href = URL.createObjectURL(blob)
-                link.download = `${name}.xlsx`
-                link.click()
-                URL.revokeObjectURL(link.href)
-            })
+                const blob = new Blob([buffer], {type: 'application/xlsx'});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${name}.xlsx`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            });
         }
     }
-})
+});
 </script>
 

@@ -10,10 +10,10 @@
 
 <script lang="ts">
 
-import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon'
-import { Poll } from '../domain/Poll'
+import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon';
+import { Poll } from '../domain/Poll';
 
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
     components: {
@@ -26,26 +26,26 @@ export default defineComponent({
     data(){
         return{
             votes: 0,
-        }
+        };
     },
     async created(){
-        const results = await this.$client.service('poll-result').get(this.poll._key)
+        const results = await this.$client.service('poll-result').get(this.poll._key);
         this.updateVotes(results);
-        this.$client.service('poll-result').on('patched', this.updateVotes)
+        this.$client.service('poll-result').on('patched', this.updateVotes);
     },
     unmounted(){
-        this.$client.service('poll-result').off('patched')
+        this.$client.service('poll-result').off('patched');
     },
     methods: {
         updateVotes(data: any){
             if(data.pollId !== this.poll._key)
-                return
+                return;
             let count = 0;
             Object.keys(data.answerCount).forEach((key:string) => {
-                count += data.answerCount[key]
-            })
-            this.votes = count
+                count += data.answerCount[key];
+            });
+            this.votes = count;
         }
     }
-})
+});
 </script>

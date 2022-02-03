@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import FeedbackPopover from '../components/feedback-popover.vue'
+import { defineComponent } from 'vue';
+import FeedbackPopover from '../components/feedback-popover.vue';
 
 export default defineComponent({
     components: {
@@ -29,12 +29,12 @@ export default defineComponent({
     },
     created(){
         if(this.noParams)
-            this.$router.push('/')
+            this.$router.push('/');
     },
     computed: {
         noParams():boolean{
-            return !this.$route.params.id || !this.$route.params.title
+            return !this.$route.params.id || !this.$route.params.title;
         }
     }
-})
+});
 </script>

@@ -10,8 +10,8 @@
 
 
 
-import { defineComponent } from 'vue'
-import PollingEventForm from '../components/polling-event-form.vue'
+import { defineComponent } from 'vue';
+import PollingEventForm from '../components/polling-event-form.vue';
 
 export default defineComponent({
     components: {
@@ -25,7 +25,7 @@ export default defineComponent({
             this.$router.push('/polling-event/admin/'+id);
         }
     }
-})
+});
 </script>
 
             

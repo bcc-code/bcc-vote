@@ -16,7 +16,7 @@
 
 <script lang="ts">
 
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'FormDate',
     props: {
@@ -34,51 +34,51 @@ export default defineComponent({
             month: '',
             year: '',
             focusElement: 'day',
-        }
+        };
     },
     created():void{
-        this.init()
+        this.init();
     },
     methods: {
         init():void {
             if(this.modelValue.getTime()){
-                const date = this.modelValue
-                this.day = this.format(date.getDate())
-                this.month = this.format(date.getMonth() + 1)
-                this.year = this.format(date.getFullYear())
-                this.hour = this.format(date.getHours())
-                this.minute = this.format(date.getMinutes())
+                const date = this.modelValue;
+                this.day = this.format(date.getDate());
+                this.month = this.format(date.getMonth() + 1);
+                this.year = this.format(date.getFullYear());
+                this.hour = this.format(date.getHours());
+                this.minute = this.format(date.getMinutes());
             }
         },
         format(val:number):string{
-            return val.toString().padStart(2, '0')
+            return val.toString().padStart(2, '0');
         },
         updateValue():void {
-            const stringDate = `${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:00`
-            const time = Date.parse(stringDate)
+            const stringDate = `${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:00`;
+            const time = Date.parse(stringDate);
             if (Number.isNaN(time)) {
-                return
+                return;
             }
-            this.$emit('update:modelValue', new Date(time))
+            this.$emit('update:modelValue', new Date(time));
         },
         resetValue():void {
-            this.day = ''
-            this.month = ''
-            this.year = ''
-            this.focusElement = 'day'
-            this.$emit('update:modelValue', 0)
+            this.day = '';
+            this.month = '';
+            this.year = '';
+            this.focusElement = 'day';
+            this.$emit('update:modelValue', 0);
         },
         goNext(evt: any):void{
             if(evt.target.value.length === evt.target.placeholder.length)
-                this.focusOnNextFormInput(evt.target)
+                this.focusOnNextFormInput(evt.target);
         },
         focusOnNextFormInput: (el: any):void => {
-            const currentIndex = Array.from(el.form.elements).indexOf(el)
+            const currentIndex = Array.from(el.form.elements).indexOf(el);
             if (currentIndex < el.form.elements.length - 1)
-                el.form.elements.item(currentIndex + 1).focus()
+                el.form.elements.item(currentIndex + 1).focus();
         }
     }
-})
+});
 </script>
 <style scoped>
 

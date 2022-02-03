@@ -13,8 +13,8 @@
 
 <script lang="ts">
 
-import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon'
-import { PropType, defineComponent } from 'vue'
+import ChevronDownIcon from 'heroicons-vue3/solid/ChevronDownIcon';
+import { PropType, defineComponent } from 'vue';
 
 type ModelType = string|Array<string>
 
@@ -29,18 +29,18 @@ export default defineComponent({
     computed: {
         model: {
             get():ModelType{
-                return this.modelValue
+                return this.modelValue;
             },
             set(val:ModelType):void{
-                this.$emit('update:modelValue', val)
+                this.$emit('update:modelValue', val);
             }
         },
         isMultiple():boolean{
-            return typeof this.modelValue === 'object'
+            return typeof this.modelValue === 'object';
         }
     },
     emits: ['update:modelValue']
-})
+});
 </script>
 
 <style scoped>

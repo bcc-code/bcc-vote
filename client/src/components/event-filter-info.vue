@@ -34,12 +34,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { ParticipantFilters } from '../domain'
+import { defineComponent, PropType } from 'vue';
+import { ParticipantFilters } from '../domain';
 
 export default defineComponent({
     props: {
         filter: {type: Object as PropType<ParticipantFilters>, required: true}
     }
-})
+});
 </script>

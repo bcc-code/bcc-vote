@@ -26,12 +26,12 @@
 </template>
 <script lang="ts">
 
-import XIcon from 'heroicons-vue3/outline/XIcon'
-import StarIcon from 'heroicons-vue3/solid/StarIcon'
-import PopoverBase from './popover-base.vue'
+import XIcon from 'heroicons-vue3/outline/XIcon';
+import StarIcon from 'heroicons-vue3/solid/StarIcon';
+import PopoverBase from './popover-base.vue';
 
-import { defineComponent} from 'vue'
-import FormField from './form-field.vue'
+import { defineComponent} from 'vue';
+import FormField from './form-field.vue';
 export default defineComponent({
     components: {
         XIcon,
@@ -52,35 +52,35 @@ export default defineComponent({
             rating: 0,
             textVal: '',
             submitted: false
-        }
+        };
     },
     methods: {
         sendFeedback(){
             if(this.submitted)
                 return;
-            this.submitted = true
+            this.submitted = true;
 
             const feedbackData = {
                 pollingEventId: this.pollingEventId,
                 personID: this.$user.personID,
                 message: this.textVal,
                 rating: this.rating
-            }
+            };
             this.$client.service('feedback').create(feedbackData).then(() => {
-                this.$showSuccess(this.$t('info.thank-for-feedback'))
-                this.showFeedback = false
+                this.$showSuccess(this.$t('info.thank-for-feedback'));
+                this.showFeedback = false;
             }).catch((err: Error) => {
-                this.submitted = false
-                this.$handleError(err)
+                this.submitted = false;
+                this.$handleError(err);
             });
         },
         getColor(i: number):string {
             if(i <= this.rating)
-                return 'color:#DFB300'
-            return 'color:#F2F2F2'
+                return 'color:#DFB300';
+            return 'color:#F2F2F2';
         }
     }
-})
+});
 </script>
 <style scoped>
 .centering-div {

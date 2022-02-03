@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts">
-import InfoBox from './info-box.vue'
-import SavedPoll from './saved-poll.vue'
-import PollForm from './poll-form.vue'
+import InfoBox from './info-box.vue';
+import SavedPoll from './saved-poll.vue';
+import PollForm from './poll-form.vue';
 
-import { Poll, PollActiveStatus } from '../domain'
+import { Poll, PollActiveStatus } from '../domain';
 
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     props: {
         isEventLive: Boolean,
@@ -36,7 +36,7 @@ export default defineComponent({
         return {
             addingPoll: false,
             currentlyEditedIndex: null as (null|number),
-        }
+        };
     },
     created(){
         if(this.savedPolls.length === 0)
@@ -44,51 +44,51 @@ export default defineComponent({
     },
     computed: {
         isAnythingEdited(): boolean{
-            return this.currentlyEditedIndex !== null
+            return this.currentlyEditedIndex !== null;
         }
     },
     methods: {
         async changePollStatus(poll: Poll){
             if(poll.activeStatus === PollActiveStatus["Live"])
-                await this.setActivePoll()
+                await this.setActivePoll();
             else{
-                await this.setActivePoll(poll)
+                await this.setActivePoll(poll);
             }
-            this.reloadPolls()
+            this.reloadPolls();
         },
         async setActivePoll(poll?: Poll){
             const ind =  this.savedPolls.findIndex((p: Poll) => {
-                return p.activeStatus === PollActiveStatus['Live']
-            })
+                return p.activeStatus === PollActiveStatus['Live'];
+            });
             if(ind > -1){
                 await this.$client.service('poll').patch(this.savedPolls[ind]._key, {
                     activeStatus: PollActiveStatus['Finished']
-                }).catch(this.$handleError)
+                }).catch(this.$handleError);
             }
                 
             if(poll){
                 await this.$client.service('poll').patch(poll._key, {
                     activeStatus: PollActiveStatus['Live']
-                }).catch(this.$handleError)
+                }).catch(this.$handleError);
             }
                 
         },
         createNewPoll(){
             if(!this.isAnythingEdited){
-                this.addingPoll = true
+                this.addingPoll = true;
             }
         },
         reloadPolls(){
-            this.currentlyEditedIndex = null
-            this.addingPoll = false
-            this.$emit('reloadPolls')
+            this.currentlyEditedIndex = null;
+            this.addingPoll = false;
+            this.$emit('reloadPolls');
         },
         startEditing(ind: number){
-            this.currentlyEditedIndex = ind 
-            this.addingPoll = false
+            this.currentlyEditedIndex = ind; 
+            this.addingPoll = false;
         },
         
     },
     emits: ['reloadPolls']
-})
+});
 </script>
