@@ -48,7 +48,6 @@ class CustomJWtStrategy extends JWTStrategy {
             if (params.connection) {
                 params.connection.authentication = authResult.authentication;
             }
-            console.log(authResult)
 
             return authResult;
         } catch (error) {

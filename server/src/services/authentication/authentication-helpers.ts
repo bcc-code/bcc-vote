@@ -29,7 +29,6 @@ export async function verifyAuth0AccessToken(
     issuer: string
 ): Promise<{[key: string]: any}> {
     accessToken = accessToken.replace('Bearer ', '');
-    console.log(accessToken)
     try {
         if (client === undefined) {
             client = jwksClient({
@@ -43,8 +42,6 @@ export async function verifyAuth0AccessToken(
         const kid = decoded?.header?.kid;
         const key = await client.getSigningKey(kid);
         const publicKey = key.getPublicKey();
-        console.log(publicKey);
-        console.log(decoded);
 
         const payload = <Record<string, any>>jsonwebtoken.verify(accessToken, publicKey, {
             issuer,
@@ -52,7 +49,6 @@ export async function verifyAuth0AccessToken(
         return payload;
     } catch (error) {
         console.log('Error verifying accessToken with publicKey from Auth0, please inspect error.');
-        console.log(error);
         throw error;
     }
 }
