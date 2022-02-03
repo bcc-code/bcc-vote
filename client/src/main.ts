@@ -15,11 +15,11 @@ import { logConnectionsToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
 import auth from '@feathersjs/authentication-client';
 import {AuthenticationResult} from '@feathersjs/authentication';
-
 import i18n from './i18n';
 import mixins from './mixins';
 import createAuth0Client, { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import determineConfigBasedOnEnvironment from './config';
+import hooks from './hooks'
 
 const app = createApp(App);
 const config = determineConfigBasedOnEnvironment();
@@ -31,6 +31,7 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
 
 client.configure(socketio(socket));
 logConnectionsToSentry(client);
+client.hooks(hooks);
 
 window.onload = async () => {
     await setupAuth0(client);
@@ -100,4 +101,6 @@ async function setupAuth0(client: feathers.Application) {
     });
     client.set('auth0', auth0);
 }
+
+export default app;
 
