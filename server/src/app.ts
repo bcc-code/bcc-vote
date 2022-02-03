@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import compress from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
