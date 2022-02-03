@@ -97,7 +97,7 @@ async function setupAuth0(client: feathers.Application) {
         client_id: config.auth0ClientId,
         redirect_uri: config.auth0RedirectUri,
         cacheLocation: 'localstorage',
-        audience: 'bcc.members'
+        audience: config.audience
     });
     client.set('auth0', auth0);
 }
