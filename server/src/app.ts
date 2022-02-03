@@ -1,5 +1,3 @@
-import path from 'path';
-import favicon from 'serve-favicon';
 import compress from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -18,7 +16,6 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './services/authentication/authentication';
-const cookieSession = require('cookie-session');
 
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -29,12 +26,6 @@ app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet({
     contentSecurityPolicy: false
-}));
-app.use(cookieSession({
-    name: 'session',
-    secret:app.get('authentication').secret,
-    maxAge: 24 * 60 * 60 * 1000,
-    signed:true // 24 hours
 }));
 app.use(cors());
 app.use(compress());

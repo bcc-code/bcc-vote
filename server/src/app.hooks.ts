@@ -220,7 +220,7 @@ export default {
     },
 
     error: {
-        all: [trackErrors,purgeErrors, logErrors],
+        all: [trackErrors,purgeErrors],
         find: [],
         get: [],
         create: [],

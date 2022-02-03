@@ -1,51 +1,33 @@
 {
-  "host": "VOTE_HOSTNAME",
-  "port": 4040,
-  "public": "../public/",
-  "paginate": {
-    "default": 10,
-    "max": 50
-  },
-  "authentication": {
-    "oauth": {
-      "defaults": {
-        "transport": "session",
-        "response": ["tokens"]
-      },
-      "redirect": "VOTE_AUTH_SUCCESS_CLIENT_REDIRECT",
-      "auth0": {
-        "scope": ["openid"],
-        "key": "VOTE_AUTH0_CLIENT_KEY",
-        "secret": "VOTE_AUTH0_CLIENT_SECRET",
-        "subdomain": "VOTE_AUTH0_SUBDOMAIN",
-        "authorize_url": "VOTE_AUTH0_AUTHORIZE_URL",
-        "access_url": "VOTE_AUTH0_ACCESS_URL"
-      }
+    "host": "VOTE_HOSTNAME",
+    "port": 4040,
+    "public": "../public/",
+    "paginate": {
+        "default": 10,
+        "max": 50
     },
-    "entity": "user",
-    "service": "user",
-    "secret": "FEATHERS_JWT_HS256_SECRET",
-    "authStrategies": [
-      "jwt",
-      "auth0"
-    ],
-    "jwtOptions": {
-      "header": {
-        "typ": "access"
-      },
-      "issuer": "feathers",
-      "algorithm": "HS256",
-      "expiresIn": "1d"
+    "authentication": {
+        "oauth": {
+            "auth0": {
+                "jwks": "VOTE_AUTH0_JWKS",
+                "issuer":"VOTE_AUTH0_ISSUER"
+            }
+        },
+        "entity": "user",
+        "service": "user",
+        "secret": "FEATHERS_JWT_HS256_SECRET",
+        "authStrategies": [
+            "jwt"
+        ]
+    },
+    "arangodDB": {
+        "username": "VOTE_ARANGODB_USERNAME",
+        "password": "VOTE_ARANGODB_PASSWORD",
+        "url": "VOTE_ARANGODB_URL",
+        "database": "VOTE_ARANGODB_DATABASE"
+    },
+    "members":{
+        "url":"MEMBERS_URL",
+        "apiKey":"MEMBERS_API_KEY"
     }
-  },
-  "arangodDB": {
-    "username": "VOTE_ARANGODB_USERNAME",
-    "password": "VOTE_ARANGODB_PASSWORD",
-    "url": "VOTE_ARANGODB_URL",
-    "database": "VOTE_ARANGODB_DATABASE"
-  },
-  "members":{
-    "url":"MEMBERS_URL",
-    "apiKey":"MEMBERS_API_KEY"
-  }
 }
