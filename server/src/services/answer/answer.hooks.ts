@@ -58,6 +58,7 @@ const incrementCounter = async (context:HookContext):Promise<HookContext> => {
 
     const countUpdate = {} as any;
     countUpdate['answerCount.'+result.answerId] = FieldValue.increment(1);
+    countUpdate.lastChanged = Date.now();
 
     await pollRef.update(countUpdate);
 

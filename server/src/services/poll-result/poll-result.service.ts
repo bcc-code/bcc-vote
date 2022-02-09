@@ -12,15 +12,8 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application): void {
-  const options = {
-    paginate: app.get('paginate')
-  };
+    app.use('/poll-result', new PollResult(app));
+    const service = app.service('poll-result');
 
-  // Initialize our service with any options it requires
-  app.use('/poll-result', new PollResult(options, app));
-
-  // Get our initialized service so that we can register hooks
-  const service = app.service('poll-result');
-
-  service.hooks(hooks);
+    service.hooks(hooks);
 }

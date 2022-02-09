@@ -4,6 +4,7 @@ import { PollingEvent, Answer, Poll, PollResultVisibility} from './domain';
 import { db } from './firestore';
 
 export default function(app: Application): void {
+    const startupDate = Date.now();
     if(typeof app.channel !== 'function') {
         return;
     }
@@ -44,13 +45,8 @@ export default function(app: Application): void {
     });
 
     // Listen for answers from firestore
-    const answer = db.collection('answer');
-    let initAnswer = true;
+    const answer = db.collection('answer').where('lastChanged', '>=', startupDate);
     answer.onSnapshot((docSnapshot:any) => {
-        if(initAnswer){
-            initAnswer = false;
-            return;
-        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'added') {
                 app.service('answer').emit('created',change.doc.data());
@@ -59,13 +55,8 @@ export default function(app: Application): void {
     });
 
     // Listen for poll changes and re-emit the events
-    const poll = db.collection('poll');
-    let initPoll = true;
+    const poll = db.collection('poll').where('lastChanged', '>=', startupDate);
     poll.onSnapshot((docSnapshot:any) => {
-        if(initPoll){
-            initPoll = false;
-            return;
-        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('poll').emit('patched',change.doc.data());
@@ -87,15 +78,9 @@ export default function(app: Application): void {
         });
     });
 
-    const pollingEvent = db.collection('polling-event');
-    let initPollingEvent = true;
+    const pollingEvent = db.collection('polling-event').where('lastChanged', '>=', startupDate);
     pollingEvent.onSnapshot((docSnapshot:any) => {
-        if(initPollingEvent){
-            initPollingEvent = false;
-            return;
-        }
         docSnapshot.docChanges().forEach((change:any) => {
-            
             if (change.type === 'added' || change.type === 'modified') {
                 app.service('polling-event').emit('patched',change.doc.data());
             }
