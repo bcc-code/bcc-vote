@@ -64,13 +64,9 @@ export default function(app: Application): void {
         });
     });
 
-    const pollResult = db.collection('poll-result');
-    let initPollResult = true;
+    const pollResult = db.collection('poll-result').where('lastChanged', '>=', startupDate);
+    
     pollResult.onSnapshot((docSnapshot:any) => {
-        if(initPollResult){
-            initPollResult = false;
-            return;
-        }
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'modified') {
                 app.service('poll-result').emit('patched',change.doc.data());
