@@ -44,7 +44,6 @@ export default function(app: Application): void {
         }
     });
 
-    // Listen for answers from firestore
     const answer = db.collection('answer').where('lastChanged', '>=', startupDate);
     answer.onSnapshot((docSnapshot:any) => {
         docSnapshot.docChanges().forEach((change:any) => {
@@ -54,7 +53,6 @@ export default function(app: Application): void {
         });
     });
 
-    // Listen for poll changes and re-emit the events
     const poll = db.collection('poll').where('lastChanged', '>=', startupDate);
     poll.onSnapshot((docSnapshot:any) => {
         docSnapshot.docChanges().forEach((change:any) => {
@@ -65,7 +63,6 @@ export default function(app: Application): void {
     });
 
     const pollResult = db.collection('poll-result').where('lastChanged', '>=', startupDate);
-    
     pollResult.onSnapshot((docSnapshot:any) => {
         docSnapshot.docChanges().forEach((change:any) => {
             if (change.type === 'modified') {
