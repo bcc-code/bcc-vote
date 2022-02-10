@@ -9,7 +9,7 @@
                 <p v-if="poll.description" class="mt-2 whitespace-pre-wrap">{{poll.description}}</p>
             </div>
             <div v-if="!answer" class="h-full mb-20 mt-5">
-                <PollVote :options="poll.answers" @vote="checkConfirm"/>
+                <PollVote :submitting="submitting" :options="poll.answers" @vote="checkConfirm"/>
             </div>
             <div v-else class="mb-5 mt-2">
                 <PollResults :chosenOption="answer.answerId" :poll="poll" :key="poll._key"/>
@@ -17,7 +17,7 @@
         </div>
         <transition name="fade">
             <div v-if="showConfirm && !answer">
-                <VoteConfirm @cancel="showConfirm = false" @resign="showConfirm = false" @confirm="submitAnswer(chosenOption)">
+                <VoteConfirm :active="!submitting" @cancel="showConfirm = false" @resign="showConfirm = false" @confirm="submitAnswer()">
                     <template v-slot:header>{{$t('labels.vote-confirmation')}}</template>
                     <template v-slot:description>{{chosenOption.explanation}}</template>
                 </VoteConfirm>
@@ -29,7 +29,7 @@
 import PollVote from './poll-vote.vue';
 import PollResults from './poll-results.vue';
 import VoteConfirm from './confirm-popover.vue';
-import { Poll, Answer } from '../domain/Poll';
+import { Poll, Answer, Option } from '../domain/Poll';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
     components: {
@@ -44,32 +44,36 @@ export default defineComponent({
     data() {
         return {
             showConfirm: false as boolean,
-            chosenOption: {} as Answer,
+            chosenOption: {} as Option,
+            submitting: false        
         };
     },
     methods: {
-        checkConfirm(option:Answer) {
+        checkConfirm(option: Option) {
             this.chosenOption = option;
             if(this.poll && this.poll.confirmAnswer) { 
                 this.showConfirm = true;
             } else {
-                this.submitAnswer(option);
+                this.submitAnswer();
             }
         },
-        async submitAnswer(option:Answer) {
-            if(this.poll && this.$user) {
-                const participantAnswer = {
-                    _from: this.poll._id,
-                    _to: this.$user._id,
-                    visibility: this.poll.resultVisibility,
-                    answerId: option.answerId,
-                    pollingEventId: this.$route.params.id
-                };
+        async submitAnswer() {
+            if(!this.chosenOption || !this.poll || !this.$user || this.submitting) return;
+            const participantAnswer = {
+                _from: this.poll._id,
+                _to: this.$user._id,
+                visibility: this.poll.resultVisibility,
+                answerId: this.chosenOption.answerId,
+                pollingEventId: this.$route.params.id
+            };
+            this.submitting = true;
+            try {
                 const sentAnswer = await this.$client.service('answer').create(participantAnswer)
-                    .catch(this.$handleError);
-                
                 this.$emit('answered', sentAnswer);
+            } catch(err) {
+                this.$handleError(err);
             }
+            this.submitting = false;
         }
     },
     emits: ['answered']
