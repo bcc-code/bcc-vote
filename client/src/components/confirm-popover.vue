@@ -13,7 +13,7 @@
             <button class="w-full rounded-full p-4 bg-gray-200" @click="$emit('cancel')">
                 <h5 class="font-bold text-blue-900">{{$t('actions.'+cancelTranslation)}}</h5>
             </button>
-            <button class="w-full rounded-full p-4 bg-blue-900" @click="$emit('confirm')">
+            <button class="w-full rounded-full p-4 bg-blue-900" :class="active ? '':'button-inactive'" @click="$emit('confirm')">
                 <h5 class="font-bold text-white">{{$t('actions.'+confirmTranslation)}}</h5>
             </button>
         </div>
@@ -30,7 +30,8 @@ export default defineComponent({
     },
     props: {
         confirmTranslation: {type: String, default: 'confirm'},
-        cancelTranslation: {type: String, default: 'cancel'}
+        cancelTranslation: {type: String, default: 'cancel'},
+        active: {type: Boolean, default: true}
     },
     emits: ['cancel','confirm', 'resign'],
 });
