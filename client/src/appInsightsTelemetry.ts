@@ -3,7 +3,7 @@ import {ApplicationInsights} from '@microsoft/applicationinsights-web';
 
 const appInsights = new ApplicationInsights({
     config: {
-        connectionString: determineConfigBasedOnEnvironment().appInsisghtKey,
+        connectionString: determineConfigBasedOnEnvironment().appInsightsKey,
         enableAutoRouteTracking: true,
         disableFetchTracking: false,
     },
