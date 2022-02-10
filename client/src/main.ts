@@ -17,9 +17,10 @@ import auth from '@feathersjs/authentication-client';
 import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
-import createAuth0Client, { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
+import { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import determineConfigBasedOnEnvironment from './config';
 import hooks from './hooks'
+import { setupAuth0 } from './auth0';
 
 const app = createApp(App);
 const config = determineConfigBasedOnEnvironment();
@@ -36,7 +37,7 @@ logConnectionsToSentry(client);
 client.hooks(hooks);
 
 window.onload = async () => {
-    const auth0Client = await setupAuth0(client);
+    const auth0Client = await setupAuth0();
     client.set('auth0', auth0Client);
 
     const auth0 = (await client.get('auth0')) as Auth0Client;
@@ -92,17 +93,6 @@ function registerVue(authResult: AuthenticationResult) {
     app.config.globalProperties.$user = user;
     
     app.mount('#app');
-}
-
-async function setupAuth0(): Promise<Auth0Client> {
-    const auth0 = await createAuth0Client({
-        domain: config.auth0Domain,
-        client_id: config.auth0ClientId,
-        redirect_uri: config.auth0RedirectUri,
-        cacheLocation: 'localstorage',
-        audience: config.audience
-    });
-    return auth0;
 }
 
 export default app;
