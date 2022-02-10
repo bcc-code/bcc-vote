@@ -1,5 +1,8 @@
-import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
+import createAuth0Client, { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import auth from '@feathersjs/authentication-client';
+import { AuthenticationResult } from '@feathersjs/authentication';
+import feathers from '@feathersjs/feathers';
+import { App } from 'vue';
 import determineConfigBasedOnEnvironment from './config';
 
 const config = determineConfigBasedOnEnvironment();
@@ -15,7 +18,7 @@ export async function setupAuth0(): Promise<Auth0Client> {
     return auth0;
 }
 
-export async function authenticate(app, client, callback): Promise<void> {
+export async function authenticate(app: App<Element>, client: feathers.Application<any>, callback: (authResult: AuthenticationResult) => void): Promise<void> {
     const auth0 = (await client.get('auth0')) as Auth0Client;
     let redirectUrl = '';
     const query = window.location.search;
