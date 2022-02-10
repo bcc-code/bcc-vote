@@ -6,6 +6,7 @@ import { ForbiddenError, subject } from '@casl/ability';
 import { BadRequest } from '@feathersjs/errors';
 import { User } from './domain';
 import {initTracking, finalizeTracking, trackErrors} from './utils/appInsightsWebSocket';
+import { db } from './firestore';
 
 
 // Application hooks that run for every service
@@ -198,6 +199,16 @@ const logErrors = (context: HookContext):void => {
     logger.info(message);
 };
 
+const syncToFirestore = async (context: HookContext):Promise<HookContext> => {
+    const syncedCollections = ['poll', 'polling-event', 'answer'];
+    if(!syncedCollections.includes(context.path)) return context;
+    const {result} = context;
+    if(!result) return context;
+    db.collection(context.path).doc(result._key).set(result);
+
+    return context;
+};
+
 export default {
     before: {
         all: [initTracking, startAuthenticationAtTheStartOfRequest],
@@ -213,9 +224,9 @@ export default {
         all: [endAuthenticationAtEndOfRequest, finalizeTracking],
         find: [checkFindAbility],
         get: [checkGetAbility],
-        create: [],
-        update: [],
-        patch: [checkGetAbility],
+        create: [ syncToFirestore ],
+        update: [ syncToFirestore ],
+        patch: [syncToFirestore, checkGetAbility],
         remove: []
     },
 
