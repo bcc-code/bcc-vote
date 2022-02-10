@@ -37,6 +37,10 @@ window.onload = async () => {
     const auth0Client = await setupAuth0();
     client.set('auth0', auth0Client);
 
+    await authenticate();
+};;
+
+async function authenticate() {
     const auth0 = (await client.get('auth0')) as Auth0Client;
     let redirectUrl = '';
     const query = window.location.search;
@@ -45,7 +49,7 @@ window.onload = async () => {
         redirectUrl = options.appState.targetUrl;
     }
     if (await auth0.isAuthenticated()) {
-        client.configure(auth({storage: window.sessionStorage}));
+        client.configure(auth({ storage: window.sessionStorage }));
         const accessToken = await auth0.getTokenSilently();
         client.authentication.setAccessToken(accessToken);
         const authResult = await client.reAuthenticate(true);
@@ -57,7 +61,7 @@ window.onload = async () => {
         }
     } else {
         const options: RedirectLoginOptions = {
-            appState: {targetUrl: location.pathname + location.search},
+            appState: { targetUrl: location.pathname + location.search },
         };
         await auth0.loginWithRedirect(options);
     }
