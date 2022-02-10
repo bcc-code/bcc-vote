@@ -38,6 +38,9 @@ export default defineComponent({
     },
     methods: {
         updateVotes(data: any){
+            if(!data) {
+                return;
+            }
             if(data.pollId !== this.poll._key)
                 return;
             let count = 0;

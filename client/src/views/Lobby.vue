@@ -59,7 +59,7 @@ export default defineComponent({
                     activeStatus: PollActiveStatus['Live']
                 }
             }).catch(this.$handleError);
-            if(res.length === 0){
+            if(!res || res.length === 0){
                 this.currentPoll = undefined;
                 this.currentAnswer = undefined;
             }
