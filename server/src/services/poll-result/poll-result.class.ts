@@ -1,77 +1,70 @@
 import { NotFound, NotImplemented } from '@feathersjs/errors';
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
-import { QuerySnapshot } from "@google-cloud/firestore";
+import { Id, Params, ServiceMethods } from '@feathersjs/feathers';
+import { PollResultDetails } from '../../domain';
 import { Application } from '../../declarations';
 import { db } from '../../firestore';
 
-interface Data {}
 
-interface ServiceOptions {}
 
 const isPrimitive = (val: any): boolean => {
     if(val === Object(val))
         return false;
     return true;
 };
-export class PollResult implements ServiceMethods<Data> {
+export class PollResult implements Partial<ServiceMethods<PollResultDetails>> {
     app: Application;
-    options: ServiceOptions;
+    collection: FirebaseFirestore.CollectionReference;
 
-    constructor (options: ServiceOptions = {}, app: Application) {
-        this.options = options;
+    constructor (app: Application) {
         this.app = app;
+        this.collection = db.collection('poll-result');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async find (params: Params): Promise<Data[] | Paginated<Data>> {
+    async create(data: PollResultDetails, params: Params):Promise<PollResultDetails> {
+        await this.collection.doc(data.pollId).set(data);
+        return data;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async find (params: Params): Promise<PollResultDetails[]> {
         const query = params.query;
         if(!query)
             return [];
-        let resultRef = db.collection('poll-result') as FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
+        let resultRef = this.collection as FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
         Object.keys(query).forEach((atr: string) => {
             if(isPrimitive(query[atr]))
                 resultRef = resultRef.where(atr, '==', query[atr]);
             else
                 throw new NotImplemented('That query is not yet implemented');
         });
-        const resultArray = [] as Array<PollResult>;
-        const querySnapshot = await resultRef.get() as QuerySnapshot;
+        const resultArray:PollResultDetails[] = [];
+        const querySnapshot = await resultRef.get();
 
-        querySnapshot.forEach((doc: any) => {
-            const data = doc.data() as PollResult;
+        querySnapshot.forEach(doc => {
+            const data = doc.data() as PollResultDetails;
             resultArray.push(data);
         });
         return resultArray;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async get (id: Id, params?: Params): Promise<Data> {
-        const resultRef = db.collection('poll-result').doc(id.toString());
+    async get (id: Id, params?: Params): Promise<PollResultDetails> {
+        const resultRef = this.collection.doc(id.toString());
         
         const result = await resultRef.get();
-        const data = result.data();
+        const data = result.data() as PollResultDetails | undefined;
         if(!data) throw new NotFound('Poll result not found');
 
         return data;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async create (data: Data, params?: Params): Promise<Data> {
-        throw new NotImplemented();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
-        throw new NotImplemented();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
-        throw new NotImplemented();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async remove (id: NullableId, params?: Params): Promise<Data> {
-        throw new NotImplemented();
+    async patch (id: string, data: Partial<PollResultDetails>, params?: Params): Promise<PollResultDetails> {
+        await this.collection.doc(id).update(data);
+        const updatedPollResultSnapshot = await this.collection.doc(id).get();
+        const updatedDocument = updatedPollResultSnapshot.data() as PollResultDetails | undefined;
+        if(!updatedDocument) throw Error('Could not get the poll-result');
+        return updatedDocument;
     }
 }
