@@ -13,13 +13,12 @@ import router from './router';
 import { init, User } from '@sentry/browser';
 import { logConnectionsToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
-import auth from '@feathersjs/authentication-client';
 import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
 import { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import hooks from './hooks';
-import { setupAuth0 } from './auth0';
+import { setupAuth0, authenticate } from './auth0';
 
 const app = createApp(App);
 const client = feathers();
@@ -37,35 +36,8 @@ window.onload = async () => {
     const auth0Client = await setupAuth0();
     client.set('auth0', auth0Client);
 
-    await authenticate();
+    await authenticate(app, client, registerVue);
 };
-
-async function authenticate() {
-    const auth0 = (await client.get('auth0')) as Auth0Client;
-    let redirectUrl = '';
-    const query = window.location.search;
-    if (query.includes('code=') && query.includes('state=')) {
-        const options = await auth0.handleRedirectCallback();
-        redirectUrl = options.appState.targetUrl;
-    }
-    if (await auth0.isAuthenticated()) {
-        client.configure(auth({ storage: window.sessionStorage }));
-        const accessToken = await auth0.getTokenSilently();
-        client.authentication.setAccessToken(accessToken);
-        const authResult = await client.reAuthenticate(true);
-        registerVue(authResult);
-
-        if (redirectUrl) {
-            const router = app.config.globalProperties.$router;
-            router.push(redirectUrl);
-        }
-    } else {
-        const options: RedirectLoginOptions = {
-            appState: { targetUrl: location.pathname + location.search },
-        };
-        await auth0.loginWithRedirect(options);
-    }
-}
 
 function registerVue(authResult: AuthenticationResult) {
     const user = authResult.user as User;
