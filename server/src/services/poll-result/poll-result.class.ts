@@ -17,9 +17,23 @@ const isPrimitive = (val: any): boolean => {
 };
 export class PollResult implements Partial<ServiceMethods<PollResultDetails>> {
     app: Application;
+    collection: FirebaseFirestore.CollectionReference;
 
     constructor (app: Application) {
         this.app = app;
+        this.collection = db.collection('poll-result');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async create(data: PollResultDetails, params: Params):Promise<PollResultDetails> {
+        await this.collection.doc(data.pollId).set(data);
+        return data;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async update(id: string, data: PollResultDetails, params: Params):Promise<PollResultDetails> {
+        await this.collection.doc(id).set(data);
+        return data;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,7 +41,7 @@ export class PollResult implements Partial<ServiceMethods<PollResultDetails>> {
         const query = params.query;
         if(!query)
             return [];
-        let resultRef = db.collection('poll-result') as FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
+        let resultRef = this.collection as FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
         Object.keys(query).forEach((atr: string) => {
             if(isPrimitive(query[atr]))
                 resultRef = resultRef.where(atr, '==', query[atr]);
@@ -46,12 +60,21 @@ export class PollResult implements Partial<ServiceMethods<PollResultDetails>> {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async get (id: Id, params?: Params): Promise<PollResultDetails> {
-        const resultRef = db.collection('poll-result').doc(id.toString());
+        const resultRef = this.collection.doc(id.toString());
         
         const result = await resultRef.get();
         const data = result.data() as PollResultDetails | undefined;
         if(!data) throw new NotFound('Poll result not found');
 
         return data;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async patch (id: string, data: Partial<PollResultDetails>, params?: Params): Promise<PollResultDetails> {
+        await this.collection.doc(id).update(data);
+        const updatedPollResultSnapshot = await this.collection.doc(id).get();
+        const updatedDocument = updatedPollResultSnapshot.data() as PollResultDetails | undefined;
+        if(!updatedDocument) throw Error('Could not get the poll-result');
+        return updatedDocument;
     }
 }

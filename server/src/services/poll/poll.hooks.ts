@@ -61,13 +61,14 @@ const resetPollResults = async(context: HookContext):Promise<HookContext> => {
     const pollRes = {
         pollingEventId: context.result.pollingEventId,
         pollId: context.result._key,
-        answerCount: {} as {[answerId: number]: number}
+        answerCount: {} as {[answerId: number]: number},
+        lastChanged: Date.now()
     };
     context.result.answers.forEach((opt:Option) => {
         pollRes.answerCount[opt.answerId] = 0;
     });
+    context.app.services['poll-result'].update(context.result._key, pollRes);
     
-    await db.collection('poll-result').doc(context.result._key).set(pollRes);
     return context;
 };
 

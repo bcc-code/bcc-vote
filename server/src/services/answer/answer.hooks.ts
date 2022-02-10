@@ -1,7 +1,7 @@
-import { HookContext } from "@feathersjs/feathers";
+import { HookContext, Query } from "@feathersjs/feathers";
 import logger from '../../logger';
 import { Answer, PollActiveStatus, User } from "../../domain";
-import { db, FieldValue } from '../../firestore';
+import { FieldValue } from '../../firestore';
 import { defineAbilityFor } from "../../permissions/appAbility";
 import { ForbiddenError, subject } from "@casl/ability";
 
@@ -44,23 +44,25 @@ const addUserData = (context:HookContext):HookContext => {
     return context;
 };
 
-const addCustomKey = async (context:HookContext):Promise<HookContext> => {
-    const pollKey = context.data._from.split('/')[1];
-    context.data._key = pollKey+'-'+context.params?.user?._key;
+const addCustomKey = async (context:HookContext<Answer>):Promise<HookContext> => {
+    const {data: answer} = context;
+    if(!answer) throw Error('No answer provided');
+    const pollKey = answer._from.split('/')[1];
+    answer._key = pollKey+'-'+context.params?.user?._key;
 
     return context;
 };
 
-const incrementCounter = async (context:HookContext):Promise<HookContext> => {
-    const { result } = context;
-    const pollKey = result._from.split('/')[1];
-    const pollRef = db.collection('poll-result').doc(pollKey);
+const incrementCounter = async (context:HookContext<Answer>):Promise<HookContext<Answer>> => {
+    const { result: answer } = context;
+    if(!answer) throw Error('Answer has not been created');
+    const pollKey = answer._from.split('/')[1];
 
-    const countUpdate = {} as any;
-    countUpdate['answerCount.'+result.answerId] = FieldValue.increment(1);
+    const countUpdate = {} as Query;
+    countUpdate['answerCount.'+answer.answerId] = FieldValue.increment(1);
     countUpdate.lastChanged = Date.now();
 
-    await pollRef.update(countUpdate);
+    await context.app.services['poll-result'].patch(pollKey, countUpdate);
 
     return context;
 };
