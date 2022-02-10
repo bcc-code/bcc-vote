@@ -11,7 +11,7 @@ import io from 'socket.io-client';
 import { store } from './store';
 import router from './router';
 import { init, User } from '@sentry/browser';
-import { logConnectionsToSentry } from './functions/sentry';
+import { logConnectionsToSentry, logToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
 import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
@@ -25,7 +25,9 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
     transports: ['websocket', 'polling'],
 });
 
-//socket.on('reconnect', () => {});
+socket.on("connect_error", (err: Error) => {
+    logToSentry(err);
+});
 
 client.configure(socketio(socket));
 logConnectionsToSentry(client);
