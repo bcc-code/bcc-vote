@@ -29,12 +29,15 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
     transports: ['websocket', 'polling'],
 });
 
+//socket.on('reconnect', () => {});
+
 client.configure(socketio(socket));
 logConnectionsToSentry(client);
 client.hooks(hooks);
 
 window.onload = async () => {
-    await setupAuth0(client);
+    const auth0Client = await setupAuth0(client);
+    client.set('auth0', auth0Client);
 
     const auth0 = (await client.get('auth0')) as Auth0Client;
     let redirectUrl = '';
@@ -91,7 +94,7 @@ function registerVue(authResult: AuthenticationResult) {
     app.mount('#app');
 }
 
-async function setupAuth0(client: feathers.Application) {
+async function setupAuth0(): Promise<Auth0Client> {
     const auth0 = await createAuth0Client({
         domain: config.auth0Domain,
         client_id: config.auth0ClientId,
@@ -99,7 +102,7 @@ async function setupAuth0(client: feathers.Application) {
         cacheLocation: 'localstorage',
         audience: config.audience
     });
-    client.set('auth0', auth0);
+    return auth0;
 }
 
 export default app;
