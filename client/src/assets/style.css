@@ -137,6 +137,11 @@
     @apply border-blue-900;
     @apply rounded-full;
   }
+
+  .button-inactive {
+      opacity: 0.3;
+      cursor: default;
+  }
   
   .border-with-bar {
     @apply border-gray-200;

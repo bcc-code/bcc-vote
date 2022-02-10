@@ -9,7 +9,7 @@
             </button>
         </div>
         <div class="flex justify-center mt-9">
-            <button class="vote-button" :style="selectedOption == null ? 'opacity:0.3' : ''" @click="$emit('vote', selectedOption)">
+            <button class="vote-button" :class="canVote ? '' : 'button-inactive'" @click="$emit('vote', selectedOption)">
                 <h5 class="font-bold text-white">{{$t('actions.vote')}}</h5>
             </button>
         </div>
@@ -24,12 +24,18 @@ export default defineComponent({
         CheckIcon
     },
     props: {
-        options: {type: Array as PropType<Array<Option>>, required: true}
+        options: {type: Array as PropType<Array<Option>>, required: true},
+        submitting: {type: Boolean, default: false}
     },
     data() {
         return {
-            selectedOption: null
+            selectedOption: null as null | Option
         };
+    },
+    computed: {
+        canVote():boolean{
+            return this.selectedOption !== null && !this.submitting;
+        }
     },
     emits: ['vote']
 });
