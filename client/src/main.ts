@@ -38,7 +38,7 @@ window.onload = async () => {
     client.set('auth0', auth0Client);
 
     await authenticate();
-};;
+};
 
 async function authenticate() {
     const auth0 = (await client.get('auth0')) as Auth0Client;
