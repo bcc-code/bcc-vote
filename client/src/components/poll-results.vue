@@ -138,7 +138,6 @@ export default defineComponent({
             this.allAnswers.unshift(answer);
         },
         changeBars(data: PollResult){
-            console.log('changing bars')
             if(data.pollId !== this.poll._key)
                 return;
             Object.keys(this.sortedOptions).forEach((ans: string) =>{
