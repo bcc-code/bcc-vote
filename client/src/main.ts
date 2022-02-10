@@ -30,8 +30,8 @@ socket.on('connect_error', (err: Error) => {
 });
 
 socket.on('reconnect', async() => {
-    console.log('reconnecting!');
     await verifyAccessToken(client);
+    location.reload();
 });
 
 client.configure(socketio(socket));
