@@ -18,13 +18,10 @@ import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
 import { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
-import determineConfigBasedOnEnvironment from './config';
 import hooks from './hooks'
 import { setupAuth0 } from './auth0';
 
 const app = createApp(App);
-const config = determineConfigBasedOnEnvironment();
-
 const client = feathers();
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`, {
     transports: ['websocket', 'polling'],
