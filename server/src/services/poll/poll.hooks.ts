@@ -67,7 +67,7 @@ const resetPollResults = async(context: HookContext):Promise<HookContext> => {
     context.result.answers.forEach((opt:Option) => {
         pollRes.answerCount[opt.answerId] = 0;
     });
-    context.app.services['poll-result'].update(context.result._key, pollRes);
+    await context.app.services['poll-result'].create(pollRes);
     
     return context;
 };

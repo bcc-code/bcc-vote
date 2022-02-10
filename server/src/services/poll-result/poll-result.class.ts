@@ -1,14 +1,10 @@
 import { NotFound, NotImplemented } from '@feathersjs/errors';
 import { Id, Params, ServiceMethods } from '@feathersjs/feathers';
+import { PollResultDetails } from '../../domain';
 import { Application } from '../../declarations';
 import { db } from '../../firestore';
 
-interface PollResultDetails {
-    answerCount: Record<string, number>;
-    lastChanged: number;
-    pollId: string;
-    pollingEventId: string;
-}
+
 
 const isPrimitive = (val: any): boolean => {
     if(val === Object(val))
@@ -27,12 +23,6 @@ export class PollResult implements Partial<ServiceMethods<PollResultDetails>> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async create(data: PollResultDetails, params: Params):Promise<PollResultDetails> {
         await this.collection.doc(data.pollId).set(data);
-        return data;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async update(id: string, data: PollResultDetails, params: Params):Promise<PollResultDetails> {
-        await this.collection.doc(id).set(data);
         return data;
     }
 
