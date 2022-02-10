@@ -17,7 +17,7 @@ import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
 import hooks from './hooks';
-import { setupAuth0, authenticate } from './auth0';
+import { setupAuth0, authenticate, verifyAccessToken } from './auth0';
 
 const app = createApp(App);
 const client = feathers();
@@ -25,8 +25,13 @@ const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4
     transports: ['websocket', 'polling'],
 });
 
-socket.on("connect_error", (err: Error) => {
+socket.on('connect_error', (err: Error) => {
     logToSentry(err);
+});
+
+socket.on('reconnect', async() => {
+    console.log('reconnecting!');
+    await verifyAccessToken(client);
 });
 
 client.configure(socketio(socket));
