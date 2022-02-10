@@ -10,7 +10,7 @@ export default function(app: Application): void {
     }
     
     app.services['polling-event'].publish('patched',async (data:PollingEvent) => {
-        if(!data.firestore)return;
+        if(!data.firestore) return;
         return app.channel(data._key);
     });
 
@@ -27,7 +27,7 @@ export default function(app: Application): void {
     });
 
     app.services.poll.publish('patched', async (data:Poll) => {
-        if(data.firestore) return;
+        if(!data.firestore) return;
         return app.channel(data.pollingEventId);
     });
 
