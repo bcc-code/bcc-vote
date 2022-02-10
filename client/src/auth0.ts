@@ -44,3 +44,14 @@ export async function authenticate(app: App<Element>, client: feathers.Applicati
         await auth0.loginWithRedirect(options);
     }
 }
+
+export async function verifyAccessToken(app: feathers.Application<any>): Promise<void> {
+    const auth0 = app.get('auth0') as Auth0Client;
+    const accessToken = await auth0.getTokenSilently();
+
+    const feathersToken = await app.authentication.getAccessToken();
+    if (accessToken !== feathersToken) {
+        app.authentication.setAccessToken(accessToken);
+        await app.authentication.reAuthenticate(true);
+    }
+}
