@@ -1,13 +1,13 @@
 import { captureException, setTag, addBreadcrumb, Severity } from '@sentry/browser';
 
-export const logToSentry = (error: Error, role?: string ) => {
+export const logToSentry = (error: Error, role?: string ): void => {
     if(role){
         setTag('activeRole', role);
     }
     captureException(error);
 };
 
-export const createBreadcrumb = (category: string, data: any, message: string) => {
+export const createBreadcrumb = (category: string, data: any, message: string): void => {
     let severityLevel = Severity.Info;
     if(message.includes('error'))
         severityLevel = Severity.Error;
@@ -19,7 +19,7 @@ export const createBreadcrumb = (category: string, data: any, message: string) =
     });
 };
 
-export const logConnectionsToSentry = (client: any) => {
+export const logConnectionsToSentry = (client: any): void => {
     const allServiceEvents = [
         {service: 'polling-event', event: 'patched'},
         {service: 'answer', event: 'created'},
