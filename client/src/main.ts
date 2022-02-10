@@ -18,7 +18,7 @@ import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
 import { Auth0Client, RedirectLoginOptions } from '@auth0/auth0-spa-js';
-import hooks from './hooks'
+import hooks from './hooks';
 import { setupAuth0 } from './auth0';
 
 const app = createApp(App);
