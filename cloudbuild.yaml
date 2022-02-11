@@ -16,6 +16,8 @@ steps:
         "SENTRY_AUTH_TOKEN=$_SENTRY_AUTH_TOKEN",
         "--build-arg",
         "SENTRY_RELEASE=$REVISION_ID",
+        "--build-arg",
+        "NODE_ENV=$_NODE_ENV",
         "."
       ] 
   #push image
