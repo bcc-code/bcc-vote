@@ -26,9 +26,9 @@
     "unarchive-polling-event": "Unarchive",
     "restart-polling-event": "Start polling event",
     "save-poll": "Save question",
-    "change-poll": "Save changes",
+    "change-poll": "Lagre endringer",
     "delete-poll": "Delete question",
-    "save-changes": "Save changes",
+    "save-changes": "Lagre endringer",
     "discard": "Discard",
     "publish-poll": "Publish",
     "republish-poll": "Republish",
@@ -93,9 +93,7 @@
     "sure-close-event": "Are you sure that you want to close this event?",
     "church": "Church",
     "age": "Age",
-    "role": "Roles",
-    "feedback-vote": "Feedback for “BCC Vote”",
-    "rate-experience": "Rate your overall experience"
+    "role": "Roles"
   },
   "info": {
     "no-polling-events": "Det er ikke noe avstemninger tilgjengelig",
@@ -152,14 +150,16 @@
     "group": "Voting group",
     "confirmation": "Bekreftelse",
     "answer-option": "Option",
-    "answer-confirmation": "Bekreftelse",
-    "any-trouble": "Did you experience any trouble?"
+    "answer-confirmation": "Bekreftelse"
   },
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"
   },
   "placeholders": {
-    "type-here": "Type here..."
+    "type-here": "Skriv her..."
+  },
+  "error": {
+    "pollNotActive": "This poll is not active. Please try refreshing page to see currently active poll."
   }
 }
