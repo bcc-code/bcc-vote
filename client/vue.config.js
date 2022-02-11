@@ -1,7 +1,6 @@
 const path = require("path");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 
-
 module.exports = {
     devServer: {
         port: 8080,
@@ -20,9 +19,7 @@ module.exports = {
         });
     },
     configureWebpack: () => {
-        if(process.env.NODE_ENV === 'production') {
-            console.log("ENV: " + process.env.NODE_ENV);
-            
+        if(process.env.NODE_ENV === 'production') {          
             const settings = {
                 mode: 'production',
                 devtool: 'source-map',
@@ -36,8 +33,6 @@ module.exports = {
                         org: "bcc-hj",
                         project: "bcc-vote",
                         release: process.env.SENTRY_RELEASE,
-                
-                        // other SentryWebpackPlugin configuration
                         include: ".",
                         ignore: ["node_modules", "webpack.config.js"],
                     })
