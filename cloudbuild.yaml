@@ -12,6 +12,8 @@ steps:
         "$_IMAGE_NAME",
         "--build-arg",
         "GITHUB_PACKAGES_ACCESS_KEY=$_GITHUB_PACKAGES_ACCESS_KEY",
+        "--build-arg",
+        "SENTRY_AUTH_TOKEN=$_SENTRY_AUTH_TOKEN",
         "."
       ] 
   #push image
