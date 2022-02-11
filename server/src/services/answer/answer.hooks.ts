@@ -6,7 +6,6 @@ import { defineAbilityFor } from "../../permissions/appAbility";
 import { ForbiddenError, subject } from "@casl/ability";
 
 const preventVoteOnInactivePoll = async (context:HookContext):Promise<HookContext> => {
-    throw Error('Poll is not active');
     const key = context.data._from.split('/')[1];
     const res = await context.app.service('poll').get(key);
 
