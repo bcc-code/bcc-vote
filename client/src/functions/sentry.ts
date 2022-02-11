@@ -11,7 +11,7 @@ export const initSentry = (app: App<Element> , router: Router):void =>{
         integrations: [
             new BrowserTracing({
                 routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-
+                tracingOrigins: ["localhost", "vote.bcc.no", "dev.vote.bcc.no", "beta.vote.bcc.no",/^\//],
             }),
         ],
         tracesSampleRate: 1.0,
