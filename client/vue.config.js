@@ -20,30 +20,32 @@ module.exports = {
         });
     },
     configureWebpack: () => {
-        console.log("ENV: " + process.env.NODE_ENV);
-        console.log(process.env.NODE_ENV);
-        
-        const settings = {
-            mode: 'production',
-            devtool: 'source-map',
-            optimization: {
-                minimize: true,
-                usedExports: true
-            },
-            plugins: [
-                new SentryWebpackPlugin({
-                    authToken: process.env.SENTRY_AUTH_TOKEN,
-                    org: "bcc-hj",
-                    project: "bcc-vote",
-                    release: process.env.SENTRY_RELEASE,
+        if(process.env.NODE_ENV !== 'development') {
+            console.log("ENV: " + process.env.NODE_ENV);
+            console.log(process.env.NODE_ENV);
             
-                    // other SentryWebpackPlugin configuration
-                    include: ".",
-                    ignore: ["node_modules", "webpack.config.js"],
-                })
-            ]
-        };
-        return settings;
+            const settings = {
+                mode: 'production',
+                devtool: 'source-map',
+                optimization: {
+                    minimize: true,
+                    usedExports: true
+                },
+                plugins: [
+                    new SentryWebpackPlugin({
+                        authToken: process.env.SENTRY_AUTH_TOKEN,
+                        org: "bcc-hj",
+                        project: "bcc-vote",
+                        release: process.env.SENTRY_RELEASE,
+                
+                        // other SentryWebpackPlugin configuration
+                        include: ".",
+                        ignore: ["node_modules", "webpack.config.js"],
+                    })
+                ]
+            };
+            return settings;
+        }
         
     }
 };
