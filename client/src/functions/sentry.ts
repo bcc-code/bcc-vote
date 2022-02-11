@@ -7,7 +7,7 @@ import { Router } from 'vue-router';
 export const initSentry = (app: App<Element> , router: Router):void =>{
     Sentry.init({
         app,
-        dsn: "https://examplePublicKey@o0.ingest.sentry.io/0",
+        dsn: "https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770",
         integrations: [
             new BrowserTracing({
                 routingInstrumentation: Sentry.vueRouterInstrumentation(router),
