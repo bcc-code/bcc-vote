@@ -24,15 +24,15 @@ export default function (app: Application): void {
 
 
     socket.on("connect", () => {
-        logger.info(`[SOCKET_EVENT] [VOTING_APP] [CONNECTED] socket successfully connected to ${url}`);
+        logger.info('[SOCKET_EVENT] [VOTING_APP] [CONNECTED] socket successfully connected.',{url});
     });
 
     socket.on("disconnect", (reason: string) => {
-        logger.info(`[SOCKET_EVENT] [VOTING_APP] [DISCONNECTED] socket was disconnected from ${url} for the following reason: ${reason}`);
+        logger.info('[SOCKET_EVENT] [VOTING_APP] [DISCONNECTED] socket was disconnected.',{url, reason});
     });
 
     socket.on("connect_error", (error: any) => {
-        logger.error(`[SOCKET_EVENT] [VOTING_APP] [ERROR] socket failed to reconnect to ${url} after an reconnection attempt with the following error: ${inspect(error)}`);
+        logger.error('[SOCKET_EVENT] [VOTING_APP] [ERROR] socket failed to reconnect.', {url, error});
     });
 
     const membersWebSocketClient = feathers();
