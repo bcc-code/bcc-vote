@@ -11,7 +11,7 @@ export default defineComponent({
         $handleError(error: Error) {
             logToSentry(error, this.$user.activeRole); 
             if(error.message === 'Poll is not active') {
-                this.$toast(this.$t(''), getSentryOptions());
+                this.$toast(this.$t('error.pollNotActive'), getSentryOptions());
             } else {
                 this.$toast(error.message, getSentryOptions());
             }
