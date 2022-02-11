@@ -11,7 +11,7 @@ import io from 'socket.io-client';
 import { store } from './store';
 import router from './router';
 import { init, User } from '@sentry/browser';
-import { logConnectionsToSentry, logToSentry } from './functions/sentry';
+import { initSentry, logConnectionsToSentry, logToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
 import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
@@ -20,6 +20,7 @@ import hooks from './hooks';
 import { setupAuth0, authenticate, verifyAccessToken } from './functions/auth0';
 
 const app = createApp(App);
+initSentry(app, router);
 const client = feathers();
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`, {
     transports: ['websocket', 'polling'],
