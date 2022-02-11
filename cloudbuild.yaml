@@ -15,7 +15,7 @@ steps:
         "--build-arg",
         "SENTRY_AUTH_TOKEN=$_SENTRY_AUTH_TOKEN",
         "--build-arg",
-        "SENTRY_RELEASE=$_SHA_COMMIT",
+        "SENTRY_RELEASE=$REVISION_ID",
         "."
       ] 
   #push image
