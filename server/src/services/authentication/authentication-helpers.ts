@@ -2,7 +2,7 @@ import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
-import { Application } from '../../declarations';
+import { Application } from '@feathersjs/feathers';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
