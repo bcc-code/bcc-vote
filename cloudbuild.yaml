@@ -27,7 +27,7 @@ steps:
         "push",
         "$_IMAGE_NAME"
       ]
-  #build steps to build and push the google cloud function for shceduled tasks
+  #build steps to build and push the google cloud function for scheduled tasks
   
   #deploy to cloud run
   - name: 'gcr.io/cloud-builders/gcloud'
