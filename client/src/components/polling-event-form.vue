@@ -49,7 +49,6 @@
 <script lang="ts">
 import InfoBox from '../components/info-box.vue';
 import FormField from '../components/form-field.vue';
-import XIcon from 'heroicons-vue3/outline/XIcon';
 
 import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain';
 
