@@ -28,10 +28,8 @@ class CustomJWtStrategy extends JWTStrategy {
     }
     async authenticate(authentication: AuthenticationRequest, params: Params) {
         const {accessToken} = authentication;
-        if (!accessToken) {
-            throw new NotAuthenticated('No access token');
-        }
-
+        if (!accessToken)  throw new NotAuthenticated('No access token');
+        if (!this.app)  throw new NotAuthenticated('Could not authenticate');
         try {
             const config = this.authentication?.configuration.oauth.auth0;
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);

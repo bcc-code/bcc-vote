@@ -49,9 +49,8 @@
 <script lang="ts">
 import InfoBox from '../components/info-box.vue';
 import FormField from '../components/form-field.vue';
-import XIcon from 'heroicons-vue3/outline/XIcon';
 
-import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain';
+import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters, Role } from '../domain';
 
 interface RoleName {
     name: string,
@@ -67,11 +66,11 @@ interface SelectObject {
 }
 
 import { defineComponent, PropType } from 'vue';
+import { Query } from '@feathersjs/feathers';
 export default defineComponent({
     components: {
         InfoBox,
         FormField,
-        XIcon,
     },
     props: {
         pollingEvent: Object as PropType<PollingEvent>,
@@ -107,12 +106,12 @@ export default defineComponent({
         await this.loadRoles();
     },
     computed: {
-        votingAdminRole():any {
+        votingAdminRole():Role|null {
             if(this.$user.activeRole === 'VotingAdmin') {
-                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0];
+                const role = this.$user.roles.filter((r:Role) => r.enumName === 'VotingAdmin')[0];
                 return role;
             } else {
-                return false;
+                return null;
             }
         }
     },
@@ -125,9 +124,9 @@ export default defineComponent({
                 $sort: {
                     name: 1
                 }
-            } as any;
+            } as Query;
             if(this.votingAdminRole) {
-                query.orgID = { $in: this.votingAdminRole.orgIDs};
+                query.churchID = { $in: this.votingAdminRole.orgIDs};
             }
             const res = await this.$client.service('org').find({query}).catch(this.$handleError);
             

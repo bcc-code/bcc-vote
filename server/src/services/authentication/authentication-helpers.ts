@@ -2,6 +2,7 @@ import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
+import { Application } from '@feathersjs/feathers';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -54,9 +55,9 @@ export async function verifyAuth0AccessToken(
     }
 }
 
-export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: any): Promise<User | null> {
+export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application): Promise<User | null> {
     const personID = payload['https://login.bcc.no/claims/personId'];
-    const user: User = await app.services.person.get(personID.toString());
+    const user = await app.services.person.get(personID.toString());
     user.authTime = payload.iat;
     user.roles = user.related.roles;
 

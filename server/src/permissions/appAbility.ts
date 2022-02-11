@@ -61,7 +61,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('create','polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
 
         //Investigate this permission, org permissions seem to not be working
-        can('find', 'org', { orgID: { $in: votingAdminFor}} as any);
+        can('find', 'org', { churchID: { $in: votingAdminFor}} as any);
         can('find', 'role');
         can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user', {'churchID': { $in: votingAdminFor}} as any);
