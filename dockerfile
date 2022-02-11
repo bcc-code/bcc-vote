@@ -18,6 +18,7 @@ RUN npm ci
 
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
+ARG NODE_ENV
 
 RUN printenv
 COPY ./client /opt/vote/client
