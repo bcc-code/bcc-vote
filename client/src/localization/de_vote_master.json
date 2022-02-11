@@ -16,7 +16,8 @@
     "show-all-participants": "Show all participants",
     "add-option": "Add another option",
     "add-poll": "Add another question",
-    "admin-this-event": "Administrate",
+    "admin-this-event": "Administrate event",
+    "view-this-event": "View event",
     "join-this-event": "Participate",
     "view-event": "View event",
     "start-polling-event": "Start polling event",
@@ -38,7 +39,9 @@
     "customer-support": "Customer support",
     "go-to-login": "Go to login page",
     "ok-continue": "Okay, continue",
-    "yes-continue": "Yes, continue"
+    "yes-continue": "Yes, continue",
+    "submit": "Submit",
+    "skip": "Skip"
   },
   "labels": {
     "yes": "Yes",
@@ -128,7 +131,8 @@
       "edit": "Bearbeiten",
       "delete": "Delete"
     },
-    "select-option": "Select an option to view who voted on it"
+    "select-option": "Select an option to view who voted on it",
+    "thank-for-feedback": "Thank you for your feedback"
   },
   "fields": {
     "poll-title": "Question title",
@@ -151,5 +155,11 @@
   "explanations": {
     "disagree": "No, I disagree with the question",
     "agree": "Yes, I agree with the question"
+  },
+  "placeholders": {
+    "type-here": "Type here..."
+  },
+  "error": {
+    "pollNotActive": "This poll is not active. Please try refreshing page to see currently active poll."
   }
 }
