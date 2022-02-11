@@ -8,6 +8,7 @@ import { expressOauth} from '@feathersjs/authentication-oauth';
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
+import logger from '../../logger';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -35,7 +36,7 @@ class CustomJWtStrategy extends JWTStrategy {
             const config = this.authentication?.configuration.oauth.auth0;
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);
             const user = (await getUserBasedOnPayLoad(payload, this.app));
-            
+
             const authResult = {
                 user,
                 accessToken,
@@ -51,9 +52,9 @@ class CustomJWtStrategy extends JWTStrategy {
 
             return authResult;
         } catch (error) {
-            console.log(
+            logger.error(
                 'There was an error trying to authenticate using the jwt strategy, it is likely related to verifying the access token.'
-            );
+                , {authentication, error});
             throw error;
         }
     }

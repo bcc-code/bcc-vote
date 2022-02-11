@@ -1,6 +1,7 @@
 import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
+import logger from '../../logger';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -15,7 +16,7 @@ export function getActiveRole(userRoles:Array<UserRole>):RoleName{
         return a.securityLevel - b.securityLevel;
     });
 
-    if(possibleActiveRoles.some((role:UserRole) => role.enumName === 'VotingAdmin')) { 
+    if(possibleActiveRoles.some((role:UserRole) => role.enumName === 'VotingAdmin')) {
         activeRole = 'VotingAdmin';
     } else {
         activeRole = possibleActiveRoles[0].enumName;
@@ -48,7 +49,7 @@ export async function verifyAuth0AccessToken(
         });
         return payload;
     } catch (error) {
-        console.log('Error verifying accessToken with publicKey from Auth0, please inspect error.');
+        logger.error('Error verifying accessToken with publicKey from Auth0, please inspect error.', {accessToken, error});
         throw error;
     }
 }
