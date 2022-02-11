@@ -20,9 +20,8 @@ module.exports = {
         });
     },
     configureWebpack: () => {
-        if(process.env.NODE_ENV !== 'development') {
+        if(process.env.NODE_ENV === 'production') {
             console.log("ENV: " + process.env.NODE_ENV);
-            console.log(process.env.NODE_ENV);
             
             const settings = {
                 mode: 'production',
