@@ -18,16 +18,6 @@ module.exports = {
             options[0].ignore.push("**/config.json");
             return [options];
         });
-        config.plugin('SentryWebpackPlugin').use(SentryWebpackPlugin, [{
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-            org: "bcc-hj",
-            project: "bcc-vote",
-            release: process.env.SENTRY_RELEASE,
-    
-            // other SentryWebpackPlugin configuration
-            include: ".",
-            ignore: ["node_modules", "webpack.config.js"],
-        }]);
     },
     configureWebpack: () => {
         if(process.env.NODE_ENV === 'production') {
@@ -37,7 +27,19 @@ module.exports = {
                 optimization: {
                     minimize: true,
                     usedExports: true
-                }
+                },
+                plugins: [
+                    new SentryWebpackPlugin({
+                        authToken: process.env.SENTRY_AUTH_TOKEN,
+                        org: "bcc-hj",
+                        project: "bcc-vote",
+                        release: process.env.SENTRY_RELEASE,
+                
+                        // other SentryWebpackPlugin configuration
+                        include: ".",
+                        ignore: ["node_modules", "webpack.config.js"],
+                    })
+                ]
             };
             return settings;
         }
