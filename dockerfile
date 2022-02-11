@@ -20,11 +20,8 @@ ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_RELEASE
 ARG NODE_ENV
 
-RUN printenv
 COPY ./client /opt/vote/client
 RUN npm run build
-
-
 
 # build db and server
 WORKDIR /opt/vote/server
