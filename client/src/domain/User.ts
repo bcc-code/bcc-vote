@@ -1,4 +1,6 @@
 export interface User {
+    _id: string;
+    _key: string;
     age: number;
     activeRole: string;
     churchID: number;

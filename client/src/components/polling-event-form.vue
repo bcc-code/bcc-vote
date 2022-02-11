@@ -66,6 +66,7 @@ interface SelectObject {
 }
 
 import { defineComponent, PropType } from 'vue';
+import { Query } from '@feathersjs/feathers';
 export default defineComponent({
     components: {
         InfoBox,
@@ -105,12 +106,12 @@ export default defineComponent({
         await this.loadRoles();
     },
     computed: {
-        votingAdminRole():any {
+        votingAdminRole():Role|null {
             if(this.$user.activeRole === 'VotingAdmin') {
                 const role = this.$user.roles.filter((r:Role) => r.enumName === 'VotingAdmin')[0];
                 return role;
             } else {
-                return false;
+                return null;
             }
         }
     },
@@ -123,7 +124,7 @@ export default defineComponent({
                 $sort: {
                     name: 1
                 }
-            } as any;
+            } as Query;
             if(this.votingAdminRole) {
                 query.churchID = { $in: this.votingAdminRole.orgIDs};
             }
