@@ -159,5 +159,7 @@
   "placeholders": {
     "type-here": "Type here..."
   },
-  "error": {}
+  "error": {
+      "pollNotActive": "This poll is not active. Please try refreshing page to see currently active poll."
+  }
 }
