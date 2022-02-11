@@ -196,7 +196,7 @@ const purgeErrors = (context: HookContext):void => {
 
 const logErrors = (context: HookContext):void => {
     const message = [context.error.name, 'from app.hooks.ts:', context.error.message, 'during', context.method, context.path].join(' ');
-    logger.info(message);
+    logger.error(message);
 };
 
 const syncToFirestore = async (context: HookContext):Promise<HookContext> => {
