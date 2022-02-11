@@ -59,7 +59,7 @@ interface RoleName {
 }
 interface Org {
     name: string,
-    churchID: number
+    orgID: number
 }
 interface SelectObject {
     name: string,
@@ -71,7 +71,6 @@ export default defineComponent({
     components: {
         InfoBox,
         FormField,
-        XIcon,
     },
     props: {
         pollingEvent: Object as PropType<PollingEvent>,
@@ -121,7 +120,7 @@ export default defineComponent({
             let query = {
                 activeStatusCode: 0,
                 type: 'church',
-                $select: ['name', 'churchID'],
+                $select: ['name', 'orgID'],
                 $sort: {
                     name: 1
                 }
@@ -138,7 +137,7 @@ export default defineComponent({
             this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
-                    val: c.churchID.toString(),
+                    val: c.orgID.toString(),
                 };
             });
         },

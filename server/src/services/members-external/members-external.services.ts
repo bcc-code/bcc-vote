@@ -16,11 +16,8 @@ declare module '../../declarations' {
   
 
 export default function (app: Application): void {
-
     const membersConfig = app.get("members");
-
     const url = membersConfig.url;
-
 
     const restClient = rest(url);
     const membersRestClient = feathers();
