@@ -10,7 +10,7 @@ import socketio from '@feathersjs/socketio-client';
 import io from 'socket.io-client';
 import { store } from './store';
 import router from './router';
-import { init, User } from '@sentry/browser';
+import { User } from '@sentry/vue';
 import { initSentry, logConnectionsToSentry, logToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
 import {AuthenticationResult} from '@feathersjs/authentication';
@@ -60,8 +60,6 @@ function registerVue(authResult: AuthenticationResult) {
         app.use(vueGtag, {
             config: { id: 'G-6V21WXD03F' },
         });
-    
-        init({ dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770' });
     }
     
     router.$client = client;
