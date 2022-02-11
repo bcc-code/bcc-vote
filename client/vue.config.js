@@ -1,4 +1,6 @@
 const path = require("path");
+const SentryWebpackPlugin = require("@sentry/webpack-plugin");
+
 
 module.exports = {
     devServer: {
@@ -29,5 +31,16 @@ module.exports = {
             };
             return settings;
         }
-    }
+    },
+    plugins: [
+        new SentryWebpackPlugin({
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: "bcc-hj",
+            project: "bcc-vote",
+    
+            // other SentryWebpackPlugin configuration
+            include: ".",
+            ignore: ["node_modules", "webpack.config.js"],
+        }),
+    ],
 };
