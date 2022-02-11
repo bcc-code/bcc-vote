@@ -12,6 +12,12 @@ steps:
         "$_IMAGE_NAME",
         "--build-arg",
         "GITHUB_PACKAGES_ACCESS_KEY=$_GITHUB_PACKAGES_ACCESS_KEY",
+        "--build-arg",
+        "SENTRY_AUTH_TOKEN=$_SENTRY_AUTH_TOKEN",
+        "--build-arg",
+        "SENTRY_RELEASE=$REVISION_ID",
+        "--build-arg",
+        "NODE_ENV=$_NODE_ENV",
         "."
       ] 
   #push image
@@ -23,7 +29,7 @@ steps:
         "push",
         "$_IMAGE_NAME"
       ]
-  #build steps to build and push the google cloud function for shceduled tasks
+  #build steps to build and push the google cloud function for scheduled tasks
   
   #deploy to cloud run
   - name: 'gcr.io/cloud-builders/gcloud'

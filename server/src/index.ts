@@ -8,7 +8,7 @@ const server = app.listen(port);
 const startTime = Date.now();
 
 process.on('unhandledRejection', (reason, p) => {
-    const message = ['UnhandeledRejection', p, reason].join(' ');
+    const message = ['UnhandledRejection', p, reason].join(' ');
     logger.error(message);
 });
 

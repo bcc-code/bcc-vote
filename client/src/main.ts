@@ -10,8 +10,8 @@ import socketio from '@feathersjs/socketio-client';
 import io from 'socket.io-client';
 import { store } from './store';
 import router from './router';
-import { init, User } from '@sentry/browser';
-import { logConnectionsToSentry, logToSentry } from './functions/sentry';
+import { User } from '@sentry/vue';
+import { initSentry, logConnectionsToSentry, logToSentry } from './functions/sentry';
 import vueGtag from 'vue-gtag';
 import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
@@ -20,6 +20,7 @@ import hooks from './hooks';
 import { setupAuth0, authenticate, verifyAccessToken } from './functions/auth0';
 
 const app = createApp(App);
+initSentry(app, router);
 const client = feathers();
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`, {
     transports: ['websocket', 'polling'],
@@ -59,8 +60,6 @@ function registerVue(authResult: AuthenticationResult) {
         app.use(vueGtag, {
             config: { id: 'G-6V21WXD03F' },
         });
-    
-        init({ dsn: 'https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770' });
     }
     
     router.$client = client;

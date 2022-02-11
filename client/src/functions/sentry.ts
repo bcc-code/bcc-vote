@@ -1,4 +1,22 @@
-import { captureException, setTag, addBreadcrumb, Severity } from '@sentry/browser';
+import { captureException, setTag, addBreadcrumb, Severity, vueRouterInstrumentation, init } from "@sentry/vue";
+import { BrowserTracing } from "@sentry/tracing";
+import { App } from 'vue';
+import { Router } from 'vue-router';
+
+export const initSentry = (app: App<Element> , router: Router):void =>{
+    init({
+        app,
+        dsn: "https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770",
+        
+        integrations: [
+            new BrowserTracing({
+                routingInstrumentation: vueRouterInstrumentation(router),
+                tracingOrigins: ["vote.bcc.no",/^\//],  
+            }),
+        ],
+        tracesSampleRate: 1.0,
+    });
+};
 
 export const logToSentry = (error: Error, role?: string ): void => {
     if(role){
