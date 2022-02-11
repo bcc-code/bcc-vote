@@ -58,7 +58,7 @@ interface RoleName {
 }
 interface Org {
     name: string,
-    orgID: number
+    churchID: number
 }
 interface SelectObject {
     name: string,
@@ -107,7 +107,7 @@ export default defineComponent({
     computed: {
         votingAdminRole():any {
             if(this.$user.activeRole === 'VotingAdmin') {
-                const role = this.$user.roles.filter((r:any) => r.enumName == 'VotingAdmin')[0];
+                const role = this.$user.roles?.filter((r:any) => r.enumName == 'VotingAdmin')[0];
                 return role;
             } else {
                 return false;
@@ -119,13 +119,13 @@ export default defineComponent({
             let query = {
                 activeStatusCode: 0,
                 type: 'church',
-                $select: ['name', 'orgID'],
+                $select: ['name', 'churchID'],
                 $sort: {
                     name: 1
                 }
             } as any;
             if(this.votingAdminRole) {
-                query.orgID = { $in: this.votingAdminRole.orgIDs};
+                query.churchID = { $in: this.votingAdminRole.orgIDs};
             }
             const res = await this.$client.service('org').find({query}).catch(this.$handleError);
             
@@ -136,7 +136,7 @@ export default defineComponent({
             this.allChurches = res.map((c: Org) => {
                 return {
                     name: c.name,
-                    val: c.orgID.toString(),
+                    val: c.churchID.toString(),
                 };
             });
         },

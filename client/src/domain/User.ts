@@ -1,9 +1,10 @@
 export interface User {
-    age?: number;
-    churchID?: number;
-    personID?: number;
+    age: number;
+    activeRole: string;
+    churchID: number;
+    personID: number;
     authorityLevel?: number;
-    roles?: Array<Role>
+    roles: Array<Role>
 }
 
 export interface Role {
@@ -11,4 +12,5 @@ export interface Role {
     name: string;
     securityLevel: number;
     enumName: string;
+    orgIDs: number[];
 }

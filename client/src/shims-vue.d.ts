@@ -1,4 +1,7 @@
-import { ComponentCustomProperties } from 'vue';
+import feathers from '@feathersjs/feathers';
+import { Router } from 'vue-router'
+import { User } from './domain';
+
 
 /* eslint-disable */
 declare module '*.vue' {
@@ -7,14 +10,11 @@ declare module '*.vue' {
   export default component
 }
 
-import { createApp } from 'vue'
-import { Router, createRouter } from 'vue-router'
-
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $router: Router,
-    $user: any,
-    $client: any,
+    $user: User,
+    $client: feathers.Application,
     $handleError: Function,
     $showSuccess: Function,
     $logout: Function,
