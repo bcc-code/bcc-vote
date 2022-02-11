@@ -158,5 +158,6 @@
   },
   "placeholders": {
     "type-here": "Type here..."
-  }
+  },
+  "error": {}
 }
