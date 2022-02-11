@@ -50,7 +50,7 @@
 import InfoBox from '../components/info-box.vue';
 import FormField from '../components/form-field.vue';
 
-import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters } from '../domain';
+import { PollingEvent, PollingEventType, PollingEventStatus, ParticipantFilters, Role } from '../domain';
 
 interface RoleName {
     name: string,
@@ -107,7 +107,7 @@ export default defineComponent({
     computed: {
         votingAdminRole():any {
             if(this.$user.activeRole === 'VotingAdmin') {
-                const role = this.$user.roles?.filter((r:any) => r.enumName == 'VotingAdmin')[0];
+                const role = this.$user.roles.filter((r:Role) => r.enumName === 'VotingAdmin')[0];
                 return role;
             } else {
                 return false;
