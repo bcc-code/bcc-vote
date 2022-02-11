@@ -16,6 +16,7 @@ WORKDIR /opt/vote/client
 COPY ./client/package.json ./client/package-lock.json /opt/vote/client/
 RUN npm ci
 
+ARG SENTRY_AUTH_TOKEN
 COPY ./client /opt/vote/client
 RUN npm run build
 
