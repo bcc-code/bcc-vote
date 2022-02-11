@@ -22,6 +22,7 @@ module.exports = {
             authToken: process.env.SENTRY_AUTH_TOKEN,
             org: "bcc-hj",
             project: "bcc-vote",
+            release: process.env.SENTRY_RELEASE,
     
             // other SentryWebpackPlugin configuration
             include: ".",
