@@ -17,7 +17,7 @@ import {AuthenticationResult} from '@feathersjs/authentication';
 import i18n from './i18n';
 import mixins from './mixins';
 import hooks from './hooks';
-import { setupAuth0, authenticate, verifyAccessToken } from './auth0';
+import { setupAuth0, authenticate, verifyAccessToken } from './functions/auth0';
 
 const app = createApp(App);
 const client = feathers();

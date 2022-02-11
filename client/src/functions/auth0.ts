@@ -3,7 +3,7 @@ import auth from '@feathersjs/authentication-client';
 import { AuthenticationResult } from '@feathersjs/authentication';
 import feathers from '@feathersjs/feathers';
 import { App } from 'vue';
-import determineConfigBasedOnEnvironment from './config';
+import determineConfigBasedOnEnvironment from '../config';
 
 const config = determineConfigBasedOnEnvironment();
 
