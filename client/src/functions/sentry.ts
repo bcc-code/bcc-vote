@@ -7,10 +7,11 @@ export const initSentry = (app: App<Element> , router: Router):void =>{
     init({
         app,
         dsn: "https://de460cd536b34cdab822a0338782e799@o879247.ingest.sentry.io/5831770",
+        
         integrations: [
             new BrowserTracing({
                 routingInstrumentation: vueRouterInstrumentation(router),
-                tracingOrigins: ["localhost", "vote.bcc.no", "dev.vote.bcc.no", "beta.vote.bcc.no",/^\//],
+                tracingOrigins: ["localhost", "vote.bcc.no", "dev.vote.bcc.no", "beta.vote.bcc.no",/^\//],  
             }),
         ],
         tracesSampleRate: 1.0,

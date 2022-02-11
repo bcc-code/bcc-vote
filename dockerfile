@@ -17,7 +17,7 @@ COPY ./client/package.json ./client/package-lock.json /opt/vote/client/
 RUN npm ci
 
 ARG SENTRY_AUTH_TOKEN
-ARG SENTRY_RERLEASE
+ARG SENTRY_RELEASE
 
 RUN printenv
 COPY ./client /opt/vote/client
