@@ -31,7 +31,6 @@ socket.on('connect_error', (err: Error) => {
 
 socket.on('reconnect', async() => {
     await verifyAccessToken(client);
-    location.reload();
 });
 
 client.configure(socketio(socket));
