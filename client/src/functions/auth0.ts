@@ -49,9 +49,14 @@ export async function verifyAccessToken(app: feathers.Application<any>): Promise
     const auth0 = app.get('auth0') as Auth0Client;
     const accessToken = await auth0.getTokenSilently();
 
-    const feathersToken = await app.authentication.getAccessToken();
-    if (accessToken !== feathersToken) {
-        app.authentication.setAccessToken(accessToken);
-        await app.authentication.reAuthenticate(true);
+    if(app?.authentication) {
+        const feathersToken = await app.authentication.getAccessToken();
+        if (accessToken !== feathersToken) {
+            app.authentication.setAccessToken(accessToken);
+            await app.authentication.reAuthenticate(true);
+        }
+    } else {
+        throw new Error('No authentication service found');
     }
+    
 }

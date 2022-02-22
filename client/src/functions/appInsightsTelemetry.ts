@@ -1,4 +1,4 @@
-import determineConfigBasedOnEnvironment from './config';
+import determineConfigBasedOnEnvironment from '../config';
 import {ApplicationInsights} from '@microsoft/applicationinsights-web';
 
 const appInsights = new ApplicationInsights({
