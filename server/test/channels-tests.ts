@@ -75,7 +75,7 @@ describe('channels', () => {
         await sleep(300);
         const ans:any = await app.service('answer').create({
             _from: 'poll/504310092',
-            _to: 'user/178509735',
+            _to: 'user/54512',
             answerId: '1',
             pollingEventId: '504279890',
         }, context.params);
