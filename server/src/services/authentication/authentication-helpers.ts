@@ -55,13 +55,33 @@ export async function verifyAuth0AccessToken(
     }
 }
 
-export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application): Promise<User | null> {
+export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application): Promise<User> {
     const personID = payload['https://login.bcc.no/claims/personId'];
-    const user = await app.services.person.get(personID.toString());
-    user.authTime = payload.iat;
-    user.roles = user.related.roles;
+    const person:any = await app.services.person.get(personID.toString());
 
-    user.activeRole = getActiveRole(user.related.roles);
-
+    const user:User = {
+        _id: person._id,
+        _key: person._key,
+        displayName: person.displayName,
+        personID: person.personID,
+        churchName: person.church.name,
+        churchID: person.churchID,
+        activeRole: getActiveRole(person.related.roles),
+        administrator: person.administrator,
+        email: person.email,
+        roles: person.related.roles,
+        age: person.age,
+        cellPhone: person.cellPhone
+    };
     return user;
+}
+
+export async function saveUser(user: User, app: Application): Promise<User> {
+    const existingUsers = (await app.service('user').find({ query: { _key: user._key }})).data;
+
+    if(existingUsers.length == 0) {
+        return await app.service('user').create(user);
+    } else {
+        return await app.service('user').update(user._key, user);
+    }
 }
