@@ -33,7 +33,7 @@ class CustomJWtStrategy extends JWTStrategy {
         try {
             const config = this.authentication?.configuration.oauth.auth0;
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);
-            const fetchedUser = (await getUserBasedOnPayLoad(payload, this.app));
+            const fetchedUser = await getUserBasedOnPayLoad(payload, this.app);
             const user = await saveUser(fetchedUser, this.app);
             
             const authResult = {
