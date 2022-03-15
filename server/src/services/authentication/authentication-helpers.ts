@@ -73,15 +73,19 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
         age: person.age,
         cellPhone: person.cellPhone
     };
+    logger.info(`Fetched user ${user.personID} from members`);
     return user;
 }
 
 export async function saveUser(user: User, app: Application): Promise<User> {
     const existingUsers = (await app.service('user').find({ query: { _key: user._key }})).data;
 
+    let savedUser;
     if(existingUsers.length == 0) {
-        return await app.service('user').create(user);
+        savedUser = await app.service('user').create(user);
     } else {
-        return await app.service('user').update(user._key, user);
+        savedUser = await app.service('user').update(user._key, user);
     }
+    logger.info(`Saved user ${savedUser._id}`);
+    return savedUser;
 }
