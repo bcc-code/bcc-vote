@@ -87,6 +87,8 @@
     },
     "bcc-vote": "BCC Vote",
     "thank-you": "Thank you for participating!",
+    "feedback-vote": "Give us your feedback",
+    "rate-experience": "How do you rate your experience?",
     "logged-as": "You are now voting as",
     "sure-republish": "Are you sure that you want to republish this question?",
     "sure-close": "Are you sure that you want to close this question?",
@@ -150,7 +152,8 @@
     "group": "Voting group",
     "confirmation": "Confirmation",
     "answer-option": "Option",
-    "answer-confirmation": "Confirmation"
+    "answer-confirmation": "Confirmation",
+    "any-trouble": "Any trouble"
   },
   "explanations": {
     "disagree": "No, I disagree with the question",

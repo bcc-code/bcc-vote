@@ -7,7 +7,7 @@ import {
 import { expressOauth} from '@feathersjs/authentication-oauth';
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
-import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
+import { getUserBasedOnPayLoad, verifyAuth0AccessToken, saveUser } from './authentication-helpers';
 import logger from '../../logger';
 declare module '../../declarations' {
   interface ServiceTypes {
@@ -33,8 +33,9 @@ class CustomJWtStrategy extends JWTStrategy {
         try {
             const config = this.authentication?.configuration.oauth.auth0;
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);
-            const user = (await getUserBasedOnPayLoad(payload, this.app));
-
+            const fetchedUser = await getUserBasedOnPayLoad(payload, this.app);
+            const user = await saveUser(fetchedUser, this.app);
+            
             const authResult = {
                 user,
                 accessToken,

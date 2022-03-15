@@ -70,9 +70,10 @@ export default defineComponent({
             });
         },
         async getVoters(allAnswers: Answer[]){
-            const allVoterSet = new Set();
+            const allVoterSet = new Set<string>();
             allAnswers.forEach((ans: Answer) => {
-                allVoterSet.add(ans._to);
+                const key = ans._to.split('/')[1];
+                allVoterSet.add(key);
             });
             const voterArray = [...allVoterSet];
             let promises = [];
@@ -82,7 +83,7 @@ export default defineComponent({
                 promises.push(this.$client.service('user').find({
                     query: {
                         $limit: voterSubset.length,
-                        _id: {
+                        _key: {
                             $in: voterSubset
                         }
                     }

@@ -28,8 +28,8 @@ describe('Form Validation', async () => {
     it('Get a user', async () => {
         try {
             const userSvc = app.services.user;
-            const getUser = await userSvc.get("178509735",{}) as any;
-            assert.equal(getUser._key,"178509735");
+            const getUser = await userSvc.get("54512",{}) as any;
+            assert.equal(getUser._key,"54512");
         } catch (error) {
             assert.fail('Could find a user through the user service');
         }

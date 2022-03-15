@@ -30,7 +30,8 @@ const fillAnswerData = (allAnswers: Answer[], workSheets:any, voterMap:any, answ
 const fillDataRow = (ws: any, ans: Answer, voterMap: any, answerMap:any) => {
     const row = ws.lastUsedRow + 1;
     try {
-        const {personID, displayName, age, email, churchName, cellPhone, activeRole} = voterMap[ans._to];
+        const _key = ans._to.split('/')[1];
+        const {personID, displayName, age, email, churchName, cellPhone, activeRole} = voterMap[_key];
         ws.cell(row, 1).number(personID);
         ws.cell(row, 2).string(displayName);
         ws.cell(row, 3).number(age);
@@ -96,9 +97,9 @@ const getAnswerMap = (savedPolls: Poll[]) => {
 };
 
 const getVoterMap = (allVoters: any[]) => {
-    const voterMap = {} as {[id: string]: any};
+    const voterMap = {} as {[key: string]: any};
     allVoters.forEach((voter: any) => {
-        voterMap[voter._id] = voter;
+        voterMap[voter._key] = voter;
     });
     return voterMap;
 };

@@ -23,7 +23,7 @@ function getAranoDBConfigFromFeathers():ArangoDBConfig {
 async function generateFreshContext() {
     const userSvc = app.service('user') as any ;
 
-    const loggedInUser = await userSvc.get('178509735',{});
+    const loggedInUser = await userSvc.get('54512',{});
 
     const context = {
         app:app,
@@ -89,7 +89,7 @@ function pollingEventsTestSet(){
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('69');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('431');},
         user: async (hasRoles?:Array<RoleName>) => {
-            const user = await userSvc.get('178509735',{});
+            const user = await userSvc.get('54512',{});
             if(hasRoles) {
                 const userRoles = user.roles.filter((r:UserRole) => hasRoles.includes(r.enumName));
                 user.activeRole = getActiveRole(userRoles);
