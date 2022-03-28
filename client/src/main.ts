@@ -23,6 +23,7 @@ import appInsights from './functions/appInsightsTelemetry';
 const app = createApp(App);
 initSentry(app, router);
 appInsights.trackEvent({'name': 'app started'});
+document.title = 'Vote';
 const client = feathers();
 const socket = io(window.location.hostname === 'localhost' ? 'http://localhost:4040' : `${location.origin}`, {
     transports: ['websocket', 'polling'],
