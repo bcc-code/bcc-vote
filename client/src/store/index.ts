@@ -17,13 +17,17 @@ export const store: any = createStore<RootState>({
     actions: {
         async findPollingEvents({commit},archived) {
             const query = {
-                
                 status: archived ? {} : {
                     $ne: PollingEventStatus.Archived
                 }
             };
-            const unarchivedEvents = await store.$client.service('polling-event').find({ query});
-            commit('UPDATE_POLLING_EVENTS',unarchivedEvents);
+            let currentEvents:PollingEvent[] = [];
+            await store.$client.service('polling-event').find({ query})
+                .then((events: PollingEvent[]) => {
+                    currentEvents = events;
+                });
+
+            commit('UPDATE_POLLING_EVENTS', currentEvents);
         }
     },
     modules: {
