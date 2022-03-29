@@ -41,16 +41,19 @@ export default defineComponent({
         this.$client.io.off('reconnect', this.init);
     },
     methods: {
-        init():void {
+        init() {
             this.loadPollingEvent();
             this.loadCurrentPoll();
         },
         async loadPollingEvent():Promise<void>{
-            this.pollingEvent = await this.$client.service('polling-event')
-                .get(this.$route.params.id)
-                .catch(this.$handleError) as PollingEvent;
-            if(this.pollingEvent.status === PollingEventStatus['Finished'])
-                this.goToThankYouPage(this.pollingEvent);
+            try {
+                this.pollingEvent = await this.$client.service('polling-event').get(this.$route.params.id) as PollingEvent;
+                if(this.pollingEvent.status === PollingEventStatus['Finished']) {
+                    this.goToThankYouPage(this.pollingEvent);
+                }
+            } catch(err) {
+                this.$handleError(err);
+            }
         },
         async loadCurrentPoll():Promise<void>{
             const res = await this.$client.service('poll').find({
