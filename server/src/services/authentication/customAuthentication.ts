@@ -11,6 +11,7 @@ export async function authenticateExternal(context: HookContext) {
     context.params.user = result.user;
 
   } catch(err) {
+    // attach err! 
     throw new NotAuthenticated('Access Denied: authentication for your user was unsuccesful')
   }
   return context

@@ -2,7 +2,7 @@ import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
-import { Application } from '@feathersjs/feathers';
+import { Application, Paginated } from '@feathersjs/feathers';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -71,19 +71,25 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
         email: person.email,
         roles: person.related.roles,
         age: person.age,
-        cellPhone: person.cellPhone
+        cellPhone: person.cellPhone,
+        authTime: payload.iat
     };
     logger.debug(`Fetched user ${user.personID} from members`);
     return user;
 }
 
 export async function saveUser(user: User, app: Application): Promise<User> {
-    const existingUsers = (await app.service('user').find({ query: { _key: user._key }})).data;
+    const { data:existingUsers } = await app.service('user').find({ query: { _key: user._key }}) as Paginated<User>;
 
     let savedUser;
-    if(existingUsers.length == 0) {
+    if(existingUsers.length === 0) {
         savedUser = await app.service('user').create(user);
-    } else {
+    }
+
+    const existingUser = existingUsers[0];
+    
+    const time30sAgo = Date.now() / 1000 - 30;
+    if(!existingUser.authTime || existingUser.authTime < time30sAgo) {
         savedUser = await app.service('user').update(user._key, user);
     }
     logger.debug(`Saved user ${savedUser._id}`);
