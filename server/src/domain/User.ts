@@ -10,6 +10,7 @@ export type User = {
     roles: Array<UserRole>;
     displayName: string;
     age: number;
+    authTime: number;
     cellPhone?: any;
 }
 

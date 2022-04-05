@@ -2,7 +2,7 @@ import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
-import { Application } from '@feathersjs/feathers';
+import { Application, Paginated } from '@feathersjs/feathers';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -59,7 +59,7 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
     const personID = payload['https://login.bcc.no/claims/personId'];
     const person:any = await app.services.person.get(personID.toString());
 
-    const user:User = {
+    const user: User = {
         _id: person._id,
         _key: person._key,
         displayName: person.displayName,
@@ -71,17 +71,24 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
         email: person.email,
         roles: person.related.roles,
         age: person.age,
-        cellPhone: person.cellPhone
+        cellPhone: person.cellPhone,
+        authTime: payload.iat
     };
     logger.debug(`Fetched user ${user.personID} from members`);
+
+    const time10sAgo = Date.now() - 10000;
+    if(user.authTime > time10sAgo) {
+        await saveUser(user, app);
+    }
+
     return user;
 }
 
-export async function saveUser(user: User, app: Application): Promise<User> {
-    const existingUsers = (await app.service('user').find({ query: { _key: user._key }})).data;
+async function saveUser(user: User, app: Application) {
+    const { data:existingUsers } = await app.service('user').find({ query: { _key: user._key }}) as Paginated<User>;
 
     let savedUser;
-    if(existingUsers.length == 0) {
+    if(existingUsers.length === 0) {
         savedUser = await app.service('user').create(user);
     } else {
         savedUser = await app.service('user').update(user._key, user);
