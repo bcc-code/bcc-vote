@@ -1,4 +1,4 @@
-import 'mocha'
+import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
@@ -23,16 +23,6 @@ describe('Form Validation', async () => {
         forbiddenPoll = await (testSet['forbiddenPoll'])() as any;
         user = await (testSet['user'])() as any;
         user.churchName = 'Terwolde';
-    });
-
-    it('Get a user', async () => {
-        try {
-            const userSvc = app.services.user;
-            const getUser = await userSvc.get("54512",{}) as any;
-            assert.equal(getUser._key,"54512");
-        } catch (error) {
-            assert.fail('Could find a user through the user service');
-        }
     });
 
     it('answer -> Adds user fields', async () => {

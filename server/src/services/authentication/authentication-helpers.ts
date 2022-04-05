@@ -55,11 +55,11 @@ export async function verifyAuth0AccessToken(
     }
 }
 
-export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application): Promise<User> {
+export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application) {
     const personID = payload['https://login.bcc.no/claims/personId'];
     const person:any = await app.services.person.get(personID.toString());
 
-    const user:User = {
+    const user: User = {
         _id: person._id,
         _key: person._key,
         displayName: person.displayName,
@@ -75,21 +75,22 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
         authTime: payload.iat
     };
     logger.debug(`Fetched user ${user.personID} from members`);
+
+    const time10sAgo = Date.now() - 10000;
+    if(user.authTime > time10sAgo) {
+        await saveUser(user, app);
+    }
+
     return user;
 }
 
-export async function saveUser(user: User, app: Application): Promise<User> {
+async function saveUser(user: User, app: Application) {
     const { data:existingUsers } = await app.service('user').find({ query: { _key: user._key }}) as Paginated<User>;
 
     let savedUser;
     if(existingUsers.length === 0) {
         savedUser = await app.service('user').create(user);
-    }
-
-    const existingUser = existingUsers[0];
-    
-    const time30sAgo = Date.now() / 1000 - 30;
-    if(!existingUser.authTime || existingUser.authTime < time30sAgo) {
+    } else {
         savedUser = await app.service('user').update(user._key, user);
     }
     logger.debug(`Saved user ${savedUser._id}`);
