@@ -55,7 +55,7 @@ export async function verifyAuth0AccessToken(
     }
 }
 
-export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application) {
+export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: Application): Promise<User> {
     const personID = payload['https://login.bcc.no/claims/personId'];
     const person:any = await app.services.person.get(personID.toString());
 
