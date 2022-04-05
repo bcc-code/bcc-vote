@@ -14,10 +14,8 @@ VotingAdmin gets timeout errors when getting a polling-event and finding polls.
 1. Occurs in event Lobby and root page.
 2. Not linked to a specific role.
 3. Errors caused by write write conflict when updating the user.
-
-url: http://localhost:8080/polling-event/lobby/504279890
-
 4. Error is triggered on authenticateExternal in app.hooks
 5. Locally there are no write-write conflicts
 
 # Root cause:
+Authentication is not as robust as we want, this broke when there was an authentication call done concurrently in the Lobby.

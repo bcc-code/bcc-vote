@@ -41,9 +41,9 @@ export default defineComponent({
         this.$client.io.off('reconnect', this.init);
     },
     methods: {
-        init() {
-            this.loadPollingEvent();
-            this.loadCurrentPoll();
+        async init() {
+            await this.loadPollingEvent();
+            await this.loadCurrentPoll();
         },
         async loadPollingEvent():Promise<void>{
             try {
