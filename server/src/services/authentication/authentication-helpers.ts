@@ -76,19 +76,20 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
     };
     logger.debug(`Fetched user ${user.personID} from members`);
 
+    const { data:existingUsers } = await app.service('user').find({ query: { _key: user._key }}) as Paginated<User>;
+    const noExisingUser = existingUsers.length !== 1;
     const time10sAgo = Date.now() - 10000;
-    if(user.authTime > time10sAgo) {
-        await saveUser(user, app);
+    
+    if(noExisingUser || user.authTime > time10sAgo) {
+        await saveUser(user, noExisingUser, app);
     }
 
     return user;
 }
 
-async function saveUser(user: User, app: Application) {
-    const { data:existingUsers } = await app.service('user').find({ query: { _key: user._key }}) as Paginated<User>;
-
+async function saveUser(user: User, noExisingUser: boolean, app: Application) {
     let savedUser;
-    if(existingUsers.length === 0) {
+    if(noExisingUser) {
         savedUser = await app.service('user').create(user);
     } else {
         savedUser = await app.service('user').update(user._key, user);
