@@ -195,8 +195,16 @@ const purgeErrors = (context: HookContext):void => {
 };
 
 const logErrors = (context: HookContext):void => {
-    const message = [context.error.name, 'from app.hooks.ts:', context.error.message, 'during', context.method, context.path].join(' ');
-    logger.error(message);
+    const { error, method, path } = context;
+    const expectedErrors = ['ForbiddenError','NotFound','NotAuthenticated'];
+
+    const message = [error.name, 'from app.hooks.ts:', error.message, 'during', method, path].join(' ');
+
+    if(expectedErrors.includes(error.name)) {
+        logger.warn(message);
+    } else {
+        logger.error(message);
+    }
 };
 
 const syncToFirestore = async (context: HookContext):Promise<HookContext> => {

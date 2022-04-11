@@ -70,4 +70,23 @@ describe('Authentication', async () => {
             assert.fail(`User was not saved correctly ${error}`);
         }
     });
+
+    it('User logged in before without saved user gets stored', async () => {
+        await app.services.user.remove('54512',{});
+        
+        try {
+            const jwtPayload: Record<string, any> = {
+                'https://login.bcc.no/claims/personId': 54512,
+                iat: Date.now() - (60000) //1 minute ago
+            };
+
+            const authenticatedUser = await getUserBasedOnPayLoad(jwtPayload, app);
+            assert.equal(jwtPayload.iat, authenticatedUser.authTime);
+            
+            const savedUser = await app.services.user.get(authenticatedUser._key,{}) as User;
+            assert.equal(jwtPayload.iat, savedUser.authTime);
+        } catch (error) {
+            assert.fail(`User was not saved correctly ${error}`);
+        }
+    });
 });
