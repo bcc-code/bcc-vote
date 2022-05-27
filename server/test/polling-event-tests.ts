@@ -46,7 +46,7 @@ describe('polling-event', async () => {
         }
     });
 
-    it('Polling event with max-age should be visible until age of user', async () => {
+    it('Polling event with max-age should be visible until limited age of user', async () => {
         try {
             const user = await testSet.user() as User;
             const event = await testSet.scopedToLocalChurchSameAsLoggedInUser() as PollingEvent;
@@ -55,13 +55,13 @@ describe('polling-event', async () => {
             const eventSubject = subject("polling-event", event);
 
             const ability = defineAbilityFor(user);
-            assert.equal(ability.can('find', eventSubject), true);
-            assert.equal(ability.can('get', eventSubject), true);
+            assert.equal(ability.can('find', eventSubject), false);
+            assert.equal(ability.can('get', eventSubject), false);
 
-            user.age++;
+            user.age--;
             const abilityTooOld = defineAbilityFor(user);
-            assert.equal(abilityTooOld.can('find', eventSubject), false);
-            assert.equal(abilityTooOld.can('get', eventSubject), false);
+            assert.equal(abilityTooOld.can('find', eventSubject), true);
+            assert.equal(abilityTooOld.can('get', eventSubject), true);
         } catch (error) {
             assert.fail('The right events where not retrieved for the user: ' + error.message);
         }

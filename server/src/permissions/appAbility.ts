@@ -22,7 +22,7 @@ const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbilit
     can('create', 'feedback');
     can(['find','get'],'polling-event', {'participantFilter.org': {$in: [user.churchID.toString(), 'all']}, 'participantFilter.role': { $in: [...userRoleNames, 'all'] }} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gt:user.age}} as any);
-    cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lt:user.age}} as any);
+    cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}} as any);
     cannot('find', 'polling-event', {'status': 'archived' as any});
     can(['find','get'],'polling-event', {'creatorId':user.personID as any});
 };
