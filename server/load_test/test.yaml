@@ -9,7 +9,6 @@ config:
       - personID
       - accessToken
     order: sequence
-    cast: false
 scenarios:
   - name: "Emit an event"
     engine: ws
