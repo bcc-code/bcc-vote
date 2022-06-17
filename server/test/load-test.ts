@@ -6,6 +6,7 @@ const io = require('socket.io-client');
 import feathers from '@feathersjs/feathers';
 import { getFeahtersToken }  from './setup-tests/test-set'
 import app from '../src/app';
+import { sleep } from './setup-tests/test-utils';
 
 
 
@@ -96,10 +97,6 @@ async function newFeathersClient() {
     console.log(error)
   }
 
-}
-
-async function sleep(msec:any) {
-  return new Promise(resolve => setTimeout(resolve, msec));
 }
 
 });

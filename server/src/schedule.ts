@@ -1,5 +1,6 @@
 import cron, { ScheduledTask } from "node-cron";
 import { Application } from "./declarations";
+import { PollingEventStatus } from "./domain";
 
 let scheduledJob: ScheduledTask | undefined;
 
@@ -8,11 +9,20 @@ function init(app:Application) {
         const interval = '*/1 * * * * *';
         const options = { scheduled: false};
 
-        scheduledJob = cron.schedule(interval, async () => {
+        const createAnswerBatches = async () => {
             await app.services['answer-batch'].create({},{});
-        }, options);
-    }catch(err) {
-        console.error(err);
+        };
+        scheduledJob = cron.schedule(interval, createAnswerBatches, options);
+
+        app.services["polling-event"].find({query: { status: PollingEventStatus['Live']}})
+            .then(livePollingEvents => {
+                if(livePollingEvents.length) {
+                    start();
+                }
+            });
+
+    } catch(err) {
+        console.error("Unable to initiate scheduled job: " + err);
     }
 }
 
@@ -22,9 +32,20 @@ function start() {
             throw Error('Scheduled job has not been initiated');
         }
         scheduledJob.start();
-    }catch(err) {
-        console.error(err);
+    } catch(err) {
+        console.error("Unable to start scheduled job: " + err);
     }
 }
 
-export default {init, start};
+function stop() {
+    try {
+        if(!scheduledJob) {
+            throw Error('Scheduled job has not been initiated');
+        }
+        scheduledJob.stop();
+    } catch(err) {
+        console.error("Unable to stop scheduled job: " + err);
+    }
+}
+
+export default {init, start, stop};

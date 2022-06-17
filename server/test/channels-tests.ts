@@ -4,6 +4,7 @@ import app from '../src/app';
 import { generateFreshContext, getAranoDBConfigFromFeathers }  from './setup-tests/test-set';
 import {PollingEventAnswerBatch, PollActiveStatus, Answer, User} from '../src/domain';
 import { importDB } from '@bcc-code/arango-migrate';
+import { sleep } from './setup-tests/test-utils';
 
 describe('channels', () => {
     let context:any;
@@ -116,6 +117,7 @@ describe('channels', () => {
 
     it('Answer to polling event gets batched through', async () => {
         try {
+            await app.service('polling-event').patch(pollingEventId, { status: 'live' }, {});
             let batch;
             context.app.service('answer').on('batched', (answerBatch:PollingEventAnswerBatch)=>{
                 batch = answerBatch;
@@ -131,8 +133,4 @@ describe('channels', () => {
             assert.fail('There should be no error. ' + error);
         }
     });
-
-    function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
 });

@@ -59,6 +59,7 @@
     "@feathersjs/transport-commons": "^4.5.11",
     "@google-cloud/firestore": "^4.12.2",
     "@google-cloud/logging-winston": "^4.1.0",
+    "@types/sinon": "^10.0.11",
     "applicationinsights": "^2.2.0",
     "arangojs": "^7.5.0",
     "axios": "^0.24.0",
@@ -77,6 +78,7 @@
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.7",
     "serve-favicon": "^2.5.0",
+    "sinon": "^14.0.0",
     "socket.io-client": "2.4",
     "winston": "^3.3.3",
     "x3-linkedlist": "^1.2.0"
