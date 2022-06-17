@@ -5,9 +5,13 @@ export type Answer = {
     _key: string;
     _from: string;
     _to: string;
-    firestore?: boolean;
     visibility: PollResultVisibility
     answerId: string;
     pollingEventId: string;
     displayName: string;
+}
+
+export type PollingEventAnswerBatch = {
+    pollingEventId: string,
+    answers: Answer[]
 }

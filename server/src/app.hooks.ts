@@ -208,7 +208,7 @@ const logErrors = (context: HookContext):void => {
 };
 
 const syncToFirestore = async (context: HookContext):Promise<HookContext> => {
-    const syncedCollections = ['poll', 'polling-event', 'answer'];
+    const syncedCollections = ['poll', 'polling-event'];
     if(!syncedCollections.includes(context.path)) return context;
     const {result} = context;
     if(!result) return context;
