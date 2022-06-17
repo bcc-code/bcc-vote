@@ -10,7 +10,7 @@ do
     do
         let "personID = $f * 30 + $i"
         echo -n "$personID," >> "users/${f}.csv"
-        curl -X GET 'http://localhost:8081/token' \
+        curl -X GET 'http://7909239a5ed9.ngrok.io/token' \
             -H 'Content-Type: application/json' \
             -d '{
                 "https://login.bcc.no/claims/personId": '$personID',
