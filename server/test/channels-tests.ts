@@ -1,8 +1,9 @@
 import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
-import { generateFreshContext }  from './setup-tests/test-set';
+import { generateFreshContext, getAranoDBConfigFromFeathers }  from './setup-tests/test-set';
 import {PollingEventAnswerBatch, PollActiveStatus, Answer, User} from '../src/domain';
+import { importDB } from '@bcc-code/arango-migrate';
 
 describe('channels', () => {
     let context:any;
@@ -11,6 +12,7 @@ describe('channels', () => {
     const pollingEventId = '504279890';
 
     beforeEach(async() => {
+        await importDB(getAranoDBConfigFromFeathers(),true,false);
         context  = await generateFreshContext();
         context.params.provider = '';
         user = context.params.user;
@@ -127,32 +129,21 @@ describe('channels', () => {
         }
     });
 
-    it.only('Answer to polling event gets batched through', async () => {
+    it('Answer to polling event gets batched through', async () => {
         try {
             let batch;
             context.app.service('answer').on('batched', (answerBatch:PollingEventAnswerBatch)=>{
                 batch = answerBatch;
             });
 
-            console.log('res',batch);
             const createdAnswer = await app.services.answer.create(answer,{user});
-            
+            await sleep(2500);
             assert.isDefined(batch);
             assert.equal(batch.pollingEventId, pollingEventId);
             assert.equal(batch.answers.length, 1);
             assert.equal(batch.answers[0]._id, createdAnswer._id);
         } catch (error) {
-            assert.fail('There should be no error. Error:',error);
-        }
-    });
-
-    
-    it('Answer to different polling event does not get batched through', async () => {
-        try {
-            assert.fail('There should be no error. Error:',error);
-            
-        } catch (error) {
-            assert.fail('There should be no error. Error:',error);
+            assert.fail('There should be no error. ' + error);
         }
     });
 
