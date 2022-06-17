@@ -2,17 +2,27 @@ import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
 import { generateFreshContext }  from './setup-tests/test-set';
-import {PollActiveStatus} from '../src/domain';
+import {PollingEventAnswerBatch, PollActiveStatus, Answer, User} from '../src/domain';
 
 describe('channels', () => {
     let context:any;
+    let user: User;
+    let answer: Partial<Answer>;
+    const pollingEventId = '504279890';
 
     beforeEach(async() => {
         context  = await generateFreshContext();
         context.params.provider = '';
+        user = context.params.user;
+        answer = {
+            _from: 'poll/504310092',
+            _to: user._id,
+            answerId: '1',
+            pollingEventId ,
+        };
 
         // person id added to a channel by getting polling event
-        await app.service('polling-event').get('504279890', context.params);
+        await app.service('polling-event').get(pollingEventId, context.params);
     });
 
     afterEach(function() {
@@ -73,12 +83,7 @@ describe('channels', () => {
         });
         await app.service('poll').patch('504310092', {activeStatus: PollActiveStatus['Live']}, {});
         await sleep(300);
-        const ans:any = await app.service('answer').create({
-            _from: 'poll/504310092',
-            _to: 'user/54512',
-            answerId: '1',
-            pollingEventId: '504279890',
-        }, context.params);
+        const ans:any = await app.service('answer').create(answer, context.params);
         await sleep(300);
         // // Assert
         assert.equal(res._key, ans._key);
@@ -117,6 +122,35 @@ describe('channels', () => {
             // Assert
             assert.equal(res._key,'504310091');
             assert.equal(res.activeStatus,'not_started');
+        } catch (error) {
+            assert.fail('There should be no error. Error:',error);
+        }
+    });
+
+    it.only('Answer to polling event gets batched through', async () => {
+        try {
+            let batch;
+            context.app.service('answer').on('batched', (answerBatch:PollingEventAnswerBatch)=>{
+                batch = answerBatch;
+            });
+
+            console.log('res',batch);
+            const createdAnswer = await app.services.answer.create(answer,{user});
+            
+            assert.isDefined(batch);
+            assert.equal(batch.pollingEventId, pollingEventId);
+            assert.equal(batch.answers.length, 1);
+            assert.equal(batch.answers[0]._id, createdAnswer._id);
+        } catch (error) {
+            assert.fail('There should be no error. Error:',error);
+        }
+    });
+
+    
+    it('Answer to different polling event does not get batched through', async () => {
+        try {
+            assert.fail('There should be no error. Error:',error);
+            
         } catch (error) {
             assert.fail('There should be no error. Error:',error);
         }
