@@ -77,21 +77,6 @@ describe('channels', () => {
             assert.fail('There should be no error. Error:',error);
         }
     });
-    it('Get data via socket -> answer created', async () => {
-        let res:any;
-        context.app.service('answer').on('created', (ans:any)=>{
-            if(ans.pollingEventId === app.channels[0])
-                res = ans;
-        });
-        await app.service('poll').patch('504310092', {activeStatus: PollActiveStatus['Live']}, {});
-        await sleep(300);
-        const ans:any = await app.service('answer').create(answer, context.params);
-        await sleep(300);
-        // // Assert
-        assert.equal(res._key, ans._key);
-        assert.equal(res.answerId, '1');
-    });
-
     it('different polling event gets patched', async () => {
         try {
             // Act

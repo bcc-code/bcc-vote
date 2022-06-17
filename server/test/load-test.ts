@@ -86,7 +86,7 @@ async function newFeathersClient() {
       var event = await membersClient.service('polling-event').get(testingVariables.pollingEentId,{})
       console.log('Socket was added to the polling-event channel')
 
-      membersClient.service('answer').on('created',(a:any)=>{
+      membersClient.service('answer').on('batched',(a:any)=>{
         console.log('[RECEIVED PUBLISHED ANSWER IN CLIENT]')
       })
 

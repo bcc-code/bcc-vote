@@ -17,7 +17,7 @@
 import ProgressBars from '../components/results-progress-bars.vue';
 import VoterList from './results-voter-list.vue';
 
-import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain';
+import { Poll, PollResultVisibility, Answer, PollingEventAnswerBatch, Option, SortedOptions, PollResult } from '../domain';
 import { defineComponent, PropType } from 'vue';
 // import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
@@ -50,14 +50,14 @@ export default defineComponent({
         
         
         if(this.pollResultsAreVisible)
-            this.$client.service('answer').on('created', this.addAnswer);
+            this.$client.service('answer').on('batched', this.addAnswers);
 
         this.$client.service('poll-result').on('patched', this.changeBars);
 
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('answer').off('created', this.addAnswer);
+        this.$client.service('answer').off('batched', this.addAnswers);
         this.$client.service('poll-result').off('patched', this.changeBars);
         this.$client.io.off('reconnect', this.init);
     },
@@ -128,6 +128,14 @@ export default defineComponent({
         },
         isVoterAlreadyCounted(key: string){
             return this.answerIdsFromFind.has(key);
+        },
+        addAnswers({pollingEventId, answers}: PollingEventAnswerBatch){
+            if(pollingEventId !== this.poll.pollingEventId) {
+                throw Error('Received incorrect answer batch');
+            }
+            answers.forEach(ans => {
+                this.addAnswer(ans)
+            });
         },
         addAnswer(answer: Answer){
             if(answer._from !== this.poll._id)
