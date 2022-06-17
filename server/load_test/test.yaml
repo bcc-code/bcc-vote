@@ -1,0 +1,27 @@
+config:
+  target: "wss://dev.vote.bcc.no/socket.io"
+  phases:
+    - duration: 30
+      arrivalRate: 1
+  payload:
+    path: "users/{{$processEnvironment.TEST_NUMBER}}.csv"
+    fields:
+      - personID
+      - accessToken
+    order: sequence
+    cast: false
+scenarios:
+  - name: "Emit an event"
+    engine: ws
+    flow:
+      - connect: "{{ target }}/?EIO=3&transport=websocket"
+      - send: '420["create","authentication",{"strategy":"jwt","accessToken":"{{accessToken}}"},{}]'
+      - think: 3
+      - send: 422["get","polling-event","1339667582",{}]
+      - send: 422["find","poll",{"pollingEventId":"1339667582","activeStatus":"live"}]
+      - send: 423["get","answer","1339667629-{{personID}}",{}]
+      - think: 3
+      - send: 424["create","answer",{"_from":"poll/1339667629","_to":"person/{{personID}}","visibility":"public","answerId":"1623243249532","pollingEventId":"1339667582"},{}]
+      - send: 425["get","poll-result","1339667629",{}]
+      - send: 426["find","answer",{"_from":"poll/1339667629"","$sort":{"lastChanged":-1}}]
+      - think: 10
