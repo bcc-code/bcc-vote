@@ -3,6 +3,7 @@ import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
 import { Application, Paginated } from '@feathersjs/feathers';
+import fs from 'fs';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -50,8 +51,14 @@ export async function verifyAuth0AccessToken(
         });
         return payload;
     } catch (error) {
-        logger.error('Error verifying accessToken with publicKey from Auth0, please inspect error.', {accessToken, error});
-        throw error;
+        if (process.env.ALLOW_LOCAL_JWTS === 'true') {
+            const publicKey = fs.readFileSync('config/development-public.key');
+            const payload = jsonwebtoken.verify(accessToken, publicKey) as any;
+            return payload;
+        } else {
+            console.log('Error verifying accessToken with publicKey from Auth0, please inspect error.');
+            throw error;
+        }
     }
 }
 
