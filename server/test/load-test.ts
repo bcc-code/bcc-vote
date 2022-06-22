@@ -1,14 +1,11 @@
 import 'mocha';
-import { assert } from 'chai';
-import { Server } from 'http';
-const socketio = require('@feathersjs/socketio-client');
-const io = require('socket.io-client');
+import socketio from '@feathersjs/socketio-client';
+import io from 'socket.io-client';
 import feathers from '@feathersjs/feathers';
-import { getFeahtersToken }  from './setup-tests/test-set'
 import app from '../src/app';
-
-
-
+import fs from 'fs';
+import jwt from 'jwt-simple';
+import logger from '../src/logger';
 
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
@@ -18,88 +15,120 @@ import app from '../src/app';
 // to be present
 // -----------------------------------------------------------------------------------------
 
+interface VirtualUser {
+    personId: number
+    client: feathers.Application
+}
+
 describe('load test', () => {
-    const testingVariables = app.get('testingSet')
-    const host = app.get('host')
-    const protocol = app.get('protocol')
+    const testingVariables = app.get('testingSet');
 
-  it.skip('Perform a socket load test on an environment', async (done) => {
+    let receivedAnswersTotal = 0;
+    let connectedClients = 0;
+    const numberOfConnections = 600;
+    it.skip('Perform a socket load test on an environment', async (done) => {
 
-    try {
-      let numberOfConnections = 1500
-      let counter = 1
-      let clientsPromises = []
-      while (counter != numberOfConnections) {
-        clientsPromises.push(newFeathersClient())
-        console.log('new conainer added no:',counter)
-        counter++
-      }
-
-      var clients = await Promise.all(clientsPromises)
-     //var answer = await clients[0].service('answer').get('1340021880',{})
-      var a = {
-        "_id": testingVariables.answerId,
-        "_from": testingVariables.pollId,
-        "_to": testingVariables.userId,
-        "answerId": 1623243249532,
-        "pollingEventId": "1339667582",
-        "displayName": "Philip Dalen",
-        "churchName": "Oslo/Follo",
-        "lastChanged": 1623335253622
-      }
-
-
-      var answer = await clients[0]?.service('answer').create(a,{})
-      var deletedAnswer = await clients[0]?.service('answer').remove(answer._key,{})
-
-      let events = await  clients[0]?.service('polling-event').find({}) as any[];
-
-      while (true) {
-        await sleep(100)
-      }
-
-    } catch (error) {
-      assert.fail(error.message)
-    }
-  });
-
-
-async function newFeathersClient() {
-  try {
-
-    let url = `${protocol}://${host}`
-      let token = await getFeahtersToken()
-      const socket = io(url, {
-        transports:["websocket", "polling"],
-        extraHeaders: {
-          'Authorization': `bearer ${token}`
+        const connetionPromises:Promise<void>[] = [];
+        const virtualUsers:VirtualUser[] = [];
+        for (let i = 1; i <= numberOfConnections; i++) {
+            const vu = createNewVirtualUser(i);
+            virtualUsers.push(vu);
+            connetionPromises.push(setupUser(vu));
         }
+
+        await Promise.all(connetionPromises);
+
+        for(const vu of virtualUsers){
+            runFlow(vu);
+        }
+        setInterval(checkStatus, 5000, done);
     });
 
-      const membersClient = feathers()
+    async function runFlow(vu: VirtualUser) {
+        const a = {
+            _from: testingVariables.pollId,
+            _to: `person/${vu.personId}`,
+            answerId: testingVariables.answerId,
+            pollingEventId: testingVariables.pollingEventId,
+            visibility: "public",
+        };
+        try {
+            await vu.client.service('answer').create(a,{});
 
-      membersClient.configure(socketio(socket, {
-        timeout: 400000
-      }));
+        } catch(err) {
+            logger.error(err.message);
+            throw err;
+        }
+    }
 
+    async function setupUser(vu: VirtualUser) {
+        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
+        vu.client.service('answer').on('created',()=>{
+            receivedAnswersTotal++;
+        });
 
-      var event = await membersClient.service('polling-event').get(testingVariables.pollingEentId,{})
-      console.log('Socket was added to the polling-event channel')
+        vu.client.on("disconnect", () => {
+            logger.error(`[CLIENT ${vu.personId}] Disconnected`);
+        });
+        connectedClients ++;
+        console.log("Connected clients:", connectedClients, "/", numberOfConnections);
+    }
 
-      membersClient.service('answer').on('created',(a:any)=>{
-        console.log('[RECEIVED PUBLISHED ANSWER IN CLIENT]')
-      })
+    function createNewVirtualUser(personId: number):VirtualUser {
+        const host = app.get('host');
+        const protocol = app.get('protocol');
 
-      return membersClient
+        const url = `${protocol}://${host}`;
+        const token = getNewAuth0Jwt(personId);
+        const socket = io(url, {
+            transports:["websocket", "polling"],
+            extraHeaders: {
+                'Authorization': `bearer ${token}`
+            }
+        } as any);
+        const client = feathers();
 
-  } catch (error) {
-    console.log(error)
-  }
+        client.configure(socketio(socket, {
+            timeout: 400000
+        }));
+        return {
+            personId,
+            client
+        };
+    }
 
-}
-
-async function sleep(msec:any) {
-  return new Promise(resolve => setTimeout(resolve, msec));
-}
-
+    function checkStatus(done: Mocha.Done) {
+        const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
+        console.log('Received answers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
+        if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
+    }
 });
+
+
+function getNewAuth0Jwt(personID = 54512) {
+    const privateKey = fs.readFileSync('config/development-private.key').toString();
+
+    const now = Date.now();
+
+    const expires = now + 7 * 24 * 60 * 60 * 1000;
+    const access_token = jwt.encode(
+        {
+            'https://login.bcc.no/claims/physicalLoginTimestamp': Date.now(),
+            'https://login.bcc.no/claims/personId': personID,
+            'https://members.bcc.no/app_metadata': {
+                hasMembership: true,
+                personId: personID,
+            },
+            iss: 'auth0-impersonation',
+            sub: 'auth0|5e90e4a9acb4320bd72e9bde',
+            aud: ['bcc.members'],
+            iat: now,
+            exp: expires,
+            azp: 'mHD7Uto7xPmyo4nVA2okg6CJCxjCDQe3',
+            scope: 'openid profile email members.mfa',
+        },
+        privateKey,
+        'RS256'
+    );
+    return access_token;
+}
