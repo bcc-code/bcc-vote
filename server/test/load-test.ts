@@ -15,46 +15,45 @@ import logger from '../src/logger';
 // to be present
 // -----------------------------------------------------------------------------------------
 
+interface VirtualUser {
+    personId: number
+    client: feathers.Application
+}
+
 describe('load test', () => {
     const testingVariables = app.get('testingSet');
-    const host = app.get('host');
-    const protocol = app.get('protocol');
-    let allAnswers = 0;
+
+    let receivedAnswersTotal = 0;
     let connectedClients = 0;
     const numberOfConnections = 600;
-    it.skip('Perform a socket load test on an environment', async () => {
+    it.skip('Perform a socket load test on an environment', async (done) => {
 
-
-        const clientsPromises:Promise<feathers.Application<any>>[] = [];
+        const connetionPromises:Promise<void>[] = [];
+        const virtualUsers:VirtualUser[] = [];
         for (let i = 1; i <= numberOfConnections; i++) {
-            clientsPromises.push(newFeathersClient(i));
-            // console.log('new user added, personId:',personId);
+            const vu = createNewVirtualUser(i);
+            virtualUsers.push(vu);
+            connetionPromises.push(setupUser(vu));
         }
 
-        const clients = await Promise.all(clientsPromises);
-        for (let i = 1; i <= numberOfConnections; i++)  {
-            runFlow(clients[i - 1], i);
-        }
+        await Promise.all(connetionPromises);
 
-        while (true) {
-            await sleep(5000);
-            console.log('allAnswers:',allAnswers,"/",numberOfConnections*numberOfConnections);
-            if(allAnswers === numberOfConnections*numberOfConnections) break;
+        for(const vu of virtualUsers){
+            runFlow(vu);
         }
+        setInterval(checkStatus, 5000, done);
     });
 
-    async function runFlow(client: feathers.Application<any>, personId: number) {
-
-
+    async function runFlow(vu: VirtualUser) {
         const a = {
             _from: testingVariables.pollId,
-            _to: `person/${personId}`,
+            _to: `person/${vu.personId}`,
             answerId: testingVariables.answerId,
             pollingEventId: testingVariables.pollingEventId,
             visibility: "public",
         };
         try {
-            await client.service('answer').create(a,{});
+            await vu.client.service('answer').create(a,{});
 
         } catch(err) {
             logger.error(err.message);
@@ -62,40 +61,47 @@ describe('load test', () => {
         }
     }
 
+    async function setupUser(vu: VirtualUser) {
+        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
+        vu.client.service('answer').on('created',()=>{
+            receivedAnswersTotal++;
+        });
 
-    async function newFeathersClient(personId: number) {
+        vu.client.on("disconnect", () => {
+            logger.error(`[CLIENT ${vu.personId}] Disconnected`);
+        });
+        connectedClients ++;
+        console.log("Connected clients:", connectedClients, "/", numberOfConnections);
+    }
+
+    function createNewVirtualUser(personId: number):VirtualUser {
+        const host = app.get('host');
+        const protocol = app.get('protocol');
 
         const url = `${protocol}://${host}`;
-        const token = await getNewAuth0Jwt(personId);
+        const token = getNewAuth0Jwt(personId);
         const socket = io(url, {
             transports:["websocket", "polling"],
             extraHeaders: {
                 'Authorization': `bearer ${token}`
             }
         } as any);
-        const membersClient = feathers();
+        const client = feathers();
 
-        membersClient.configure(socketio(socket, {
+        client.configure(socketio(socket, {
             timeout: 400000
         }));
-        await membersClient.service('polling-event').get(testingVariables.pollingEventId,{});
-        membersClient.service('answer').on('created',(a:any)=>{
-            // console.log(`[CLIENT ${personId}] Received answer ${a._id}`);
-            allAnswers++;
-        });
-
-        membersClient.on("disconnect", () => {
-            logger.error(`[CLIENT ${personId}] Disconnected`);
-        });
-        connectedClients ++;
-        console.log("Connected clients:", connectedClients, "/", numberOfConnections);
-        return membersClient;
+        return {
+            personId,
+            client
+        };
     }
 
-    async function sleep(msec:any) {
-        return new Promise(resolve => setTimeout(resolve, msec));
+    function checkStatus(done: Mocha.Done) {
+        const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
+        console.log('allAnswers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
+        if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
     }
-
 });
 
 
@@ -125,4 +131,8 @@ function getNewAuth0Jwt(personID = 54512) {
         'RS256'
     );
     return access_token;
+}
+
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
