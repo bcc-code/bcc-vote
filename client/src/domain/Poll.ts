@@ -48,6 +48,11 @@ export interface Answer {
     lastChanged: number;
 }
 
+export type PollingEventAnswerBatch = {
+    pollingEventId: string,
+    answers: Answer[]
+}
+
 export interface PollResult {
     pollingEventId: string;
     pollId: string;

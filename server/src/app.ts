@@ -8,13 +8,13 @@ import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
 
-
 import { Application } from './declarations';
 import logger from './logger';
 import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
+import schedule from './schedule';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './services/authentication/authentication';
 
@@ -58,5 +58,7 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
+
+schedule.init(app);
 
 export default app;

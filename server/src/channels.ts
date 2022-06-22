@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { Application } from './declarations';
-import { PollingEvent, Answer, Poll, PollResultVisibility, PollResultDetails} from './domain';
+import { PollingEvent, Poll, PollResultDetails, PollingEventAnswerBatch} from './domain';
 import { db } from './firestore';
 
 export default function(app: Application): void {
@@ -14,11 +14,8 @@ export default function(app: Application): void {
         return app.channel(data._key);
     });
 
-    app.services.answer.publish('created',async (data:Answer) => {
-
-        if(!data.firestore) return;
-        if(data.visibility !== PollResultVisibility['Anonymous'])
-            return app.channel(data.pollingEventId);
+    app.services.answer.publish('batched',async (data: PollingEventAnswerBatch) => {
+        return app.channel(data.pollingEventId);
     });
 
     app.services['poll-result'].publish('patched', async (data: PollResultDetails) => {
@@ -29,17 +26,6 @@ export default function(app: Application): void {
     app.services.poll.publish('patched', async (data:Poll) => {
         if(!data.firestore) return;
         return app.channel(data.pollingEventId);
-    });
-
-    const answer = db.collection('answer').where('lastChanged', '>=', startupDate);
-    answer.onSnapshot((docSnapshot:any) => {
-        docSnapshot.docChanges().forEach((change:any) => {
-            if (change.type === 'added') {
-                const data = change.doc.data();
-                data.firestore = true;
-                app.service('answer').emit('created', data);
-            }
-        });
     });
 
     const poll = db.collection('poll').where('lastChanged', '>=', startupDate);

@@ -1,18 +1,31 @@
 import 'mocha';
 import { assert } from 'chai';
 import app from '../src/app';
-import { generateFreshContext }  from './setup-tests/test-set';
-import {PollActiveStatus} from '../src/domain';
+import { generateFreshContext, getAranoDBConfigFromFeathers }  from './setup-tests/test-set';
+import {PollingEventAnswerBatch, PollActiveStatus, Answer, User} from '../src/domain';
+import { importDB } from '@bcc-code/arango-migrate';
+import { sleep } from './setup-tests/test-utils';
 
 describe('channels', () => {
     let context:any;
+    let user: User;
+    let answer: Partial<Answer>;
+    const pollingEventId = '504279890';
 
     beforeEach(async() => {
+        await importDB(getAranoDBConfigFromFeathers(),true,false);
         context  = await generateFreshContext();
         context.params.provider = '';
+        user = context.params.user;
+        answer = {
+            _from: 'poll/504310092',
+            _to: user._id,
+            answerId: '1',
+            pollingEventId ,
+        };
 
         // person id added to a channel by getting polling event
-        await app.service('polling-event').get('504279890', context.params);
+        await app.service('polling-event').get(pollingEventId, context.params);
     });
 
     afterEach(function() {
@@ -65,26 +78,6 @@ describe('channels', () => {
             assert.fail('There should be no error. Error:',error);
         }
     });
-    it('Get data via socket -> answer created', async () => {
-        let res:any;
-        context.app.service('answer').on('created', (ans:any)=>{
-            if(ans.pollingEventId === app.channels[0])
-                res = ans;
-        });
-        await app.service('poll').patch('504310092', {activeStatus: PollActiveStatus['Live']}, {});
-        await sleep(300);
-        const ans:any = await app.service('answer').create({
-            _from: 'poll/504310092',
-            _to: 'user/54512',
-            answerId: '1',
-            pollingEventId: '504279890',
-        }, context.params);
-        await sleep(300);
-        // // Assert
-        assert.equal(res._key, ans._key);
-        assert.equal(res.answerId, '1');
-    });
-
     it('different polling event gets patched', async () => {
         try {
             // Act
@@ -122,7 +115,22 @@ describe('channels', () => {
         }
     });
 
-    function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    it('Answer to polling event gets batched through', async () => {
+        try {
+            await app.service('polling-event').patch(pollingEventId, { status: 'live' }, {});
+            let batch;
+            context.app.service('answer').on('batched', (answerBatch:PollingEventAnswerBatch)=>{
+                batch = answerBatch;
+            });
+
+            const createdAnswer = await app.services.answer.create(answer,{user});
+            await sleep(2500);
+            assert.isDefined(batch);
+            assert.equal(batch.pollingEventId, pollingEventId);
+            assert.equal(batch.answers.length, 1);
+            assert.equal(batch.answers[0]._id, createdAnswer._id);
+        } catch (error) {
+            assert.fail('There should be no error. ' + error);
+        }
+    });
 });
