@@ -132,7 +132,3 @@ function getNewAuth0Jwt(personID = 54512) {
     );
     return access_token;
 }
-
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
