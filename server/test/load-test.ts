@@ -20,9 +20,9 @@ describe('load test', () => {
     const host = app.get('host');
     const protocol = app.get('protocol');
     let allAnswers = 0;
-    let connectedClients = 0;        
+    let connectedClients = 0;
     const numberOfConnections = 600;
-    it.only('Perform a socket load test on an environment', async () => {
+    it.skip('Perform a socket load test on an environment', async () => {
 
 
         const clientsPromises:Promise<feathers.Application<any>>[] = [];
