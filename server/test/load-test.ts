@@ -99,7 +99,7 @@ describe('load test', () => {
 
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
-        console.log('allAnswers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
+        console.log('Received answers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
         if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
     }
 });
