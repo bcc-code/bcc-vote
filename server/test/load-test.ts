@@ -1,12 +1,12 @@
 import 'mocha';
+import { assert } from 'chai';
 import socketio from '@feathersjs/socketio-client';
 import io from 'socket.io-client';
 import feathers from '@feathersjs/feathers';
-import app from '../src/app';
-import { sleep } from './setup-tests/test-utils';
 import fs from 'fs';
 import jwt from 'jwt-simple';
 import logger from '../src/logger';
+import { PollingEventAnswerBatch } from '../src/domain';
 
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
@@ -22,12 +22,17 @@ interface VirtualUser {
 }
 
 describe('load test', () => {
-    const testingVariables = app.get('testingSet');
+    const testingVariables = {
+        pollingEventId:"84441",
+        pollId:"poll/84588",
+        answerId: "1655972543954"
+    };
 
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
-    const numberOfConnections = 600;
-    it.skip('Perform a socket load test on an environment', async (done) => {
+    const numberOfConnections = 250;
+    const hasBatching = true;
+    it.only('Perform a socket load test on an environment', function (done) {
 
         const connetionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -37,12 +42,13 @@ describe('load test', () => {
             connetionPromises.push(setupUser(vu));
         }
 
-        await Promise.all(connetionPromises);
+        Promise.all(connetionPromises).then(() => {
+            for(const vu of virtualUsers){
+                runFlow(vu);
+            }
+            setInterval(checkStatus, 5000, done);
+        });
 
-        for(const vu of virtualUsers){
-            runFlow(vu);
-        }
-        setInterval(checkStatus, 5000, done);
     });
 
     async function runFlow(vu: VirtualUser) {
@@ -64,8 +70,13 @@ describe('load test', () => {
 
     async function setupUser(vu: VirtualUser) {
         await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
-        vu.client.service('answer').on('created',()=>{
-            receivedAnswersTotal++;
+        vu.client.service('answer').on(hasBatching ? 'batched' : 'created',(result)=>{
+            if(hasBatching) {
+                const batch = result as PollingEventAnswerBatch;
+                receivedAnswersTotal += batch.answers.length;
+            } else {
+                receivedAnswersTotal++;
+            }
         });
 
         vu.client.on("disconnect", () => {
@@ -76,8 +87,8 @@ describe('load test', () => {
     }
 
     function createNewVirtualUser(personId: number):VirtualUser {
-        const host = app.get('host');
-        const protocol = app.get('protocol');
+        const host = "localhost:4040";
+        const protocol = "http";
 
         const url = `${protocol}://${host}`;
         const token = getNewAuth0Jwt(personId);
@@ -101,6 +112,9 @@ describe('load test', () => {
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
         console.log('Received answers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
+        if(receivedAnswersTotal > receivedAnswersExpectedTotal) {
+            assert.fail('Received more answers than expected');
+        }
         if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
     }
 });
