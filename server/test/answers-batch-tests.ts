@@ -4,18 +4,33 @@ import app from '../src/app';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { Answer, PollingEventAnswerBatch, User } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
+import { Params } from '@feathersjs/feathers';
 
 function getAnswerInBatches(answer: Answer, batches: PollingEventAnswerBatch[]) {
     const {_id, pollingEventId} = answer;
     const batch = batches.find(b => b.pollingEventId === pollingEventId);
     return batch?.answers.find(a => a._id === _id);
-} 
+}
 
 describe('Answer batching', async () => {
     let testSet:any;
     let poll:any;
     let user:User;
     let answer:Partial<Answer>;
+
+    const generateAnswerAndParams= (user_key: number):[Partial<Answer>, Params] => {
+        const answerUser = {
+            ...user,
+            _key: String(user_key),
+            displayName: `User ${user_key}`,
+            activeRole: 'Member',
+        };
+    
+        return [
+            {...answer, _to: `person/${user_key}`},
+            { user: answerUser}
+        ];
+    };
 
     beforeEach(async ()=>{
         await importDB(getAranoDBConfigFromFeathers(),true,false);
@@ -46,7 +61,6 @@ describe('Answer batching', async () => {
         }
     });
 
-    
     it('Created answer -> After batching an answer it is not included in the following batch', async () => {
         try {
             const created = await app.services.answer.create(answer,{ user});
@@ -58,6 +72,39 @@ describe('Answer batching', async () => {
             const answerBatch2 = await app.services['answer-batch'].create({},{});
             const answerInBatch2 = getAnswerInBatches(created, answerBatch2);
             assert.isUndefined(answerInBatch2);
+        } catch (error) {
+            assert.fail(error.message);
+        }
+    });
+
+    it('Created answer -> Batching multiple answers it is not included in the following batch', async () => {
+        try {
+            const answers1 = [
+                app.services.answer.create(...generateAnswerAndParams(1)),
+                app.services.answer.create(...generateAnswerAndParams(2)),
+                app.services.answer.create(...generateAnswerAndParams(3)),
+            ];
+            await Promise.all(answers1);
+
+            const batch1 = await app.services['answer-batch'].create({},{});
+            const answersBatch1 = batch1.find(ab => ab.pollingEventId == poll.pollingEventId)?.answers;
+            assert.isDefined(answersBatch1?.find(a => a._to === 'person/1'));
+            assert.isDefined(answersBatch1?.find(a => a._to === 'person/2'));
+            assert.isDefined(answersBatch1?.find(a => a._to === 'person/3'));
+
+            const answers2 = [
+                app.services.answer.create(...generateAnswerAndParams(4)),
+                app.services.answer.create(...generateAnswerAndParams(5)),
+            ];
+            await Promise.all(answers2);
+
+            const batch2 = await app.services['answer-batch'].create({},{});
+            const answersBatch2 = batch2.find(ab => ab.pollingEventId == poll.pollingEventId)?.answers;
+            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/1'));
+            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/2'));
+            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/3'));
+            assert.isDefined(answersBatch2?.find(a => a._to === 'person/4'));
+            assert.isDefined(answersBatch2?.find(a => a._to === 'person/5'));
         } catch (error) {
             assert.fail(error.message);
         }

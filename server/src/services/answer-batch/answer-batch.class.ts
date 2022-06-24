@@ -1,4 +1,3 @@
-import { IOptions } from "@bcc-code/feathers-arangodb";
 import { Application } from '../../declarations';
 import { ServiceMethods, Params } from '@feathersjs/feathers';
 import { Answer, PollingEventAnswerBatch } from "../../domain";
@@ -13,15 +12,17 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
     }
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
-        const dateOfBatch = Date.now();
-
         const query = {
-            lastChanged: { $gte: this.lastBatchDate}
+            lastChanged: { $gt: this.lastBatchDate}
         };
         const answers = await this.app.services.answer.find({query});
-        this.lastBatchDate = dateOfBatch;
 
-        const answerBatches = mapAnswersToBatches(answers);
+        const sortedAnswers = answers.sort((a, b) => b.lastChanged - a.lastChanged);
+        if(sortedAnswers[0]) {
+            this.lastBatchDate = sortedAnswers[0].lastChanged;
+        }
+
+        const answerBatches = mapAnswersToBatches(sortedAnswers);
         answerBatches.forEach(batch => {
             this.app.service('answer').emit('batched', batch);
         });

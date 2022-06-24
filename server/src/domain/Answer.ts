@@ -9,6 +9,7 @@ export type Answer = {
     answerId: string;
     pollingEventId: string;
     displayName: string;
+    lastChanged: number;
 }
 
 export type PollingEventAnswerBatch = {
