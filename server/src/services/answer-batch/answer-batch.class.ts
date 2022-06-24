@@ -1,6 +1,7 @@
 import { Application } from '../../declarations';
 import { ServiceMethods, Params } from '@feathersjs/feathers';
 import { Answer, PollingEventAnswerBatch } from "../../domain";
+import logger from '../../logger';
 
 export class AnswerBatch implements Partial<ServiceMethods<any>> {
     app: Application;
@@ -24,6 +25,13 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
 
         const answerBatches = mapAnswersToBatches(sortedAnswers);
         answerBatches.forEach(batch => {
+            const answers = batch.answers; 
+            const batchRanges:number[] = [];
+            if(answers.length) {
+                batchRanges.push(answers[0].lastChanged);
+                batchRanges.push(answers[answers.length - 1].lastChanged);
+            }
+            logger.info(`Batched ${answers.length} answers`, { range: batchRanges});
             this.app.service('answer').emit('batched', batch);
         });
         return answerBatches;
