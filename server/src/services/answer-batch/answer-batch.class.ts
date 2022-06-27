@@ -14,8 +14,11 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
         const logger = await instanceLogger();
+        const compensationMs = 500;
+        const batchRange = this.lastBatchDate - compensationMs;
+
         const query = {
-            lastChanged: { $gt: this.lastBatchDate}
+            lastChanged: { $gt: batchRange}
         };
         const answers = await this.app.services.answer.find({query});
 
