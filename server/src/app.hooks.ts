@@ -1,4 +1,4 @@
-import logger from './logger';
+import {logger} from './logger';
 import { HookContext } from "@feathersjs/feathers";
 import { defineAbilityFor,  } from './permissions/appAbility';
 import {authenticateExternal } from './services/authentication/customAuthentication';

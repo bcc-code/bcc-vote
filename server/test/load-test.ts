@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import feathers from '@feathersjs/feathers';
 import fs from 'fs';
 import jwt from 'jwt-simple';
-import logger from '../src/logger';
+import {logger} from '../src/logger';
 import { PollingEventAnswerBatch } from '../src/domain';
 
 // -----------------------------------------------------------------------------------------
@@ -23,16 +23,16 @@ interface VirtualUser {
 
 describe('load test', () => {
     const testingVariables = {
-        pollingEventId:"84441",
-        pollId:"poll/84588",
-        answerId: "1655972543954"
+        pollingEventId:"1520133464",
+        pollId:"poll/1520133563",
+        answerId: "1655878423211"
     };
 
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
-    const numberOfConnections = 250;
+    const numberOfConnections = 100;
     const hasBatching = true;
-    it.only('Perform a socket load test on an environment', function (done) {
+    it.skip('Perform a socket load test on an environment', function (done) {
 
         const connetionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -61,7 +61,6 @@ describe('load test', () => {
         };
         try {
             await vu.client.service('answer').create(a,{});
-
         } catch(err) {
             logger.error(err.message);
             throw err;
@@ -87,15 +86,15 @@ describe('load test', () => {
     }
 
     function createNewVirtualUser(personId: number):VirtualUser {
-        const host = "localhost:4040";
-        const protocol = "http";
+        const host = "dev.vote.bcc.no";
+        const protocol = "https";
 
         const url = `${protocol}://${host}`;
         const token = getNewAuth0Jwt(personId);
         const socket = io(url, {
             transports:["websocket", "polling"],
             extraHeaders: {
-                'Authorization': `bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         } as any);
         const client = feathers();
@@ -109,13 +108,27 @@ describe('load test', () => {
         };
     }
 
+    let identicalStatusCount = 0;
+    const maxStatusCount = 10;
+    let previousReceivedAnswerTotal: number;
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
-        console.log('Received answers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
+        console.log('Received answers:', receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
         if(receivedAnswersTotal > receivedAnswersExpectedTotal) {
             assert.fail('Received more answers than expected');
         }
         if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
+
+        if(receivedAnswersTotal === previousReceivedAnswerTotal) {
+            identicalStatusCount++;
+        } else {
+            identicalStatusCount = 0;
+        }
+        previousReceivedAnswerTotal = receivedAnswersTotal;
+
+        if(identicalStatusCount >= maxStatusCount) {
+            assert.fail(`Received the same count of answers ${maxStatusCount} times`);
+        }
     }
 });
 

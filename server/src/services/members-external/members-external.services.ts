@@ -1,4 +1,4 @@
-import logger from '../../logger';
+import {logger} from '../../logger';
 import { Application } from '../../declarations';
 import rest from '@feathersjs/rest-client';
 import axios from 'axios';
