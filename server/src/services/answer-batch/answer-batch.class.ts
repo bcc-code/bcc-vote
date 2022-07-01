@@ -1,7 +1,7 @@
 import { Application } from '../../declarations';
 import { ServiceMethods, Params } from '@feathersjs/feathers';
 import { Answer, PollingEventAnswerBatch } from "../../domain";
-import {instanceLogger} from '../../logger';
+import logger from '../../logger';
 
 export class AnswerBatch implements Partial<ServiceMethods<any>> {
     app: Application;
@@ -15,7 +15,6 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
     }
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
-        const logger = await instanceLogger();
         const compensationMs = 300;
         const batchRange = this.lastBatchDate - compensationMs;
 

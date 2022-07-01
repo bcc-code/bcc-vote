@@ -1,7 +1,7 @@
 import { UserRole, RoleName, User } from '../../domain';
 import jwksClient, {JwksClient} from 'jwks-rsa';
 import jsonwebtoken from 'jsonwebtoken';
-import {logger} from '../../logger';
+import logger from '../../logger';
 import { Application, Paginated } from '@feathersjs/feathers';
 import fs from 'fs';
 

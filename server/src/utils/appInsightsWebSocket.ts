@@ -1,5 +1,5 @@
 import { HookContext } from "@feathersjs/feathers";
-import {logger} from '../logger';
+import logger from '../logger';
 import appInsights from "./appInsightsTelemetry";
 import {ExceptionTelemetry} from 'applicationinsights/out/Declarations/Contracts';
 

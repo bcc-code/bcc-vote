@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import appInsights from './utils/appInsightsTelemetry';
 import app from './app';
-import {logger} from './logger';
+import logger from './logger';
 
 const port = app.get('port');
 const server = app.listen(port);

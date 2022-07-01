@@ -5,7 +5,7 @@ import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tes
 import { Answer, PollingEventAnswerBatch, User } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
 import { Params } from '@feathersjs/feathers';
-import { logger } from '../src/logger';
+import logger from '../src/logger';
 
 function getAnswerInBatches(answer: Answer, batches: PollingEventAnswerBatch[]) {
     const {_id, pollingEventId} = answer;

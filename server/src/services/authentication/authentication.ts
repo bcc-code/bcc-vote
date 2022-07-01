@@ -8,7 +8,7 @@ import { expressOauth} from '@feathersjs/authentication-oauth';
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
-import {logger} from '../../logger';
+import logger from '../../logger';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;

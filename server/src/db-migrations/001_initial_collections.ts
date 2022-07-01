@@ -1,5 +1,5 @@
 import { Database } from "arangojs";
-import {logger} from '../logger';
+import logger from '../logger';
 
 const up = async (db: Database): Promise<boolean> => {
     try {
