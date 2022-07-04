@@ -21,23 +21,30 @@ interface VirtualUser {
     client: feathers.Application
 }
 
+const testingVariablesLocal = {
+    pollingEventId:"84441",
+    pollId:"poll/84588",
+    answerId: "1655972543954",
+    host: "localhost:4040",
+    protocol: "http"
+};
+const testingVariablesDev = {
+    pollingEventId:"1520133464",
+    pollId:"poll/1522979151",
+    answerId: "1656672521383",
+    host: "dev.vote.bcc.no",
+    protocol: "https"
+};
+
 describe('load test', () => {
-    const testingVariablesLocal = {
-        pollingEventId:"84441",
-        pollId:"poll/84588",
-        answerId: "1655972543954"
-    };
-    const testingVariablesDev = {
-        pollingEventId:"1520133464",
-        pollId:"poll/1522979151",
-        answerId: "1656672521383"
-    };
+    const useLocal = true;
+    const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
-    const numberOfConnections = 100;
+    const numberOfConnections = 200;
     const hasBatching = true;
-    it.skip('Perform a socket load test on an environment', function (done) {
+    it.only('Perform a socket load test on an environment', function (done) {
 
         const connetionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -58,10 +65,10 @@ describe('load test', () => {
 
     async function runFlow(vu: VirtualUser) {
         const a = {
-            _from: testingVariablesLocal.pollId,
+            _from: testingVariables.pollId,
             _to: `person/${vu.personId}`,
-            answerId: testingVariablesLocal.answerId,
-            pollingEventId: testingVariablesLocal.pollingEventId,
+            answerId: testingVariables.answerId,
+            pollingEventId: testingVariables.pollingEventId,
             visibility: "public",
         };
         try {
@@ -91,8 +98,7 @@ describe('load test', () => {
     }
 
     function createNewVirtualUser(personId: number):VirtualUser {
-        const host = "dev.vote.bcc.no";
-        const protocol = "https";
+        const {host, protocol} = testingVariables;
 
         const url = `${protocol}://${host}`;
         const token = getNewAuth0Jwt(personId);
