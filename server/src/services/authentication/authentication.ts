@@ -4,7 +4,6 @@ import {
     JWTStrategy,
     AuthenticationRequest,
 } from "@feathersjs/authentication";
-import { expressOauth} from '@feathersjs/authentication-oauth';
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
@@ -70,5 +69,4 @@ export default function(app: Application): void {
     authentication.register('jwt', new CustomJWtStrategy());
 
     app.use('/authentication', authentication);
-    app.configure(expressOauth());
 }

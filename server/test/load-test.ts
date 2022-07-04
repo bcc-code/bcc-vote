@@ -37,24 +37,24 @@ const testingVariablesDev = {
 };
 
 describe('load test', () => {
-    const useLocal = true;
+    const useLocal = false;
     const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
-    const numberOfConnections = 200;
+    const numberOfConnections = 500;
     const hasBatching = true;
-    it.skip('Perform a socket load test on an environment', function (done) {
+    it.only('Perform a socket load test on an environment', function (done) {
 
-        const connetionPromises:Promise<void>[] = [];
+        const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
         for (let i = 1; i <= numberOfConnections; i++) {
             const vu = createNewVirtualUser(i);
             virtualUsers.push(vu);
-            connetionPromises.push(setupUser(vu));
+            connectionPromises.push(setupUser(vu));
         }
 
-        Promise.all(connetionPromises).then(() => {
+        Promise.all(connectionPromises).then(() => {
             for(const vu of virtualUsers){
                 runFlow(vu);
             }
@@ -125,10 +125,9 @@ describe('load test', () => {
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
         console.log('Received answers:', receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
-        // if(receivedAnswersTotal > receivedAnswersExpectedTotal) {
-        //     assert.fail('Received more answers than expected');
-        // }
-        if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
+        if(receivedAnswersTotal >= receivedAnswersExpectedTotal) {
+            done();
+        }
 
         if(receivedAnswersTotal === previousReceivedAnswerTotal) {
             identicalStatusCount++;
