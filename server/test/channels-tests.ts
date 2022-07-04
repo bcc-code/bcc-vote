@@ -78,6 +78,7 @@ describe('channels', () => {
             assert.fail('There should be no error. Error:',error);
         }
     });
+
     it('different polling event gets patched', async () => {
         try {
             // Act
@@ -115,9 +116,9 @@ describe('channels', () => {
         }
     });
 
-    it('Answer to polling event gets batched through', async () => {
+    it('Answer to poll gets batched through', async () => {
         try {
-            await app.service('polling-event').patch(pollingEventId, { status: 'live' }, {});
+            await app.services.poll.patch('504310092', { activeStatus: PollActiveStatus['Live'] }, {});
             let batch;
             context.app.service('answer').on('batched', (answerBatch:PollingEventAnswerBatch)=>{
                 batch = answerBatch;
@@ -130,7 +131,7 @@ describe('channels', () => {
             assert.equal(batch.answers.length, 1);
             assert.equal(batch.answers[0]._id, createdAnswer._id);
         } catch (error) {
-            assert.fail('There should be no error. ' + error);
+            assert.fail(error);
         }
     });
 });

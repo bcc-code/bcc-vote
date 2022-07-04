@@ -1,11 +1,12 @@
 import 'mocha';
-import { assert } from 'chai';
 import app from '../src/app';
+import { assert } from 'chai';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { Answer, PollingEventAnswerBatch, User } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
 import { Params } from '@feathersjs/feathers';
 import logger from '../src/logger';
+import { sleep } from './setup-tests/test-utils';
 
 function getAnswerInBatches(answer: Answer, batches: PollingEventAnswerBatch[]) {
     const {_id, pollingEventId} = answer;
@@ -62,7 +63,7 @@ describe('Answer batching', async () => {
         }
     });
 
-    it('Created answer -> After batching an answer it is not included in the following batch', async () => {
+    it('Created answer -> After batching an answer it is not included in the following time range', async () => {
         try {
             logger.info(`Starting batch test`);
             const created = await app.services.answer.create(...generateAnswerAndParams(1));
@@ -70,6 +71,7 @@ describe('Answer batching', async () => {
             const answerBatch1 = await app.services['answer-batch'].create({},{});
             const answerInBatch1 = getAnswerInBatches(created, answerBatch1);
             assert.isDefined(answerInBatch1);
+            await sleep(1500);
 
             const answerBatch2 = await app.services['answer-batch'].create({},{});
             const answerInBatch2 = getAnswerInBatches(created, answerBatch2);
@@ -79,7 +81,7 @@ describe('Answer batching', async () => {
         }
     });
 
-    it('Created answer -> Batching multiple answers it is not included in the following batch', async () => {
+    it('Created answer -> Batching multiple answers it is not included in the following time range', async () => {
         try {
             const answers1 = [
                 app.services.answer.create(...generateAnswerAndParams(2)),
@@ -93,6 +95,7 @@ describe('Answer batching', async () => {
             assert.isDefined(answersBatch1?.find(a => a._to === 'person/2'));
             assert.isDefined(answersBatch1?.find(a => a._to === 'person/3'));
             assert.isDefined(answersBatch1?.find(a => a._to === 'person/4'));
+            await sleep(1500);
 
             const answers2 = [
                 app.services.answer.create(...generateAnswerAndParams(5)),

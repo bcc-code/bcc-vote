@@ -1,8 +1,6 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
-import schedule from '../../schedule';
 import { db } from '../../firestore';
-import { PollingEvent, PollingEventStatus } from '../../domain';
 
 const validateAndFormat = (context: HookContext) => {
     const { data } = context;
@@ -47,23 +45,6 @@ const addFeedbackDocument = async (context: HookContext):Promise<HookContext> =>
     return context;
 };
 
-const toggleAnswerBatching = async (context: HookContext):Promise<HookContext> => {
-    const pollingEvent = context.data as Partial<PollingEvent>;
-    const changedStatus = pollingEvent.status;
-
-    if(!changedStatus) return context;
-
-    if(changedStatus === PollingEventStatus['Live']) {
-        schedule.start();
-    } else {
-        const activePollingEvents = await context.app.services['polling-event'].find({ query:{ status: PollingEventStatus['Live']}});
-        if(activePollingEvents.length === 0) {
-            schedule.stop();
-        }
-    }
-
-    return context;
-};
 
 export default {
     before: {
@@ -82,7 +63,7 @@ export default {
         get: [],
         create: [addFeedbackDocument],
         update: [],
-        patch: [toggleAnswerBatching],
+        patch: [],
         remove: []
     },
 

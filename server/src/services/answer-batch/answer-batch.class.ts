@@ -1,17 +1,18 @@
 import { Application } from '../../declarations';
-import { ServiceMethods, Params } from '@feathersjs/feathers';
+import { ServiceMethods, Params, Id } from '@feathersjs/feathers';
 import { Answer, PollingEventAnswerBatch } from "../../domain";
 import logger from '../../logger';
+import schedule from '../../schedule';
 
 export class AnswerBatch implements Partial<ServiceMethods<any>> {
     app: Application;
     lastBatchDate: number;
-    previouslyBatchedAnswerIds: string[];
+    activePoll_Ids: string[];
 
     constructor (app: Application) {
         this.app = app;
         this.lastBatchDate = 0;
-        this.previouslyBatchedAnswerIds = [];
+        this.activePoll_Ids = [];
     }
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
@@ -19,15 +20,15 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         const batchRange = this.lastBatchDate - compensationMs;
 
         const query = {
+            _from: {$in: this.activePoll_Ids},
             lastChanged: { $gt: batchRange}
         };
-        const answers = await this.app.services.answer.find({query});
+        logger.info(`Answer batch query ${JSON.stringify(query)}`);
 
-        
-        const filteredAnswers = answers.filter((a) => !this.previouslyBatchedAnswerIds.includes(a._id));
-        const sortedAnswers = filteredAnswers.sort((a, b) => b.lastChanged - a.lastChanged);
+        const answers = await this.app.services.answer.find({query});
+        const sortedAnswers = answers.sort((a, b) => b.lastChanged - a.lastChanged);
         if(sortedAnswers[0]) {
-            this.lastBatchDate = sortedAnswers[0].lastChanged;
+            this.lastBatchDate = Date.now();
         }
 
         const answerBatches = mapAnswersToBatches(sortedAnswers);
@@ -41,10 +42,34 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
             logger.info(`Batched ${answers.length} answers`, { range: batchRanges});
             this.app.service('answer').emit('batched', batch);
         });
-
-        const answerIds = filteredAnswers.map(a => a._id);
-        this.previouslyBatchedAnswerIds.push(...answerIds);
         return answerBatches;
+    }
+
+    async patch(id:Id, data:any, params:Params) {
+        let schedulerActive = false;
+        if(this.activePoll_Ids.length) {
+            schedulerActive = true;
+        }
+        const {activate, deactivate} = data;
+        if(!activate && !deactivate) {
+            throw Error('No polls to activate or deactivate batching for defined');
+        }
+        if(activate?.length) {
+            const previouslyInactive = activate.filter((a:string) => !this.activePoll_Ids.includes(a));
+            this.activePoll_Ids.push(...previouslyInactive);
+        }
+        if(deactivate?.length) {
+            const stillActive = this.activePoll_Ids.filter(a => !deactivate.includes(a));
+            this.activePoll_Ids = stillActive;
+        }
+
+        if(schedulerActive && this.activePoll_Ids.length === 0) {
+            schedule.stop();
+        }
+        if(!schedulerActive && this.activePoll_Ids.length) {
+            schedule.start();
+        }
+        return this.activePoll_Ids;
     }
 }
 
