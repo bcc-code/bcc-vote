@@ -4,7 +4,7 @@ import app from '../src/app';
 import { generateFreshContext, getAranoDBConfigFromFeathers }  from './setup-tests/test-set';
 import {PollingEventAnswerBatch, PollActiveStatus, Answer, User} from '../src/domain';
 import { importDB } from '@bcc-code/arango-migrate';
-import { sleep } from './setup-tests/test-utils';
+import { sleep } from '../src/utils/promise';
 
 describe('channels', () => {
     let context:any;

@@ -4,7 +4,7 @@ import app from '../src/app';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { Answer, PollActiveStatus } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
-import { sleep } from './setup-tests/test-utils';
+import { sleep } from '../src/utils/promise';
 
 describe('Form Validation', async () => {
     let testSet:any;

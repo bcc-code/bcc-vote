@@ -1,7 +1,7 @@
 import cron, { ScheduledTask } from "node-cron";
 import { Application } from "./declarations";
 import { PollActiveStatus } from "./domain";
-import { sleep } from '../test/setup-tests/test-utils';
+import { sleep } from './utils/promise';
 import logger from "./logger";
 
 let scheduledJob: ScheduledTask | undefined;

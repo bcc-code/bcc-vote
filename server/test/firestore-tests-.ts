@@ -2,7 +2,7 @@ import 'mocha';
 import { assert } from 'chai';
 import { Server } from 'http';
 import app from '../src/app';
-import { sleep } from './setup-tests/test-utils';
+import { sleep } from '../src/utils/promise';
 const Firestore = require('@google-cloud/firestore');
 const port = app.get('port') || 8998;
 

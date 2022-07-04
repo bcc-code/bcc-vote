@@ -5,7 +5,7 @@ import { getAranoDBConfigFromFeathers, pollingEventsTestSet } from './setup-test
 import { Poll, PollActiveStatus } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
 import sinon from 'sinon';
-import { sleep } from './setup-tests/test-utils';
+import { sleep } from '../src/utils/promise';
 import logger from '../src/logger';
 
 describe('Scheduled jobs', async () => {

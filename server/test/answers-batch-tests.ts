@@ -6,7 +6,7 @@ import { Answer, PollingEventAnswerBatch, User } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
 import { Params } from '@feathersjs/feathers';
 import logger from '../src/logger';
-import { sleep } from './setup-tests/test-utils';
+import { sleep } from '../src/utils/promise';
 
 function getAnswerInBatches(answer: Answer, batches: PollingEventAnswerBatch[]) {
     const {_id, pollingEventId} = answer;
