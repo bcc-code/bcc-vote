@@ -18,7 +18,7 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         const compensationMsEnv = process.env.VOTE_ANSWER_BATCHING_COMPENSATION_MS;
         const compensationMsReplaced = compensationMsEnv?.replace(/\D/g, '');
 
-        if (compensationMsReplaced !== '') {
+        if (compensationMsReplaced && compensationMsReplaced !== '') {
             this.compensationMs = Number(compensationMsReplaced);
         }
     }
