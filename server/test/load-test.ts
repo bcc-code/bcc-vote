@@ -41,12 +41,12 @@ describe('load test', () => {
     const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
     let receivedAnswersTotal = 0;
-    const receivedAnswersPerUser:{[personID:number]: {receivedCount: number}} = {
+    const receivedAnswersPerUser:{[personID:number]: {receivedCount: number, uniqueAnswers:number, answerIds: string[]}} = {
     };
     let connectedClients = 0;
-    const numberOfConnections = 50;
+    const numberOfConnections = 500;
     const hasBatching = true;
-    it.skip('Perform a socket load test on an environment', function (done) {
+    it.only('Perform a socket load test on an environment', function (done) {
 
         const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -86,12 +86,24 @@ describe('load test', () => {
         vu.client.service('answer').on(hasBatching ? 'batched' : 'created',(result)=>{
             if(hasBatching) {
                 const batch = result as PollingEventAnswerBatch;
-                if(receivedAnswersPerUser[vu.personId]) {
-                    receivedAnswersPerUser[vu.personId].receivedCount += batch.answers.length;
-                } else {
-                    receivedAnswersPerUser[vu.personId] = { receivedCount: batch.answers.length};
+                if(batch.pollingEventId === testingVariables.pollingEventId) {
+                    const answerIds = batch.answers.map(a => a._id);
+                    if(receivedAnswersPerUser[vu.personId]) {
+                        receivedAnswersPerUser[vu.personId].receivedCount += batch.answers.length;
+
+                        if(receivedAnswersPerUser[vu.personId].answerIds.length) {
+                            const filteredAnswerIds = answerIds.filter(a => receivedAnswersPerUser[vu.personId].answerIds.includes(a) === false);
+                            receivedAnswersPerUser[vu.personId].answerIds.push(...filteredAnswerIds);
+                        } else {
+                            receivedAnswersPerUser[vu.personId].answerIds = answerIds;
+                        }
+                        
+                        receivedAnswersPerUser[vu.personId].uniqueAnswers = receivedAnswersPerUser[vu.personId].answerIds.length;
+                    } else {
+                        receivedAnswersPerUser[vu.personId] = { receivedCount: batch.answers.length, answerIds, uniqueAnswers: answerIds.length};
+                    }
+                    receivedAnswersTotal += batch.answers.length;
                 }
-                receivedAnswersTotal += batch.answers.length;
             } else {
                 receivedAnswersTotal++;
             }
@@ -131,8 +143,12 @@ describe('load test', () => {
     let previousReceivedAnswerTotal: number;
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
-        console.log('Received answers:', receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
-        if(receivedAnswersTotal >= receivedAnswersExpectedTotal) {
+
+        let receivedUniqueAnswersTotal = 0;
+        Object.values(receivedAnswersPerUser).forEach(u => receivedUniqueAnswersTotal += u.uniqueAnswers);
+        
+        console.log('Received answers:', receivedUniqueAnswersTotal,"/",receivedAnswersExpectedTotal);
+        if(receivedUniqueAnswersTotal >= receivedAnswersExpectedTotal) {
             console.table(receivedAnswersPerUser);
             done();
         }
