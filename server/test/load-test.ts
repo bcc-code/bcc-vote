@@ -41,10 +41,12 @@ describe('load test', () => {
     const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
     let receivedAnswersTotal = 0;
+    const receivedAnswersPerUser:{[personID:number]: {receivedCount: number}} = {
+    };
     let connectedClients = 0;
-    const numberOfConnections = 500;
+    const numberOfConnections = 50;
     const hasBatching = true;
-    it.only('Perform a socket load test on an environment', function (done) {
+    it.skip('Perform a socket load test on an environment', function (done) {
 
         const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -80,10 +82,15 @@ describe('load test', () => {
     }
 
     async function setupUser(vu: VirtualUser) {
-        await vu.client.service('polling-event').get(testingVariablesLocal.pollingEventId,{});
+        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
         vu.client.service('answer').on(hasBatching ? 'batched' : 'created',(result)=>{
             if(hasBatching) {
                 const batch = result as PollingEventAnswerBatch;
+                if(receivedAnswersPerUser[vu.personId]) {
+                    receivedAnswersPerUser[vu.personId].receivedCount += batch.answers.length;
+                } else {
+                    receivedAnswersPerUser[vu.personId] = { receivedCount: batch.answers.length};
+                }
                 receivedAnswersTotal += batch.answers.length;
             } else {
                 receivedAnswersTotal++;
@@ -126,6 +133,7 @@ describe('load test', () => {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
         console.log('Received answers:', receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
         if(receivedAnswersTotal >= receivedAnswersExpectedTotal) {
+            console.table(receivedAnswersPerUser);
             done();
         }
 
@@ -137,6 +145,7 @@ describe('load test', () => {
         previousReceivedAnswerTotal = receivedAnswersTotal;
 
         if(identicalStatusCount >= maxStatusCount) {
+            console.table(receivedAnswersPerUser);
             assert.fail(`Received the same count of answers ${maxStatusCount} times`);
         }
     }
