@@ -8,16 +8,24 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
     app: Application;
     lastBatchDate: number;
     activePoll_Ids: string[];
+    compensationMs = 300;
 
     constructor (app: Application) {
         this.app = app;
         this.lastBatchDate = 0;
         this.activePoll_Ids = [];
+
+        const compensationMsEnv = process.env.VOTE_ANSWER_BATCHING_COMPENSATION_MS;
+        const compensationMsReplaced = compensationMsEnv?.replace(/\D/g, '');
+
+        if (compensationMsReplaced !== '') {
+            this.compensationMs = Number(compensationMsReplaced);
+        }
     }
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
-        const compensationMs = 300;
-        const batchRange = this.lastBatchDate - compensationMs;
+        const currentBatchDate = Date.now();
+        const batchRange = this.lastBatchDate - this.compensationMs;
 
         const query = {
             _from: {$in: this.activePoll_Ids},
@@ -28,7 +36,7 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         const answers = await this.app.services.answer.find({query});
         const sortedAnswers = answers.sort((a, b) => b.lastChanged - a.lastChanged);
         if(sortedAnswers[0]) {
-            this.lastBatchDate = Date.now();
+            this.lastBatchDate = currentBatchDate;
         }
 
         const answerBatches = mapAnswersToBatches(sortedAnswers);

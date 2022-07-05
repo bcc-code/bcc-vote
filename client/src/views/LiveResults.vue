@@ -13,6 +13,7 @@
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
                     <AdminVoterList :sortedOptions="sortedOptions" :voterList="voterList"/>
+                    Answers: {{voterList.length}}
                 </div>
                 <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
