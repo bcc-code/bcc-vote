@@ -5,13 +5,15 @@ import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tes
 import { Answer, PollingEventAnswerBatch, User } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
 import { Params } from '@feathersjs/feathers';
-import logger from '../src/logger';
+import { PollActiveStatus } from '../src/domain/Poll';
 import { sleep } from '../src/utils/promise';
 
-function getAnswerInBatches(answer: Answer, batches: PollingEventAnswerBatch[]) {
+function getAnswerInBatches(answer: Answer, batch: PollingEventAnswerBatch) {
     const {_id, pollingEventId} = answer;
-    const batch = batches.find(b => b.pollingEventId === pollingEventId);
-    return batch?.answers.find(a => a._id === _id);
+    if(batch.pollingEventId !== pollingEventId) {
+        return undefined;
+    }
+    return batch.answers.find(a => a._id === _id);
 }
 
 describe('Answer batching', async () => {
@@ -37,6 +39,7 @@ describe('Answer batching', async () => {
     beforeEach(async ()=>{
         await importDB(getAranoDBConfigFromFeathers(),true,false);
         testSet = pollingEventsTestSet();
+        app.services['answer-batch'].resetBatchState();
 
         poll = await (testSet['basePoll'])() as any;
         user = await (testSet['user'])();
@@ -49,67 +52,119 @@ describe('Answer batching', async () => {
         };
     });
 
-    it('Created answer -> Batched as a part of the Answer Batch', async () => {
+    it('Created answer -> Gets added to batch', async () => {
         try {
-            const created = await app.services.answer.create(answer,{ user});
+            const batches:PollingEventAnswerBatch[]  = [];
+            app.services.answer.on('batched',(batch: PollingEventAnswerBatch) => {
+                batches.push(batch);
+            });
 
-            const answerBatches = await app.services['answer-batch'].create({},{});
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Live},{});
+            const created = await app.services.answer.create(...generateAnswerAndParams(1));
 
-            const answerInBatch = getAnswerInBatches(created, answerBatches);
+            await sleep(1005);
+            const firstBatch = batches[0];
+            const answerInBatch = getAnswerInBatches(created, firstBatch);
+
             assert.isDefined(answerInBatch);
-            assert.equal(answerInBatch?.displayName, user.displayName);
+            assert.equal(answerInBatch?.displayName, 'User 1');
         } catch (error) {
             assert.fail(error.message);
         }
     });
 
-    it('Created answer -> After batching an answer it is not included in the following time range', async () => {
+    it('Created answer -> After batching an answer it is not included in the following batch', async () => {
         try {
-            logger.info(`Starting batch test`);
+            const batches:PollingEventAnswerBatch[]  = [];
+            app.services.answer.on('batched',(batch: PollingEventAnswerBatch) => {
+                batches.push(batch);
+            });
+
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Live},{});
             const created = await app.services.answer.create(...generateAnswerAndParams(1));
 
-            const answerBatch1 = await app.services['answer-batch'].create({},{});
+            await sleep(1005);
+            const answerBatch1 = batches[0];
             const answerInBatch1 = getAnswerInBatches(created, answerBatch1);
             assert.isDefined(answerInBatch1);
-            await sleep(1500);
 
-            const answerBatch2 = await app.services['answer-batch'].create({},{});
-            const answerInBatch2 = getAnswerInBatches(created, answerBatch2);
+            await sleep(1005);
+            const answerBatch2 = batches[1];
+            let answerInBatch2;
+            if(answerBatch2) {
+                answerInBatch2 = getAnswerInBatches(created, answerBatch2);
+            }
             assert.isUndefined(answerInBatch2);
         } catch (error) {
             assert.fail(error.message);
         }
     });
 
-    it('Created answer -> Batching multiple answers it is not included in the following time range', async () => {
+    it('Created answer -> Batching multiple answers it is not included in the following batch', async () => {
         try {
+            const batches:PollingEventAnswerBatch[]  = [];
+            app.services.answer.on('batched',(batch: PollingEventAnswerBatch) => {
+                batches.push(batch);
+            });
+
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Live},{});
             const answers1 = [
+                app.services.answer.create(...generateAnswerAndParams(1)),
                 app.services.answer.create(...generateAnswerAndParams(2)),
                 app.services.answer.create(...generateAnswerAndParams(3)),
-                app.services.answer.create(...generateAnswerAndParams(4)),
             ];
             await Promise.all(answers1);
 
-            const batch1 = await app.services['answer-batch'].create({},{});
-            const answersBatch1 = batch1.find(ab => ab.pollingEventId == poll.pollingEventId)?.answers;
-            assert.isDefined(answersBatch1?.find(a => a._to === 'person/2'));
-            assert.isDefined(answersBatch1?.find(a => a._to === 'person/3'));
-            assert.isDefined(answersBatch1?.find(a => a._to === 'person/4'));
-            await sleep(1500);
+            await sleep(1005);
+            assert.equal(batches[0]?.pollingEventId, poll.pollingEventId);
+            assert.isDefined(batches[0]?.answers.find(a => a._to === 'person/1'));
+            assert.isDefined(batches[0]?.answers.find(a => a._to === 'person/2'));
+            assert.isDefined(batches[0]?.answers.find(a => a._to === 'person/3'));
 
             const answers2 = [
+                app.services.answer.create(...generateAnswerAndParams(4)),
                 app.services.answer.create(...generateAnswerAndParams(5)),
-                app.services.answer.create(...generateAnswerAndParams(6)),
             ];
             await Promise.all(answers2);
 
-            const batch2 = await app.services['answer-batch'].create({},{});
-            const answersBatch2 = batch2.find(ab => ab.pollingEventId == poll.pollingEventId)?.answers;
-            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/2'));
-            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/3'));
-            assert.isUndefined(answersBatch2?.find(a => a._to === 'person/4'));
-            assert.isDefined(answersBatch2?.find(a => a._to === 'person/5'));
-            assert.isDefined(answersBatch2?.find(a => a._to === 'person/6'));
+            await sleep(1005);
+            assert.equal(batches[1]?.pollingEventId, poll.pollingEventId);
+            assert.isUndefined(batches[1]?.answers.find(a => a._to === 'person/1'));
+            assert.isUndefined(batches[1]?.answers.find(a => a._to === 'person/2'));
+            assert.isUndefined(batches[1]?.answers.find(a => a._to === 'person/3'));
+            assert.isDefined(batches[1]?.answers.find(a => a._to === 'person/4'));
+            assert.isDefined(batches[1]?.answers.find(a => a._to === 'person/5'));
+        } catch (error) {
+            assert.fail(error.message);
+        }
+    });
+
+    it('Created answer -> Reactivating a poll allows answer to be batched again', async () => {
+        try {
+            const batches:PollingEventAnswerBatch[]  = [];
+            app.services.answer.on('batched',(batch: PollingEventAnswerBatch) => {
+                batches.push(batch);
+            });
+
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Live},{});
+            const created1 = await app.services.answer.create(...generateAnswerAndParams(1));
+
+            
+            await sleep(1005);
+            const answerBatch1 = batches[0];
+            const answerInBatch1 = getAnswerInBatches(created1, answerBatch1);
+            assert.isDefined(answerInBatch1);
+
+            //Republish poll
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Finished},{});
+            await app.services.poll.patch(poll._key,{activeStatus: PollActiveStatus.Live},{});
+            const created2 = await app.services.answer.create(...generateAnswerAndParams(1));
+
+            
+            await sleep(1005);
+            const answerBatch2 = batches[1];
+            const answerInBatch2 = getAnswerInBatches(created2, answerBatch2);
+            assert.isDefined(answerInBatch2);
         } catch (error) {
             assert.fail(error.message);
         }

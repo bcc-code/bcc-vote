@@ -23,9 +23,8 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         const query = {
             _from: {$in: this.activePoll_Ids},
         };
-
         const answers = await this.app.services.answer.find({query});
-        
+
         const sortedAnswers = answers.sort((a, b) => b.lastChanged - a.lastChanged);
         const filteredAnswers = this.filterOutPreviousAnswers(sortedAnswers);
         const answerBatches = this.mapAnswersToBatches(filteredAnswers);
@@ -74,6 +73,10 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         return this.activePoll_Ids;
     }
 
+    resetBatchState() {
+        this.activePoll_Ids = [];
+        this.batchedPerPoll = {};
+    }
 
     filterOutPreviousAnswers(answers: Answer[]) {
         const previouslyBatchedAnswers:string[] = [];

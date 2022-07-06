@@ -22,6 +22,7 @@ describe('Scheduled jobs', async () => {
 
     beforeEach(async ()=>{
         await importDB(getAranoDBConfigFromFeathers(),true,false);
+        app.services['answer-batch'].resetBatchState();
         testSet = pollingEventsTestSet();
         inactivePoll = await (testSet['forbiddenPoll'])();
 
@@ -52,7 +53,6 @@ describe('Scheduled jobs', async () => {
 
     it('Deactivating all polls disables answer batching', async () => {
         try {
-            await app.services.poll.patch(inactivePoll._key, { activeStatus: PollActiveStatus['Finished']},{});
             await app.services.poll.patch(activePoll1._key, { activeStatus: PollActiveStatus['Finished']},{});
             await app.services.poll.patch(activePoll2._key, { activeStatus: PollActiveStatus['Finished']},{});
 

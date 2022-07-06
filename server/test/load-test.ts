@@ -30,8 +30,8 @@ const testingVariablesLocal = {
 };
 const testingVariablesDev = {
     pollingEventId:"1520133464",
-    pollId:"poll/1522979151",
-    answerId: "1656672521383",
+    pollId:"poll/1524149878",
+    answerId: "1657097392329",
     host: "dev.vote.bcc.no",
     protocol: "https"
 };
@@ -82,7 +82,8 @@ describe('load test', () => {
     }
 
     async function setupUser(vu: VirtualUser) {
-        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
+        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{})
+            .catch(err => logger.error(err.message));
         vu.client.service('answer').on(hasBatching ? 'batched' : 'created',(result)=>{
             if(hasBatching) {
                 const batch = result as PollingEventAnswerBatch;

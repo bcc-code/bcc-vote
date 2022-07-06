@@ -14,6 +14,7 @@ describe('channels', () => {
 
     beforeEach(async() => {
         await importDB(getAranoDBConfigFromFeathers(),true,false);
+        app.services['answer-batch'].resetBatchState();
         context  = await generateFreshContext();
         context.params.provider = '';
         user = context.params.user;
