@@ -60,6 +60,25 @@ describe('channels', () => {
             assert.fail('There should be no error. Error:',error);
         }
     });
+
+    it('Answer batching stays up to date -> poll activated and finished', async () => {
+        try {
+            const activatedPoll = { _id: 'poll/12345678', activeStatus: PollActiveStatus.Live};
+            app.service('poll').emit('patched', activatedPoll);
+            await sleep(500);
+            const batchState1 = app.services['answer-batch'].getBatchState();
+            assert.include(batchState1.activePoll_Ids, activatedPoll._id);
+
+            const finishedPoll = Object.assign(activatedPoll, {activeStatus: PollActiveStatus.Finished});
+            app.service('poll').emit('patched', finishedPoll);
+            await sleep(500);
+            const batchState2 = app.services['answer-batch'].getBatchState();
+            assert.notInclude(batchState2.activePoll_Ids, activatedPoll._id);
+        } catch (error) {
+            assert.fail(error);
+        }
+    });
+
     it('Get data via socket -> polling event patched', async () => {
         try {
             // Act

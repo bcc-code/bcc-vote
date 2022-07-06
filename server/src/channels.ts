@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { Application } from './declarations';
-import { PollingEvent, Poll, PollResultDetails, PollingEventAnswerBatch} from './domain';
+import { PollingEvent, Poll, PollResultDetails, PollingEventAnswerBatch, PollActiveStatus} from './domain';
 import { db } from './firestore';
 
 export default function(app: Application): void {
@@ -16,6 +16,15 @@ export default function(app: Application): void {
 
     app.services.answer.publish('batched',async (data: PollingEventAnswerBatch) => {
         return app.channel(data.pollingEventId);
+    });
+
+    app.services.poll.on('patched', async (data:Poll) => {
+        if(data.activeStatus === PollActiveStatus['Live']) {
+            await app.services['answer-batch'].patch('default', {activate: [data._id]}, {});
+        }
+        if(data.activeStatus === PollActiveStatus['Finished']) {
+            await app.services['answer-batch'].patch('default', {deactivate: [data._id]}, {});
+        } 
     });
 
     app.services['poll-result'].publish('patched', async (data: PollResultDetails) => {

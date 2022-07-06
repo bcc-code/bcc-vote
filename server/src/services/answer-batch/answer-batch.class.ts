@@ -73,6 +73,10 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         return this.activePoll_Ids;
     }
 
+    getBatchState() {
+        return { activePoll_Ids: this.activePoll_Ids, batchedPerPoll: this.batchedPerPoll};
+    }
+
     resetBatchState() {
         this.activePoll_Ids = [];
         this.batchedPerPoll = {};

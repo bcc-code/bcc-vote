@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
-import { Poll, PollActiveStatus, Option } from '../../domain';
+import { PollActiveStatus, Option } from '../../domain';
 import { db } from '../../firestore';
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -25,21 +25,6 @@ const addTime = async (context: HookContext):Promise<HookContext> => {
 const addLastChangedTime = (context: HookContext):HookContext => {
     const { data } = context;
     data.lastChanged = Date.now();
-    return context;
-};
-
-const toggleAnswerBatching = async (context: HookContext):Promise<HookContext> => {
-    const poll:Poll = context.result;
-    const changedStatus:PollActiveStatus | undefined = context.data.activeStatus;
-
-    if(!changedStatus) return context;
-
-    if(changedStatus === PollActiveStatus['Live']) {
-        context.app.services['answer-batch'].patch('default', {activate: [poll._id]});
-    }
-    if(changedStatus === PollActiveStatus['Finished']) {
-        context.app.services['answer-batch'].patch('default', {deactivate: [poll._id]});
-    } 
     return context;
 };
 
@@ -117,7 +102,7 @@ export default {
         get: [ addChannel ],
         create: [],
         update: [],
-        patch: [ toggleAnswerBatching, removeAllAnswers ],
+        patch: [ removeAllAnswers ],
         remove: []
     },
 
