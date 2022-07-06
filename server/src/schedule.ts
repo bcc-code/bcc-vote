@@ -18,13 +18,13 @@ function init(app:Application) {
     let initiationError:string;
     app.services.poll.find({query: { activeStatus: PollActiveStatus['Live']}})
         .then(async (livePolls) => {
-            logger.info('Schedule startup '+livePolls.length+' active polls found');
+            logger.info(`Schedule startup ${livePolls.length} active polls found`);
             if(livePolls.length) {
                 const activePoll_Ids = livePolls.map(p => p._id);
                 await app.services["answer-batch"].patch('default',{activate: activePoll_Ids},{});
             }
         }).catch(async (err) => {
-            logger.error("Unable to initiate scheduled job: " + err);
+            logger.error(`Unable to initiate scheduled job: ${err}`);
             if(err.message !== initiationError) {
                 await sleep(1000);
                 initiationError = err.message;

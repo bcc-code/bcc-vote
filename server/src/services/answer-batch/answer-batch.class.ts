@@ -30,13 +30,7 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         const answerBatches = this.mapAnswersToBatches(filteredAnswers);
 
         answerBatches.forEach(batch => {
-            const answers = batch.answers; 
-            const batchRanges:number[] = [];
-            if(answers.length) {
-                batchRanges.push(answers[0].lastChanged);
-                batchRanges.push(answers[answers.length - 1].lastChanged);
-            }
-            logger.info(`Batched ${answers.length} answers`, { range: batchRanges});
+            logger.info(`Batched ${answers.length} answers`);
             this.app.service('answer').emit('batched', batch);
         });
         return answerBatches;

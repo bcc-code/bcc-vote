@@ -1,4 +1,4 @@
-import { format, createLogger, transports } from 'winston';
+import { format, createLogger, transports, LoggerOptions } from 'winston';
 import { LoggingWinston } from '@google-cloud/logging-winston';
 
 const isLocalEnvironment = process.env.VOTE_HOSTNAME?.includes('localhost');
@@ -36,7 +36,7 @@ const stackDriverLogger = new LoggingWinston({
     },
 });
 
-const logger = createLogger({
+const options:LoggerOptions = {
     level: loggingLevel,
     format: format.combine(
         format.json(),
@@ -58,6 +58,7 @@ const logger = createLogger({
     ],
     handleExceptions: true,
     exitOnError: false,
-});
+};
+const logger = createLogger(options);
 
 export default logger;
