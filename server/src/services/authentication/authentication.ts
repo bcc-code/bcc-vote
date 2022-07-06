@@ -31,7 +31,7 @@ class CustomJWtStrategy extends JWTStrategy {
         if (!this.app)  throw new NotAuthenticated('Could not authenticate');
         try {
             const config = this.authentication?.configuration.oauth.auth0;
-            const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);
+            const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.audience, config.issuer);
             const user = await getUserBasedOnPayLoad(payload, this.app);
             
             const authResult = {
