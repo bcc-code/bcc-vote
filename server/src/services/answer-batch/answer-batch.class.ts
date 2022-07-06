@@ -4,42 +4,32 @@ import { Answer, PollingEventAnswerBatch } from "../../domain";
 import logger from '../../logger';
 import schedule from '../../schedule';
 
+interface BatchedPerPoll {
+    [key: string]: string[]
+}
+
 export class AnswerBatch implements Partial<ServiceMethods<any>> {
     app: Application;
-    lastBatchDate: number;
     activePoll_Ids: string[];
-    compensationMs = 300;
+    batchedPerPoll: BatchedPerPoll;
 
     constructor (app: Application) {
         this.app = app;
-        this.lastBatchDate = 0;
         this.activePoll_Ids = [];
-
-        const compensationMsEnv = process.env.VOTE_ANSWER_BATCHING_COMPENSATION_MS;
-        const compensationMsReplaced = compensationMsEnv?.replace(/\D/g, '');
-
-        if (compensationMsReplaced && compensationMsReplaced !== '') {
-            this.compensationMs = Number(compensationMsReplaced);
-        }
+        this.batchedPerPoll = {};
     }
 
     async create (data: any, params?: Params): Promise<PollingEventAnswerBatch[]> {
-        const currentBatchDate = Date.now();
-        const batchRange = this.lastBatchDate - this.compensationMs;
-
         const query = {
             _from: {$in: this.activePoll_Ids},
-            lastChanged: { $gt: batchRange}
         };
-        logger.info(`Answer batch query ${JSON.stringify(query)}`);
 
         const answers = await this.app.services.answer.find({query});
+        
         const sortedAnswers = answers.sort((a, b) => b.lastChanged - a.lastChanged);
-        if(sortedAnswers[0]) {
-            this.lastBatchDate = currentBatchDate;
-        }
+        const filteredAnswers = this.filterOutPreviousAnswers(sortedAnswers);
+        const answerBatches = this.mapAnswersToBatches(filteredAnswers);
 
-        const answerBatches = mapAnswersToBatches(sortedAnswers);
         answerBatches.forEach(batch => {
             const answers = batch.answers; 
             const batchRanges:number[] = [];
@@ -69,6 +59,10 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         if(deactivate?.length) {
             const stillActive = this.activePoll_Ids.filter(a => !deactivate.includes(a));
             this.activePoll_Ids = stillActive;
+
+            deactivate.forEach((poll_id:string) => {
+                delete this.batchedPerPoll[poll_id];
+            });
         }
 
         if(schedulerActive && this.activePoll_Ids.length === 0) {
@@ -79,23 +73,42 @@ export class AnswerBatch implements Partial<ServiceMethods<any>> {
         }
         return this.activePoll_Ids;
     }
-}
 
-function mapAnswersToBatches(answers: Answer[]) {
-    const eventBatches:PollingEventAnswerBatch[] = [];
-    answers.forEach(answer => {
-        const {pollingEventId} = answer;
-        const existingBatch = eventBatches.find(b => b.pollingEventId == pollingEventId);
 
-        if (existingBatch) {
-            existingBatch.answers.push(answer);
-        } else {
-            eventBatches.push({
-                pollingEventId,
-                answers: [answer]
-            });
-        } 
-    });
+    filterOutPreviousAnswers(answers: Answer[]) {
+        const previouslyBatchedAnswers:string[] = [];
+        for (const poll_id of Object.keys(this.batchedPerPoll)) {
+            previouslyBatchedAnswers.push(...this.batchedPerPoll[poll_id]);
+        }
 
-    return eventBatches;
+        const filteredAnswers = answers.filter(a => !previouslyBatchedAnswers.includes(a._id));
+        filteredAnswers.forEach(a => {
+            if(this.batchedPerPoll[a._from]) {
+                this.batchedPerPoll[a._from].push(a._id);
+            } else {
+                this.batchedPerPoll[a._from] = [a._id];
+            }
+        });
+    
+        return filteredAnswers;
+    }
+
+    mapAnswersToBatches(answers: Answer[]) {
+        const eventBatches:PollingEventAnswerBatch[] = [];
+        answers.forEach(answer => {
+            const {pollingEventId} = answer;
+            const existingBatch = eventBatches.find(b => b.pollingEventId == pollingEventId);
+    
+            if (existingBatch) {
+                existingBatch.answers.push(answer);
+            } else {
+                eventBatches.push({
+                    pollingEventId,
+                    answers: [answer]
+                });
+            } 
+        });
+    
+        return eventBatches;
+    }
 }

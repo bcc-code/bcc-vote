@@ -46,7 +46,7 @@ describe('load test', () => {
     let connectedClients = 0;
     const numberOfConnections = 500;
     const hasBatching = true;
-    it.only('Perform a socket load test on an environment', function (done) {
+    it.skip('Perform a socket load test on an environment', function (done) {
 
         const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
