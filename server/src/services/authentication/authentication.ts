@@ -4,7 +4,6 @@ import {
     JWTStrategy,
     AuthenticationRequest,
 } from "@feathersjs/authentication";
-import { expressOauth} from '@feathersjs/authentication-oauth';
 import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
@@ -32,7 +31,7 @@ class CustomJWtStrategy extends JWTStrategy {
         if (!this.app)  throw new NotAuthenticated('Could not authenticate');
         try {
             const config = this.authentication?.configuration.oauth.auth0;
-            const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.issuer);
+            const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.audience, config.issuer);
             const user = await getUserBasedOnPayLoad(payload, this.app);
             
             const authResult = {
@@ -70,5 +69,4 @@ export default function(app: Application): void {
     authentication.register('jwt', new CustomJWtStrategy());
 
     app.use('/authentication', authentication);
-    app.configure(expressOauth());
 }

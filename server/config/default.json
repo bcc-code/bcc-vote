@@ -10,7 +10,8 @@
         "oauth": {
             "auth0": {
                 "jwks": "VOTE_AUTH0_JWKS",
-                "issuer":"VOTE_AUTH0_ISSUER"
+                "issuer":"VOTE_AUTH0_ISSUER",
+                "audience": "bcc.vote"
             }
         },
         "entity": "user",

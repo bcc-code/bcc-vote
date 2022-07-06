@@ -29,6 +29,7 @@ export function getActiveRole(userRoles:Array<UserRole>):RoleName{
 export async function verifyAuth0AccessToken(
     accessToken: string,
     jwks_url: string,
+    audience: string,
     issuer: string
 ): Promise<{[key: string]: any}> {
     accessToken = accessToken.replace('Bearer ', '');
@@ -47,6 +48,7 @@ export async function verifyAuth0AccessToken(
         const publicKey = key.getPublicKey();
 
         const payload = <Record<string, any>>jsonwebtoken.verify(accessToken, publicKey, {
+            audience,
             issuer,
         });
         return payload;
