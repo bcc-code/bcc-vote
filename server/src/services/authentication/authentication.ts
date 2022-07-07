@@ -49,9 +49,9 @@ class CustomJWtStrategy extends JWTStrategy {
 
             return authResult;
         } catch (error) {
-            logger.error(
-                'There was an error trying to authenticate using the jwt strategy, it is likely related to verifying the access token.'
-                , {authentication, error});
+            if( error instanceof Error ) {
+                logger.error('There was an error trying to authenticate using the jwt strategy, it is likely related to verifying the access token.:'+ error.message);
+            }
             throw error;
         }
     }

@@ -7,7 +7,7 @@ import logger from "./logger";
 let scheduledJob: ScheduledTask | undefined;
 
 function init(app:Application) {
-    const interval = '*/1 * * * * *';
+    const interval = '*/3 * * * * *';
     const options = { scheduled: false};
 
     const createAnswerBatches = async () => {
