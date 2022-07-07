@@ -44,7 +44,7 @@ describe('load test', () => {
     const receivedAnswersPerUser:{[personID:number]: {receivedCount: number, uniqueAnswers:number, answerIds: string[]}} = {
     };
     let connectedClients = 0;
-    const numberOfConnections = 1000;
+    const numberOfConnections = 750;
     const hasBatching = true;
     it.only('Perform a socket load test on an environment', function (done) {
 

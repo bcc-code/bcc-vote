@@ -27,10 +27,10 @@ export default function(app: Application): void {
         } 
     });
 
-    app.services['poll-result'].publish('patched', async (data: PollResultDetails) => {
-        if(!data.firestore) return;
-        return app.channel(data.pollingEventId);
-    });
+    // app.services['poll-result'].publish('patched', async (data: PollResultDetails) => {
+    //     if(!data.firestore) return;
+    //     return app.channel(data.pollingEventId);
+    // });
 
     app.services.poll.publish('patched', async (data:Poll) => {
         if(!data.firestore) return;
