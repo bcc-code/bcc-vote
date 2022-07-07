@@ -7,13 +7,12 @@ const port = app.get('port');
 const server = app.listen(port);
 const startTime = Date.now();
 
-process.on('unhandledRejection', (reason, p) => {
-    const message = ['UnhandledRejection', p, reason].join(' ');
-    logger.error(message);
+process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled rejection in promise', {promise, reason});
 });
 
 server.on('listening', () => {
-    logger.info('Feathers application started on http://%s:%d', app.get('host'), port);
+    logger.info('Feathers application started on http://%s:%d', {host: app.get('host'), port});
     const duration = Date.now() - startTime;
     appInsights?.defaultClient?.trackMetric({name: 'Server startup time', value: duration});
 });

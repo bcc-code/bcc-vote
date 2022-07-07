@@ -24,11 +24,13 @@ function init(app:Application) {
                 await app.services["answer-batch"].patch('default',{activate: activePoll_Ids},{});
             }
         }).catch(async (err) => {
-            logger.error(`Unable to initiate scheduled job: ${err}`);
-            if(err.message !== initiationError) {
-                await sleep(1000);
-                initiationError = err.message;
-                init(app);
+            if(err instanceof Error) {
+                logger.error(`Unable to initiate scheduled job: ${err.message}`);
+                if(err.message !== initiationError) {
+                    await sleep(1000);
+                    initiationError = err.message;
+                    init(app);
+                }
             }
         });
 }
@@ -40,7 +42,9 @@ function start() {
         }
         scheduledJob.start();
     } catch(err) {
-        console.error("Unable to start scheduled job: " + err);
+        if(err instanceof Error) {
+            logger.error(`Unable to start scheduled job: ${err.message}`);
+        }
     }
 }
 
@@ -51,7 +55,9 @@ function stop() {
         }
         scheduledJob.stop();
     } catch(err) {
-        console.error("Unable to stop scheduled job: " + err);
+        if(err instanceof Error) {
+            logger.error(`Unable to stop scheduled job: ${err.message}`);
+        }
     }
 }
 
