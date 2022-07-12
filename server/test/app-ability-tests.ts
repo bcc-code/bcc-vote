@@ -6,7 +6,7 @@ import { subject } from '@casl/ability';
 import { defineAbilityFor,subjects,actions  } from '../src/permissions/appAbility';
 import { RoleName } from '../src/domain';
 
-describe.only('permissions - app ability', async () => {
+describe('permissions - app ability', async () => {
     type actionsType = (typeof actions)[number]
     type subjectType = (typeof subjects)[number]
 
@@ -71,72 +71,72 @@ describe.only('permissions - app ability', async () => {
 
   const useCases:Array<useCaseType> = [
       // Permissions for get and find should be identical for polling events
-    //   { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-    //   { action:"find", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
-    //   { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"find", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
+      { action:"find", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
 
-    //   { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-    //   { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
-    //   { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
-      { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative"], entity:'eventForNationalRepresentatives', expected: true },
-      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'eventForNationalRepresentatives', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedAgeOutsideOfLoggedInUserAge', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["OrgRepresentative","Member"], entity:'scopedToRepresentativesEvent', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member", "OrgRepresentative"], entity:'eventForNationalOrgRepresentatives', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'eventForNationalOrgRepresentatives', expected: false },
 
-    //   { action:"create", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
+      { action:"create", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
 
-    //   { action:"find", subject:"role", entity:'user', hasRoles:["Member"], expected: false },
-    //   { action:"find", subject:"org", entity:'user', hasRoles:["Member"], expected: false },
+      { action:"find", subject:"role", entity:'user', hasRoles:["Member"], expected: false },
+      { action:"find", subject:"org", entity:'user', hasRoles:["Member"], expected: false },
 
-    //   { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
-    //   { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
-    //   { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
+      { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
+      { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
+      { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Member"], expected: false },
 
-    //   { action:"update", subject:"polling-event", hasRoles:["Developer"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
-    //   { action:"patch", subject:"polling-event", hasRoles:["Developer"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"update", subject:"polling-event", hasRoles:["Developer"], entity:'scopedLoggedInUserIsCreatorOfEvent', expected: true },
+      { action:"patch", subject:"polling-event", hasRoles:["Developer"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
 
-    //   { action:"find", subject:"role", entity:'user', hasRoles:["Developer"], expected: true },
-    //   { action:"find", subject:"org", entity:'user', hasRoles:["Developer"], expected: true },
+      { action:"find", subject:"role", entity:'user', hasRoles:["Developer"], expected: true },
+      { action:"find", subject:"org", entity:'user', hasRoles:["Developer"], expected: true },
 
-    //   { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
-    //   { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
-    //   { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
 
-    //   { action:"create", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
-    //   { action:"create", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-    //   { action:"patch", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'eventForAllOrgs', expected: false },
-    //   { action:"remove", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
-    //   { action:"find", subject:"org", hasRoles:["VotingAdmin"], entity:'organisationUserIsAdminFor', expected: true },
-    //   { action:"find", subject:"org", hasRoles:["VotingAdmin"], entity:'organisationUserIsNotAdminFor', expected: false },
+      { action:"create", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: true },
+      { action:"create", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"patch", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'eventForAllOrgs', expected: false },
+      { action:"remove", subject:"polling-event", hasRoles:["VotingAdmin"], entity:'scopedToLocalChurchDifferentAsLoggedInUser', expected: false },
+      { action:"find", subject:"org", hasRoles:["VotingAdmin"], entity:'organisationUserIsAdminFor', expected: true },
+      { action:"find", subject:"org", hasRoles:["VotingAdmin"], entity:'organisationUserIsNotAdminFor', expected: false },
 
-    //   { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
-    //   { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
-    //   { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"update", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"patch", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
+      { action:"remove", subject:"poll", entity:'basePoll', hasRoles:["Developer"], expected: true },
 
-    //   { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["Developer"], expected: true},
-    //   { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["Developer"], expected: true},
-    //   { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["Developer"], expected: false},
+      { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["Developer"], expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["Developer"], expected: true},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["Developer"], expected: false},
 
-    //   { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["VotingAdmin"], expected: true},
-    //   { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["VotingAdmin"], expected: true},
-    //   { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["VotingAdmin"], expected: false},
+      { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["VotingAdmin"], expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["VotingAdmin"], expected: true},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["VotingAdmin"], expected: false},
 
-    //   { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["Member"], expected: true},
-    //   { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["Member"], expected: false},
-    //   { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["Member"], expected: false},
+      { action:"find", subject:"answer", entity:"publicAnswer", hasRoles:["Member"], expected: true},
+      { action:"find", subject:"answer", entity:"nonpublicAnswer", hasRoles:["Member"], expected: false},
+      { action:"find", subject:"answer", entity:"anonymousAnswer", hasRoles:["Member"], expected: false},
 
-    //   { action:"create", subject:"feedback", entity:"feedbackData", hasRoles:["Member"], expected: true},
+      { action:"create", subject:"feedback", entity:"feedbackData", hasRoles:["Member"], expected: true},
 
-    //   { action:"get", subject: "answer", entity: "ownAnswer", hasRoles: ["Member"], expected: true},
-    //   { action:"get", subject: "answer", entity: "someoneElsesAnswer", hasRoles: ["Member"], expected: false},
+      { action:"get", subject: "answer", entity: "ownAnswer", hasRoles: ["Member"], expected: true},
+      { action:"get", subject: "answer", entity: "someoneElsesAnswer", hasRoles: ["Member"], expected: false},
   ];
 
   useCases.forEach((useCase) => {

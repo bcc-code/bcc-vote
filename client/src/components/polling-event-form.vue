@@ -18,7 +18,7 @@
             {{$t('info.define-group')}}
         </InfoBox>
 
-        <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allChurches"/>
+        <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allOrgs"/>
 
         <div class="flex w-full gap-10 max-w-sm">
             <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number" optional />
@@ -58,7 +58,7 @@ interface RoleName {
 }
 interface Org {
     name: string,
-    churchID: number
+    orgID: number
 }
 interface SelectObject {
     name: string,
@@ -77,7 +77,7 @@ export default defineComponent({
     },
     data(){
         return {
-            allChurches: [] as SelectObject[],
+            allOrgs: [] as SelectObject[],
             allRoles: [] as SelectObject[],
             numberOfVoters: 0,
             eventData: {
@@ -117,27 +117,26 @@ export default defineComponent({
     },
     methods: {
         async loadOrgs(){
-            let query = {
+            let query:Query = {
                 activeStatusCode: 0,
-                type: 'church',
-                $select: ['name', 'churchID'],
+                $select: ['name', 'orgID'],
                 $sort: {
                     name: 1
                 }
-            } as Query;
+            };
             if(this.votingAdminRole) {
-                query.churchID = { $in: this.votingAdminRole.orgIDs};
+                query.orgID = { $in: this.votingAdminRole.orgIDs};
             }
             const res = await this.$client.service('org').find({query}).catch(this.$handleError);
             
             if(!this.votingAdminRole) {
-                res.unshift({name: "All churches", churchID: 'all'});
+                res.unshift({name: "All organizations", orgID: 'all'});
             }
 
-            this.allChurches = res.map((c: Org) => {
+            this.allOrgs = res.map((c: Org) => {
                 return {
                     name: c.name,
-                    val: c.churchID.toString(),
+                    val: c.orgID.toString(),
                 };
             });
         },
@@ -163,7 +162,7 @@ export default defineComponent({
             const role = this.allRoles.find((r:SelectObject) => {
                 return r.val === this.eventData.participantFilter.role;
             });
-            const org = this.allChurches.find((r:SelectObject) => {
+            const org = this.allOrgs.find((r:SelectObject) => {
                 return r.val === this.eventData.participantFilter.org;
             });
             if(!role || !org)

@@ -12,7 +12,6 @@ export class AppAbility extends Ability<AppAbilities>{}
 type DefinePermissions = (user: User, builder: AbilityBuilder<AppAbility>) => void;
 
 const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbility>) => {
-    const userRoleNames = user.roles.map((r:UserRole) => r.enumName);
     can('create','answer', { _to: user._id } as any);
     can('find', 'answer', {'visibility': PollResultVisibility["Public"] as any});
     can('get', 'answer', {_to: user._id} as any);
@@ -20,7 +19,11 @@ const globalPermissions = (user: User, { can, cannot }: AbilityBuilder<AppAbilit
     can('get', 'poll');
     can('get', 'poll-result');
     can('create', 'feedback');
-    can(['find','get'],'polling-event', {'participantFilter.org': {$in: [user.churchID.toString(), 'all']}, 'participantFilter.role': { $in: [...userRoleNames, 'all'] }} as any);
+    
+    user.roles.forEach(r => {
+        const orgIDs = r.orgIDs.map(orgID => orgID.toString());
+        can(['find','get'],'polling-event', {'participantFilter.org': {$in: [...orgIDs, 'all']}, 'participantFilter.role': { $in: [r.enumName, 'all'] }} as any);
+    });
     cannot(['find','get'],'polling-event',{'participantFilter.minAge': {$gt:user.age}} as any);
     cannot(['find','get'],'polling-event',{'participantFilter.maxAge': {$lte:user.age}} as any);
     cannot('find', 'polling-event', {'status': 'archived' as any});
@@ -60,7 +63,7 @@ const rolePermissions: Record<string, DefinePermissions> = {
         can('update', 'polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
         can('create','polling-event', { 'participantFilter.org': { $in: votingAdminFor.map(String)}} as any);
 
-        can('find', 'org', { churchID: { $in: votingAdminFor}} as any);
+        can('find', 'org', { orgID: { $in: votingAdminFor}} as any);
         can('find', 'role');
         can('find', 'answer', {'visibility': PollResultVisibility["Non Public"] as any});
         can('find', 'user', {'churchID': { $in: votingAdminFor}} as any);

@@ -85,18 +85,14 @@ function pollingEventsTestSet(){
         eventForAllOrgs: async () => { return await  pollingEventSvc.get('504327598');},
         eventForDifferentOrgButMatchingRole: async () => {return await pollingEventSvc.get('504327600');},
         eventForDifferentRoleButMatchingOrg: async () => {return await pollingEventSvc.get('504327601');},
-        eventForOrgAndRoleWithoutMembers: async () => {return await pollingEventSvc.get('504327602');},
+        eventForNationalOrgRepresentatives: async () => {return await pollingEventSvc.get('504327602');},
 
         organisationUserIsAdminFor: async () => { return await  orgSvc.get('69');},
         organisationUserIsNotAdminFor: async () => { return await  orgSvc.get('431');},
         user: async (hasRoles?:Array<RoleName>) => {
             const user = await userSvc.get('54512',{});
             if(hasRoles) {
-                console.log('User hasRoles',hasRoles)
-
                 const userRoles = user.roles.filter((r:UserRole) => hasRoles.includes(r.enumName));
-                console.log('User result',userRoles)
-
                 user.activeRole = getActiveRole(userRoles);
                 user.roles = userRoles;
             }
