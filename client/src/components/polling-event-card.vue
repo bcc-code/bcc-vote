@@ -69,17 +69,34 @@ export default defineComponent({
                 return false;
             if(this.pollingEvent.status === PollingEventStatus['Archived'])
                 return false;
-            const rolesEnum: string[] = this.$user.roles.map((r:any) => r.enumName);
+
+            const rolesEnum:string[] = [];
+            const orgIDs:string[] = [];
+
+            this.$user.roles.forEach(r => {
+                rolesEnum.push(r.enumName);
+                const orgIDstrings = r.orgIDs.map(orgID => orgID.toString());
+                orgIDs.push(...orgIDstrings);
+            });
+
             const filter = this.pollingEvent.participantFilter;
             if(filter.maxAge && this.$user.age >= filter.maxAge)
                 return false;
             if(filter.minAge && this.$user.age < filter.minAge)
                 return false;
-            //Needs rework
-            if(filter.org !== 'all' && this.$user.churchID.toString() !== filter.org)
+
+            if(filter.org !== 'all' && !orgIDs.includes(filter.org))
                 return false;
+
             if(filter.role !== 'all' && !rolesEnum.includes(filter.role))
                 return false;
+            
+            if(filter.org !== 'all' && filter.role !== 'all') {
+                const role = this.$user.roles.find(r => r.enumName === filter.role);
+                const orgIdsForRole = role?.orgIDs.map(o => o.toString()) ?? [];
+                if(!role) return false;
+                if(!orgIdsForRole.includes(filter.org)) return false;
+            }
             return true;
         },
         isCreator():boolean{

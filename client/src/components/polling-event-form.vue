@@ -18,7 +18,7 @@
             {{$t('info.define-group')}}
         </InfoBox>
 
-        <FormField v-model="eventData.participantFilter.org" translation="poll-church" type="select" :options="allOrgs"/>
+        <FormField v-model="eventData.participantFilter.org" translation="poll-org" type="select" :options="allOrgs"/>
 
         <div class="flex w-full gap-10 max-w-sm">
             <FormField class="flex-grow" v-model="eventData.participantFilter.minAge" translation="poll-min-age" type="number" optional />

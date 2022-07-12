@@ -5,14 +5,9 @@
         </div>
     </div>
 </template>
-
 <script lang="ts">
-
-
-
 import { defineComponent } from 'vue';
 import PollingEventForm from '../components/polling-event-form.vue';
-
 export default defineComponent({
     components: {
         PollingEventForm 
