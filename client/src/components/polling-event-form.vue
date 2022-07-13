@@ -146,7 +146,6 @@ export default defineComponent({
                     $sort: {
                         name: 1
                     },
-              
                     $select: ['name', 'enumName'],
                 }
             }).catch(this.$handleError);
@@ -156,6 +155,7 @@ export default defineComponent({
                     val: c.enumName.toString(),
                 };
             });
+            this.allRoles.unshift({name: "Member", val: 'Member'});
             this.allRoles.unshift({name: "All roles", val: 'all'});
         },
         fillparticipantLabels(){
