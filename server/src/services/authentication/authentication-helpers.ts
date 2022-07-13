@@ -9,16 +9,16 @@ const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider'
 
 let client: undefined | JwksClient;
 
-export function getActiveRole(userRoles:Array<UserRole>):RoleName{
+export function getActiveRole(userRoles:UserRole[]):RoleName{
     let activeRole = 'None' as RoleName;
-    const possibleActiveRoles = userRoles.filter((role:UserRole) => rolesInUseInApp.includes(role.enumName));
+    const possibleActiveRoles = userRoles.filter(role => rolesInUseInApp.includes(role.enumName));
 
     // Sort the permission from highest level to lowest level
-    possibleActiveRoles.sort(function (a:UserRole, b:UserRole) {
+    possibleActiveRoles.sort(function (a, b) {
         return a.securityLevel - b.securityLevel;
     });
 
-    if(possibleActiveRoles.some((role:UserRole) => role.enumName === 'VotingAdmin')) {
+    if(possibleActiveRoles.some(role => role.enumName === 'VotingAdmin')) {
         activeRole = 'VotingAdmin';
     } else {
         activeRole = possibleActiveRoles[0].enumName;

@@ -4,7 +4,7 @@ import { importDB } from '@bcc-code/arango-migrate';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { subject } from '@casl/ability';
 import { defineAbilityFor,subjects,actions  } from '../src/permissions/appAbility';
-import { RoleName, UserRole } from '../src/domain';
+import { RoleName } from '../src/domain';
 
 describe('permissions - app ability', async () => {
     type actionsType = (typeof actions)[number]
@@ -88,6 +88,8 @@ describe('permissions - app ability', async () => {
       { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'scopedToRepresentativesEvent', expected: false },
       { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentOrgButMatchingRole', expected: false },
       { action:"get", subject:"polling-event", hasRoles:["Member","VotingAdmin","Developer"], entity:'eventForDifferentRoleButMatchingOrg', expected: false },
+      { action:"get", subject:"polling-event", hasRoles:["Member", "OrgRepresentative"], entity:'eventForNationalOrgRepresentatives', expected: true },
+      { action:"get", subject:"polling-event", hasRoles:["Member"], entity:'eventForNationalOrgRepresentatives', expected: false },
 
       { action:"create", subject:"polling-event", hasRoles:["Member"], entity:'scopedToLocalChurchSameAsLoggedInUser', expected: false },
 
