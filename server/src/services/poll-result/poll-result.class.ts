@@ -4,8 +4,6 @@ import { PollResultDetails } from '../../domain';
 import { Application } from '../../declarations';
 import { db } from '../../firebase';
 
-
-
 const isPrimitive = (val: any): boolean => {
     if(val === Object(val))
         return false;

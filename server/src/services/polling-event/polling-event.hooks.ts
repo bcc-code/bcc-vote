@@ -20,15 +20,6 @@ const addLastChangedTime = (context: HookContext) => {
     return context;
 };
 
-const addChannel = (context: HookContext):HookContext => {
-    if(context.id && context.params.connection){
-        const channelName = context.id.toString();
-        const connection = context.params.connection;
-        context.app.channel(channelName).join(connection);
-    }
-    return context;
-};
-
 const addFeedbackDocument = async (context: HookContext):Promise<HookContext> => {
     const feedbackRef = db.collection('feedback').doc(context.result._key);
 
@@ -48,9 +39,9 @@ const addFeedbackDocument = async (context: HookContext):Promise<HookContext> =>
 
 export default {
     before: {
-        all: [ ],
+        all: [],
         find: [],
-        get: [ addChannel ],
+        get: [],
         create: [ validateAndFormat, addLastChangedTime ],
         update: [ validateAndFormat, addLastChangedTime ],
         patch: [ addLastChangedTime ],

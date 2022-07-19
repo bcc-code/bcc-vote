@@ -5,7 +5,7 @@ import app from '../src/app';
 import { initializeApp } from 'firebase-admin';
 const port = app.get('port') || 8998;
 
-describe('Firebase', () => {
+describe.skip('Firebase', () => {
     let server: Server;
 
     before(function(done) {
@@ -17,7 +17,7 @@ describe('Firebase', () => {
         server.close(done);
     });
 
-    it.skip('setup a firebase instance', async (done) => {
+    it('setup a firebase instance', async (done) => {
 
         try {
 
