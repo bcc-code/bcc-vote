@@ -6,7 +6,7 @@ import { ForbiddenError, subject } from '@casl/ability';
 import { BadRequest } from '@feathersjs/errors';
 import { User } from './domain';
 import {initTracking, finalizeTracking, trackErrors} from './utils/appInsightsWebSocket';
-import { db } from './firestore';
+import { db } from './firebase';
 
 
 // Application hooks that run for every service

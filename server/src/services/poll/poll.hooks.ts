@@ -1,7 +1,7 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
 import { PollActiveStatus, Option } from '../../domain';
-import { db } from '../../firestore';
+import { db } from '../../firebase';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const validateAndFormat = async (context: HookContext):Promise<HookContext> => {

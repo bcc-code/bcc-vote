@@ -1,6 +1,6 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
-import { db } from '../../firestore';
+import { db } from '../../firebase';
 
 const validateAndFormat = (context: HookContext) => {
     const { data } = context;

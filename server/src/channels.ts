@@ -1,7 +1,7 @@
 import '@feathersjs/transport-commons';
 import { Application } from './declarations';
 import { PollingEvent, Answer, Poll, PollResultVisibility, PollResultDetails} from './domain';
-import { db } from './firestore';
+import { db } from './firebase';
 
 export default function(app: Application): void {
     const startupDate = Date.now();

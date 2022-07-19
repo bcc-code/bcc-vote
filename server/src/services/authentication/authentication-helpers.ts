@@ -4,6 +4,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import logger from '../../logger';
 import { Application, Paginated } from '@feathersjs/feathers';
 import fs from 'fs';
+import {auth} from '../../firebase';
 
 const rolesInUseInApp = ['CentralAdministrator','SentralInformasjonsmedarbeider','Developer','VotingAdmin','Member'];
 
@@ -93,6 +94,7 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
         await saveUser(user, noExisingUser, app);
     }
 
+    const firebaseJWT = await auth.createCustomToken(user.personID.toString());
     return user;
 }
 
