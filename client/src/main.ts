@@ -19,6 +19,7 @@ import mixins from './mixins';
 import hooks from './hooks';
 import { setupAuth0, authenticate, verifyAccessToken } from './functions/auth0';
 import appInsights from './functions/appInsightsTelemetry';
+import initFirestore from './firebase';
 
 const app = createApp(App);
 initSentry(app, router);
@@ -48,8 +49,10 @@ window.onload = async () => {
     await authenticate(app, client, registerVue);
 };
 
-function registerVue(authResult: AuthenticationResult) {
+async function registerVue(authResult: AuthenticationResult) {
     const user = authResult.user as User;
+
+    const firestore = await initFirestore(authResult);
     app.component('Spinner', Spinner);
     app.component('InfoBox', InfoBox);
     app.use(Toast, { duration: 2000, positionX: 'right', positionY: 'bottom' });
@@ -65,10 +68,13 @@ function registerVue(authResult: AuthenticationResult) {
         });
     }
     
-    router.$client = client;
+    store.$firestore = firestore;
     store.$client = client;
+    router.$client = client;
+    router.$firestore = firestore;
     router.$user = authResult.user;
     router.$gtag = app.config.globalProperties.$gtag;
+    app.config.globalProperties.$firestore = firestore;
     app.config.globalProperties.$client = client;
     app.config.globalProperties.$user = user;
     

@@ -8,6 +8,7 @@ import { NotAuthenticated } from '@feathersjs/errors';
 import { Application } from '../../declarations';
 import { getUserBasedOnPayLoad, verifyAuth0AccessToken } from './authentication-helpers';
 import logger from '../../logger';
+import {auth} from '../../firebase';
 declare module '../../declarations' {
   interface ServiceTypes {
     'authentication': AuthenticationService & ServiceAddons<any>;
@@ -34,9 +35,12 @@ class CustomJWtStrategy extends JWTStrategy {
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.audience, config.issuer);
             const user = await getUserBasedOnPayLoad(payload, this.app);
             
+            const firebaseAccessToken = await auth.createCustomToken(user.personID.toString());
+            
             const authResult = {
                 user,
                 accessToken,
+                firebaseAccessToken,
                 authentication: {
                     strategy: 'jwt',
                     accessToken,

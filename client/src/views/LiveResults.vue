@@ -34,22 +34,53 @@ export default defineComponent({
         return {
             loading: false,
             selectedOption: "",
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         await this.init();
         
-        this.$client.service('poll').on('patched', this.patchedPoll);
-        this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').on('created', this.addedAnswer);
+        const poll = this.$firestore.collection('poll').where('lastChanged', '>=', startupDate);
+        const unsubscribePoll = poll.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'added' || change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.patchedPoll(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribePoll);
+
+        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
+        const unsubscribePollResult = pollResult.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.UPDATE_POLL_RESULT(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribePollResult);
+
+        const answer = this.$firestore.collection('answer').where('lastChanged', '>=', startupDate);
+        const unsubscribeAnswer = answer.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'added') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.addedAnswer(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribeAnswer);
     
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.patchedPoll);
-        this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').off('created', this.addedAnswer);
-    
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     computed: {

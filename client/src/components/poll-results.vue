@@ -41,24 +41,45 @@ export default defineComponent({
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         this.generateSortedOptions();
 
         await this.init();
         
-        
-        if(this.pollResultsAreVisible)
-            this.$client.service('answer').on('created', this.addAnswer);
+        if(this.pollResultsAreVisible) {
+            const answer = this.$firestore.collection('answer').where('lastChanged', '>=', startupDate);
+            const unsubscribeAnswer = answer.onSnapshot((docSnapshot:any) => {
+                docSnapshot.docChanges().forEach((change:any) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        data.firestore = true;
+                        this.addAnswer(data);
+                    }
+                });
+            });
+            this.removeListeners.push(unsubscribeAnswer);
+        }
 
-        this.$client.service('poll-result').on('patched', this.changeBars);
+        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
+        const unsubscribePoll = pollResult.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.changeBars(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribePoll);
 
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('answer').off('created', this.addAnswer);
-        this.$client.service('poll-result').off('patched', this.changeBars);
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     watch: {

@@ -4,7 +4,7 @@ import app from '../src/app';
 import { generateFreshContext }  from './setup-tests/test-set';
 import {PollActiveStatus} from '../src/domain';
 
-describe('channels', () => {
+describe.skip('channels', () => {
     let context:any;
 
     beforeEach(async() => {

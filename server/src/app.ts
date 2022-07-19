@@ -14,7 +14,6 @@ import logger from './logger';
 import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
-import channels from './channels';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './services/authentication/authentication';
 
@@ -45,8 +44,6 @@ app.configure(middleware);
 app.configure(authentication);
 // Set up our services (see `services/index.ts`)
 app.configure(services);
-// Set up event channels (see channels.ts)
-app.configure(channels);
 
 // Configure a middleware for 404s and the error handler
 app.use("/loaderio-130e15d149cbac9df52e3162eeb68298.txt", express.static("load-testing"));

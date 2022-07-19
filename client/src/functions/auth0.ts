@@ -18,7 +18,7 @@ export async function setupAuth0(): Promise<Auth0Client> {
     return auth0;
 }
 
-export async function authenticate(app: App<Element>, client: feathers.Application<any>, callback: (authResult: AuthenticationResult) => void): Promise<void> {
+export async function authenticate(app: App<Element>, client: feathers.Application<any>, callback: (authResult: AuthenticationResult) => Promise<void>): Promise<void> {
     const auth0 = (await client.get('auth0')) as Auth0Client;
     let redirectUrl = '';
     const query = window.location.search;
@@ -31,7 +31,7 @@ export async function authenticate(app: App<Element>, client: feathers.Applicati
         const accessToken = await auth0.getTokenSilently();
         client.authentication.setAccessToken(accessToken);
         const authResult = await client.reAuthenticate(true);
-        callback(authResult);
+        await callback(authResult);
 
         if (redirectUrl) {
             const router = app.config.globalProperties.$router;

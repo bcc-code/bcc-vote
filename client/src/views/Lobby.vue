@@ -25,19 +25,41 @@ export default defineComponent({
         return {
             pollingEvent: {} as PollingEvent,
             currentPoll: undefined as (undefined | Poll),
-            currentAnswer: undefined as (undefined | Answer)
+            currentAnswer: undefined as (undefined | Answer),
+            removeListeners: [] as (() => void)[]
         };
     },
     created() {
+        const startupDate = Date.now();
         this.init();
-        
-        this.$client.service('poll').on('patched', this.getPoll);
-        this.$client.service('polling-event').on('patched', this.patchEvent);
+
+        const poll = this.$firestore.collection('poll').where('lastChanged', '>=', startupDate);
+        const unsubscribePoll = poll.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'added' || change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.getPoll(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribePoll);
+
+        const pollingEvent = this.$firestore.collection('polling-event').where('lastChanged', '>=', startupDate);
+        const unsubscribePollingEvent = pollingEvent.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'added' || change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.patchEvent(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribePollingEvent);
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.getPoll);
-        this.$client.service('polling-event').off('patched', this.patchEvent);
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     methods: {

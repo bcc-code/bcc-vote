@@ -26,15 +26,28 @@ export default defineComponent({
     data(){
         return{
             votes: 0,
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         const results = await this.$client.service('poll-result').get(this.poll._key);
         this.updateVotes(results);
-        this.$client.service('poll-result').on('patched', this.updateVotes);
+
+        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
+        const unsubscribe = pollResult.onSnapshot((docSnapshot:any) => {
+            docSnapshot.docChanges().forEach((change:any) => {
+                if (change.type === 'modified') {
+                    const data = change.doc.data();
+                    data.firestore = true;
+                    this.updateVotes(data);
+                }
+            });
+        });
+        this.removeListeners.push(unsubscribe);
     },
     unmounted(){
-        this.$client.service('poll-result').off('patched');
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
     },
     methods: {
         updateVotes(data: any){
