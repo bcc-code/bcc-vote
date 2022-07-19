@@ -16,8 +16,8 @@
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue';
 import VoterList from './results-voter-list.vue';
-
-import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain';
+import {collection, forEach} from '../firebase';
+import { Poll, PollResultVisibility, Answer, Option, SortedOptions } from '../domain';
 import { defineComponent, PropType } from 'vue';
 // import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
@@ -49,33 +49,20 @@ export default defineComponent({
         this.generateSortedOptions();
 
         await this.init();
-        
-        if(this.pollResultsAreVisible) {
-            const answer = this.$firestore.collection('answer').where('lastChanged', '>=', startupDate);
-            const unsubscribeAnswer = answer.onSnapshot((docSnapshot:any) => {
-                docSnapshot.docChanges().forEach((change:any) => {
-                    if (change.type === 'added') {
-                        const data = change.doc.data();
-                        data.firestore = true;
-                        this.addAnswer(data);
-                    }
-                });
-            });
-            this.removeListeners.push(unsubscribeAnswer);
+
+        if(collection) {
+            if(this.pollResultsAreVisible) {
+                const answer = collection.answer.where('lastChanged', '>=', startupDate);
+                const unsubscribeAnswer = answer.onSnapshot(snap => forEach(['added'], snap, this.addAnswer));
+                this.removeListeners.push(unsubscribeAnswer);
+            }
+
+            const pollResult = collection['poll-result'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollResult = pollResult.onSnapshot(snap => forEach(['modified'],snap, this.changeBars));
+            this.removeListeners.push(unsubscribePollResult);
+        } else {
+            console.error('Was not able to initiate event listener')
         }
-
-        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
-        const unsubscribePoll = pollResult.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.changeBars(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribePoll);
-
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
@@ -150,7 +137,7 @@ export default defineComponent({
         isVoterAlreadyCounted(key: string){
             return this.answerIdsFromFind.has(key);
         },
-        addAnswer(answer: Answer){
+        addAnswer(answer: any){
             if(answer._from !== this.poll._id)
                 return;
             if(this.isVoterAlreadyCounted(answer._key))
@@ -158,7 +145,7 @@ export default defineComponent({
 
             this.allAnswers.unshift(answer);
         },
-        changeBars(data: PollResult){
+        changeBars(data: any){
             if(!data || data.pollId !== this.poll._key)
                 return;
             Object.keys(this.sortedOptions).forEach((ans: string) =>{

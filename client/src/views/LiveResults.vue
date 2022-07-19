@@ -25,6 +25,7 @@ import AdminVoterList from '../components/admin-voter-list.vue';
 import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain';
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { defineComponent } from 'vue';
+import { collection, forEach } from '../firebase';
 export default defineComponent({
     components: {
         ProgressBars,
@@ -41,42 +42,20 @@ export default defineComponent({
         const startupDate = Date.now();
         await this.init();
         
-        const poll = this.$firestore.collection('poll').where('lastChanged', '>=', startupDate);
-        const unsubscribePoll = poll.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'added' || change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.patchedPoll(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribePoll);
+        if(collection) {
+            const poll = collection.poll.where('lastChanged', '>=', startupDate);
+            const unsubscribePoll = poll.onSnapshot(snap => forEach(['added','modified'], snap, this.patchedPoll));
 
-        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
-        const unsubscribePollResult = pollResult.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.UPDATE_POLL_RESULT(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribePollResult);
+            const pollResult = collection['poll-result'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollResult = pollResult.onSnapshot(snap => forEach(['modified'], snap, this.UPDATE_POLL_RESULT));
 
-        const answer = this.$firestore.collection('answer').where('lastChanged', '>=', startupDate);
-        const unsubscribeAnswer = answer.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'added') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.addedAnswer(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribeAnswer);
-    
+            const answer = collection.answer.where('lastChanged', '>=', startupDate);
+            const unsubscribeAnswer = answer.onSnapshot(snap => forEach(['added'], snap, this.addedAnswer));
+
+            this.removeListeners = [unsubscribePoll, unsubscribePollResult, unsubscribeAnswer];
+        } else {
+            console.error('Was not able to initiate event listener');
+        }
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){

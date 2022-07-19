@@ -9,12 +9,10 @@
 </template>
 
 <script lang="ts">
-
 import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon';
 import { Poll } from '../domain/Poll';
-
+import {collection, forEach} from '../firebase';
 import { defineComponent, PropType } from 'vue';
-
 export default defineComponent({
     components: {
         ArrowRightIcon
@@ -34,17 +32,13 @@ export default defineComponent({
         const results = await this.$client.service('poll-result').get(this.poll._key);
         this.updateVotes(results);
 
-        const pollResult = this.$firestore.collection('poll-result').where('lastChanged', '>=', startupDate);
-        const unsubscribe = pollResult.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.updateVotes(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribe);
+        if(collection) {
+            const pollResult = collection.answer.where('lastChanged', '>=', startupDate);
+            const unsubscribe = pollResult.onSnapshot(snap => forEach(['modified'], snap, this.updateVotes));
+            this.removeListeners.push(unsubscribe);
+        } else {
+            console.error('Was not able to initiate event listener')
+        }
     },
     unmounted(){
         this.removeListeners.forEach((unsubscribe) => unsubscribe());

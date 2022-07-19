@@ -1,7 +1,8 @@
 import feathers from '@feathersjs/feathers';
-import { Router } from 'vue-router'
+import { Router } from 'vue-router';
 import { User } from './domain';
 import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 /* eslint-disable */
 declare module '*.vue' {
@@ -9,6 +10,7 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+/* eslint-enable */
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -16,9 +18,9 @@ declare module '@vue/runtime-core' {
     $user: User,
     $firestore: firebase.firestore.Firestore,
     $client: feathers.Application,
-    $handleError: Function,
-    $showSuccess: Function,
-    $logout: Function,
+    $handleError: (error:unknown) => void,
+    $showSuccess: (message: string) => void,
+    $logout: () => void,
     $canAdministratePollingEvents: boolean,
     $gtag: any
   }

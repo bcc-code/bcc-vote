@@ -17,6 +17,7 @@ import PollPopOver from '../components/poll-popover.vue';
 import { PollingEvent, PollingEventStatus } from '../domain';
 import { Answer, Poll, PollActiveStatus } from '../domain/Poll';
 import { defineComponent } from 'vue';
+import { collection, forEach } from '../firebase';
 export default defineComponent({
     components: {
         PollPopOver,
@@ -33,29 +34,17 @@ export default defineComponent({
         const startupDate = Date.now();
         this.init();
 
-        const poll = this.$firestore.collection('poll').where('lastChanged', '>=', startupDate);
-        const unsubscribePoll = poll.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'added' || change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.getPoll(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribePoll);
+        if(collection) {
+            const poll = collection.poll.where('lastChanged', '>=', startupDate);
+            const unsubscribePoll = poll.onSnapshot(snap => forEach(['added','modified'], snap, this.getPoll));
 
-        const pollingEvent = this.$firestore.collection('polling-event').where('lastChanged', '>=', startupDate);
-        const unsubscribePollingEvent = pollingEvent.onSnapshot((docSnapshot:any) => {
-            docSnapshot.docChanges().forEach((change:any) => {
-                if (change.type === 'added' || change.type === 'modified') {
-                    const data = change.doc.data();
-                    data.firestore = true;
-                    this.patchEvent(data);
-                }
-            });
-        });
-        this.removeListeners.push(unsubscribePollingEvent);
+            const pollingEvent = collection['polling-event'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollingEvent = pollingEvent.onSnapshot(snap => forEach(['added','modified'], snap, this.patchEvent));
+
+            this.removeListeners = [unsubscribePoll, unsubscribePollingEvent];
+        } else {
+            console.error('Was not able to initiate event listener');
+        }
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
@@ -102,7 +91,7 @@ export default defineComponent({
 
             return res;
         },
-        getPoll(data: Poll):void{
+        getPoll(data:any):void{
             if(data.pollingEventId !== this.$route.params.id)
                 return;
 
@@ -112,7 +101,7 @@ export default defineComponent({
             else
                 this.currentPoll = undefined;
         },
-        patchEvent(data: PollingEvent):void{
+        patchEvent(data:any):void{
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
                 this.goToThankYouPage(data);
         },
