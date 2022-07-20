@@ -1,9 +1,16 @@
-import { initializeApp } from 'firebase-admin';
+import firebase, { initializeApp, credential } from 'firebase-admin';
 
-export const app = initializeApp({
-    serviceAccountId: 'firebase-adminsdk-yclzv@bcc-vote.iam.gserviceaccount.com',
-    projectId: 'bcc-vote',
-    databaseURL: 'https://bcc-vote.firebaseio.com'
-});
-export const db = app.firestore();
-export const auth = app.auth();
+export let app: firebase.app.App;
+export let db: firebase.firestore.Firestore;
+export let auth: firebase.auth.Auth;
+
+export function initFirebase() {
+    console.log('Initializing Firebase');
+    const a = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS as string);
+    app = initializeApp({
+        credential: credential.cert(a),
+    });
+    db = app.firestore();
+    auth = app.auth();
+    console.log('Initialized Firebase');
+}

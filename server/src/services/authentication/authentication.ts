@@ -35,7 +35,7 @@ class CustomJWtStrategy extends JWTStrategy {
             const payload = await verifyAuth0AccessToken(accessToken, config.jwks, config.audience, config.issuer);
             const user = await getUserBasedOnPayLoad(payload, this.app);
             
-            const firebaseAccessToken = await auth.createCustomToken(user.personID.toString());
+            const firebaseAccessToken = await auth.createCustomToken(user.personID.toString()).catch(err => {logger.error(err.message, { err});});
             
             const authResult = {
                 user,
