@@ -6,6 +6,7 @@ import app from '../src/app';
 import fs from 'fs';
 import jwt from 'jwt-simple';
 import logger from '../src/logger';
+import { AuthenticationRequest } from '@feathersjs/authentication';
 
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
@@ -18,6 +19,7 @@ import logger from '../src/logger';
 interface VirtualUser {
     personId: number
     client: feathers.Application
+    token: string
 }
 
 describe('load test', () => {
@@ -26,7 +28,7 @@ describe('load test', () => {
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
     const numberOfConnections = 600;
-    it.skip('Perform a socket load test on an environment', async (done) => {
+    it.only('Perform a socket load test on an environment', async (done) => {
 
         const connetionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
@@ -62,7 +64,15 @@ describe('load test', () => {
     }
 
     async function setupUser(vu: VirtualUser) {
-        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
+
+        const authRequest: AuthenticationRequest= {
+            strategy: 'jwt',
+            accessToken: vu.token
+        };
+        const authResult = await vu.client.service('authentication').create(authRequest, {});
+        if(authResult.firebaseAccessToken) {
+            console.log('Token!');
+        }
         vu.client.service('answer').on('created',()=>{
             receivedAnswersTotal++;
         });
@@ -93,7 +103,8 @@ describe('load test', () => {
         }));
         return {
             personId,
-            client
+            client,
+            token
         };
     }
 
