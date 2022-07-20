@@ -13,6 +13,7 @@
                 <h4 class="font-bold mb-3">{{$t('labels.participants')}}</h4>
                 <div v-if="resultsVisible" class="w-full">
                     <AdminVoterList :sortedOptions="sortedOptions" :voterList="voterList"/>
+                    Answers: {{voterList.length}}
                 </div>
                 <InfoBox v-else>{{$t('info.poll-is.'+activePoll.resultVisibility)}}</InfoBox>
             </div>
@@ -25,6 +26,7 @@ import AdminVoterList from '../components/admin-voter-list.vue';
 import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain';
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { defineComponent } from 'vue';
+import { PollingEventAnswerBatch } from '../../../server/src/domain/Answer';
 export default defineComponent({
     components: {
         ProgressBars,
@@ -41,14 +43,14 @@ export default defineComponent({
         
         this.$client.service('poll').on('patched', this.patchedPoll);
         this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').on('created', this.addedAnswer);
+        this.$client.service('answer').on('batched', this.addAnswers);
     
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
         this.$client.service('poll').off('patched', this.patchedPoll);
         this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').off('created', this.addedAnswer);
+        this.$client.service('answer').off('batched', this.addAnswers);
     
         this.$client.io.off('reconnect', this.init);
     },
@@ -101,6 +103,14 @@ export default defineComponent({
                 this.$handleError(err);
             }
             this.loading = false;
+        },
+        addAnswers({pollingEventId, answers}: PollingEventAnswerBatch){
+            if(pollingEventId !== this.activePoll.pollingEventId) {
+                throw Error('Received incorrect answer batch');
+            }
+            answers.forEach(ans => {
+                this.addedAnswer(ans)
+            });
         },
         async refreshAnswers() {
             this.loading = true;

@@ -3,11 +3,10 @@ import user from './user/user.service';
 import pollEvent from './polling-event/polling-event.service';
 import poll from './poll/poll.service';
 import answer from './answer/answer.service';
+import answerBatch from './answer-batch/answer-batch.service';
 import participant from './participant/participant.service';
 import membersExternal from './members-external/members-external.services';
-
 import pollResult from './poll-result/poll-result.service';
-
 import feedback from './feedback/feedback.service';
 
 export default function (app: Application): void {
@@ -15,6 +14,7 @@ export default function (app: Application): void {
     app.configure(pollEvent);
     app.configure(poll);
     app.configure(answer);
+    app.configure(answerBatch);
     app.configure(participant);
     app.configure(membersExternal);
     app.configure(pollResult);

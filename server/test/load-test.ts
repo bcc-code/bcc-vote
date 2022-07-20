@@ -1,11 +1,12 @@
 import 'mocha';
+import { assert } from 'chai';
 import socketio from '@feathersjs/socketio-client';
 import io from 'socket.io-client';
 import feathers from '@feathersjs/feathers';
-import app from '../src/app';
 import fs from 'fs';
 import jwt from 'jwt-simple';
 import logger from '../src/logger';
+import { PollingEventAnswerBatch } from '../src/domain';
 
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
@@ -20,28 +21,48 @@ interface VirtualUser {
     client: feathers.Application
 }
 
+const testingVariablesLocal = {
+    pollingEventId:"84441",
+    pollId:"poll/84588",
+    answerId: "1655972543954",
+    host: "localhost:4040",
+    protocol: "http"
+};
+const testingVariablesDev = {
+    pollingEventId:"1520133464",
+    pollId:"poll/1524149878",
+    answerId: "1657097392329",
+    host: "dev.vote.bcc.no",
+    protocol: "https"
+};
+
 describe('load test', () => {
-    const testingVariables = app.get('testingSet');
+    const useLocal = false;
+    const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
     let receivedAnswersTotal = 0;
+    const receivedAnswersPerUser:{[personID:number]: {receivedCount: number, uniqueAnswers:number, answerIds: string[]}} = {
+    };
     let connectedClients = 0;
-    const numberOfConnections = 600;
-    it.skip('Perform a socket load test on an environment', async (done) => {
+    const numberOfConnections = 750;
+    const hasBatching = true;
+    it.only('Perform a socket load test on an environment', function (done) {
 
-        const connetionPromises:Promise<void>[] = [];
+        const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
         for (let i = 1; i <= numberOfConnections; i++) {
             const vu = createNewVirtualUser(i);
             virtualUsers.push(vu);
-            connetionPromises.push(setupUser(vu));
+            connectionPromises.push(setupUser(vu));
         }
 
-        await Promise.all(connetionPromises);
+        Promise.all(connectionPromises).then(() => {
+            for(const vu of virtualUsers){
+                runFlow(vu);
+            }
+            setInterval(checkStatus, 5000, done);
+        });
 
-        for(const vu of virtualUsers){
-            runFlow(vu);
-        }
-        setInterval(checkStatus, 5000, done);
     });
 
     async function runFlow(vu: VirtualUser) {
@@ -54,7 +75,6 @@ describe('load test', () => {
         };
         try {
             await vu.client.service('answer').create(a,{});
-
         } catch(err) {
             logger.error(err.message);
             throw err;
@@ -62,9 +82,32 @@ describe('load test', () => {
     }
 
     async function setupUser(vu: VirtualUser) {
-        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{});
-        vu.client.service('answer').on('created',()=>{
-            receivedAnswersTotal++;
+        await vu.client.service('polling-event').get(testingVariables.pollingEventId,{})
+            .catch(err => logger.error(err.message));
+        vu.client.service('answer').on(hasBatching ? 'batched' : 'created',(result)=>{
+            if(hasBatching) {
+                const batch = result as PollingEventAnswerBatch;
+                if(batch.pollingEventId === testingVariables.pollingEventId) {
+                    const answerIds = batch.answers.map(a => a._id);
+                    if(receivedAnswersPerUser[vu.personId]) {
+                        receivedAnswersPerUser[vu.personId].receivedCount += batch.answers.length;
+
+                        if(receivedAnswersPerUser[vu.personId].answerIds.length) {
+                            const filteredAnswerIds = answerIds.filter(a => receivedAnswersPerUser[vu.personId].answerIds.includes(a) === false);
+                            receivedAnswersPerUser[vu.personId].answerIds.push(...filteredAnswerIds);
+                        } else {
+                            receivedAnswersPerUser[vu.personId].answerIds = answerIds;
+                        }
+                        
+                        receivedAnswersPerUser[vu.personId].uniqueAnswers = receivedAnswersPerUser[vu.personId].answerIds.length;
+                    } else {
+                        receivedAnswersPerUser[vu.personId] = { receivedCount: batch.answers.length, answerIds, uniqueAnswers: answerIds.length};
+                    }
+                    receivedAnswersTotal += batch.answers.length;
+                }
+            } else {
+                receivedAnswersTotal++;
+            }
         });
 
         vu.client.on("disconnect", () => {
@@ -75,15 +118,14 @@ describe('load test', () => {
     }
 
     function createNewVirtualUser(personId: number):VirtualUser {
-        const host = app.get('host');
-        const protocol = app.get('protocol');
+        const {host, protocol} = testingVariables;
 
         const url = `${protocol}://${host}`;
         const token = getNewAuth0Jwt(personId);
         const socket = io(url, {
             transports:["websocket", "polling"],
             extraHeaders: {
-                'Authorization': `bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         } as any);
         const client = feathers();
@@ -97,10 +139,32 @@ describe('load test', () => {
         };
     }
 
+    let identicalStatusCount = 0;
+    const maxStatusCount = 10;
+    let previousReceivedAnswerTotal: number;
     function checkStatus(done: Mocha.Done) {
         const receivedAnswersExpectedTotal = numberOfConnections * numberOfConnections;
-        console.log('Received answers:',receivedAnswersTotal,"/",receivedAnswersExpectedTotal);
-        if(receivedAnswersTotal === receivedAnswersExpectedTotal) done();
+
+        let receivedUniqueAnswersTotal = 0;
+        Object.values(receivedAnswersPerUser).forEach(u => receivedUniqueAnswersTotal += u.uniqueAnswers);
+        
+        console.log('Received answers:', receivedUniqueAnswersTotal,"/",receivedAnswersExpectedTotal);
+        if(receivedUniqueAnswersTotal >= receivedAnswersExpectedTotal) {
+            console.table(receivedAnswersPerUser);
+            done();
+        }
+
+        if(receivedAnswersTotal === previousReceivedAnswerTotal) {
+            identicalStatusCount++;
+        } else {
+            identicalStatusCount = 0;
+        }
+        previousReceivedAnswerTotal = receivedAnswersTotal;
+
+        if(identicalStatusCount >= maxStatusCount) {
+            console.table(receivedAnswersPerUser);
+            assert.fail(`Received the same count of answers ${maxStatusCount} times`);
+        }
     }
 });
 

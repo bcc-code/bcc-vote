@@ -4,6 +4,7 @@ import app from '../src/app';
 import { getAranoDBConfigFromFeathers, pollingEventsTestSet }  from './setup-tests/test-set';
 import { Answer, PollActiveStatus } from '../src/domain';
 import { importDB} from "@bcc-code/arango-migrate";
+import { sleep } from '../src/utils/promise';
 
 describe('Form Validation', async () => {
     let testSet:any;
@@ -173,7 +174,4 @@ describe('Form Validation', async () => {
             assert.fail(error.message);
         }
     });
-    function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
 });

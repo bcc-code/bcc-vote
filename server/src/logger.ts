@@ -1,4 +1,4 @@
-import { format, createLogger, transports } from 'winston';
+import { format, createLogger, transports, LoggerOptions } from 'winston';
 import { LoggingWinston } from '@google-cloud/logging-winston';
 
 const isLocalEnvironment = process.env.VOTE_HOSTNAME?.includes('localhost');
@@ -6,7 +6,6 @@ const serviceName = isLocalEnvironment ? 'localhost' : process.env.K_SERVICE;
 const loggingLevel = process.env.LOGGING_LEVEL ?? 'debug';
 const label = `VoteLogger-${serviceName}`;
 const errorLabel = label + '-errorHandler';
-
 
 const consoleLogger = new transports.Console({
     format: format.combine(
@@ -21,7 +20,7 @@ const consoleLogger = new transports.Console({
     ),
 });
 
-const stackdriverLogger = new LoggingWinston({
+const stackDriverLogger = new LoggingWinston({
     logName: `${serviceName}-logs`,
     labels: {label},
     serviceContext: {
@@ -37,7 +36,7 @@ const stackdriverLogger = new LoggingWinston({
     },
 });
 
-const logger = createLogger({
+const options:LoggerOptions = {
     level: loggingLevel,
     format: format.combine(
         format.json(),
@@ -48,7 +47,7 @@ const logger = createLogger({
             message: false,
         })
     ),
-    transports: isLocalEnvironment ? [consoleLogger] : [stackdriverLogger],
+    transports: isLocalEnvironment ? [consoleLogger] : [stackDriverLogger],
     exceptionHandlers: [
         new LoggingWinston({
             labels: {errorLabel},
@@ -59,6 +58,7 @@ const logger = createLogger({
     ],
     handleExceptions: true,
     exitOnError: false,
-});
+};
+const logger = createLogger(options);
 
 export default logger;

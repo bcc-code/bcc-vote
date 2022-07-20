@@ -8,17 +8,18 @@ import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
 
-
 import { Application } from './declarations';
 import logger from './logger';
 import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
+import schedule from './schedule';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './services/authentication/authentication';
 
-// Don't remove this comment. It's needed to format import lines nicely.
+const start = Date.now();
+logger.debug('Server starting');
 
 const app: Application = express(feathers());
 export type HookContext<T = any> = { app: Application } & FeathersHookContext<T>;
@@ -40,6 +41,7 @@ app.use(express.static(app.get("public")));
 app.configure(express.rest());
 app.configure(socketio());
 
+logger.debug(`Initiating services and middleware`);
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware);
 app.configure(authentication);
@@ -58,5 +60,11 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
+
+logger.debug(`Initiating scheduled jobs`);
+schedule.init(app);
+
+const duration = Date.now() - start;
+logger.debug(`Server started after ${duration}ms`);
 
 export default app;
