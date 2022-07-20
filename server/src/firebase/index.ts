@@ -6,7 +6,9 @@ export let auth: firebase.auth.Auth;
 
 export function initFirebase() {
     console.log('Initializing Firebase');
-    const a = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS as string);
+    if(!process.env.FIREBASE_SERVICE_ACCOUNT) return;
+
+    const a = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
     app = initializeApp({
         credential: credential.cert(a),
     });
