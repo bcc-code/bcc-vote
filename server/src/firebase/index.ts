@@ -1,7 +1,7 @@
-import { initializeApp, credential } from 'firebase-admin';
+import { initializeApp } from 'firebase-admin';
 
 export const app = initializeApp({
-    credential: credential.applicationDefault(),
+    serviceAccountId: 'firebase-adminsdk-yclzv@bcc-vote.iam.gserviceaccount.com',
     projectId: 'bcc-vote',
     databaseURL: 'https://bcc-vote.firebaseio.com'
 });
