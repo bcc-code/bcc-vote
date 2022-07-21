@@ -38,7 +38,7 @@ export default defineComponent({
             const pollQuery = collection.poll.where('lastChanged', '>=', startupDate);
             const unsubscribePoll = pollQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.getPoll));
 
-            const pollingEventQuery = collection['polling-event'].where('lastChanged', '>=', startupDate).where('status', '!=', PollingEventStatus.Archived);
+            const pollingEventQuery = collection['polling-event'].where('lastChanged', '>=', startupDate);
             const unsubscribePollingEvent = pollingEventQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.patchEvent));
 
             this.removeListeners = [unsubscribePoll, unsubscribePollingEvent];
