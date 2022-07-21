@@ -25,6 +25,7 @@ import AdminVoterList from '../components/admin-voter-list.vue';
 import { Poll, PollingEventStatus, PollResultVisibility, Answer } from '../domain';
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { defineComponent } from 'vue';
+import { collection, forEach } from '../firebase';
 export default defineComponent({
     components: {
         ProgressBars,
@@ -34,22 +35,31 @@ export default defineComponent({
         return {
             loading: false,
             selectedOption: "",
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         await this.init();
         
-        this.$client.service('poll').on('patched', this.patchedPoll);
-        this.$client.service('poll-result').on('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').on('created', this.addedAnswer);
-    
+        if(collection) {
+            const pollQuery = collection.poll.where('lastChanged', '>=', startupDate);
+            const unsubscribePoll = pollQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.patchedPoll));
+
+            const pollResultQuery = collection['poll-result'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollResult = pollResultQuery.onSnapshot(snap => forEach(['modified'], snap, this.UPDATE_POLL_RESULT));
+
+            const answerQuery = collection.answer.where('lastChanged', '>=', startupDate).where('visibility', '==', PollResultVisibility.Public);
+            const unsubscribeAnswer = answerQuery.onSnapshot(snap => forEach(['added'], snap, this.addedAnswer));
+
+            this.removeListeners = [unsubscribePoll, unsubscribePollResult, unsubscribeAnswer];
+        } else {
+            this.$handleError({ message: 'Was not able to initiate event listener'});
+        }
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.patchedPoll);
-        this.$client.service('poll-result').off('patched', this.UPDATE_POLL_RESULT);
-        this.$client.service('answer').off('created', this.addedAnswer);
-    
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     computed: {

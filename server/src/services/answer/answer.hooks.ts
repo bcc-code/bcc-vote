@@ -1,9 +1,9 @@
 import { HookContext, Query } from "@feathersjs/feathers";
 import logger from '../../logger';
 import { Answer, PollActiveStatus, User } from "../../domain";
-import { FieldValue } from '../../firestore';
 import { defineAbilityFor } from "../../permissions/appAbility";
 import { ForbiddenError, subject } from "@casl/ability";
+import { FieldValue } from 'firebase-admin/firestore';
 
 const preventVoteOnInactivePoll = async (context:HookContext):Promise<HookContext> => {
     const key = context.data._from.split('/')[1];

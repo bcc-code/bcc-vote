@@ -2,9 +2,7 @@ import { NotFound, NotImplemented } from '@feathersjs/errors';
 import { Id, Params, ServiceMethods } from '@feathersjs/feathers';
 import { PollResultDetails } from '../../domain';
 import { Application } from '../../declarations';
-import { db } from '../../firestore';
-
-
+import { db } from '../../firebase';
 
 const isPrimitive = (val: any): boolean => {
     if(val === Object(val))

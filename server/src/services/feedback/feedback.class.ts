@@ -1,8 +1,8 @@
 import { NotImplemented } from '@feathersjs/errors';
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
-import { FieldValue } from "@google-cloud/firestore";
+import { FieldValue } from 'firebase-admin/firestore';
 import { Application } from '../../declarations';
-import { db } from '../../firestore';
+import { db } from '../../firebase';
 import axios from "axios";
 
 interface Data {

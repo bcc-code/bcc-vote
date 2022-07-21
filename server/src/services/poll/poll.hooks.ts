@@ -1,18 +1,11 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from "@feathersjs/feathers";
 import { PollActiveStatus, Option } from '../../domain';
-import { db } from '../../firestore';
-// Don't remove this comment. It's needed to format import lines nicely.
+import { db } from '../../firebase';
 
 const validateAndFormat = async (context: HookContext):Promise<HookContext> => {
     const { data } = context;
     if (!data.title || data.title === '') throw Error('Validation Error: Please provide a title');
-    return context;
-};
-
-const addChannel = (context: HookContext):HookContext => {
-    if(context.result.pollingEventId && context.params.connection)
-        context.app.channel(context.result.pollingEventId.toString()).join(context.params.connection);
     return context;
 };
 
@@ -99,7 +92,7 @@ export default {
     after: {
         all: [],
         find: [],
-        get: [ addChannel ],
+        get: [],
         create: [],
         update: [],
         patch: [ removeAllAnswers ],

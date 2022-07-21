@@ -9,12 +9,10 @@
 </template>
 
 <script lang="ts">
-
 import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon';
-import { Poll } from '../domain/Poll';
-
+import { Poll, PollResultVisibility } from '../domain/Poll';
+import {collection, forEach} from '../firebase';
 import { defineComponent, PropType } from 'vue';
-
 export default defineComponent({
     components: {
         ArrowRightIcon
@@ -26,15 +24,24 @@ export default defineComponent({
     data(){
         return{
             votes: 0,
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         const results = await this.$client.service('poll-result').get(this.poll._key);
         this.updateVotes(results);
-        this.$client.service('poll-result').on('patched', this.updateVotes);
+
+        if(collection) {
+            const pollResultQuery = collection.answer.where('lastChanged', '>=', startupDate).where('visibility', '==', PollResultVisibility.Public);
+            const unsubscribe = pollResultQuery.onSnapshot(snap => forEach(['modified'], snap, this.updateVotes));
+            this.removeListeners.push(unsubscribe);
+        } else {
+            this.$handleError({ message: 'Was not able to initiate event listener'});
+        }
     },
     unmounted(){
-        this.$client.service('poll-result').off('patched');
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
     },
     methods: {
         updateVotes(data: any){

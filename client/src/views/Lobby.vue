@@ -17,6 +17,7 @@ import PollPopOver from '../components/poll-popover.vue';
 import { PollingEvent, PollingEventStatus } from '../domain';
 import { Answer, Poll, PollActiveStatus } from '../domain/Poll';
 import { defineComponent } from 'vue';
+import { collection, forEach } from '../firebase';
 export default defineComponent({
     components: {
         PollPopOver,
@@ -25,19 +26,29 @@ export default defineComponent({
         return {
             pollingEvent: {} as PollingEvent,
             currentPoll: undefined as (undefined | Poll),
-            currentAnswer: undefined as (undefined | Answer)
+            currentAnswer: undefined as (undefined | Answer),
+            removeListeners: [] as (() => void)[]
         };
     },
     created() {
+        const startupDate = Date.now();
         this.init();
-        
-        this.$client.service('poll').on('patched', this.getPoll);
-        this.$client.service('polling-event').on('patched', this.patchEvent);
+
+        if(collection) {
+            const pollQuery = collection.poll.where('lastChanged', '>=', startupDate);
+            const unsubscribePoll = pollQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.getPoll));
+
+            const pollingEventQuery = collection['polling-event'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollingEvent = pollingEventQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.patchEvent));
+
+            this.removeListeners = [unsubscribePoll, unsubscribePollingEvent];
+        } else {
+            this.$handleError({ message: 'Was not able to initiate event listener'});
+        }
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('poll').off('patched', this.getPoll);
-        this.$client.service('polling-event').off('patched', this.patchEvent);
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     methods: {
@@ -80,7 +91,7 @@ export default defineComponent({
 
             return res;
         },
-        getPoll(data: Poll):void{
+        getPoll(data:any):void{
             if(data.pollingEventId !== this.$route.params.id)
                 return;
 
@@ -90,7 +101,7 @@ export default defineComponent({
             else
                 this.currentPoll = undefined;
         },
-        patchEvent(data: PollingEvent):void{
+        patchEvent(data:any):void{
             if(data._key === this.$route.params.id && data.status === PollingEventStatus['Finished'])
                 this.goToThankYouPage(data);
         },

@@ -16,8 +16,8 @@
 <script lang="ts">
 import ProgressBars from '../components/results-progress-bars.vue';
 import VoterList from './results-voter-list.vue';
-
-import { Poll, PollResultVisibility, Answer, Option, SortedOptions, PollResult } from '../domain';
+import {collection, forEach} from '../firebase';
+import { Poll, PollResultVisibility, Answer, Option, SortedOptions } from '../domain';
 import { defineComponent, PropType } from 'vue';
 // import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default defineComponent({
@@ -41,24 +41,32 @@ export default defineComponent({
             answerColors: ['#004C78','#006887','#0081A2','#329BBD','#55B6D9','#72D0E3'],
             neutralColor: '#C1C7DA',
             sortedOptions: {} as SortedOptions,
+            removeListeners: [] as (() => void)[]
         };
     },
     async created(){
+        const startupDate = Date.now();
         this.generateSortedOptions();
 
         await this.init();
-        
-        
-        if(this.pollResultsAreVisible)
-            this.$client.service('answer').on('created', this.addAnswer);
 
-        this.$client.service('poll-result').on('patched', this.changeBars);
+        if(collection) {
+            if(this.pollResultsAreVisible) {
+                const answerQuery = collection.answer.where('lastChanged', '>=', startupDate).where('visibility', '==', PollResultVisibility.Public);
+                const unsubscribeAnswer = answerQuery.onSnapshot(snap => forEach(['added'], snap, this.addAnswer));
+                this.removeListeners.push(unsubscribeAnswer);
+            }
 
+            const pollResult = collection['poll-result'].where('lastChanged', '>=', startupDate);
+            const unsubscribePollResult = pollResult.onSnapshot(snap => forEach(['modified'],snap, this.changeBars));
+            this.removeListeners.push(unsubscribePollResult);
+        } else {
+            this.$handleError({ message: 'Was not able to initiate event listener'});
+        }
         this.$client.io.on('reconnect', this.init);
     },
     unmounted(){
-        this.$client.service('answer').off('created', this.addAnswer);
-        this.$client.service('poll-result').off('patched', this.changeBars);
+        this.removeListeners.forEach((unsubscribe) => unsubscribe());
         this.$client.io.off('reconnect', this.init);
     },
     watch: {
@@ -129,7 +137,7 @@ export default defineComponent({
         isVoterAlreadyCounted(key: string){
             return this.answerIdsFromFind.has(key);
         },
-        addAnswer(answer: Answer){
+        addAnswer(answer: any){
             if(answer._from !== this.poll._id)
                 return;
             if(this.isVoterAlreadyCounted(answer._key))
@@ -137,7 +145,7 @@ export default defineComponent({
 
             this.allAnswers.unshift(answer);
         },
-        changeBars(data: PollResult){
+        changeBars(data: any){
             if(!data || data.pollId !== this.poll._key)
                 return;
             Object.keys(this.sortedOptions).forEach((ans: string) =>{

@@ -92,7 +92,6 @@ export async function getUserBasedOnPayLoad(payload: Record<string, any>, app: A
     if(noExisingUser || user.authTime > time10sAgo) {
         await saveUser(user, noExisingUser, app);
     }
-
     return user;
 }
 
