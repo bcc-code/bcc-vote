@@ -9,6 +9,7 @@ import { AuthenticationRequest } from '@feathersjs/authentication';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { PollResultVisibility } from '../src/domain/Poll';
 // -----------------------------------------------------------------------------------------
 // NB!!! Before running this performance test you have to run
 // npm run mocha-dev-in-cloud
@@ -38,7 +39,7 @@ const testingVariablesDev = {
     protocol: "https"
 };
 
-describe.skip('load test', () => {
+describe('load test', () => {
     const useLocal = true;
     const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
@@ -54,7 +55,7 @@ describe.skip('load test', () => {
         removeListeners.forEach((unsubscribe) => unsubscribe());
     });
 
-    it('Perform a socket load test on an environment', (done) => {
+    it.only('Perform a socket load test on an environment', (done) => {
         const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
         for (let i = 1; i <= numberOfConnections; i++) {
@@ -100,8 +101,8 @@ describe.skip('load test', () => {
                 const app = await initFirestore(firebaseAccessToken, vu.personId);
             
                 const answerCol = app.firestore().collection('answer');
-                const answerRef = answerCol.where('lastChanged', '>=', startupDate);
-                const unsubscribeAnswer = answerRef.onSnapshot(snap => {
+                const answerQuery = answerCol.where('lastChanged', '>=', startupDate).where('visibility','==',PollResultVisibility.Public);
+                const unsubscribeAnswer = answerQuery.onSnapshot(snap => {
                     snap.docChanges().forEach(change => {
                         if (change.type === 'added') {
                             receivedAnswersTotal++;

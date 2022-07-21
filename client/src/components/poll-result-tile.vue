@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import ArrowRightIcon from 'heroicons-vue3/outline/ArrowNarrowRightIcon';
-import { Poll } from '../domain/Poll';
+import { Poll, PollResultVisibility } from '../domain/Poll';
 import {collection, forEach} from '../firebase';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
@@ -33,11 +33,11 @@ export default defineComponent({
         this.updateVotes(results);
 
         if(collection) {
-            const pollResult = collection.answer.where('lastChanged', '>=', startupDate);
-            const unsubscribe = pollResult.onSnapshot(snap => forEach(['modified'], snap, this.updateVotes));
+            const pollResultQuery = collection.answer.where('lastChanged', '>=', startupDate).where('visibility', '==', PollResultVisibility.Public);
+            const unsubscribe = pollResultQuery.onSnapshot(snap => forEach(['modified'], snap, this.updateVotes));
             this.removeListeners.push(unsubscribe);
         } else {
-            console.error('Was not able to initiate event listener')
+            this.$handleError({ message: 'Was not able to initiate event listener'});
         }
     },
     unmounted(){

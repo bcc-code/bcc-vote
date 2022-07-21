@@ -35,15 +35,15 @@ export default defineComponent({
         this.init();
 
         if(collection) {
-            const poll = collection.poll.where('lastChanged', '>=', startupDate);
-            const unsubscribePoll = poll.onSnapshot(snap => forEach(['added','modified'], snap, this.getPoll));
+            const pollQuery = collection.poll.where('lastChanged', '>=', startupDate);
+            const unsubscribePoll = pollQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.getPoll));
 
-            const pollingEvent = collection['polling-event'].where('lastChanged', '>=', startupDate);
-            const unsubscribePollingEvent = pollingEvent.onSnapshot(snap => forEach(['added','modified'], snap, this.patchEvent));
+            const pollingEventQuery = collection['polling-event'].where('lastChanged', '>=', startupDate).where('status', '!=', PollingEventStatus.Archived);
+            const unsubscribePollingEvent = pollingEventQuery.onSnapshot(snap => forEach(['added','modified'], snap, this.patchEvent));
 
             this.removeListeners = [unsubscribePoll, unsubscribePollingEvent];
         } else {
-            console.error('Was not able to initiate event listener');
+            this.$handleError({ message: 'Was not able to initiate event listener'});
         }
         this.$client.io.on('reconnect', this.init);
     },

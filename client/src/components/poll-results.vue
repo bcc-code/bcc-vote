@@ -52,8 +52,8 @@ export default defineComponent({
 
         if(collection) {
             if(this.pollResultsAreVisible) {
-                const answer = collection.answer.where('lastChanged', '>=', startupDate);
-                const unsubscribeAnswer = answer.onSnapshot(snap => forEach(['added'], snap, this.addAnswer));
+                const answerQuery = collection.answer.where('lastChanged', '>=', startupDate).where('visibility', '==', PollResultVisibility.Public);
+                const unsubscribeAnswer = answerQuery.onSnapshot(snap => forEach(['added'], snap, this.addAnswer));
                 this.removeListeners.push(unsubscribeAnswer);
             }
 
@@ -61,7 +61,7 @@ export default defineComponent({
             const unsubscribePollResult = pollResult.onSnapshot(snap => forEach(['modified'],snap, this.changeBars));
             this.removeListeners.push(unsubscribePollResult);
         } else {
-            console.error('Was not able to initiate event listener')
+            this.$handleError({ message: 'Was not able to initiate event listener'});
         }
         this.$client.io.on('reconnect', this.init);
     },
