@@ -44,7 +44,9 @@ describe.skip('load test', () => {
 
     let receivedAnswersTotal = 0;
     let connectedClients = 0;
-    const numberOfConnections = 300;
+    // Firestore has a limit setup for the amount of listeners per client:
+    // https://firebase.google.com/docs/firestore/best-practices#realtime_updates
+    const numberOfConnections = 99;
     const startupDate = Date.now();
     const removeListeners: (() => void)[] = [];
 
@@ -126,8 +128,7 @@ describe.skip('load test', () => {
             "projectId": "bcc-vote",
             "storageBucket": "bcc-vote.appspot.com",
             "messagingSenderId": "720418204616",
-            "appId": "1:720418204616:web:19533b48520a110f252efd",
-            "measurementId": "G-4KNVYNZ55W"
+            "appId": "1:720418204616:web:19533b48520a110f252efd"
         }, `firebase-for-${personID}`);
         const auth = app.auth();
         await auth.signInWithCustomToken(token);
