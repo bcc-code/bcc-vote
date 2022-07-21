@@ -39,7 +39,7 @@ const testingVariablesDev = {
     protocol: "https"
 };
 
-describe('load test', () => {
+describe.skip('load test', () => {
     const useLocal = true;
     const testingVariables = useLocal ? testingVariablesLocal : testingVariablesDev;
 
@@ -55,7 +55,7 @@ describe('load test', () => {
         removeListeners.forEach((unsubscribe) => unsubscribe());
     });
 
-    it.only('Perform a socket load test on an environment', (done) => {
+    it('Perform a socket load test on an environment', (done) => {
         const connectionPromises:Promise<void>[] = [];
         const virtualUsers:VirtualUser[] = [];
         for (let i = 1; i <= numberOfConnections; i++) {
